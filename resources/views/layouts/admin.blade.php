@@ -34,7 +34,7 @@
         <aside class="main-sidebar">
             <section class="sidebar">
                 <ul class="sidebar-menu">
-                    <li class="{{ Route::is('admin.accounts') ? 'active' : '' }}">
+                    <li class="{{ route_starts_with('admin.accounts') }}">
                         <a href="{{ route('admin.accounts') }}">
                             <i class="fa fa-hospital-o"></i>
                             <span>Accounts</span>
