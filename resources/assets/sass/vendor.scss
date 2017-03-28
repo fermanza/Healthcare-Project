@@ -6,7 +6,10 @@
 
 // Admin LTE
 @import "node_modules/admin-lte/dist/css/AdminLTE";
-@import "node_modules/admin-lte/dist/css/skins/skin-blue";
+@import "node_modules/admin-lte/dist/css/skins/skin-blue-light";
+
+// Overwrites
+@import "overwrites";
 
 // Font Awesome
 @import "node_modules/font-awesome/scss/font-awesome";

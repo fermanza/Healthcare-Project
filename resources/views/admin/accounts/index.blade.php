@@ -2,6 +2,13 @@
 
 @section('content-header', __('Accounts'))
 
+@section('tools')
+    <a href="{{ route('admin.accounts.create') }}" class="btn btn-sm btn-success">
+        <i class="fa fa-plus"></i>
+        New
+    </a>
+@endsection
+
 @section('content')
     <div class="table-responsive">
         <table class="table table-hover table-bordered datatable">
@@ -17,7 +24,7 @@
             </thead>
             <tbody>
                 @foreach($accounts as $account)
-                    <tr>
+                    <tr class="{{ $account->isRecentlyCreated() ? 'success' : '' }}">
                         <td>{{ $account->name }}</td>
                         <td>{{ $account->site_code }}</td>
                         <td>{{ $account->city }}</td>

@@ -16,3 +16,7 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('send-reminders', function () {
+    $this->comment('mandando correos alv');
+})->describe('Send the schedules reminders');

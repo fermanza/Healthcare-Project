@@ -18,9 +18,12 @@ $router->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmai
 $router->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 $router->post('password/reset', 'Auth\ResetPasswordController@reset');
 
-$router->group(['prefix' => 'admin', 'middleware' => 'auth'], function ($router) {
+$router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], function ($router) {
 
-    $router->get('accounts', 'AccountsController@index')->name('admin.accounts');
+    $router->get('sidebar-collapse', 'SidebarController@collapse');
+    $router->get('sidebar-expand', 'SidebarController@expand');
+
+    $router->resource('accounts', 'AccountsController');
 
 });
 

@@ -1,13 +1,15 @@
 @extends('layouts.master')
 
-@section('body-class', 'skin-blue sidebar-mini')
+@section('body-class')
+    skin-blue-light sidebar-mini {{ session('sidebar-collapsed') ? 'sidebar-collapse' : '' }}
+@endsection
 
 @section('body')
     <div class="wrapper">
 
         <header class="main-header">
             <a href="../../index2.html" class="logo">
-                <span class="logo-mini">AA</span>
+                <span class="logo-mini">Em</span>
                 <span class="logo-lg">{{ config('app.name') }}</span>
             </a>
             <nav class="navbar navbar-static-top">
@@ -35,9 +37,45 @@
             <section class="sidebar">
                 <ul class="sidebar-menu">
                     <li class="{{ route_starts_with('admin.accounts') }}">
-                        <a href="{{ route('admin.accounts') }}">
+                        <a href="{{ route('admin.accounts.index') }}">
                             <i class="fa fa-hospital-o"></i>
                             <span>Accounts</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="fa fa-id-card-o"></i>
+                            <span>Employees</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="fa fa-id-badge"></i>
+                            <span>Position Types</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="fa fa-users"></i>
+                            <span>People</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="fa fa-map-marker"></i>
+                            <span>Divisions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="fa fa-tag"></i>
+                            <span>Practices</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="fa fa-flag-o"></i>
+                            <span>Groups</span>
                         </a>
                     </li>
                 </ul>
@@ -45,23 +83,23 @@
         </aside>
 
         <div class="content-wrapper">
-            <section class="content-header">
-                <h1>
-
-                    @yield('content-header')
-
-                </h1>
-
-                @yield('breadcrumb')
-
-            </section>
-            
             <section class="content">
                 <div class="box">
-                    <div class="box-body">
+                    <div class="box-header with-border">
+                        <h1 class="box-title">
 
-                    @yield('content')
-                
+                            @yield('content-header')
+
+                        </h1>
+
+                        <div class="box-tools pull-right">
+
+                            @yield('tools')
+
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        @yield('content')
                     </div>
                 </div>
             </section>

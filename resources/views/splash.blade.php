@@ -59,7 +59,7 @@
     <div class="flex-center position-ref full-height">
         <div class="top-right links">
             @if (Auth::check())
-                <a href="{{ route('admin.accounts') }}">Admin</a>
+                <a href="{{ route('admin.accounts.index') }}">Admin</a>
             @else
                 <a href="{{ route('login') }}">Login</a>
             @endif
