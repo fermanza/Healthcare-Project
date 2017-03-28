@@ -20,7 +20,7 @@ $router->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 $router->group(['prefix' => 'admin', 'middleware' => 'auth'], function ($router) {
 
-    $router->get('dashboard', 'AdminController@index');
+    $router->get('accounts', 'AccountsController@index')->name('admin.accounts');
 
 });
 

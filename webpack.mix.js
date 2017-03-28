@@ -11,11 +11,13 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'admin-lte',
         'icheck',
         'fastclick',
+        'datatables',
+        'datatables-bootstrap3-plugin',
     ]);
    
 mix.sass('resources/assets/sass/vendor.scss', 'public/css');
 
-mix.browserSync('cdiweboffice.dev');
+mix.browserSync('account-admin.dev');
 
 if (mix.config.inProduction) {
     mix.version();

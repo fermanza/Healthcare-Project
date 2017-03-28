@@ -10,7 +10,11 @@ require('admin-lte');
 // iCheck
 require('icheck');
 
-// iCheck
+// DataTables
+require('datatables');
+require('datatables-bootstrap3-plugin');
+
+// FastClick
 const FastClick = require('fastclick');
 FastClick.attach(document.body);
 
