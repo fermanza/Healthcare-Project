@@ -8,10 +8,10 @@
     <div class="wrapper">
 
         <header class="main-header">
-            <a href="../../index2.html" class="logo">
+            <span class="logo">
                 <span class="logo-mini">Em</span>
                 <span class="logo-lg">{{ config('app.name') }}</span>
-            </a>
+            </span>
             <nav class="navbar navbar-static-top">
                 <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
