@@ -61,14 +61,43 @@ $factory->define(App\Division::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Account::class, function (Faker\Generator $faker) {
     return [
+        'practice_id' => function () {
+            return factory(App\Practice::class)->create()->id;
+        },
         'division_id' => function () {
             return factory(App\Division::class)->create()->id;
         },
-        'site_code' => $faker->randomNumber,
         'name' => $faker->word,
+        'site_code' => $faker->randomNumber,
+        'photo_path' => $faker->image,
+        'google_address' => $faker->address,
+        'street' => $faker->streetName,
+        'number' => $faker->randomNumber,
         'city' => $faker->city,
         'state' => $faker->state,
+        'zip_code' => $faker->randomNumber,
+        'country' => $faker->country,
         'start_date' => $faker->dateTime,
+        'physicians_needed' => $faker->randomNumber,
+        'apps_needed' => $faker->randomNumber,
+        'physician_hours_per_month' => $faker->randomNumber,
+        'app_hours_per_month' => $faker->randomNumber,
+        'press_release' => $faker->boolean,
+        'press_release_date' => $faker->date,
+        'management_change_mailers' => $faker->boolean,
+        'recruiting_mailers' => $faker->boolean,
+        'email_blast' => $faker->boolean,
+        'purl_campaign' => $faker->boolean,
+        'marketing_slick' => $faker->boolean,
+        'collaboration_recruiting_team' => $faker->boolean,
+        'collaboration_recruiting_team_names' => $faker->firstName,
+        'compensation_grid' => $faker->boolean,
+        'compensation_grid_bonuses' => $faker->sentence,
+        'recruiting_incentives' => $faker->boolean,
+        'recruiting_incentives_description' => $faker->sentence,
+        'locum_companies_notified' => $faker->boolean,
+        'search_firms_notified' => $faker->boolean,
+        'departments_coordinated' => $faker->boolean,
     ];
 });
 
