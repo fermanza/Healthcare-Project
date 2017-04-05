@@ -27,4 +27,10 @@ $(() => {
     // Select2
     $('.select2').select2();
 
+
+    // DateTime Picker
+    $('.datetimepicker').datetimepicker({
+        format: 'yyyy-mm-dd hh:ii'
+    });
+
 });

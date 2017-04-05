@@ -17,6 +17,9 @@ require('datatables-bootstrap3-plugin');
 // Select2
 require('select2');
 
+// DateTime Picker
+require('bootstrap-datetime-picker');
+
 // FastClick
 const FastClick = require('fastclick');
 FastClick.attach(document.body);

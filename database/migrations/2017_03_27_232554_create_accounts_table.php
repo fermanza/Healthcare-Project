@@ -15,10 +15,10 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('recruiter_id')->unsigned();
-            $table->integer('manager_id')->unsigned();
-            $table->integer('practice_id')->unsigned();
-            $table->integer('division_id')->unsigned();
+            $table->integer('recruiter_id')->unsigned()->nullable();
+            $table->integer('manager_id')->unsigned()->nullable();
+            $table->integer('practice_id')->unsigned()->nullable();
+            $table->integer('division_id')->unsigned()->nullable();
             $table->string('name');
             $table->string('site_code');
             $table->string('photo_path')->nullable();
@@ -30,10 +30,10 @@ class CreateAccountsTable extends Migration
             $table->string('zip_code')->nullable();
             $table->string('country')->nullable();
             $table->dateTime('start_date');
-            $table->integer('physicians_needed')->unsigned();
-            $table->integer('apps_needed')->unsigned();
-            $table->integer('physician_hours_per_month')->unsigned();
-            $table->integer('app_hours_per_month')->unsigned();
+            $table->integer('physicians_needed')->unsigned()->default(0);
+            $table->integer('apps_needed')->unsigned()->default(0);
+            $table->integer('physician_hours_per_month')->unsigned()->default(0);
+            $table->integer('app_hours_per_month')->unsigned()->default(0);
 
             $table->boolean('press_release')->default(false);
             $table->date('press_release_date')->nullable();

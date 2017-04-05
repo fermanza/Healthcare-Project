@@ -14,6 +14,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'datatables',
         'datatables-bootstrap3-plugin',
         'select2',
+        'bootstrap-datetime-picker',
     ]);
    
 mix.sass('resources/assets/sass/vendor.scss', 'public/css');
