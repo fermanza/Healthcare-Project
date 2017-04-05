@@ -14,6 +14,9 @@ require('icheck');
 require('datatables');
 require('datatables-bootstrap3-plugin');
 
+// Select2
+require('select2');
+
 // FastClick
 const FastClick = require('fastclick');
 FastClick.attach(document.body);

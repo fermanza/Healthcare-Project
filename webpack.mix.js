@@ -13,6 +13,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'fastclick',
         'datatables',
         'datatables-bootstrap3-plugin',
+        'select2',
     ]);
    
 mix.sass('resources/assets/sass/vendor.scss', 'public/css');

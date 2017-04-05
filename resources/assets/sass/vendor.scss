@@ -7,9 +7,7 @@
 // Admin LTE
 @import "node_modules/admin-lte/dist/css/AdminLTE";
 @import "node_modules/admin-lte/dist/css/skins/skin-blue-light";
-
-// Overwrites
-@import "overwrites";
+@import "custom/admin-lte";
 
 // Font Awesome
 @import "node_modules/font-awesome/scss/font-awesome";
@@ -19,3 +17,7 @@
 
 // DataTables
 @import "node_modules/datatables-bootstrap3-plugin/media/css/datatables-bootstrap3";
+
+// Select2
+@import "node_modules/select2/src/scss/core";
+@import "custom/select2";
