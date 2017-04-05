@@ -15,8 +15,8 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->increments('id');
-            // $table->integer('recruiter_id')->unsigned();
-            // $table->integer('manager_id')->unsigned();
+            $table->integer('recruiter_id')->unsigned();
+            $table->integer('manager_id')->unsigned();
             $table->integer('practice_id')->unsigned();
             $table->integer('division_id')->unsigned();
             $table->string('name');
@@ -53,8 +53,8 @@ class CreateAccountsTable extends Migration
             $table->boolean('departments_coordinated')->default(false);
             $table->timestamps();
 
-            // $table->foreign('recruiter_id')->references('id')->on('employees')->onDelete('cascade');
-            // $table->foreign('manager_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('recruiter_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('manager_id')->references('id')->on('employees')->onDelete('cascade');
             $table->foreign('practice_id')->references('id')->on('practices')->onDelete('cascade');
             $table->foreign('division_id')->references('id')->on('divisions')->onDelete('cascade');
         });

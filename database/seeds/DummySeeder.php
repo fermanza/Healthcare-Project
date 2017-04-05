@@ -13,5 +13,6 @@ class DummySeeder extends Seeder
     {
         $this->call(DummyPersonsSeeder::class);
         $this->call(DummyEmployeesSeeder::class);
+        $this->call(DummyAccountsSeeder::class);
     }
 }

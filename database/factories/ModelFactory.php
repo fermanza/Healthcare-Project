@@ -61,6 +61,12 @@ $factory->define(App\Division::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Account::class, function (Faker\Generator $faker) {
     return [
+        'recruiter_id' => function () {
+            return factory(App\Employee::class)->create()->id;
+        },
+        'manager_id' => function () {
+            return factory(App\Employee::class)->create()->id;
+        },
         'practice_id' => function () {
             return factory(App\Practice::class)->create()->id;
         },
@@ -98,20 +104,5 @@ $factory->define(App\Account::class, function (Faker\Generator $faker) {
         'locum_companies_notified' => $faker->boolean,
         'search_firms_notified' => $faker->boolean,
         'departments_coordinated' => $faker->boolean,
-    ];
-});
-
-$factory->define(App\AccountEmployee::class, function (Faker\Generator $faker) {
-    return [
-        'account_id' => function () {
-            return factory(App\Account::class)->create()->id;
-        },
-        'employee_id' => function () {
-            return factory(App\Employee::class)->create()->id;
-        },
-        'position_type_id' => function () {
-            return factory(App\PositionType::class)->create()->id;
-        },
-        'is_primary' => $faker->boolean,
     ];
 });
