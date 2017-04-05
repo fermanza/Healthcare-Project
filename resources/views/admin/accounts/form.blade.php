@@ -39,9 +39,10 @@
             <div class="form-group">
                 <label for="recruiter">@lang('Recruiter')</label>
                 <select id="recruiter" class="form-control select2">
-                    <option value="" disabled selected>@lang('Recruiter')</option>
-                    <option value="1">John Doe</option>
-                    <option value="2">Sam Joe</option>
+                    <option value="" disabled selected></option>
+                    @foreach ($employees as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->fullName() }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -49,9 +50,10 @@
             <div class="form-group">
                 <label for="manager">@lang('Manager')</label>
                 <select id="manager" class="form-control select2">
-                    <option value="" disabled selected>@lang('Manager')</option>
-                    <option value="2">Sam Joe</option>
-                    <option value="1">John Doe</option>
+                    <option value="" disabled selected></option>
+                    @foreach ($employees as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->fullName() }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -64,9 +66,10 @@
             <div class="form-group">
                 <label for="practice">@lang('Practice')</label>
                 <select id="practice" class="form-control select2">
-                    <option value="" disabled selected>@lang('Practice')</option>
-                    <option value="1">ED</option>
-                    <option value="2">ED - PED</option>
+                    <option value="" disabled selected></option>
+                    @foreach ($practices as $practice)
+                        <option value="{{ $practice->id }}">{{ $practice->name }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -74,9 +77,10 @@
             <div class="form-group">
                 <label for="division">@lang('Division')</label>
                 <select id="division" class="form-control select2">
-                    <option value="" disabled selected>@lang('Division')</option>
-                    <option value="2">Tri Star</option>
-                    <option value="1">Mid America</option>
+                    <option value="" disabled selected></option>
+                    @foreach ($divisions as $division)
+                        <option value="{{ $division->id }}">{{ $division->name }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>

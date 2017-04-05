@@ -34,7 +34,9 @@ class AccountsController extends Controller
         $practices = Practice::orderBy('name')->get();
         $divisions = Division::orderBy('name')->get();
 
-        return view('admin.accounts.create', compact('account'));
+        $params = compact('account', 'employees', 'practices', 'divisions');
+
+        return view('admin.accounts.create', $params);
     }
 
     /**
