@@ -54,9 +54,14 @@ class AccountsController extends Controller
         $account->manager_id = $request->manager_id;
         $account->practice_id = $request->practice_id;
         $account->division_id = $request->division_id;
+        $account->google_address = $request->google_address;
+        $account->street = $request->street;
+        $account->number = $request->number;
         $account->city = $request->city;
         $account->state = $request->state;
-        $account->start_date = $request->start_date ? $request->start_date.':00': '';
+        $account->zip_code = $request->zip_code;
+        $account->country = $request->country;
+        $account->start_date = $request->start_date ? $request->start_date.':00': null;
         $account->physicians_needed = $request->physicians_needed;
         $account->apps_needed = $request->apps_needed;
         $account->physician_hours_per_month = $request->physician_hours_per_month;

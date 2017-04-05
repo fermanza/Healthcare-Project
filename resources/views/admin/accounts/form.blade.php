@@ -25,7 +25,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="google_address">@lang('Address')</label>
-                <input type="text" class="form-control" id="google_address">
+                <input type="text" class="form-control" id="google_address" name="google_address">
             </div>
             <div>
                 {{-- <div id="map"></div> --}}
@@ -89,16 +89,21 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label for="locality">@lang('City')</label>
-                <input type="text" class="form-control" id="locality" name="city" placeholder="Autopopulate City" />
+                <input type="text" class="form-control" id="locality" name="city" />
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
                 <label for="administrative_area_level_1">@lang('State')</label>
-                <input type="text" class="form-control" id="administrative_area_level_1" name="state" placeholder="Autopopulate State" />
+                <input type="text" class="form-control" id="administrative_area_level_1" name="state" />
             </div>
         </div>
     </div>
+
+    <input type="hidden" id="street_number" name="number" />
+    <input type="hidden" id="route" name="street" />
+    <input type="hidden" id="country" name="country" />
+    <input type="hidden" id="postal_code" name="zip_code" />
 
     <hr />
 
@@ -253,15 +258,15 @@
         </div>
     </div>
     
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-12 text-center">
             <a href="javascript:;" class="btn btn-primary">@lang('Create PDF')</a>
             <br />
             @lang('To give internal plan')
         </div>
-    </div>
+    </div> --}}
 
-    <hr />
+    {{-- <hr />
     
     <div class="row text-center">
         <div class="col-md-6">
@@ -272,7 +277,7 @@
         <div class="col-md-6">
             <a href="javascript:;" class="btn btn-primary">@lang('Email Marketing Slick')</a>
         </div>
-    </div>
+    </div> --}}
 
     <hr />
     
@@ -281,11 +286,6 @@
             <button type="submit" class="btn btn-success">@lang('Submit')</button>
         </div>
     </div>
-
-    <input type="hidden" id="street_number" />
-    <input type="hidden" id="route" />
-    <input type="hidden" id="country" />
-    <input type="hidden" id="postal_code" />
 
 </form>
 
@@ -304,7 +304,7 @@
         street_number: 'short_name',
         route: 'long_name',
         locality: 'long_name',
-        administrative_area_level_1: 'short_name',
+        administrative_area_level_1: 'long_name',
         country: 'long_name',
         postal_code: 'short_name'
       };
@@ -338,24 +338,6 @@
             var val = place.address_components[i][componentForm[addressType]];
             document.getElementById(addressType).value = val;
           }
-        }
-      }
-
-      // Bias the autocomplete object to the user's geographical location,
-      // as supplied by the browser's 'navigator.geolocation' object.
-      function geolocate() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var geolocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-            var circle = new google.maps.Circle({
-              center: geolocation,
-              radius: position.coords.accuracy
-            });
-            autocomplete.setBounds(circle.getBounds());
-          });
         }
       }
     </script>

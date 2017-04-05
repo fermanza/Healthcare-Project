@@ -29,7 +29,7 @@ class CreateAccountsTable extends Migration
             $table->string('state')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('country')->nullable();
-            $table->dateTime('start_date');
+            $table->dateTime('start_date')->nullable();
             $table->integer('physicians_needed')->unsigned()->default(0);
             $table->integer('apps_needed')->unsigned()->default(0);
             $table->integer('physician_hours_per_month')->unsigned()->default(0);
