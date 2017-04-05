@@ -15,6 +15,46 @@ class Account extends Model
     protected $dates = ['start_date'];
 
     /**
+     * Get the Recruiter (Employee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function recruiter()
+    {
+        return $this->belongsTo(Employee::class, 'recruiter_id');
+    }
+
+    /**
+     * Get the Manager (Employee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function manager()
+    {
+        return $this->belongsTo(Employee::class, 'manager_id');
+    }
+
+    /**
+     * Get the Practice for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function practice()
+    {
+        return $this->belongsTo(Practice::class);
+    }
+
+    /**
+     * Get the Division for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
+    }
+
+    /**
      * Determines if start date is less than 6 months ago.
      *
      * @return boolean

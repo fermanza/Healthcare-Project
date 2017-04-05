@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Division;
+use App\Employee;
+use App\Practice;
 use Illuminate\Http\Request;
 
 class AccountsController extends Controller
@@ -27,6 +30,9 @@ class AccountsController extends Controller
     public function create()
     {
         $account = new Account;
+        $employees = Employee::with('person')->get()->sortBy->fullName();
+        $practices = Practice::orderBy('name')->get();
+        $divisions = Division::orderBy('name')->get();
 
         return view('admin.accounts.create', compact('account'));
     }
