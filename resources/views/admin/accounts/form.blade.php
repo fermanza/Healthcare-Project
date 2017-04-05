@@ -20,14 +20,15 @@
 
     <div class="row">
         <div class="col-md-6">
-            <img src="{{ asset('img/upload-placeholder.jpg') }}" alt="Upload Photo" class="img-thumbnail" width="300">
+            <img src="{{ asset('img/user2-160x160.jpg') }}" alt="Upload Photo" class="img-thumbnail" width="300">
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="google_address">@lang('Address')</label>
-                <input type="text" class="form-control" id="google_address" placeholder="Google API">
+                <input type="text" class="form-control" id="google_address">
             </div>
             <div>
+                {{-- <div id="map"></div> --}}
                 <img src="{{ asset('img/map-placeholder.png') }}" alt="Upload Photo" class="img-thumbnail" width="400">
             </div>
         </div>
@@ -87,14 +88,14 @@
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <label for="city">@lang('City')</label>
-                <input type="text" class="form-control" id="city" name="city" placeholder="Autopopulate City" />
+                <label for="locality">@lang('City')</label>
+                <input type="text" class="form-control" id="locality" name="city" placeholder="Autopopulate City" />
             </div>
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <label for="state">@lang('State')</label>
-                <input type="text" class="form-control" id="state" name="state" placeholder="Autopopulate State" />
+                <label for="administrative_area_level_1">@lang('State')</label>
+                <input type="text" class="form-control" id="administrative_area_level_1" name="state" placeholder="Autopopulate State" />
             </div>
         </div>
     </div>
@@ -281,4 +282,83 @@
         </div>
     </div>
 
+    <input type="hidden" id="street_number" />
+    <input type="hidden" id="route" />
+    <input type="hidden" id="country" />
+    <input type="hidden" id="postal_code" />
+
 </form>
+
+@push('styles')
+    <style>
+        #map {
+            height: 500px;
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script>
+      var placeSearch, autocomplete;
+      var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'short_name',
+        country: 'long_name',
+        postal_code: 'short_name'
+      };
+
+      function initAutocomplete() {
+        // Create the autocomplete object, restricting the search to geographical
+        // location types.
+        autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */(document.getElementById('google_address')),
+            {types: ['geocode']});
+
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        autocomplete.addListener('place_changed', fillInAddress);
+      }
+
+      function fillInAddress() {
+        // Get the place details from the autocomplete object.
+        var place = autocomplete.getPlace();
+
+        for (var component in componentForm) {
+          document.getElementById(component).value = '';
+          document.getElementById(component).disabled = false;
+        }
+
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form.
+        for (var i = 0; i < place.address_components.length; i++) {
+          var addressType = place.address_components[i].types[0];
+          if (componentForm[addressType]) {
+            var val = place.address_components[i][componentForm[addressType]];
+            document.getElementById(addressType).value = val;
+          }
+        }
+      }
+
+      // Bias the autocomplete object to the user's geographical location,
+      // as supplied by the browser's 'navigator.geolocation' object.
+      function geolocate() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var geolocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            var circle = new google.maps.Circle({
+              center: geolocation,
+              radius: position.coords.accuracy
+            });
+            autocomplete.setBounds(circle.getBounds());
+          });
+        }
+      }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6c4prh5LPl0vynfoez7XFNOpE1IekV6g&libraries=places&callback=initAutocomplete" async defer></script>
+@endpush
