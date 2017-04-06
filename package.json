@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "admin-lte": "^2.3.11",
+    "bootstrap-datepicker": "^1.6.4",
     "bootstrap-datetime-picker": "^2.4.4",
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^3.2.3",

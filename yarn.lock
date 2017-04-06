@@ -718,6 +718,12 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
+bootstrap-datepicker@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/bootstrap-datepicker/-/bootstrap-datepicker-1.6.4.tgz#889ebeced8eaa2ff15ec1f273e4b07531cc43da0"
+  dependencies:
+    jquery ">=1.7.1"
+
 bootstrap-datetime-picker@^2.4.4:
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/bootstrap-datetime-picker/-/bootstrap-datetime-picker-2.4.4.tgz#b7cfe843a3c6d221c03293c9a464a4cc35d73968"
@@ -2407,7 +2413,7 @@ jquery-mousewheel@~3.1.13:
   version "3.1.13"
   resolved "https://registry.yarnpkg.com/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz#06f0335f16e353a695e7206bf50503cb523a6ee5"
 
-jquery@>=1.7, jquery@^3.1.1:
+jquery@>=1.7, jquery@>=1.7.1, jquery@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.1.1.tgz#347c1c21c7e004115e0a4da32cece041fad3c8a3"
 

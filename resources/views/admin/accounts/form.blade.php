@@ -5,13 +5,13 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="name">@lang('Name')</label>
-                <input type="text" class="form-control" id="name" name="name" />
+                <input type="text" class="form-control" id="name" name="name" required />
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="site_code">@lang('Site Code')</label>
-                <input type="text" class="form-control" id="site_code" name="site_code" />
+                <input type="text" class="form-control" id="site_code" name="site_code" required />
             </div>
         </div>
     </div>
@@ -111,8 +111,8 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="start_date">@lang('Start Date')</label>
-                <div class="input-group">
-                    <input type="text" class="form-control datetimepicker" id="start_date" name="start_date" />
+                <div class="input-group date datetimepicker">
+                    <input type="text" class="form-control" id="start_date" name="start_date" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
@@ -162,98 +162,175 @@
 
     <hr />
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-
+    <div class="internal-plan-checkboxes">
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="press_release" />
                         @lang('Has a press release gone out announcing newstart, and if so when?')
                     </label>
-                    <input type="text" name="press_release_date" />
                 </div>
+            </div>
+            <div class="col-md-3">
+                <div class="input-group date datepicker">
+                    <input type="text" class="form-control" name="press_release_date" placeholder="When?" />
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="management_change_mailers" />
                         @lang('Have mailers gone out announcing management change?')
                     </label>
                 </div>
+            </div>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="recruiting_mailers" />
                         @lang('Have mailers gone out for recruiting?')
                     </label>
                 </div>
+            </div>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="email_blast" />
                         @lang('Have email blasts gone out?')
                     </label>
                 </div>
+            </div>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="purl_campaign" />
                         @lang('PURL Campaign')
                     </label>
                 </div>
+            </div>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="marketing_slick" />
                         @lang('Account Marketing slick generated')
                     </label>
                 </div>
+            </div>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="collaboration_recruiting_team" />
                         @lang('Do we need to set up a collaboration recruiting team, and if so, who is on the team?')
                     </label>
-                    <input type="text" name="collaboration_recruiting_team_names" />
                 </div>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="collaboration_recruiting_team_names" placeholder="Who is on the team?" />
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="compensation_grid" />
                         @lang('What is the compensation grid, including sign on bonuses or retention bonuses?')
                     </label>
-                    <input type="text" name="compensation_grid_bonuses" />
                 </div>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="compensation_grid_bonuses" placeholder="Compensation grid" />
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="recruiting_incentives" />
                         @lang('What additional recruiting incentives do we have in place?')
                     </label>
-                    <input type="text" name="recruiting_incentives_description" />
                 </div>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="recruiting_incentives_description" placeholder="Additional recruiting incentives" />
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="locum_companies_notified" />
                         @lang('Have you notified the locum companies?')
                     </label>
                 </div>
+            </div>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="search_firms_notified" />
                         @lang('Have you notified the 3rd party search firms?')
                     </label>
                 </div>
+            </div>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
                         <input type="checkbox" value="1" name="departments_coordinated" />
                         @lang('Have you coordinated with the on site hospital marketing department physicians liaisons and internal recruiter?')
                     </label>
                 </div>
-
+            </div>
+            <div class="col-md-6">
+                
             </div>
         </div>
     </div>

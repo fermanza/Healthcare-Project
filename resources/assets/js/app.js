@@ -20,6 +20,9 @@ require('select2');
 // DateTime Picker
 require('bootstrap-datetime-picker');
 
+// DatePicker
+require('bootstrap-datepicker');
+
 // FastClick
 const FastClick = require('fastclick');
 FastClick.attach(document.body);

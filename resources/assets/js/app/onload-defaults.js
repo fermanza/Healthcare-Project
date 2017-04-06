@@ -30,7 +30,17 @@ $(() => {
 
     // DateTime Picker
     $('.datetimepicker').datetimepicker({
-        format: 'yyyy-mm-dd hh:ii'
+        format: 'yyyy-mm-dd hh:ii',
+        autoclose: true,
+        todayHighlight: true
+    });
+
+
+    // DatePicker
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayHighlight: true
     });
 
 });

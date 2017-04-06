@@ -61,6 +61,9 @@ class Account extends Model
      */
     public function isRecentlyCreated()
     {
+        if (! $this->start_date) {
+            return false;
+        }
         // Six months ago
         $pastDate = Carbon::now()->subMonths(6);
 
