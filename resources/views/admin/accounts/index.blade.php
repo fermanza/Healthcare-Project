@@ -31,7 +31,7 @@
                         <td>{{ $account->state }}</td>
                         <td>{{ $account->start_date }}</td>
                         <td class="text-center">
-                            <a href="javascript:;" class="btn btn-xs btn-primary">
+                            <a href="{{ route('admin.accounts.edit', [$account]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>
                             </a>
                             <a href="javascript:;" class="btn btn-xs btn-danger">
