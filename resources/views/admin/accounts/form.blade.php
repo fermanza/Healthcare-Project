@@ -20,14 +20,20 @@
 
     <div class="row">
         <div class="col-md-6">
-            <img src="{{ asset('img/user2-160x160.jpg') }}" alt="Upload Photo" class="img-thumbnail" width="300">
+            <div class="image-upload center-block mt15" 
+                data-upload-path="/admin/accounts/image" 
+                data-current-path="/img/upload-placeholder.png" 
+                data-success="updatePathInput"
+            >
+            </div>
+            <input type="hidden" id="photo_path" name="photo_path" />
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label for="google_address">@lang('Address')</label>
                 <input type="text" class="form-control" id="google_address" name="google_address">
             </div>
-            <div>
+            <div class="text-center">
                 {{-- <div id="map"></div> --}}
                 <img src="{{ asset('img/map-placeholder.png') }}" alt="Upload Photo" class="img-thumbnail" width="400">
             </div>
@@ -376,47 +382,52 @@
 
 @push('scripts')
     <script>
-      var placeSearch, autocomplete;
-      var componentForm = {
-        street_number: 'short_name',
-        route: 'long_name',
-        locality: 'long_name',
-        administrative_area_level_1: 'long_name',
-        country: 'long_name',
-        postal_code: 'short_name'
-      };
+        /* Google Address */
+        var placeSearch, autocomplete;
+        var componentForm = {
+            street_number: 'short_name',
+            route: 'long_name',
+            locality: 'long_name',
+            administrative_area_level_1: 'long_name',
+            country: 'long_name',
+            postal_code: 'short_name'
+        };
 
-      function initAutocomplete() {
-        // Create the autocomplete object, restricting the search to geographical
-        // location types.
-        autocomplete = new google.maps.places.Autocomplete(
-            /** @type {!HTMLInputElement} */(document.getElementById('google_address')),
-            {types: ['geocode']});
+        function initAutocomplete() {
+            // Create the autocomplete object, restricting the search to geographical location types.
+            autocomplete = new google.maps.places.Autocomplete(
+                (document.getElementById('google_address')), {
+                    types: ['geocode']
+                });
 
-        // When the user selects an address from the dropdown, populate the address
-        // fields in the form.
-        autocomplete.addListener('place_changed', fillInAddress);
-      }
-
-      function fillInAddress() {
-        // Get the place details from the autocomplete object.
-        var place = autocomplete.getPlace();
-
-        for (var component in componentForm) {
-          document.getElementById(component).value = '';
-          document.getElementById(component).disabled = false;
+            // When the user selects an address from the dropdown, populate the address fields in the form.
+            autocomplete.addListener('place_changed', fillInAddress);
         }
 
-        // Get each component of the address from the place details
-        // and fill the corresponding field on the form.
-        for (var i = 0; i < place.address_components.length; i++) {
-          var addressType = place.address_components[i].types[0];
-          if (componentForm[addressType]) {
-            var val = place.address_components[i][componentForm[addressType]];
-            document.getElementById(addressType).value = val;
-          }
+        function fillInAddress() {
+            // Get the place details from the autocomplete object.
+            var place = autocomplete.getPlace();
+
+            for (var component in componentForm) {
+                document.getElementById(component).value = '';
+                document.getElementById(component).disabled = false;
+            }
+
+            // Get each component of the address from the place details and fill the corresponding field on the form.
+            for (var i = 0; i < place.address_components.length; i++) {
+                var addressType = place.address_components[i].types[0];
+                if (componentForm[addressType]) {
+                    var val = place.address_components[i][componentForm[addressType]];
+                    document.getElementById(addressType).value = val;
+                }
+            }
         }
-      }
+        /* END Google Address */
+
+        // Image upload
+        function updatePathInput(response) {
+            $('#photo_path').val(response.path);
+        }
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6c4prh5LPl0vynfoez7XFNOpE1IekV6g&libraries=places&callback=initAutocomplete" async defer></script>

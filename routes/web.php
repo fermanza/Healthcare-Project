@@ -23,6 +23,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->get('sidebar-collapse', 'SidebarController@collapse');
     $router->get('sidebar-expand', 'SidebarController@expand');
 
+    $router->post('accounts/image', 'AccountsController@image');
     $router->resource('accounts', 'AccountsController');
 
 });

@@ -43,4 +43,7 @@ $(() => {
         todayHighlight: true
     });
 
+    // Image Upload
+    require('./image-upload')
+
 });

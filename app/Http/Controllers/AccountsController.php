@@ -50,6 +50,7 @@ class AccountsController extends Controller
         $account = new Account;
         $account->name = $request->name;
         $account->site_code = $request->site_code;
+        $account->photo_path = $request->photo_path;
         $account->recruiter_id = $request->recruiter_id;
         $account->manager_id = $request->manager_id;
         $account->practice_id = $request->practice_id;
@@ -130,5 +131,26 @@ class AccountsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Upload an image to Storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function image(Request $request)
+    {
+        $this->validate($request, ['file' => 'required|image']);
+
+        $file = $request->file('file');
+
+        if (! $file->isValid()) {
+            return response()->json(['message' => __('Error with uploaded file. Try again.')], 409);
+        }
+
+        $path = $file->store('account-images');
+
+        return response()->json(['path' => '/'.$path]);
     }
 }
