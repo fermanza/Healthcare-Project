@@ -435,29 +435,25 @@
 
 @push('scripts')
     <script>
-        /* Google Address */
-        var placeSearch, autocomplete, map, marker;
-        var componentForm = {
-            street_number: 'short_name',
-            route: 'long_name',
-            locality: 'long_name',
-            administrative_area_level_1: 'long_name',
-            country: 'long_name',
-            postal_code: 'short_name'
-        };
-        var $latitude = $('#latitude');
-        var $longitude = $('#longitude');
-
         function initAutocomplete() {
-            var mapOptions, markerOptions;
-            var lat = Number($latitude.val());
-            var lng = Number($longitude.val());
+            var map, marker, mapOptions, markerOptions;
+            var lat = Number($('#latitude').val());
+            var lng = Number($('#longitude').val());
             // Create the autocomplete object, restricting the search to geographical location types.
-            autocomplete = new google.maps.places.Autocomplete(
+            var autocomplete = new google.maps.places.Autocomplete(
                 (document.getElementById('google_address')), {
                     types: ['geocode']
                 }
             );
+
+            var componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                locality: 'long_name',
+                administrative_area_level_1: 'long_name',
+                country: 'long_name',
+                postal_code: 'short_name'
+            };
 
             mapOptions = { zoom: 15 };
             mapOptions.center = (lat && lng) ? { lat: lat, lng: lng } : { lat: 42.99092, lng: -71.4682532 };
@@ -472,10 +468,12 @@
             marker = new google.maps.Marker(markerOptions);
 
             // When the user selects an address from the dropdown, populate the address fields in the form.
-            autocomplete.addListener('place_changed', fillInAddress);
+            autocomplete.addListener('place_changed', function () {
+                fillInAddress(autocomplete, componentForm, map, marker);
+            });
         }
 
-        function fillInAddress() {
+        function fillInAddress(autocomplete, componentForm, map, marker) {
             // Get the place details from the autocomplete object.
             var place = autocomplete.getPlace();
             var location = place.geometry.location;
@@ -497,8 +495,8 @@
             // Center map and set marker position.
             map.setCenter(location);
             marker.setPosition(location);
-            $latitude.val(location.lat());
-            $longitude.val(location.lng());
+            $('#latitude').val(location.lat());
+            $('#longitude').val(location.lng());
         }
         /* END Google Address */
 
