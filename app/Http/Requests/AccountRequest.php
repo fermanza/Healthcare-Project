@@ -26,6 +26,8 @@ class AccountRequest extends FormRequest
             'state' => '',
             'zip_code' => '',
             'country' => '',
+            'latitude' => 'between:-90,90',
+            'longitude' => 'between:-180,180',
             'start_date' => 'nullable|date_format:"Y-m-d H:i"',
             'physicians_needed' => 'integer|min:0',
             'apps_needed' => 'integer|min:0',
@@ -66,6 +68,8 @@ class AccountRequest extends FormRequest
         $account->state = $this->state;
         $account->zip_code = $this->zip_code;
         $account->country = $this->country;
+        $account->latitude = $this->latitude;
+        $account->longitude = $this->longitude;
         $account->start_date = $this->start_date ? $this->start_date.':00': null;
         $account->physicians_needed = $this->physicians_needed;
         $account->apps_needed = $this->apps_needed;

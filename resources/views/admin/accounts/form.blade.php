@@ -46,8 +46,8 @@
                 @endif
             </div>
             <div class="text-center">
-                {{-- <div id="map"></div> --}}
-                <img src="{{ asset('img/map-placeholder.png') }}" alt="Upload Photo" class="img-thumbnail" width="400">
+                <div id="map"></div>
+                {{-- <img src="{{ asset('img/map-placeholder.png') }}" alt="Upload Photo" class="img-thumbnail" width="400"> --}}
             </div>
         </div>
     </div>
@@ -136,10 +136,12 @@
         </div>
     </div>
 
-    <input type="hidden" id="street_number" name="number" />
-    <input type="hidden" id="route" name="street" />
-    <input type="hidden" id="country" name="country" />
-    <input type="hidden" id="postal_code" name="zip_code" />
+    <input type="hidden" id="street_number" name="number" value="{{ old('number') ?: $account->number }}" />
+    <input type="hidden" id="route" name="street" value="{{ old('street') ?: $account->street }}" />
+    <input type="hidden" id="country" name="country" value="{{ old('country') ?: $account->country }}" />
+    <input type="hidden" id="postal_code" name="zip_code" value="{{ old('zip_code') ?: $account->zip_code }}" />
+    <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude') ?: $account->latitude }}" />
+    <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude') ?: $account->longitude }}" />
 
     <hr />
 
@@ -415,7 +417,7 @@
     
     <div class="row">
         <div class="col-md-12 text-right">
-            <button type="submit" class="btn {{ $action == 'create' ? 'btn-success' : 'btn-default' }}">
+            <button type="submit" class="btn {{ $action == 'create' ? 'btn-success' : 'btn-info' }}">
                 {{ $action == 'create' ? 'Create' : 'Update' }}
             </button>
         </div>
@@ -426,7 +428,7 @@
 @push('styles')
     <style>
         #map {
-            height: 500px;
+            height: 300px;
         }
     </style>
 @endpush
@@ -434,7 +436,7 @@
 @push('scripts')
     <script>
         /* Google Address */
-        var placeSearch, autocomplete;
+        var placeSearch, autocomplete, map, marker;
         var componentForm = {
             street_number: 'short_name',
             route: 'long_name',
@@ -443,13 +445,31 @@
             country: 'long_name',
             postal_code: 'short_name'
         };
+        var $latitude = $('#latitude');
+        var $longitude = $('#longitude');
 
         function initAutocomplete() {
+            var mapOptions, markerOptions;
+            var lat = Number($latitude.val());
+            var lng = Number($longitude.val());
             // Create the autocomplete object, restricting the search to geographical location types.
             autocomplete = new google.maps.places.Autocomplete(
                 (document.getElementById('google_address')), {
                     types: ['geocode']
-                });
+                }
+            );
+
+            mapOptions = { zoom: 15 };
+            mapOptions.center = (lat && lng) ? { lat: lat, lng: lng } : { lat: 42.99092, lng: -71.4682532 };
+
+            // Create a Google Map
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+            markerOptions = { map: map };
+            markerOptions.position = (lat && lng) ? { lat: lat, lng: lng } : null;
+
+            // Create a Google Marker
+            marker = new google.maps.Marker(markerOptions);
 
             // When the user selects an address from the dropdown, populate the address fields in the form.
             autocomplete.addListener('place_changed', fillInAddress);
@@ -458,6 +478,7 @@
         function fillInAddress() {
             // Get the place details from the autocomplete object.
             var place = autocomplete.getPlace();
+            var location = place.geometry.location;
 
             for (var component in componentForm) {
                 document.getElementById(component).value = '';
@@ -472,6 +493,12 @@
                     document.getElementById(addressType).value = val;
                 }
             }
+
+            // Center map and set marker position.
+            map.setCenter(location);
+            marker.setPosition(location);
+            $latitude.val(location.lat());
+            $longitude.val(location.lng());
         }
         /* END Google Address */
 
