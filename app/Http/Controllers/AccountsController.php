@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Account;
 use App\Division;
 use App\Employee;
@@ -128,5 +129,19 @@ class AccountsController extends Controller
         $path = $file->store('account-images');
 
         return response()->json(['path' => '/'.$path]);
+    }
+
+    /**
+     * Streams the Account's internal plan.
+     *
+     * @param  \App\Account  $account
+     * @return \Illuminate\Http\Response
+     */
+    public function internalPlan(Account $account)
+    {
+        // return view('pdfs.internal-plan', compact('account'));
+        $pdf = PDF::loadView('pdfs.internal-plan', compact('account'));
+
+        return $pdf->download('internal-plan.pdf');
     }
 }

@@ -24,6 +24,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->get('sidebar-expand', 'SidebarController@expand');
 
     $router->post('accounts/image', 'AccountsController@image');
+    $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
     $router->resource('accounts', 'AccountsController');
 
 });

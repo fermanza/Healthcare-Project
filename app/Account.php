@@ -12,7 +12,10 @@ class Account extends Model
      *
      * @var array
      */
-    protected $dates = ['start_date'];
+    protected $dates = [
+        'start_date',
+        'press_release_date',
+    ];
 
     /**
      * Get the Recruiter (Employee) for the Account.

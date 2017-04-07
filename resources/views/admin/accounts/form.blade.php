@@ -393,7 +393,7 @@
     @if ($action == 'edit')
         <div class="row">
             <div class="col-md-12 text-center">
-                <a href="javascript:;" class="btn btn-primary">@lang('Create PDF')</a>
+                <a href="{{ route('admin.accounts.internalPlan', [$account]) }}" class="btn btn-primary">@lang('Create PDF')</a>
                 <br />
                 @lang('To give internal plan')
             </div>
@@ -506,5 +506,5 @@
         }
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6c4prh5LPl0vynfoez7XFNOpE1IekV6g&libraries=places&callback=initAutocomplete" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps.key') }}&libraries=places&callback=initAutocomplete" async defer></script>
 @endpush
