@@ -1,13 +1,14 @@
 @include('common/errors')
 
-<form action="{{ route('admin.accounts.store') }}" method="POST">
+<form action="{{ $action == 'create' ? route('admin.accounts.store') : route('admin.accounts.update', [$account]) }}" method="POST">
     {{ csrf_field() }}
+    {{ $action == 'edit' ? method_field('PATCH') : '' }}
     
     <div class="row">
         <div class="col-md-6">
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 <label for="name">@lang('Name')</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required autofocus />
+                <input type="text" class="form-control" id="name" name="name" value="{{ old('name') ?: $account->name }}" required autofocus />
                 @if ($errors->has('name'))
                     <span class="help-block"><strong>{{ $errors->first('name') }}</strong></span>
                 @endif
@@ -16,7 +17,7 @@
         <div class="col-md-6">
             <div class="form-group{{ $errors->has('site_code') ? ' has-error' : '' }}">
                 <label for="site_code">@lang('Site Code')</label>
-                <input type="text" class="form-control" id="site_code" name="site_code" value="{{ old('site_code') }}" required />
+                <input type="text" class="form-control" id="site_code" name="site_code" value="{{ old('site_code') ?: $account->site_code }}" required />
                 @if ($errors->has('site_code'))
                     <span class="help-block"><strong>{{ $errors->first('site_code') }}</strong></span>
                 @endif
@@ -30,16 +31,16 @@
         <div class="col-md-6">
             <div class="image-upload center-block mt15" 
                 data-upload-path="/admin/accounts/image" 
-                data-current-path="/img/upload-placeholder.png" 
+                data-current-path="{{ old('photo_path') ?: $account->photo_path ?: '/img/upload-placeholder.png' }}" 
                 data-success="updatePathInput"
             >
             </div>
-            <input type="hidden" id="photo_path" name="photo_path" />
+            <input type="hidden" id="photo_path" name="photo_path" value="{{ old('photo_path') ?: $account->photo_path }}" />
         </div>
         <div class="col-md-6">
             <div class="form-group{{ $errors->has('google_address') ? ' has-error' : '' }}">
                 <label for="google_address">@lang('Address')</label>
-                <input type="text" class="form-control" id="google_address" name="google_address" value="{{ old('google_address') }}" />
+                <input type="text" class="form-control" id="google_address" name="google_address" value="{{ old('google_address') ?: $account->google_address }}" />
                 @if ($errors->has('google_address'))
                     <span class="help-block"><strong>{{ $errors->first('google_address') }}</strong></span>
                 @endif
@@ -60,7 +61,7 @@
                 <select class="form-control select2" id="recruiter_id" name="recruiter_id">
                     <option value="" disabled selected></option>
                     @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}" {{ old('recruiter_id') == $employee->id ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                        <option value="{{ $employee->id }}" {{ (old('recruiter_id') == $employee->id ?: $employee->id == $account->recruiter_id) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('recruiter_id'))
@@ -74,7 +75,7 @@
                 <select class="form-control select2" id="manager_id" name="manager_id">
                     <option value="" disabled selected></option>
                     @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}" {{ old('manager_id') == $employee->id ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                        <option value="{{ $employee->id }}" {{ (old('manager_id') == $employee->id ?: $employee->id == $account->manager_id) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('manager_id'))
@@ -93,7 +94,7 @@
                 <select class="form-control select2" id="practice_id" name="practice_id">
                     <option value="" disabled selected></option>
                     @foreach ($practices as $practice)
-                        <option value="{{ $practice->id }}" {{ old('practice_id') == $practice->id ? 'selected': '' }}>{{ $practice->name }}</option>
+                        <option value="{{ $practice->id }}" {{ (old('practice_id') == $practice->id ?: $practice->id == $account->practice_id) ? 'selected': '' }}>{{ $practice->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('practice_id'))
@@ -107,7 +108,7 @@
                 <select class="form-control select2" id="division_id" name="division_id">
                     <option value="" disabled selected></option>
                     @foreach ($divisions as $division)
-                        <option value="{{ $division->id }}" {{ old('division_id') == $division->id ? 'selected': '' }}>{{ $division->name }}</option>
+                        <option value="{{ $division->id }}" {{ (old('division_id') == $division->id ?: $division->id == $account->division_id) ? 'selected': '' }}>{{ $division->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('division_id'))
@@ -118,7 +119,7 @@
         <div class="col-md-3">
             <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
                 <label for="locality">@lang('City')</label>
-                <input type="text" class="form-control" id="locality" name="city" value="{{ old('city') }}" />
+                <input type="text" class="form-control" id="locality" name="city" value="{{ old('city') ?: $account->city }}" />
                 @if ($errors->has('city'))
                     <span class="help-block"><strong>{{ $errors->first('city') }}</strong></span>
                 @endif
@@ -127,7 +128,7 @@
         <div class="col-md-3">
             <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
                 <label for="administrative_area_level_1">@lang('State')</label>
-                <input type="text" class="form-control" id="administrative_area_level_1" name="state" value="{{ old('state') }}" />
+                <input type="text" class="form-control" id="administrative_area_level_1" name="state" value="{{ old('state') ?: $account->state }}" />
                 @if ($errors->has('state'))
                     <span class="help-block"><strong>{{ $errors->first('state') }}</strong></span>
                 @endif
@@ -147,7 +148,7 @@
             <div class="form-group{{ $errors->has('start_date') ? ' has-error' : '' }}">
                 <label for="start_date">@lang('Start Date')</label>
                 <div class="input-group date datetimepicker">
-                    <input type="text" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') }}" />
+                    <input type="text" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') ?: $account->start_date ? $account->start_date->format('Y-m-d H:i') : '' }}" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
                 @if ($errors->has('start_date'))
@@ -159,9 +160,9 @@
             @if ($action == 'edit')
                 <div class="bg-success">
                     <br />
-                    Account created
-                    <strong>3</strong>
-                    months ago.
+                    Account created in the last
+                    <strong>6</strong>
+                    months.
                     <br />&nbsp;
                 </div>
             @endif
@@ -174,7 +175,7 @@
         <div class="col-md-6">
             <div class="form-group{{ $errors->has('physicians_needed') ? ' has-error' : '' }}">
                 <label for="physicians_needed">@lang('No. of Physicians needed')</label>
-                <input type="number" class="form-control" id="physicians_needed" name="physicians_needed" min="0" value="0" />
+                <input type="number" class="form-control" id="physicians_needed" name="physicians_needed" min="0" value="{{ old('physicians_needed') ?: $account->physicians_needed ?: '0' }}" />
                 @if ($errors->has('physicians_needed'))
                     <span class="help-block"><strong>{{ $errors->first('physicians_needed') }}</strong></span>
                 @endif
@@ -183,7 +184,7 @@
         <div class="col-md-6">
             <div class="form-group{{ $errors->has('apps_needed') ? ' has-error' : '' }}">
                 <label for="apps_needed">@lang('No. of APPs needed')</label>
-                <input type="number" class="form-control" id="apps_needed" name="apps_needed" min="0" value="0" />
+                <input type="number" class="form-control" id="apps_needed" name="apps_needed" min="0" value="{{ old('apps_needed') ?: $account->apps_needed ?: '0' }}" />
                 @if ($errors->has('apps_needed'))
                     <span class="help-block"><strong>{{ $errors->first('apps_needed') }}</strong></span>
                 @endif
@@ -195,7 +196,7 @@
         <div class="col-md-6">
             <div class="form-group{{ $errors->has('physician_hours_per_month') ? ' has-error' : '' }}">
                 <label for="physician_hours_per_month">@lang('No. of hours for Physicians per month')</label>
-                <input type="number" class="form-control" id="physician_hours_per_month" name="physician_hours_per_month" min="0" value="0" />
+                <input type="number" class="form-control" id="physician_hours_per_month" name="physician_hours_per_month" min="0" value="{{ old('physician_hours_per_month') ?: $account->physician_hours_per_month ?: '0' }}" />
                 @if ($errors->has('physician_hours_per_month'))
                     <span class="help-block"><strong>{{ $errors->first('physician_hours_per_month') }}</strong></span>
                 @endif
@@ -204,7 +205,7 @@
         <div class="col-md-6">
             <div class="form-group{{ $errors->has('app_hours_per_month') ? ' has-error' : '' }}">
                 <label for="app_hours_per_month">@lang('No. of hours for APP per month')</label>
-                <input type="number" class="form-control" id="app_hours_per_month" name="app_hours_per_month" min="0" value="0" />
+                <input type="number" class="form-control" id="app_hours_per_month" name="app_hours_per_month" min="0" value="{{ old('app_hours_per_month') ?: $account->app_hours_per_month ?: '0' }}" />
                 @if ($errors->has('app_hours_per_month'))
                     <span class="help-block"><strong>{{ $errors->first('app_hours_per_month') }}</strong></span>
                 @endif
@@ -219,14 +220,14 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="press_release" {{ old('press_release') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="press_release" {{ (old('press_release') ?: $account->press_release) ? 'checked' : '' }} />
                         @lang('Has a press release gone out announcing newstart, and if so when?')
                     </label>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="input-group date datepicker">
-                    <input type="text" class="form-control" name="press_release_date" value="{{ old('press_release_date') }}" placeholder="When?" />
+                    <input type="text" class="form-control" name="press_release_date" value="{{ old('press_release_date') ?: $account->press_release_date }}" placeholder="When?" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
@@ -236,7 +237,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="management_change_mailers" {{ old('management_change_mailers') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="management_change_mailers" {{ (old('management_change_mailers') ?: $account->management_change_mailers) ? 'checked' : '' }} />
                         @lang('Have mailers gone out announcing management change?')
                     </label>
                 </div>
@@ -250,7 +251,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="recruiting_mailers" {{ old('recruiting_mailers') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="recruiting_mailers" {{ (old('recruiting_mailers') ?: $account->recruiting_mailers) ? 'checked' : '' }} />
                         @lang('Have mailers gone out for recruiting?')
                     </label>
                 </div>
@@ -264,7 +265,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="email_blast" {{ old('email_blast') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="email_blast" {{ (old('email_blast') ?: $account->email_blast) ? 'checked' : '' }} />
                         @lang('Have email blasts gone out?')
                     </label>
                 </div>
@@ -278,7 +279,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="purl_campaign" {{ old('purl_campaign') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="purl_campaign" {{ (old('purl_campaign') ?: $account->purl_campaign) ? 'checked' : '' }} />
                         @lang('PURL Campaign')
                     </label>
                 </div>
@@ -292,7 +293,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="marketing_slick" {{ old('marketing_slick') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="marketing_slick" {{ (old('marketing_slick') ?: $account->marketing_slick) ? 'checked' : '' }} />
                         @lang('Account Marketing slick generated')
                     </label>
                 </div>
@@ -306,13 +307,13 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="collaboration_recruiting_team" {{ old('collaboration_recruiting_team') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="collaboration_recruiting_team" {{ (old('collaboration_recruiting_team') ?: $account->collaboration_recruiting_team) ? 'checked' : '' }} />
                         @lang('Do we need to set up a collaboration recruiting team, and if so, who is on the team?')
                     </label>
                 </div>
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="collaboration_recruiting_team_names" value="{{ old('collaboration_recruiting_team_names') }}" placeholder="Who is on the team?" />
+                <input type="text" class="form-control" name="collaboration_recruiting_team_names" value="{{ old('collaboration_recruiting_team_names') ?: $account->collaboration_recruiting_team_names }}" placeholder="Who is on the team?" />
             </div>
         </div>
 
@@ -320,13 +321,13 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="compensation_grid" {{ old('compensation_grid') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="compensation_grid" {{ (old('compensation_grid') ?: $account->compensation_grid) ? 'checked' : '' }} />
                         @lang('What is the compensation grid, including sign on bonuses or retention bonuses?')
                     </label>
                 </div>
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="compensation_grid_bonuses" value="{{ old('compensation_grid_bonuses') }}" placeholder="Compensation grid" />
+                <input type="text" class="form-control" name="compensation_grid_bonuses" value="{{ old('compensation_grid_bonuses') ?: $account->compensation_grid_bonuses }}" placeholder="Compensation grid" />
             </div>
         </div>
 
@@ -334,13 +335,13 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="recruiting_incentives" {{ old('recruiting_incentives') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="recruiting_incentives" {{ (old('recruiting_incentives') ?: $account->recruiting_incentives) ? 'checked' : '' }} />
                         @lang('What additional recruiting incentives do we have in place?')
                     </label>
                 </div>
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="recruiting_incentives_description" value="{{ old('recruiting_incentives_description') }}" placeholder="Additional recruiting incentives" />
+                <input type="text" class="form-control" name="recruiting_incentives_description" value="{{ old('recruiting_incentives_description') ?: $account->recruiting_incentives_description }}" placeholder="Additional recruiting incentives" />
             </div>
         </div>
 
@@ -348,7 +349,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="locum_companies_notified" {{ old('locum_companies_notified') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="locum_companies_notified" {{ (old('locum_companies_notified') ?: $account->locum_companies_notified) ? 'checked' : '' }} />
                         @lang('Have you notified the locum companies?')
                     </label>
                 </div>
@@ -362,7 +363,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="search_firms_notified" {{ old('search_firms_notified') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="search_firms_notified" {{ (old('search_firms_notified') ?: $account->search_firms_notified) ? 'checked' : '' }} />
                         @lang('Have you notified the 3rd party search firms?')
                     </label>
                 </div>
@@ -376,7 +377,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="departments_coordinated" {{ old('departments_coordinated') ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="departments_coordinated" {{ (old('departments_coordinated') ?: $account->departments_coordinated) ? 'checked' : '' }} />
                         @lang('Have you coordinated with the on site hospital marketing department physicians liaisons and internal recruiter?')
                     </label>
                 </div>
@@ -414,7 +415,9 @@
     
     <div class="row">
         <div class="col-md-12 text-right">
-            <button type="submit" class="btn btn-success">@lang('Submit')</button>
+            <button type="submit" class="btn {{ $action == 'create' ? 'btn-success' : 'btn-default' }}">
+                {{ $action == 'create' ? 'Create' : 'Update' }}
+            </button>
         </div>
     </div>
 

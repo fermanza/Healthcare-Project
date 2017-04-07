@@ -88,12 +88,14 @@ class AccountsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AccountRequest $request, Account $account)
     {
-        //
+        $request->save($account);
+
+        return redirect()->route('admin.accounts.edit', [$account]);
     }
 
     /**

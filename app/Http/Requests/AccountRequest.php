@@ -12,7 +12,7 @@ class AccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|min:3',
             'site_code' => 'required|numeric',
             'photo_path' => '',
             'recruiter_id' => 'exists:employees,id',
