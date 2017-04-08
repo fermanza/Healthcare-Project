@@ -106,3 +106,11 @@ $factory->define(App\Account::class, function (Faker\Generator $faker) {
         'departments_coordinated' => $faker->boolean,
     ];
 });
+
+$factory->define(App\File::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+        'filename' => $faker->sentence,
+        'path' => $faker->image,
+    ];
+});

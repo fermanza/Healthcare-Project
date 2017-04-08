@@ -100,7 +100,7 @@ class AccountsController extends Controller
 
         flash(__('Account updated.'));
 
-        return redirect()->route('admin.accounts.edit', [$account]);
+        return back();
     }
 
     /**
@@ -129,13 +129,7 @@ class AccountsController extends Controller
     {
         $this->validate($request, ['file' => 'required|image']);
 
-        $file = $request->file('file');
-
-        if (! $file->isValid()) {
-            return response()->json(['message' => __('Error with uploaded file. Try again.')], 409);
-        }
-
-        $path = $file->store('account-images');
+        $path = $request->file('file')->store('account-images');
 
         return response()->json(['path' => '/'.$path]);
     }
@@ -150,6 +144,6 @@ class AccountsController extends Controller
     {
         $pdf = PDF::loadView('pdfs.internal-plan', compact('account'));
 
-        return $pdf->download('internal-plan.pdf');
+        return $pdf->download(__('internal-plan.pdf'));
     }
 }

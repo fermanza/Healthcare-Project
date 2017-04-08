@@ -15,4 +15,14 @@ class FormRequest extends BaseFormRequest
     {
         return true;
     }
+
+    /**
+     * Determine if this is a create request.
+     *
+     * @return bool
+     */
+    public function isCreate()
+    {
+        return $this->method() == 'POST';
+    }
 }

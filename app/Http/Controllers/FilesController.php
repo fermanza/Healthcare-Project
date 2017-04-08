@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\File;
 use Illuminate\Http\Request;
+use App\Http\Requests\FileRequest;
 
 class FilesController extends Controller
 {
@@ -14,7 +15,7 @@ class FilesController extends Controller
      */
     public function index()
     {
-        $files = File::all();
+        $files = File::where('active', true)->get();
 
         return view('admin.files.index', compact('files'));
     }
@@ -37,15 +38,17 @@ class FilesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\FileRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FileRequest $request)
     {
         $file = new File;
-        // $request->save($file);
+        $request->save($file);
 
-        return redirect()->route('admin.files.edit', [$file]);
+        flash(__('File created.'));
+
+        return back();
     }
 
     /**
@@ -77,25 +80,32 @@ class FilesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\FileRequest  $request
      * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, File $file)
+    public function update(FileRequest $request, File $file)
     {
-        // $request->save($account);
+        $request->save($file);
 
-        return redirect()->route('admin.files.edit', [$file]);
+        flash(__('File updated.'));
+
+        return redirect()->route('admin.files.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(File $file)
     {
-        //
+        $file->active = false;
+        $file->save();
+
+        flash(__('File deleted.'));
+
+        return back();
     }
 }

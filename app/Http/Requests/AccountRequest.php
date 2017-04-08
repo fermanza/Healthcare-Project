@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Database\Eloquent\Model;
+
 class AccountRequest extends FormRequest
 {
     /**
@@ -12,7 +14,7 @@ class AccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3',
+            'name' => 'required',
             'site_code' => 'required|numeric',
             'photo_path' => '',
             'recruiter_id' => 'exists:employees,id',
@@ -52,7 +54,13 @@ class AccountRequest extends FormRequest
         ];
     }
 
-    public function save($account)
+    /**
+     * Save the given model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    public function save(Model $account)
     {
         $account->name = $this->name;
         $account->site_code = $this->site_code;
