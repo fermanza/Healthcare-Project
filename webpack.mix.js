@@ -19,6 +19,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'toastr',
     ]);
    
+mix.sass('resources/assets/sass/vendor.scss', 'public/css');
 mix.sass('resources/assets/sass/app.scss', 'public/css');
 
 mix.browserSync('account-admin.dev');
