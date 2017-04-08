@@ -60,7 +60,13 @@ class FilesController extends Controller
      */
     public function show(File $file)
     {
-        $privateFile = Storage::disk('s3')->get($file->path);
+        try {
+            $privateFile = Storage::disk('s3')->get($file->path);
+        } catch (\Exception $e) {
+            \Log::error($e);
+            flash(__('There was a problem with the file you were trying to download.'), 'error');
+            return back();
+        }
 
         $headers = [
             'Content-Type' => 'application/octet-stream',
