@@ -77,6 +77,7 @@ class AccountsController extends Controller
      */
     public function edit(Account $account)
     {
+        $account->load('siteCodes');
         $employees = Employee::with('person')->get()->sortBy->fullName();
         $practices = Practice::orderBy('name')->get();
         $divisions = Division::orderBy('name')->get();

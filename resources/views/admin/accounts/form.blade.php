@@ -25,6 +25,13 @@
         <div class="col-md-6">
             <div class="form-group{{ $errors->has('site_code') ? ' has-error' : '' }}">
                 <label for="site_code">@lang('Site Code')</label>
+                @if ($action == 'edit')
+                    <small>
+                        <a href="javascript:;" data-toggle="modal" data-target="#site-code-history">
+                            @lang('History')
+                        </a>
+                    </small>
+                @endif
                 <input type="text" class="form-control" id="site_code" name="site_code" value="{{ old('site_code') ?: $account->site_code }}" required />
                 @if ($errors->has('site_code'))
                     <span class="help-block"><strong>{{ $errors->first('site_code') }}</strong></span>
@@ -432,6 +439,40 @@
     </div>
 
 </form>
+
+<div class="modal fade" id="site-code-history" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{ $account->name }} @lang('Site Code') @lang('History')</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>@lang('Site Code')</th>
+                                <th>@lang('Modified At')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($account->siteCodes as $siteCode)
+                                <tr>
+                                    <td>{{ $siteCode->site_code }}</td>
+                                    <td>{{ $siteCode->created_at }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @push('styles')
     <style>

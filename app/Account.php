@@ -67,6 +67,16 @@ class Account extends Model
     }
 
     /**
+     * Get the SiteCodes for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function siteCodes()
+    {
+        return $this->hasMany(SiteCode::class)->latest();
+    }
+
+    /**
      * Determines if start date is less than 6 months ago.
      *
      * @return boolean

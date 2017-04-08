@@ -43,8 +43,10 @@ $(() => {
         todayHighlight: true
     });
 
+
     // Image Upload
     require('./image-upload')
+
 
     // Delete Records
     $('.deletes-record').on('click', function(e) {
@@ -59,5 +61,12 @@ $(() => {
             $deleteForm.submit();
         }
     });
+
+
+    // Mark required Inputs
+    $(':input[required]')
+        .closest('.form-group')
+        .children('label')
+        .append(' <span class="text-danger">*</span>');
 
 });

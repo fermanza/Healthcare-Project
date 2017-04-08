@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\SiteCode;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountRequest extends FormRequest
@@ -62,6 +63,8 @@ class AccountRequest extends FormRequest
      */
     public function save(Model $account)
     {
+        $pastSiteCode = $account->site_code;
+
         $account->name = $this->name;
         $account->site_code = $this->site_code;
         $account->photo_path = $this->photo_path;
@@ -100,5 +103,23 @@ class AccountRequest extends FormRequest
         $account->search_firms_notified = $this->search_firms_notified ?: false;
         $account->departments_coordinated = $this->departments_coordinated ?: false;
         $account->save();
+        
+        if ($pastSiteCode != $this->site_code) {
+            $this->createSiteCodeHistory($account);
+        }
+    }
+
+    /**
+     * Create a SiteCode record.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    public function createSiteCodeHistory($account)
+    {
+        $siteCode = new SiteCode;
+        $siteCode->account_id = $account->id;
+        $siteCode->site_code = $this->site_code;
+        $siteCode->save();
     }
 }

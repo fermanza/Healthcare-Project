@@ -12,6 +12,7 @@
         <title>{{ config('app.name') }}</title>
 
         <!-- Styles -->
+        <link href="{{ mix('/css/vendor.css') }}" rel="stylesheet">
         <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
         @stack('styles')
         @stack('links')
