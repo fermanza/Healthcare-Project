@@ -67,7 +67,7 @@
 
         <div class="content">
             <div class="title m-b-md">
-                {{ config('app.name') }}
+                <img src="{{ asset('img/emcare-logo.png') }}" alt="Logo large" width="340" />
             </div>
         </div>
     </div>

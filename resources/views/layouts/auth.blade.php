@@ -5,7 +5,7 @@
 @section('body')
     <div class="login-box">
         <div class="login-logo">
-            {{ config('app.name') }}
+            <img src="{{ asset('img/emcare-logo-sm.png') }}" alt="Logo small" />
         </div>
         <div class="login-box-body">
             
