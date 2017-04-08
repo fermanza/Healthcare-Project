@@ -3,6 +3,14 @@
 <form action="{{ $action == 'create' ? route('admin.accounts.store') : route('admin.accounts.update', [$account]) }}" method="POST">
     {{ csrf_field() }}
     {{ $action == 'edit' ? method_field('PATCH') : '' }}
+
+    <div class="row">
+        <div class="col-md-12 text-right">
+            <button type="submit" class="btn {{ $action == 'create' ? 'btn-success' : 'btn-info' }}">
+                {{ $action == 'create' ? __('Create') : __('Update') }}
+            </button>
+        </div>
+    </div>
     
     <div class="row">
         <div class="col-md-6">
@@ -229,7 +237,7 @@
             </div>
             <div class="col-md-3">
                 <div class="input-group date datepicker">
-                    <input type="text" class="form-control" name="press_release_date" value="{{ old('press_release_date') ?: $account->press_release_date }}" placeholder="When?" />
+                    <input type="text" class="form-control" name="press_release_date" value="{{ old('press_release_date') ?: $account->press_release_date ? $account->press_release_date->format('Y-m-d') : '' }}" placeholder="When?" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
@@ -418,7 +426,7 @@
     <div class="row">
         <div class="col-md-12 text-right">
             <button type="submit" class="btn {{ $action == 'create' ? 'btn-success' : 'btn-info' }}">
-                {{ $action == 'create' ? 'Create' : 'Update' }}
+                {{ $action == 'create' ? __('Create') : __('Update') }}
             </button>
         </div>
     </div>
