@@ -39,43 +39,49 @@
                     <li class="{{ route_starts_with('admin.accounts') }}">
                         <a href="{{ route('admin.accounts.index') }}">
                             <i class="fa fa-hospital-o"></i>
-                            <span>Accounts</span>
+                            <span>@lang('Accounts')</span>
+                        </a>
+                    </li>
+                    <li class="{{ route_starts_with('admin.files') }}">
+                        <a href="{{ route('admin.files.index') }}">
+                            <i class="fa fa-upload"></i>
+                            <span>@lang('Files')</span>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;">
                             <i class="fa fa-id-card-o"></i>
-                            <span>Employees</span>
+                            <span>@lang('Employees')</span>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;">
                             <i class="fa fa-id-badge"></i>
-                            <span>Position Types</span>
+                            <span>@lang('Position Types')</span>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;">
                             <i class="fa fa-users"></i>
-                            <span>People</span>
+                            <span>@lang('People')</span>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;">
                             <i class="fa fa-map-marker"></i>
-                            <span>Divisions</span>
+                            <span>@lang('Divisions')</span>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;">
                             <i class="fa fa-tag"></i>
-                            <span>Practices</span>
+                            <span>@lang('Practices')</span>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;">
                             <i class="fa fa-flag-o"></i>
-                            <span>Groups</span>
+                            <span>@lang('Groups')</span>
                         </a>
                     </li>
                 </ul>
@@ -107,9 +113,9 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                <b>Version</b> 1.0.0
+                <b>@lang('Version')</b> 1.0.0
             </div>
-            <strong>Copyright &copy; 2017 <a href="/">{{ config('app.name') }}</a>.</strong> All rights reserved.
+            <strong>@lang('Copyright') &copy; 2017 <a href="/">{{ config('app.name') }}</a>.</strong> @lang('All rights reserved').
         </footer>
 
     </div>
