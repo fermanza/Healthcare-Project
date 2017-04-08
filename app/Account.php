@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'active' => true,
+    ];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array

@@ -34,7 +34,13 @@
                             <a href="{{ route('admin.accounts.edit', [$account]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>
                             </a>
-                            <a href="javascript:;" class="btn btn-xs btn-danger">
+                            <a 
+                                href="javascript:;"
+                                class="btn btn-xs btn-danger deletes-record"
+                                data-action="{{ route('admin.accounts.destroy', [$account]) }}"
+                                data-record="{{ $account->id }}"
+                                data-name="{{ $account->name }}"
+                            >
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>

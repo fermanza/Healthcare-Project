@@ -27,6 +27,11 @@
         <div>
             @yield('body')
         </div>
+
+        <form id="delete-form" action="" method="POST" data-message="@lang('Are you sure you want to delete')">
+            {{ csrf_field() }}
+            {{ method_field('DELETE') }}
+        </form>
         
         <!-- Scripts -->
         <script src="{{ mix('/js/manifest.js') }}"></script>

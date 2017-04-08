@@ -19,7 +19,7 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        $accounts = Account::all();
+        $accounts = Account::where('active', true)->get();
 
         return view('admin.accounts.index', compact('accounts'));
     }
@@ -102,12 +102,15 @@ class AccountsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Account $account)
     {
-        //
+        $account->active = false;
+        $account->save();
+
+        return back();
     }
 
     /**

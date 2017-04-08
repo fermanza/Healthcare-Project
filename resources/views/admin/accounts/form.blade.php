@@ -167,7 +167,7 @@
             </div>
         </div>
         <div class="col-md-6 text-center">
-            @if ($action == 'edit')
+            @if ($action == 'edit' && $account->isRecentlyCreated())
                 <div class="bg-success">
                     <br />
                     @lang('Account created in the last')

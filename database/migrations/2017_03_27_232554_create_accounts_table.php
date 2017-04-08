@@ -36,7 +36,6 @@ class CreateAccountsTable extends Migration
             $table->integer('apps_needed')->unsigned()->default(0);
             $table->integer('physician_hours_per_month')->unsigned()->default(0);
             $table->integer('app_hours_per_month')->unsigned()->default(0);
-
             $table->boolean('press_release')->default(false);
             $table->date('press_release_date')->nullable();
             $table->boolean('management_change_mailers')->default(false);
@@ -53,6 +52,7 @@ class CreateAccountsTable extends Migration
             $table->boolean('locum_companies_notified')->default(false);
             $table->boolean('search_firms_notified')->default(false);
             $table->boolean('departments_coordinated')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamps();
 
             $table->foreign('recruiter_id')->references('id')->on('employees')->onDelete('cascade');
