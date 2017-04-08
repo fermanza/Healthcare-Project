@@ -27,6 +27,9 @@
                         <td>{{ $file->filename }}</td>
                         <td>{{ $file->created_at }}</td>
                         <td class="text-center">
+                            <a href="{{ route('admin.files.show', [$file]) }}" class="btn btn-xs btn-default">
+                                <i class="fa fa-download"></i>
+                            </a>
                             <a href="{{ route('admin.files.edit', [$file]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>
                             </a>

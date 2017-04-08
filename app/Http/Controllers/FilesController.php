@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\File;
 use Illuminate\Http\Request;
 use App\Http\Requests\FileRequest;
+use Illuminate\Support\Facades\Storage;
 
 class FilesController extends Controller
 {
@@ -54,12 +55,21 @@ class FilesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(File $file)
     {
-        //
+        $privateFile = Storage::disk('s3')->get($file->path);
+
+        $headers = [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Description' => 'File Transfer',
+            'Content-Disposition' => "attachment; filename={$file->filename}",
+            'filename'=> $file->filename,
+        ];
+
+        return response($privateFile, 200, $headers);
     }
 
     /**

@@ -39,10 +39,10 @@ class FileRequest extends FormRequest
         if ($this->isCreate()) {
             $uploadedFile = $this->file('file');
             $filename = $uploadedFile->getClientOriginalName();
-            $path = $uploadedFile->store('files');
-            
+            $path = $uploadedFile->store('files', 's3');
+
             $file->filename = $filename;
-            $file->path = '/'.$path;
+            $file->path = $path;
         }
             
         $file->name = $this->name;
