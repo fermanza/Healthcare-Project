@@ -27,5 +27,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
     $router->resource('accounts', 'AccountsController');
 
+    $router->resource('files', 'FilesController');
+
 });
 
