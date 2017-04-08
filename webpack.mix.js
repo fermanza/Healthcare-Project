@@ -16,6 +16,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'select2',
         'bootstrap-datetime-picker',
         'bootstrap-datepicker',
+        'toastr',
     ]);
    
 mix.sass('resources/assets/sass/app.scss', 'public/css');

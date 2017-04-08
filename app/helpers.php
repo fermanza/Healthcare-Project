@@ -42,3 +42,17 @@ if (! function_exists('route_is_active')) {
         return '';
     }
 }
+
+if (! function_exists('flash')) {
+    /**
+     * Flashes to the session.
+     *
+     * @param  string  $message
+     * @param  string  $type
+     * @return string
+     */
+    function flash($message, $type = 'success')
+    {
+        Session::flash('flash-message', ['type' => $type, 'message' => $message]);
+    }
+}

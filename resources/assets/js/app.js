@@ -23,6 +23,9 @@ require('bootstrap-datetime-picker');
 // DatePicker
 require('bootstrap-datepicker');
 
+// Toastr
+window.toastr = require('toastr');
+
 // FastClick
 const FastClick = require('fastclick');
 FastClick.attach(document.body);

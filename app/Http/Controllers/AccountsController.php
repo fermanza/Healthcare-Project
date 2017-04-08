@@ -53,6 +53,8 @@ class AccountsController extends Controller
         $account = new Account;
         $request->save($account);
 
+        flash(__('Account created.'));
+
         return redirect()->route('admin.accounts.edit', [$account]);
     }
 
@@ -96,6 +98,8 @@ class AccountsController extends Controller
     {
         $request->save($account);
 
+        flash(__('Account updated.'));
+
         return redirect()->route('admin.accounts.edit', [$account]);
     }
 
@@ -109,6 +113,8 @@ class AccountsController extends Controller
     {
         $account->active = false;
         $account->save();
+
+        flash(__('Account deleted.'));
 
         return back();
     }
@@ -142,7 +148,6 @@ class AccountsController extends Controller
      */
     public function internalPlan(Account $account)
     {
-        // return view('pdfs.internal-plan', compact('account'));
         $pdf = PDF::loadView('pdfs.internal-plan', compact('account'));
 
         return $pdf->download('internal-plan.pdf');
