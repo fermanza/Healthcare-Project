@@ -162,9 +162,9 @@
             @if ($action == 'edit')
                 <div class="bg-success">
                     <br />
-                    Account created in the last
+                    @lang('Account created in the last')
                     <strong>6</strong>
-                    months.
+                    @lang('months').
                     <br />&nbsp;
                 </div>
             @endif
