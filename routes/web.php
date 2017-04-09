@@ -28,6 +28,12 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->resource('accounts', 'AccountsController');
 
     $router->resource('files', 'FilesController');
+    $router->resource('groups', 'GroupsController');
+    $router->resource('practices', 'PracticesController');
+    $router->resource('divisions', 'DivisionsController');
+    $router->resource('people', 'PeopleController');
+    $router->resource('positionTypes', 'PositionTypesController');
+    $router->resource('employees', 'EmployeesController');
 
 });
 

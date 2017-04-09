@@ -32,9 +32,9 @@ class AccountsController extends Controller
     public function create()
     {
         $account = new Account;
-        $employees = Employee::with('person')->get()->sortBy->fullName();
-        $practices = Practice::orderBy('name')->get();
-        $divisions = Division::orderBy('name')->get();
+        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+        $practices = Practice::where('active', true)->orderBy('name')->get();
+        $divisions = Division::where('active', true)->orderBy('name')->get();
         $action = 'create';
 
         $params = compact('account', 'employees', 'practices', 'divisions', 'action');
@@ -78,9 +78,9 @@ class AccountsController extends Controller
     public function edit(Account $account)
     {
         $account->load('siteCodes');
-        $employees = Employee::with('person')->get()->sortBy->fullName();
-        $practices = Practice::orderBy('name')->get();
-        $divisions = Division::orderBy('name')->get();
+        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+        $practices = Practice::where('active', true)->orderBy('name')->get();
+        $divisions = Division::where('active', true)->orderBy('name')->get();
         $action = 'edit';
 
         $params = compact('account', 'employees', 'practices', 'divisions', 'action');

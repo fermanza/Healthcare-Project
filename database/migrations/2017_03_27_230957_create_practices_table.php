@@ -17,6 +17,7 @@ class CreatePracticesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('code')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

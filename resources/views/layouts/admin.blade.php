@@ -50,38 +50,38 @@
                             <span>@lang('Files')</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:;">
+                    <li class="{{ route_starts_with('admin.employees') }}">
+                        <a href="{{ route('admin.employees.index') }}">
                             <i class="fa fa-id-card-o"></i>
                             <span>@lang('Employees')</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:;">
+                    <li class="{{ route_starts_with('admin.positionTypes') }}">
+                        <a href="{{ route('admin.positionTypes.index') }}">
                             <i class="fa fa-id-badge"></i>
                             <span>@lang('Position Types')</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:;">
+                    <li class="{{ route_starts_with('admin.people') }}">
+                        <a href="{{ route('admin.people.index') }}">
                             <i class="fa fa-users"></i>
                             <span>@lang('People')</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:;">
+                    <li class="{{ route_starts_with('admin.divisions') }}">
+                        <a href="{{ route('admin.divisions.index') }}">
                             <i class="fa fa-map-marker"></i>
                             <span>@lang('Divisions')</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:;">
+                    <li class="{{ route_starts_with('admin.practices') }}">
+                        <a href="{{ route('admin.practices.index') }}">
                             <i class="fa fa-tag"></i>
                             <span>@lang('Practices')</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:;">
+                    <li class="{{ route_starts_with('admin.groups') }}">
+                        <a href="{{ route('admin.groups.index') }}">
                             <i class="fa fa-flag-o"></i>
                             <span>@lang('Groups')</span>
                         </a>

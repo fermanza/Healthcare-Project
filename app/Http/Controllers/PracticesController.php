@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Practice;
 use Illuminate\Http\Request;
+use App\Http\Requests\PracticeRequest;
 
 class PracticesController extends Controller
 {
@@ -13,7 +15,9 @@ class PracticesController extends Controller
      */
     public function index()
     {
-        //
+        $practices = Practice::where('active', true)->get();
+
+        return view('admin.practices.index', compact('practices'));
     }
 
     /**
@@ -23,18 +27,28 @@ class PracticesController extends Controller
      */
     public function create()
     {
-        //
+        $practice = new Practice;
+        $action = 'create';
+
+        $params = compact('practice', 'action');
+
+        return view('admin.practices.create', $params);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\PracticeRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PracticeRequest $request)
     {
-        //
+        $practice = new Practice;
+        $request->save($practice);
+
+        flash(__('Practice created.'));
+
+        return redirect()->route('admin.practices.index');
     }
 
     /**
@@ -51,34 +65,47 @@ class PracticesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Practice  $practice
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Practice $practice)
     {
-        //
+        $action = 'edit';
+
+        $params = compact('practice', 'action');
+
+        return view('admin.practices.edit', $params);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\PracticeRequest  $request
+     * @param  \App\Practice  $practice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PracticeRequest $request, Practice $practice)
     {
-        //
+        $request->save($practice);
+
+        flash(__('Practice updated.'));
+
+        return redirect()->route('admin.practices.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Practice  $practice
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Practice $practice)
     {
-        //
+        $practice->active = false;
+        $practice->save();
+
+        flash(__('Practice deleted.'));
+
+        return back();
     }
 }

@@ -19,6 +19,7 @@ class CreateDivisionsTable extends Migration
             $table->string('name');
             $table->string('code')->nullable();
             $table->boolean('is_jv')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamps();
 
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');

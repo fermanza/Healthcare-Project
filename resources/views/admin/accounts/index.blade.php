@@ -14,12 +14,12 @@
         <table class="table table-hover table-bordered datatable">
             <thead>
                 <tr>
-                    <th>@lang('Name')</th>
-                    <th>@lang('Site Code')</th>
-                    <th>@lang('City')</th>
-                    <th>@lang('State')</th>
-                    <th>@lang('Start Date')</th>
-                    <th>@lang('Actions')</th>
+                    <th class="mw200 w100">@lang('Name')</th>
+                    <th class="mw100">@lang('Site Code')</th>
+                    <th class="mw150">@lang('City')</th>
+                    <th class="mw150">@lang('State')</th>
+                    <th class="mw150">@lang('Start Date')</th>
+                    <th class="mw100">@lang('Actions')</th>
                 </tr>
             </thead>
             <tbody>

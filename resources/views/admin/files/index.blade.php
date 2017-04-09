@@ -14,10 +14,10 @@
         <table class="table table-hover table-bordered datatable">
             <thead>
                 <tr>
-                    <th>@lang('Name')</th>
-                    <th>@lang('File Name')</th>
-                    <th>@lang('Created At')</th>
-                    <th>@lang('Actions')</th>
+                    <th class="mw200 w50">@lang('Name')</th>
+                    <th class="mw200 w50">@lang('File Name')</th>
+                    <th class="mw150">@lang('Created At')</th>
+                    <th class="mw100">@lang('Actions')</th>
                 </tr>
             </thead>
             <tbody>

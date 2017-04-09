@@ -1,55 +1,86 @@
 // Margin Zero
-.m0  { margin:        0 !important }
-.mt0 { margin-top:    0 !important }
-.mr0 { margin-right:  0 !important }
-.mb0 { margin-bottom: 0 !important }
-.ml0 { margin-left:   0 !important }
+.m0  { margin:        0 !important; }
+.mt0 { margin-top:    0 !important; }
+.mr0 { margin-right:  0 !important; }
+.mb0 { margin-bottom: 0 !important; }
+.ml0 { margin-left:   0 !important; }
 
 // Padding Zero
-.p0  { padding:        0 !important }
-.pt0 { padding-top:    0 !important }
-.pr0 { padding-right:  0 !important }
-.pb0 { padding-bottom: 0 !important }
-.pl0 { padding-left:   0 !important }
+.p0  { padding:        0 !important; }
+.pt0 { padding-top:    0 !important; }
+.pr0 { padding-right:  0 !important; }
+.pb0 { padding-bottom: 0 !important; }
+.pl0 { padding-left:   0 !important; }
 
 // Margin 5px
-.m5  { margin:        5px !important }
-.mt5 { margin-top:    5px !important }
-.mr5 { margin-right:  5px !important }
-.mb5 { margin-bottom: 5px !important }
-.ml5 { margin-left:   5px !important }
+.m5  { margin:        5px !important; }
+.mt5 { margin-top:    5px !important; }
+.mr5 { margin-right:  5px !important; }
+.mb5 { margin-bottom: 5px !important; }
+.ml5 { margin-left:   5px !important; }
 
 // Padding 5px
-.p5  { padding:        5px !important }
-.pt5 { padding-top:    5px !important }
-.pr5 { padding-right:  5px !important }
-.pb5 { padding-bottom: 5px !important }
-.pl5 { padding-left:   5px !important }
+.p5  { padding:        5px !important; }
+.pt5 { padding-top:    5px !important; }
+.pr5 { padding-right:  5px !important; }
+.pb5 { padding-bottom: 5px !important; }
+.pl5 { padding-left:   5px !important; }
 
 // Margin 10px
-.m10  { margin:        10px !important }
-.mt10 { margin-top:    10px !important }
-.mr10 { margin-right:  10px !important }
-.mb10 { margin-bottom: 10px !important }
-.ml10 { margin-left:   10px !important }
+.m10  { margin:        10px !important; }
+.mt10 { margin-top:    10px !important; }
+.mr10 { margin-right:  10px !important; }
+.mb10 { margin-bottom: 10px !important; }
+.ml10 { margin-left:   10px !important; }
 
 // Padding 10px
-.p10  { padding:        10px !important }
-.pt10 { padding-top:    10px !important }
-.pr10 { padding-right:  10px !important }
-.pb10 { padding-bottom: 10px !important }
-.pl10 { padding-left:   10px !important }
+.p10  { padding:        10px !important; }
+.pt10 { padding-top:    10px !important; }
+.pr10 { padding-right:  10px !important; }
+.pb10 { padding-bottom: 10px !important; }
+.pl10 { padding-left:   10px !important; }
 
 // Margin 15px
-.m15  { margin:        15px !important }
-.mt15 { margin-top:    15px !important }
-.mr15 { margin-right:  15px !important }
-.mb15 { margin-bottom: 15px !important }
-.ml15 { margin-left:   15px !important }
+.m15  { margin:        15px !important; }
+.mt15 { margin-top:    15px !important; }
+.mr15 { margin-right:  15px !important; }
+.mb15 { margin-bottom: 15px !important; }
+.ml15 { margin-left:   15px !important; }
 
 // Padding 15px
-.p15  { padding:        15px !important }
-.pt15 { padding-top:    15px !important }
-.pr15 { padding-right:  15px !important }
-.pb15 { padding-bottom: 15px !important }
-.pl15 { padding-left:   15px !important }
+.p15  { padding:        15px !important; }
+.pt15 { padding-top:    15px !important; }
+.pr15 { padding-right:  15px !important; }
+.pb15 { padding-bottom: 15px !important; }
+.pl15 { padding-left:   15px !important; }
+
+// Min Width
+.mw10 { min-width: 10px !important; }
+.mw20 { min-width: 20px !important; }
+.mw30 { min-width: 30px !important; }
+.mw40 { min-width: 40px !important; }
+.mw50 { min-width: 50px !important; }
+.mw60 { min-width: 60px !important; }
+.mw70 { min-width: 70px !important; }
+.mw80 { min-width: 80px !important; }
+.mw90 { min-width: 90px !important; }
+.mw100 { min-width: 100px !important; }
+.mw110 { min-width: 110px !important; }
+.mw120 { min-width: 120px !important; }
+.mw130 { min-width: 130px !important; }
+.mw140 { min-width: 140px !important; }
+.mw150 { min-width: 150px !important; }
+.mw160 { min-width: 160px !important; }
+.mw170 { min-width: 170px !important; }
+.mw180 { min-width: 180px !important; }
+.mw190 { min-width: 190px !important; }
+.mw200 { min-width: 200px !important; }
+
+// Width (%)
+.w100 { width: 100% !important; }
+.w75 { width: 75% !important; }
+.w66 { width: 66% !important; }
+.w50 { width: 50% !important; }
+.w33 { width: 33% !important; }
+.w25 { width: 25% !important; }
+.w20 { width: 20% !important; }

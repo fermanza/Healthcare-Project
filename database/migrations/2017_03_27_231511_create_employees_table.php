@@ -18,6 +18,7 @@ class CreateEmployeesTable extends Migration
             $table->integer('person_id')->unsigned();
             $table->string('type');
             $table->boolean('is_full_time')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamps();
 
             $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
