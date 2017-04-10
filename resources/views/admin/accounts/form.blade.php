@@ -491,7 +491,8 @@
             // Create the autocomplete object, restricting the search to geographical location types.
             var autocomplete = new google.maps.places.Autocomplete(
                 (document.getElementById('google_address')), {
-                    types: ['geocode']
+                    types: ['geocode'],
+                    componentRestrictions: {country: 'us'}
                 }
             );
 
