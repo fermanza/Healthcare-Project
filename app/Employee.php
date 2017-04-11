@@ -2,10 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
 class Employee extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'tEmployee';
+
     /**
      * Get the Person for the Employee.
      *
@@ -13,7 +18,7 @@ class Employee extends Model
      */
     public function person()
     {
-        return $this->belongsTo(Person::class);
+        return $this->belongsTo(Person::class, 'personId');
     }
 
     /**

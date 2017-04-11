@@ -14,8 +14,8 @@ class PersonRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'firstName' => 'required',
+            'lastName' => 'required',
         ];
     }
 
@@ -27,8 +27,8 @@ class PersonRequest extends FormRequest
      */
     public function save(Model $person)
     {
-        $person->first_name = $this->first_name;
-        $person->last_name = $this->last_name;
+        $person->firstName = $this->firstName;
+        $person->lastName = $this->lastName;
         $person->save();
     }
 }

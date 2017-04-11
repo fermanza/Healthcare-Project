@@ -14,18 +14,16 @@
         <table class="table table-hover table-bordered datatable">
             <thead>
                 <tr>
-                    <th class="mw200 w50">@lang('Name')</th>
                     <th class="mw200 w50">@lang('File Name')</th>
-                    <th class="mw150">@lang('Created At')</th>
+                    <th class="mw200 w50">@lang('File Type')</th>
                     <th class="mw100">@lang('Actions')</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($files as $file)
                     <tr>
-                        <td>{{ $file->name }}</td>
-                        <td>{{ $file->filename }}</td>
-                        <td>{{ $file->created_at }}</td>
+                        <td>{{ $file->fileName }}</td>
+                        <td>{{ $file->type->fileTypeName }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.files.show', [$file]) }}" class="btn btn-xs btn-default">
                                 <i class="fa fa-download"></i>
@@ -37,7 +35,7 @@
                                 href="javascript:;"
                                 class="btn btn-xs btn-danger deletes-record"
                                 data-action="{{ route('admin.files.destroy', [$file]) }}"
-                                data-record="{{ $file->id }}"
+                                data-record="{{ $file->fileLogId }}"
                                 data-name="{{ $file->name }}"
                             >
                                 <i class="fa fa-trash"></i>

@@ -7,31 +7,31 @@
     <div class="row">
         <div class="col-md-12">
 
-             <div class="form-group{{ $errors->has('person_id') ? ' has-error' : '' }}">
-                <label for="person_id">@lang('Person')</label>
-                <select class="form-control select2" id="person_id" name="person_id" required>
+             <div class="form-group{{ $errors->has('personId') ? ' has-error' : '' }}">
+                <label for="personId">@lang('Person')</label>
+                <select class="form-control select2" id="personId" name="personId" required>
                     <option value="" disabled selected></option>
                     @foreach ($people as $person)
-                        <option value="{{ $person->id }}" {{ (old('person_id') == $person->id ?: $person->id == $employee->person_id) ? 'selected': '' }}>{{ $person->fullName() }}</option>
+                        <option value="{{ $person->id }}" {{ (old('personId') == $person->id ?: $person->id == $employee->personId) ? 'selected': '' }}>{{ $person->fullName() }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('person_id'))
-                    <span class="help-block"><strong>{{ $errors->first('person_id') }}</strong></span>
+                @if ($errors->has('personId'))
+                    <span class="help-block"><strong>{{ $errors->first('personId') }}</strong></span>
                 @endif
             </div>
 
-            <div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
-                <label for="type">@lang('Type')</label>
-                <input type="text" class="form-control" id="type" name="type" value="{{ old('type') ?: $employee->type }}" required />
-                @if ($errors->has('type'))
-                    <span class="help-block"><strong>{{ $errors->first('type') }}</strong></span>
+            <div class="form-group{{ $errors->has('employeeType') ? ' has-error' : '' }}">
+                <label for="employeeType">@lang('Type')</label>
+                <input type="text" class="form-control" id="employeeType" name="employeeType" value="{{ old('employeeType') ?: $employee->employeeType }}" required />
+                @if ($errors->has('employeeType'))
+                    <span class="help-block"><strong>{{ $errors->first('employeeType') }}</strong></span>
                 @endif
             </div>
 
             <div class="form-group">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="is_full_time" {{ (old('is_full_time') ?: $employee->is_full_time) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="isFullTime" {{ (old('isFullTime') ?: $employee->isFullTime) ? 'checked' : '' }} />
                         <strong>@lang('Is Full Time')</strong>
                     </label>
                 </div>

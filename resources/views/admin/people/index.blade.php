@@ -22,8 +22,8 @@
             <tbody>
                 @foreach($people as $person)
                     <tr>
-                        <td>{{ $person->first_name }}</td>
-                        <td>{{ $person->last_name }}</td>
+                        <td>{{ $person->firstName }}</td>
+                        <td>{{ $person->lastName }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.people.edit', [$person]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>

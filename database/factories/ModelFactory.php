@@ -107,9 +107,26 @@ $factory->define(App\Account::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\File::class, function (Faker\Generator $faker) {
+$factory->define(App\FileType::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word,
+    ];
+});
+
+$factory->define(App\FileStatus::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+    ];
+});
+
+$factory->define(App\File::class, function (Faker\Generator $faker) {
+    return [
+        'file_type_id' => function () {
+            return factory(App\FileType::class)->create()->id;
+        },
+        'file_status_id' => function () {
+            return factory(App\FileStatus::class)->create()->id;
+        },
         'filename' => $faker->sentence,
         'path' => $faker->image,
     ];

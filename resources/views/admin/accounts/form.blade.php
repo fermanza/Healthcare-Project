@@ -414,7 +414,7 @@
             </div>
         </div>
 
-        <hr />
+       {{--  <hr />
         
         <div class="row text-center">
             <div class="col-md-6">
@@ -425,7 +425,7 @@
             <div class="col-md-6">
                 <a href="javascript:;" class="btn btn-primary">@lang('Email Marketing Slick')</a>
             </div>
-        </div>
+        </div> --}}
     @endif
 
     <hr />

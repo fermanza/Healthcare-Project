@@ -26,22 +26,22 @@
             <div class="form-group">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="is_jv" {{ (old('is_jv') ?: $division->is_jv) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="isJV" {{ (old('isJV') ?: $division->isJV) ? 'checked' : '' }} />
                         <strong>@lang('Is JV')</strong>
                     </label>
                 </div>
             </div>
 
-             <div class="form-group{{ $errors->has('group_id') ? ' has-error' : '' }}">
-                <label for="group_id">@lang('Group')</label>
-                <select class="form-control select2" id="group_id" name="group_id" required>
+             <div class="form-group{{ $errors->has('groupId') ? ' has-error' : '' }}">
+                <label for="groupId">@lang('Group')</label>
+                <select class="form-control select2" id="groupId" name="groupId" required>
                     <option value="" disabled selected></option>
                     @foreach ($groups as $group)
-                        <option value="{{ $group->id }}" {{ (old('group_id') == $group->id ?: $group->id == $division->group_id) ? 'selected': '' }}>{{ $group->name }}</option>
+                        <option value="{{ $group->id }}" {{ (old('groupId') == $group->id ?: $group->id == $division->groupId) ? 'selected': '' }}>{{ $group->name }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('group_id'))
-                    <span class="help-block"><strong>{{ $errors->first('group_id') }}</strong></span>
+                @if ($errors->has('groupId'))
+                    <span class="help-block"><strong>{{ $errors->first('groupId') }}</strong></span>
                 @endif
             </div>
 

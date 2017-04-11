@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\File;
+use App\FileType;
 use Illuminate\Http\Request;
 use App\Http\Requests\FileRequest;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,7 @@ class FilesController extends Controller
      */
     public function index()
     {
-        $files = File::where('active', true)->get();
+        $files = File::with('type')->where('active', true)->get();
 
         return view('admin.files.index', compact('files'));
     }
@@ -29,9 +30,12 @@ class FilesController extends Controller
     public function create()
     {
         $file = new File;
+        $fileTypes = FileType::whereIn('fileTypeName', [
+            'Increased Comp', 'Shifts', 'Interviews & Applications'
+        ])->orderBy('fileTypeName')->get();
         $action = 'create';
 
-        $params = compact('file', 'action');
+        $params = compact('file', 'fileTypes', 'action');
 
         return view('admin.files.create', $params);
     }
@@ -49,7 +53,7 @@ class FilesController extends Controller
 
         flash(__('File created.'));
 
-        return back();
+        return redirect()->route('admin.files.index');
     }
 
     /**
@@ -86,9 +90,12 @@ class FilesController extends Controller
      */
     public function edit(File $file)
     {
+        $fileTypes = FileType::whereIn('fileTypeName', [
+            'Increased Comp', 'Shifts', 'Interviews & Applications'
+        ])->orderBy('fileTypeName')->get();
         $action = 'edit';
 
-        $params = compact('file', 'action');
+        $params = compact('file', 'action', 'fileTypes');
 
         return view('admin.files.edit', $params);
     }

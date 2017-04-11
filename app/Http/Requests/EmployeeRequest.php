@@ -14,9 +14,9 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'person_id' => 'required|exists:people,id',
-            'type' => 'required',
-            'is_full_time' => 'boolean',
+            'personId' => 'required|exists:tPerson,id',
+            'employeeType' => 'required',
+            'isFullTime' => 'boolean',
         ];
     }
 
@@ -28,9 +28,9 @@ class EmployeeRequest extends FormRequest
      */
     public function save(Model $employee)
     {
-        $employee->person_id = $this->person_id;
-        $employee->type = $this->type;
-        $employee->is_full_time = $this->is_full_time ?: false;
+        $employee->personId = $this->personId;
+        $employee->employeeType = $this->employeeType;
+        $employee->isFullTime = $this->isFullTime ?: false;
         $employee->save();
     }
 }

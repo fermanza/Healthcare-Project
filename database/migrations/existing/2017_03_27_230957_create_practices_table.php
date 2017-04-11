@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDivisionsTable extends Migration
+class CreatePracticesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,10 @@ class CreateDivisionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('divisions', function (Blueprint $table) {
+        Schema::create('tPractice', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('group_id')->unsigned();
             $table->string('name');
             $table->string('code')->nullable();
-            $table->boolean('is_jv')->default(false);
-            $table->boolean('active')->default(true);
-            $table->timestamps();
-
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });
     }
 
@@ -33,6 +27,6 @@ class CreateDivisionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('divisions');
+        Schema::dropIfExists('tPractice');
     }
 }

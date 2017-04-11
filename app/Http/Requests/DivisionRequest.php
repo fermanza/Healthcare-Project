@@ -14,10 +14,10 @@ class DivisionRequest extends FormRequest
     public function rules()
     {
         return [
-            'group_id' => 'required|exists:groups,id',
+            'groupId' => 'required|exists:tGroup,id',
             'name' => 'required',
             'code' => '',
-            'is_jv' => 'boolean',
+            'isJV' => 'boolean',
         ];
     }
 
@@ -29,10 +29,10 @@ class DivisionRequest extends FormRequest
      */
     public function save(Model $division)
     {
-        $division->group_id = $this->group_id;
+        $division->groupId = $this->groupId;
         $division->name = $this->name;
         $division->code = $this->code;
-        $division->is_jv = $this->is_jv ?: false;
+        $division->isJV = $this->isJV ?: false;
         $division->save();
     }
 }

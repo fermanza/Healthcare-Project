@@ -24,8 +24,8 @@
                 @foreach($employees as $employee)
                     <tr>
                         <td>{{ $employee->fullName() }}</td>
-                        <td>{{ $employee->type }}</td>
-                        <td>{{ $employee->is_full_time ? __('Yes') : __('No') }}</td>
+                        <td>{{ $employee->employeeType }}</td>
+                        <td>{{ $employee->isFullTime ? __('Yes') : __('No') }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.employees.edit', [$employee]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>

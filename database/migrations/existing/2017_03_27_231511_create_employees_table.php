@@ -13,15 +13,13 @@ class CreateEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('tEmployee', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('person_id')->unsigned();
-            $table->string('type');
-            $table->boolean('is_full_time')->default(false);
-            $table->boolean('active')->default(true);
-            $table->timestamps();
+            $table->integer('personId')->unsigned();
+            $table->string('employeeType');
+            $table->boolean('isFullTime')->default(false);
 
-            $table->foreign('person_id')->references('id')->on('people')->onDelete('cascade');
+            $table->foreign('personId')->references('id')->on('tPerson')->onDelete('cascade');
         });
     }
 
@@ -32,6 +30,6 @@ class CreateEmployeesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('tEmployee');
     }
 }

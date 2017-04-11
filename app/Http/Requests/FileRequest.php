@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\FileFeed;
+use Carbon\Carbon;
+use App\FileStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class FileRequest extends FormRequest
@@ -14,7 +17,7 @@ class FileRequest extends FormRequest
     public function rules()
     {
         $commonRules = [
-            'name' => 'required',
+            'fileTypeId' => 'required|exists:tFilelogFileType,fileTypeId',
         ];
 
         if ($this->isCreate()) {
@@ -41,11 +44,15 @@ class FileRequest extends FormRequest
             $filename = $uploadedFile->getClientOriginalName();
             $path = $uploadedFile->store('files', 's3');
 
+            $file->statusTypeId = FileStatus::where('statusName', 'To Process')->value('statusTypeId');
+            $file->feedId = FileFeed::where('feedName', 'Admin Uploads')->value('feedId');
             $file->filename = $filename;
             $file->path = $path;
+            $file->downloadDate = Carbon::now();
+            $file->modifiedDate = Carbon::now();
         }
             
-        $file->name = $this->name;
+        $file->fileTypeId = $this->fileTypeId;
         $file->save();
     }
 }

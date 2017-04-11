@@ -2,10 +2,15 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
 class Division extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'tDivision';
+
     /**
      * Get the Group for the Division.
      *
@@ -13,7 +18,7 @@ class Division extends Model
      */
     public function group()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(Group::class, 'groupId');
     }
 
     /**
@@ -23,6 +28,6 @@ class Division extends Model
      */
     public function accounts()
     {
-        return $this->hasMany(Account::class);
+        return $this->hasMany(Account::class, 'accountId');
     }
 }

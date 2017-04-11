@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSiteCodesTable extends Migration
+class CreatePeopleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateSiteCodesTable extends Migration
      */
     public function up()
     {
-        Schema::create('site_codes', function (Blueprint $table) {
+        Schema::create('tPerson', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('account_id')->unsigned();
-            $table->string('site_code');
-            $table->timestamps();
-
-            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+            $table->string('firstName');
+            $table->string('lastName');
         });
     }
 
@@ -30,6 +27,6 @@ class CreateSiteCodesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('site_codes');
+        Schema::dropIfExists('tPerson');
     }
 }

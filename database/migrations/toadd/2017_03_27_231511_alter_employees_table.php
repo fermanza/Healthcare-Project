@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePositionTypesTable extends Migration
+class AlterEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreatePositionTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('position_types', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
+        Schema::table('tEmployee', function (Blueprint $table) {
             $table->boolean('active')->default(true);
-            $table->timestamps();
         });
     }
 
@@ -28,6 +25,6 @@ class CreatePositionTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('position_types');
+        //
     }
 }

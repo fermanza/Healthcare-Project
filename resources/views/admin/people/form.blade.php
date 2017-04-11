@@ -7,19 +7,19 @@
     <div class="row">
         <div class="col-md-12">
 
-            <div class="form-group{{ $errors->has('first_name') ? ' has-error' : '' }}">
-                <label for="first_name">@lang('First Name')</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ old('first_name') ?: $person->first_name }}" required />
-                @if ($errors->has('first_name'))
-                    <span class="help-block"><strong>{{ $errors->first('first_name') }}</strong></span>
+            <div class="form-group{{ $errors->has('firstName') ? ' has-error' : '' }}">
+                <label for="firstName">@lang('First Name')</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" value="{{ old('firstName') ?: $person->firstName }}" required />
+                @if ($errors->has('firstName'))
+                    <span class="help-block"><strong>{{ $errors->first('firstName') }}</strong></span>
                 @endif
             </div>
 
-            <div class="form-group{{ $errors->has('last_name') ? ' has-error' : '' }}">
-                <label for="last_name">@lang('Last Name')</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ old('last_name') ?: $person->last_name }}" required />
-                @if ($errors->has('last_name'))
-                    <span class="help-block"><strong>{{ $errors->first('last_name') }}</strong></span>
+            <div class="form-group{{ $errors->has('lastName') ? ' has-error' : '' }}">
+                <label for="lastName">@lang('Last Name')</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" value="{{ old('lastName') ?: $person->lastName }}" required />
+                @if ($errors->has('lastName'))
+                    <span class="help-block"><strong>{{ $errors->first('lastName') }}</strong></span>
                 @endif
             </div>
 

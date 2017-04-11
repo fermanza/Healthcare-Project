@@ -26,7 +26,7 @@
                     <tr>
                         <td>{{ $division->name }}</td>
                         <td>{{ $division->code }}</td>
-                        <td>{{ $division->is_jv ? __('Yes') : __('No') }}</td>
+                        <td>{{ $division->isJV ? __('Yes') : __('No') }}</td>
                         <td>{{ $division->group->name }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.divisions.edit', [$division]) }}" class="btn btn-xs btn-primary">

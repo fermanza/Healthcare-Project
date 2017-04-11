@@ -3,10 +3,16 @@
 namespace App;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'tAccount';
+
     /**
      * The model's attributes.
      *

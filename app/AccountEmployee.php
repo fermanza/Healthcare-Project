@@ -2,12 +2,12 @@
 
 namespace App;
 
-class PositionType extends Model
+class AccountEmployee extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'tPositionType';
+    protected $table = 'tAccountToEmployee';
 }
