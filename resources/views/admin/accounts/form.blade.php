@@ -23,8 +23,8 @@
             </div>
         </div>
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('site_code') ? ' has-error' : '' }}">
-                <label for="site_code">@lang('Site Code')</label>
+            <div class="form-group{{ $errors->has('siteCode') ? ' has-error' : '' }}">
+                <label for="siteCode">@lang('Site Code')</label>
                 @if ($action == 'edit')
                     <small>
                         <a href="javascript:;" data-toggle="modal" data-target="#site-code-history">
@@ -32,9 +32,9 @@
                         </a>
                     </small>
                 @endif
-                <input type="text" class="form-control" id="site_code" name="site_code" value="{{ old('site_code') ?: $account->site_code }}" required />
-                @if ($errors->has('site_code'))
-                    <span class="help-block"><strong>{{ $errors->first('site_code') }}</strong></span>
+                <input type="text" class="form-control" id="siteCode" name="siteCode" value="{{ old('siteCode') ?: $account->siteCode }}" required />
+                @if ($errors->has('siteCode'))
+                    <span class="help-block"><strong>{{ $errors->first('siteCode') }}</strong></span>
                 @endif
             </div>
         </div>
@@ -46,23 +46,22 @@
         <div class="col-md-6">
             <div class="image-upload center-block mt15" 
                 data-upload-path="/admin/accounts/image" 
-                data-current-path="{{ old('photo_path') ?: $account->photo_path ?: '/img/upload-placeholder.png' }}" 
+                data-current-path="{{ old('photoPath') ?: $account->photoPath ?: '/img/upload-placeholder.png' }}" 
                 data-success="updatePathInput"
             >
             </div>
-            <input type="hidden" id="photo_path" name="photo_path" value="{{ old('photo_path') ?: $account->photo_path }}" />
+            <input type="hidden" id="photoPath" name="photoPath" value="{{ old('photoPath') ?: $account->photoPath }}" />
         </div>
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('google_address') ? ' has-error' : '' }}">
-                <label for="google_address">@lang('Address')</label>
-                <input type="text" class="form-control" id="google_address" name="google_address" value="{{ old('google_address') ?: $account->google_address }}" />
-                @if ($errors->has('google_address'))
-                    <span class="help-block"><strong>{{ $errors->first('google_address') }}</strong></span>
+            <div class="form-group{{ $errors->has('googleAddress') ? ' has-error' : '' }}">
+                <label for="googleAddress">@lang('Address')</label>
+                <input type="text" class="form-control" id="googleAddress" name="googleAddress" value="{{ old('googleAddress') ?: $account->googleAddress }}" />
+                @if ($errors->has('googleAddress'))
+                    <span class="help-block"><strong>{{ $errors->first('googleAddress') }}</strong></span>
                 @endif
             </div>
             <div class="text-center">
                 <div id="map"></div>
-                {{-- <img src="{{ asset('img/map-placeholder.png') }}" alt="Upload Photo" class="img-thumbnail" width="400"> --}}
             </div>
         </div>
     </div>
@@ -71,30 +70,30 @@
     
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('recruiter_id') ? ' has-error' : '' }}">
-                <label for="recruiter_id">@lang('Recruiter')</label>
-                <select class="form-control select2" id="recruiter_id" name="recruiter_id">
+            <div class="form-group{{ $errors->has('recruiterId') ? ' has-error' : '' }}">
+                <label for="recruiterId">@lang('Recruiter')</label>
+                <select class="form-control select2" id="recruiterId" name="recruiterId">
                     <option value="" disabled selected></option>
                     @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}" {{ (old('recruiter_id') == $employee->id ?: $employee->id == $account->recruiter_id) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                        <option value="{{ $employee->id }}" {{ (old('recruiterId') == $employee->id ?: ($account->recruiter && $account->recruiter->employeeId == $employee->id)) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('recruiter_id'))
-                    <span class="help-block"><strong>{{ $errors->first('recruiter_id') }}</strong></span>
+                @if ($errors->has('recruiterId'))
+                    <span class="help-block"><strong>{{ $errors->first('recruiterId') }}</strong></span>
                 @endif
             </div>
         </div>
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('manager_id') ? ' has-error' : '' }}">
-                <label for="manager_id">@lang('Manager')</label>
-                <select class="form-control select2" id="manager_id" name="manager_id">
+            <div class="form-group{{ $errors->has('managerId') ? ' has-error' : '' }}">
+                <label for="managerId">@lang('Manager')</label>
+                <select class="form-control select2" id="managerId" name="managerId">
                     <option value="" disabled selected></option>
                     @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}" {{ (old('manager_id') == $employee->id ?: $employee->id == $account->manager_id) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                        <option value="{{ $employee->id }}" {{ (old('managerId') == $employee->id ?: ($account->manager && $account->manager->employeeId == $employee->id)) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('manager_id'))
-                    <span class="help-block"><strong>{{ $errors->first('manager_id') }}</strong></span>
+                @if ($errors->has('managerId'))
+                    <span class="help-block"><strong>{{ $errors->first('managerId') }}</strong></span>
                 @endif
             </div>
         </div>
@@ -104,30 +103,30 @@
     
     <div class="row">
         <div class="col-md-3">
-            <div class="form-group{{ $errors->has('practice_id') ? ' has-error' : '' }}">
-                <label for="practice_id">@lang('Practice')</label>
-                <select class="form-control select2" id="practice_id" name="practice_id">
+            <div class="form-group{{ $errors->has('practiceId') ? ' has-error' : '' }}">
+                <label for="practiceId">@lang('Practice')</label>
+                <select class="form-control select2" id="practiceId" name="practiceId">
                     <option value="" disabled selected></option>
                     @foreach ($practices as $practice)
-                        <option value="{{ $practice->id }}" {{ (old('practice_id') == $practice->id ?: $practice->id == $account->practice_id) ? 'selected': '' }}>{{ $practice->name }}</option>
+                        <option value="{{ $practice->id }}" {{ (old('practiceId') == $practice->id ?: $account->practices->contains($practice)) ? 'selected': '' }}>{{ $practice->name }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('practice_id'))
-                    <span class="help-block"><strong>{{ $errors->first('practice_id') }}</strong></span>
+                @if ($errors->has('practiceId'))
+                    <span class="help-block"><strong>{{ $errors->first('practiceId') }}</strong></span>
                 @endif
             </div>
         </div>
         <div class="col-md-3">
-            <div class="form-group{{ $errors->has('division_id') ? ' has-error' : '' }}">
-                <label for="division_id">@lang('Division')</label>
-                <select class="form-control select2" id="division_id" name="division_id">
+            <div class="form-group{{ $errors->has('divisionId') ? ' has-error' : '' }}">
+                <label for="divisionId">@lang('Division')</label>
+                <select class="form-control select2" id="divisionId" name="divisionId">
                     <option value="" disabled selected></option>
                     @foreach ($divisions as $division)
-                        <option value="{{ $division->id }}" {{ (old('division_id') == $division->id ?: $division->id == $account->division_id) ? 'selected': '' }}>{{ $division->name }}</option>
+                        <option value="{{ $division->id }}" {{ (old('divisionId') == $division->id ?: $division->id == $account->divisionId) ? 'selected': '' }}>{{ $division->name }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('division_id'))
-                    <span class="help-block"><strong>{{ $errors->first('division_id') }}</strong></span>
+                @if ($errors->has('divisionId'))
+                    <span class="help-block"><strong>{{ $errors->first('divisionId') }}</strong></span>
                 @endif
             </div>
         </div>
@@ -154,7 +153,7 @@
     <input type="hidden" id="street_number" name="number" value="{{ old('number') ?: $account->number }}" />
     <input type="hidden" id="route" name="street" value="{{ old('street') ?: $account->street }}" />
     <input type="hidden" id="country" name="country" value="{{ old('country') ?: $account->country }}" />
-    <input type="hidden" id="postal_code" name="zip_code" value="{{ old('zip_code') ?: $account->zip_code }}" />
+    <input type="hidden" id="postal_code" name="zipCode" value="{{ old('zipCode') ?: $account->zipCode }}" />
     <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude') ?: $account->latitude }}" />
     <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude') ?: $account->longitude }}" />
 
@@ -162,14 +161,14 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('start_date') ? ' has-error' : '' }}">
-                <label for="start_date">@lang('Start Date')</label>
-                <div class="input-group date datetimepicker">
-                    <input type="text" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') ?: $account->start_date ? $account->start_date->format('Y-m-d H:i') : '' }}" />
+            <div class="form-group{{ $errors->has('startDate') ? ' has-error' : '' }}">
+                <label for="startDate">@lang('Start Date')</label>
+                <div class="input-group date datepicker">
+                    <input type="text" class="form-control" id="startDate" name="startDate" value="{{ old('startDate') ?: $account->startDate ? $account->startDate->format('Y-m-d') : '' }}" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
-                @if ($errors->has('start_date'))
-                    <span class="help-block"><strong>{{ $errors->first('start_date') }}</strong></span>
+                @if ($errors->has('startDate'))
+                    <span class="help-block"><strong>{{ $errors->first('startDate') }}</strong></span>
                 @endif
             </div>
         </div>
@@ -190,20 +189,20 @@
     
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('physicians_needed') ? ' has-error' : '' }}">
-                <label for="physicians_needed">@lang('No. of Physicians needed')</label>
-                <input type="number" class="form-control" id="physicians_needed" name="physicians_needed" min="0" value="{{ old('physicians_needed') ?: $account->physicians_needed ?: '0' }}" />
-                @if ($errors->has('physicians_needed'))
-                    <span class="help-block"><strong>{{ $errors->first('physicians_needed') }}</strong></span>
+            <div class="form-group{{ $errors->has('physiciansNeeded') ? ' has-error' : '' }}">
+                <label for="physiciansNeeded">@lang('No. of Physicians needed')</label>
+                <input type="number" class="form-control" id="physiciansNeeded" name="physiciansNeeded" min="0" value="{{ old('physiciansNeeded') ?: $account->physiciansNeeded ?: '0' }}" />
+                @if ($errors->has('physiciansNeeded'))
+                    <span class="help-block"><strong>{{ $errors->first('physiciansNeeded') }}</strong></span>
                 @endif
             </div>
         </div>
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('apps_needed') ? ' has-error' : '' }}">
-                <label for="apps_needed">@lang('No. of APPs needed')</label>
-                <input type="number" class="form-control" id="apps_needed" name="apps_needed" min="0" value="{{ old('apps_needed') ?: $account->apps_needed ?: '0' }}" />
-                @if ($errors->has('apps_needed'))
-                    <span class="help-block"><strong>{{ $errors->first('apps_needed') }}</strong></span>
+            <div class="form-group{{ $errors->has('appsNeeded') ? ' has-error' : '' }}">
+                <label for="appsNeeded">@lang('No. of APPs needed')</label>
+                <input type="number" class="form-control" id="appsNeeded" name="appsNeeded" min="0" value="{{ old('appsNeeded') ?: $account->appsNeeded ?: '0' }}" />
+                @if ($errors->has('appsNeeded'))
+                    <span class="help-block"><strong>{{ $errors->first('appsNeeded') }}</strong></span>
                 @endif
             </div>
         </div>
@@ -211,20 +210,20 @@
     
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('physician_hours_per_month') ? ' has-error' : '' }}">
-                <label for="physician_hours_per_month">@lang('No. of hours for Physicians per month')</label>
-                <input type="number" class="form-control" id="physician_hours_per_month" name="physician_hours_per_month" min="0" value="{{ old('physician_hours_per_month') ?: $account->physician_hours_per_month ?: '0' }}" />
-                @if ($errors->has('physician_hours_per_month'))
-                    <span class="help-block"><strong>{{ $errors->first('physician_hours_per_month') }}</strong></span>
+            <div class="form-group{{ $errors->has('physicianHoursPerMonth') ? ' has-error' : '' }}">
+                <label for="physicianHoursPerMonth">@lang('No. of hours for Physicians per month')</label>
+                <input type="number" class="form-control" id="physicianHoursPerMonth" name="physicianHoursPerMonth" min="0" value="{{ old('physicianHoursPerMonth') ?: $account->physicianHoursPerMonth ?: '0' }}" />
+                @if ($errors->has('physicianHoursPerMonth'))
+                    <span class="help-block"><strong>{{ $errors->first('physicianHoursPerMonth') }}</strong></span>
                 @endif
             </div>
         </div>
         <div class="col-md-6">
-            <div class="form-group{{ $errors->has('app_hours_per_month') ? ' has-error' : '' }}">
-                <label for="app_hours_per_month">@lang('No. of hours for APP per month')</label>
-                <input type="number" class="form-control" id="app_hours_per_month" name="app_hours_per_month" min="0" value="{{ old('app_hours_per_month') ?: $account->app_hours_per_month ?: '0' }}" />
-                @if ($errors->has('app_hours_per_month'))
-                    <span class="help-block"><strong>{{ $errors->first('app_hours_per_month') }}</strong></span>
+            <div class="form-group{{ $errors->has('appHoursPerMonth') ? ' has-error' : '' }}">
+                <label for="appHoursPerMonth">@lang('No. of hours for APP per month')</label>
+                <input type="number" class="form-control" id="appHoursPerMonth" name="appHoursPerMonth" min="0" value="{{ old('appHoursPerMonth') ?: $account->appHoursPerMonth ?: '0' }}" />
+                @if ($errors->has('appHoursPerMonth'))
+                    <span class="help-block"><strong>{{ $errors->first('appHoursPerMonth') }}</strong></span>
                 @endif
             </div>
         </div>
@@ -237,14 +236,14 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="press_release" {{ (old('press_release') ?: $account->press_release) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="pressRelease" {{ (old('pressRelease') ?: $account->pressRelease) ? 'checked' : '' }} />
                         @lang('Has a press release gone out announcing newstart, and if so when?')
                     </label>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="input-group date datepicker">
-                    <input type="text" class="form-control" name="press_release_date" value="{{ old('press_release_date') ?: $account->press_release_date ? $account->press_release_date->format('Y-m-d') : '' }}" placeholder="When?" />
+                    <input type="text" class="form-control" name="pressReleaseDate" value="{{ old('pressReleaseDate') ?: $account->pressReleaseDate ? $account->pressReleaseDate->format('Y-m-d') : '' }}" placeholder="When?" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
@@ -254,7 +253,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="management_change_mailers" {{ (old('management_change_mailers') ?: $account->management_change_mailers) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="managementChangeMailers" {{ (old('managementChangeMailers') ?: $account->managementChangeMailers) ? 'checked' : '' }} />
                         @lang('Have mailers gone out announcing management change?')
                     </label>
                 </div>
@@ -268,7 +267,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="recruiting_mailers" {{ (old('recruiting_mailers') ?: $account->recruiting_mailers) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="recruitingMailers" {{ (old('recruitingMailers') ?: $account->recruitingMailers) ? 'checked' : '' }} />
                         @lang('Have mailers gone out for recruiting?')
                     </label>
                 </div>
@@ -282,7 +281,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="email_blast" {{ (old('email_blast') ?: $account->email_blast) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="emailBlast" {{ (old('emailBlast') ?: $account->emailBlast) ? 'checked' : '' }} />
                         @lang('Have email blasts gone out?')
                     </label>
                 </div>
@@ -296,7 +295,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="purl_campaign" {{ (old('purl_campaign') ?: $account->purl_campaign) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="purlCampaign" {{ (old('purlCampaign') ?: $account->purlCampaign) ? 'checked' : '' }} />
                         @lang('PURL Campaign')
                     </label>
                 </div>
@@ -310,7 +309,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="marketing_slick" {{ (old('marketing_slick') ?: $account->marketing_slick) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="marketingSlick" {{ (old('marketingSlick') ?: $account->marketingSlick) ? 'checked' : '' }} />
                         @lang('Account Marketing slick generated')
                     </label>
                 </div>
@@ -324,13 +323,13 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="collaboration_recruiting_team" {{ (old('collaboration_recruiting_team') ?: $account->collaboration_recruiting_team) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="collaborationRecruitingTeam" {{ (old('collaborationRecruitingTeam') ?: $account->collaborationRecruitingTeam) ? 'checked' : '' }} />
                         @lang('Do we need to set up a collaboration recruiting team, and if so, who is on the team?')
                     </label>
                 </div>
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="collaboration_recruiting_team_names" value="{{ old('collaboration_recruiting_team_names') ?: $account->collaboration_recruiting_team_names }}" placeholder="Who is on the team?" />
+                <input type="text" class="form-control" name="collaborationRecruitingTeamNames" value="{{ old('collaborationRecruitingTeamNames') ?: $account->collaborationRecruitingTeamNames }}" placeholder="Who is on the team?" />
             </div>
         </div>
 
@@ -338,13 +337,13 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="compensation_grid" {{ (old('compensation_grid') ?: $account->compensation_grid) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="compensationGrid" {{ (old('compensationGrid') ?: $account->compensationGrid) ? 'checked' : '' }} />
                         @lang('What is the compensation grid, including sign on bonuses or retention bonuses?')
                     </label>
                 </div>
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="compensation_grid_bonuses" value="{{ old('compensation_grid_bonuses') ?: $account->compensation_grid_bonuses }}" placeholder="Compensation grid" />
+                <input type="text" class="form-control" name="compensationGridBonuses" value="{{ old('compensationGridBonuses') ?: $account->compensationGridBonuses }}" placeholder="Compensation grid" />
             </div>
         </div>
 
@@ -352,13 +351,13 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="recruiting_incentives" {{ (old('recruiting_incentives') ?: $account->recruiting_incentives) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="recruitingIncentives" {{ (old('recruitingIncentives') ?: $account->recruitingIncentives) ? 'checked' : '' }} />
                         @lang('What additional recruiting incentives do we have in place?')
                     </label>
                 </div>
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control" name="recruiting_incentives_description" value="{{ old('recruiting_incentives_description') ?: $account->recruiting_incentives_description }}" placeholder="Additional recruiting incentives" />
+                <input type="text" class="form-control" name="recruitingIncentivesDescription" value="{{ old('recruitingIncentivesDescription') ?: $account->recruitingIncentivesDescription }}" placeholder="Additional recruiting incentives" />
             </div>
         </div>
 
@@ -366,7 +365,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="locum_companies_notified" {{ (old('locum_companies_notified') ?: $account->locum_companies_notified) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="locumCompaniesNotified" {{ (old('locumCompaniesNotified') ?: $account->locumCompaniesNotified) ? 'checked' : '' }} />
                         @lang('Have you notified the locum companies?')
                     </label>
                 </div>
@@ -380,7 +379,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="search_firms_notified" {{ (old('search_firms_notified') ?: $account->search_firms_notified) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="searchFirmsNotified" {{ (old('searchFirmsNotified') ?: $account->searchFirmsNotified) ? 'checked' : '' }} />
                         @lang('Have you notified the 3rd party search firms?')
                     </label>
                 </div>
@@ -394,7 +393,7 @@
             <div class="col-md-6">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" value="1" name="departments_coordinated" {{ (old('departments_coordinated') ?: $account->departments_coordinated) ? 'checked' : '' }} />
+                        <input type="checkbox" value="1" name="departmentsCoordinated" {{ (old('departmentsCoordinated') ?: $account->departmentsCoordinated) ? 'checked' : '' }} />
                         @lang('Have you coordinated with the on site hospital marketing department physicians liaisons and internal recruiter?')
                     </label>
                 </div>
@@ -459,7 +458,7 @@
                         <tbody>
                             @foreach($account->siteCodes as $siteCode)
                                 <tr>
-                                    <td>{{ $siteCode->site_code }}</td>
+                                    <td>{{ $siteCode->siteCode }}</td>
                                     <td>{{ $siteCode->created_at }}</td>
                                 </tr>
                             @endforeach
@@ -490,7 +489,7 @@
             var lng = Number($('#longitude').val());
             // Create the autocomplete object, restricting the search to geographical location types.
             var autocomplete = new google.maps.places.Autocomplete(
-                (document.getElementById('google_address')), {
+                (document.getElementById('googleAddress')), {
                     types: ['geocode'],
                     componentRestrictions: {country: 'us'}
                 }
@@ -552,7 +551,7 @@
 
         // Image upload
         function updatePathInput(response) {
-            $('#photo_path').val(response.path);
+            $('#photoPath').val(response.path);
         }
     </script>
 

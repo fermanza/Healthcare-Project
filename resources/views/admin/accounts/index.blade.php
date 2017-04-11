@@ -26,10 +26,10 @@
                 @foreach($accounts as $account)
                     <tr class="{{ $account->isRecentlyCreated() ? 'success' : '' }}">
                         <td>{{ $account->name }}</td>
-                        <td>{{ $account->site_code }}</td>
+                        <td>{{ $account->siteCode }}</td>
                         <td>{{ $account->city }}</td>
                         <td>{{ $account->state }}</td>
-                        <td>{{ $account->start_date }}</td>
+                        <td>{{ $account->startDate }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.accounts.edit', [$account]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>

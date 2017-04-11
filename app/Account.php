@@ -28,38 +28,44 @@ class Account extends Model
      * @var array
      */
     protected $dates = [
-        'start_date',
-        'press_release_date',
+        'startDate',
+        'pressReleaseDate',
     ];
 
     /**
-     * Get the Recruiter (Employee) for the Account.
+     * Get the Recruiter (AccountEmployee) for the Account.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function recruiter()
     {
-        return $this->belongsTo(Employee::class, 'recruiter_id');
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+                    ->whereHas('positionType', function ($query) {
+                        $query->where('name', 'Recruiter');
+                    });
     }
 
     /**
-     * Get the Manager (Employee) for the Account.
+     * Get the Manager (AccountEmployee) for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function manager()
     {
-        return $this->belongsTo(Employee::class, 'manager_id');
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+                    ->whereHas('positionType', function ($query) {
+                        $query->where('name', 'Manager');
+                    });
     }
 
     /**
-     * Get the Practice for the Account.
+     * Get the Practices for the Account.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function practice()
+    public function practices()
     {
-        return $this->belongsTo(Practice::class);
+        return $this->belongsToMany(Practice::class, 'tAccountToPractice', 'accountId', 'practiceId');
     }
 
     /**
@@ -69,7 +75,7 @@ class Account extends Model
      */
     public function division()
     {
-        return $this->belongsTo(Division::class);
+        return $this->belongsTo(Division::class, 'divisionId');
     }
 
     /**
@@ -79,7 +85,7 @@ class Account extends Model
      */
     public function siteCodes()
     {
-        return $this->hasMany(SiteCode::class)->latest();
+        return $this->hasMany(SiteCode::class, 'accountId')->latest();
     }
 
     /**
@@ -89,12 +95,12 @@ class Account extends Model
      */
     public function isRecentlyCreated()
     {
-        if (! $this->start_date) {
+        if (! $this->startDate) {
             return false;
         }
         // Six months ago
         $pastDate = Carbon::now()->subMonths(6);
 
-        return $this->start_date->gte($pastDate);
+        return $this->startDate->gte($pastDate);
     }
 }

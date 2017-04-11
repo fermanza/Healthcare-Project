@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\SiteCode;
+use App\PositionType;
+use App\AccountEmployee;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountRequest extends FormRequest
@@ -16,42 +18,42 @@ class AccountRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'site_code' => 'required|numeric',
-            'photo_path' => '',
-            'recruiter_id' => 'exists:employees,id',
-            'manager_id' => 'exists:employees,id',
-            'practice_id' => 'exists:practices,id',
-            'division_id' => 'exists:divisions,id',
-            'google_address' => '',
+            'siteCode' => 'required|numeric',
+            'photoPath' => '',
+            'recruiterId' => 'exists:tEmployee,id',
+            'managerId' => 'exists:tEmployee,id',
+            'practiceId' => 'exists:tPractice,id',
+            'divisionId' => 'exists:tDivision,id',
+            'googleAddress' => '',
             'street' => '',
             'number' => '',
             'city' => '',
             'state' => '',
-            'zip_code' => '',
+            'zipCode' => '',
             'country' => '',
             'latitude' => 'between:-90,90',
             'longitude' => 'between:-180,180',
-            'start_date' => 'nullable|date_format:"Y-m-d H:i"',
-            'physicians_needed' => 'integer|min:0',
-            'apps_needed' => 'integer|min:0',
-            'physician_hours_per_month' => 'integer|min:0',
-            'app_hours_per_month' => 'integer|min:0',
-            'press_release' => 'boolean',
-            'press_release_date' => 'nullable|date_format:"Y-m-d"',
-            'management_change_mailers' => 'boolean',
-            'recruiting_mailers' => 'boolean',
-            'email_blast' => 'boolean',
-            'purl_campaign' => 'boolean',
-            'marketing_slick' => 'boolean',
-            'collaboration_recruiting_team' => 'boolean',
-            'collaboration_recruiting_team_names' => '',
-            'compensation_grid' => 'boolean',
-            'compensation_grid_bonuses' => '',
-            'recruiting_incentives' => 'boolean',
-            'recruiting_incentives_description' => '',
-            'locum_companies_notified' => 'boolean',
-            'search_firms_notified' => 'boolean',
-            'departments_coordinated' => 'boolean',
+            'startDate' => 'nullable|date_format:"Y-m-d"',
+            'physiciansNeeded' => 'integer|min:0',
+            'appsNeeded' => 'integer|min:0',
+            'physicianHoursPerMonth' => 'integer|min:0',
+            'appHoursPerMonth' => 'integer|min:0',
+            'pressRelease' => 'boolean',
+            'pressReleaseDate' => 'nullable|date_format:"Y-m-d"',
+            'managementChangeMailers' => 'boolean',
+            'recruitingMailers' => 'boolean',
+            'emailBlast' => 'boolean',
+            'purlCampaign' => 'boolean',
+            'marketingSlick' => 'boolean',
+            'collaborationRecruitingTeam' => 'boolean',
+            'collaborationRecruitingTeamNames' => '',
+            'compensationGrid' => 'boolean',
+            'compensationGridBonuses' => '',
+            'recruitingIncentives' => 'boolean',
+            'recruitingIncentivesDescription' => '',
+            'locumCompaniesNotified' => 'boolean',
+            'searchFirmsNotified' => 'boolean',
+            'departmentsCoordinated' => 'boolean',
         ];
     }
 
@@ -63,48 +65,55 @@ class AccountRequest extends FormRequest
      */
     public function save(Model $account)
     {
-        $pastSiteCode = $account->site_code;
+        $pastSiteCode = $account->siteCode;
 
         $account->name = $this->name;
-        $account->site_code = $this->site_code;
-        $account->photo_path = $this->photo_path;
-        $account->recruiter_id = $this->recruiter_id;
-        $account->manager_id = $this->manager_id;
-        $account->practice_id = $this->practice_id;
-        $account->division_id = $this->division_id;
-        $account->google_address = $this->google_address;
+        $account->siteCode = $this->siteCode;
+        $account->photoPath = $this->photoPath;
+        $account->divisionId = $this->divisionId;
+        $account->googleAddress = $this->googleAddress;
         $account->street = $this->street;
         $account->number = $this->number;
         $account->city = $this->city;
         $account->state = $this->state;
-        $account->zip_code = $this->zip_code;
+        $account->zipCode = $this->zipCode;
         $account->country = $this->country;
         $account->latitude = $this->latitude;
         $account->longitude = $this->longitude;
-        $account->start_date = $this->start_date ? $this->start_date.':00': null;
-        $account->physicians_needed = $this->physicians_needed;
-        $account->apps_needed = $this->apps_needed;
-        $account->physician_hours_per_month = $this->physician_hours_per_month;
-        $account->app_hours_per_month = $this->app_hours_per_month;
-        $account->press_release = $this->press_release ?: false;
-        $account->press_release_date = $this->press_release_date;
-        $account->management_change_mailers = $this->management_change_mailers ?: false;
-        $account->recruiting_mailers = $this->recruiting_mailers ?: false;
-        $account->email_blast = $this->email_blast ?: false;
-        $account->purl_campaign = $this->purl_campaign ?: false;
-        $account->marketing_slick = $this->marketing_slick ?: false;
-        $account->collaboration_recruiting_team = $this->collaboration_recruiting_team ?: false;
-        $account->collaboration_recruiting_team_names = $this->collaboration_recruiting_team_names;
-        $account->compensation_grid = $this->compensation_grid ?: false;
-        $account->compensation_grid_bonuses = $this->compensation_grid_bonuses;
-        $account->recruiting_incentives = $this->recruiting_incentives ?: false;
-        $account->recruiting_incentives_description = $this->recruiting_incentives_description;
-        $account->locum_companies_notified = $this->locum_companies_notified ?: false;
-        $account->search_firms_notified = $this->search_firms_notified ?: false;
-        $account->departments_coordinated = $this->departments_coordinated ?: false;
+        $account->startDate = $this->startDate ? $this->startDate: null;
+        $account->physiciansNeeded = $this->physiciansNeeded;
+        $account->appsNeeded = $this->appsNeeded;
+        $account->physicianHoursPerMonth = $this->physicianHoursPerMonth;
+        $account->appHoursPerMonth = $this->appHoursPerMonth;
+        $account->pressRelease = $this->pressRelease ?: false;
+        $account->pressReleaseDate = $this->pressReleaseDate;
+        $account->managementChangeMailers = $this->managementChangeMailers ?: false;
+        $account->recruitingMailers = $this->recruitingMailers ?: false;
+        $account->emailBlast = $this->emailBlast ?: false;
+        $account->purlCampaign = $this->purlCampaign ?: false;
+        $account->marketingSlick = $this->marketingSlick ?: false;
+        $account->collaborationRecruitingTeam = $this->collaborationRecruitingTeam ?: false;
+        $account->collaborationRecruitingTeamNames = $this->collaborationRecruitingTeamNames;
+        $account->compensationGrid = $this->compensationGrid ?: false;
+        $account->compensationGridBonuses = $this->compensationGridBonuses;
+        $account->recruitingIncentives = $this->recruitingIncentives ?: false;
+        $account->recruitingIncentivesDescription = $this->recruitingIncentivesDescription;
+        $account->locumCompaniesNotified = $this->locumCompaniesNotified ?: false;
+        $account->searchFirmsNotified = $this->searchFirmsNotified ?: false;
+        $account->departmentsCoordinated = $this->departmentsCoordinated ?: false;
         $account->save();
+
+        if ($this->recruiterId) {
+            $this->associateRecruiter($account);
+        }
+
+        if ($this->managerId) {
+            $this->associateManager($account);
+        }
+
+        $account->practices()->sync($this->practiceId ? [$this->practiceId] : []);
         
-        if ($pastSiteCode != $this->site_code) {
+        if ($pastSiteCode != $this->siteCode) {
             $this->createSiteCodeHistory($account);
         }
     }
@@ -115,11 +124,49 @@ class AccountRequest extends FormRequest
      * @param  \Illuminate\Database\Eloquent\Model  $account
      * @return null
      */
-    public function createSiteCodeHistory($account)
+    protected function createSiteCodeHistory($account)
     {
         $siteCode = new SiteCode;
-        $siteCode->account_id = $account->id;
-        $siteCode->site_code = $this->site_code;
+        $siteCode->accountId = $account->id;
+        $siteCode->siteCode = $this->siteCode;
         $siteCode->save();
+    }
+
+    /**
+     * Associates a Recruiter to the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function associateRecruiter($account)
+    {
+        $recruiterPosition = PositionType::where('name', 'Recruiter')->first();
+        AccountEmployee::unguard();
+        AccountEmployee::updateOrCreate([
+            'accountId' => $account->id,
+            'positionTypeId' => $recruiterPosition->id,
+        ], [
+            'employeeId' => $this->recruiterId,
+        ]);
+        AccountEmployee::reguard();
+    }
+
+    /**
+     * Associates a Manager to the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function associateManager($account)
+    {
+        $managerPosition = PositionType::where('name', 'Manager')->first();
+        AccountEmployee::unguard();
+        AccountEmployee::updateOrCreate([
+            'accountId' => $account->id,
+            'positionTypeId' => $managerPosition->id,
+        ], [
+            'employeeId' => $this->managerId,
+        ]);
+        AccountEmployee::reguard();
     }
 }
