@@ -46,7 +46,7 @@ return [
             'port' => env('DB_PORT', '1433'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
-            'charset' => 'utf8',
+            // 'charset' => 'utf8',
             'prefix' => '',
         ],
 
