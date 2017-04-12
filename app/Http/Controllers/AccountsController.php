@@ -144,7 +144,8 @@ class AccountsController extends Controller
     public function internalPlan(Account $account)
     {
         $pdf = PDF::loadView('pdfs.internal-plan', compact('account'));
+        $fileName = str_slug($account->name).'-'.__('internal-plan.pdf');
 
-        return $pdf->download(__('internal-plan.pdf'));
+        return $pdf->download($fileName);
     }
 }
