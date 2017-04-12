@@ -14,6 +14,13 @@ class SiteCode extends Model
     protected $table = 'tSiteCodeHistory';
 
     /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
+    protected $dateFormat = 'Y-m-d H:i:s';
+
+    /**
      * Get the Account for the SiteCode.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
