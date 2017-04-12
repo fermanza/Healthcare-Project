@@ -164,7 +164,7 @@
             <div class="form-group{{ $errors->has('startDate') ? ' has-error' : '' }}">
                 <label for="startDate">@lang('Start Date')</label>
                 <div class="input-group date datepicker">
-                    <input type="text" class="form-control" id="startDate" name="startDate" value="{{ old('startDate') ?: $account->startDate ? $account->startDate->format('Y-m-d') : '' }}" />
+                    <input type="text" class="form-control" id="startDate" name="startDate" value="{{ old('startDate') ?: ($account->startDate ? $account->startDate->format('Y-m-d') : '') }}" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
                 @if ($errors->has('startDate'))
@@ -186,6 +186,16 @@
     </div>
 
     <hr />
+
+    @if ($action == 'edit' && $account->physiciansApps->count())
+        <div class="row mb10">
+            <div class="col-md-12">
+                <a href="javascript:;" data-toggle="modal" data-target="#physicians-apps-history">
+                    @lang('Physicians and Apps History')
+                </a>
+            </div>
+        </div>
+    @endif
     
     <div class="row">
         <div class="col-md-6">
@@ -228,6 +238,38 @@
             </div>
         </div>
     </div>
+    
+    @if ($action == 'edit')
+        <div id="physicianAppsChangeConfirmation" style="display: none;" class="row">
+            <div class="col-md-6">
+                <div class="form-group{{ $errors->has('physicianAppsChangeDate') ? ' has-error' : '' }}">
+                    <label for="physicianAppsChangeDate">
+                        @lang('Date the changes take effect')
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group date datepicker">
+                        <input type="text" class="form-control" id="physicianAppsChangeDate" name="physicianAppsChangeDate" value="{{ old('physicianAppsChangeDate') ?: '' }}" />
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                    @if ($errors->has('physicianAppsChangeDate'))
+                        <span class="help-block"><strong>{{ $errors->first('physicianAppsChangeDate') }}</strong></span>
+                    @endif
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group{{ $errors->has('physicianAppsChangeReason') ? ' has-error' : '' }}">
+                    <label for="physicianAppsChangeReason">
+                        @lang('Why they changed?')
+                        <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" class="form-control" id="physicianAppsChangeReason" name="physicianAppsChangeReason" value="{{ old('physicianAppsChangeReason') ?: '' }}" />
+                    @if ($errors->has('physicianAppsChangeReason'))
+                        <span class="help-block"><strong>{{ $errors->first('physicianAppsChangeReason') }}</strong></span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
 
     <hr />
 
@@ -243,7 +285,7 @@
             </div>
             <div class="col-md-3">
                 <div class="input-group date datepicker">
-                    <input type="text" class="form-control" name="pressReleaseDate" value="{{ old('pressReleaseDate') ?: $account->pressReleaseDate ? $account->pressReleaseDate->format('Y-m-d') : '' }}" placeholder="When?" />
+                    <input type="text" class="form-control" name="pressReleaseDate" value="{{ old('pressReleaseDate') ?: ($account->pressReleaseDate ? $account->pressReleaseDate->format('Y-m-d') : '') }}" placeholder="When?" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>
@@ -444,7 +486,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">{{ $account->name }} @lang('Site Code') @lang('History')</h4>
+                <h4 class="modal-title">{{ $account->name }} @lang('Site Code History')</h4>
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
@@ -473,6 +515,50 @@
     </div>
 </div>
 
+<div class="modal fade" id="physicians-apps-history" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{ $account->name }} @lang('Physicians and Apps History')</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>@lang('No. of Physicians needed')</th>
+                                <th>@lang('No. of APPs needed')</th>
+                                <th>@lang('No. of hours for Physicians per month')</th>
+                                <th>@lang('No. of hours for APP per month')</th>
+                                <th>@lang('Date the changes take effect')</th>
+                                <th>@lang('Why they changed?')</th>
+                                <th>@lang('Modified At')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($account->physiciansApps as $physicianApp)
+                                <tr>
+                                    <td>{{ $physicianApp->physiciansNeeded }}</td>
+                                    <td>{{ $physicianApp->appsNeeded }}</td>
+                                    <td>{{ $physicianApp->physicianHoursPerMonth }}</td>
+                                    <td>{{ $physicianApp->appHoursPerMonth }}</td>
+                                    <td>{{ $physicianApp->physicianAppsChangeDate }}</td>
+                                    <td>{{ $physicianApp->physicianAppsChangeReason }}</td>
+                                    <td>{{ $physicianApp->created_at }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('styles')
     <style>
         #map {
@@ -481,8 +567,32 @@
     </style>
 @endpush
 
+
 @push('scripts')
     <script>
+        @if ($action == 'edit')
+            $(document).ready(function () {
+                promptForNotesAndDateIfDifferent();
+                $('#physiciansNeeded, #appsNeeded, #physicianHoursPerMonth, #appHoursPerMonth').on('input', promptForNotesAndDateIfDifferent);
+            });
+
+            function promptForNotesAndDateIfDifferent() {
+                var account = BackendVars.account;
+                if (
+                    $('#physiciansNeeded').val() != account.physiciansNeeded ||
+                    $('#appsNeeded').val() != account.appsNeeded ||
+                    $('#physicianHoursPerMonth').val() != account.physicianHoursPerMonth ||
+                    $('#appHoursPerMonth').val() != account.appHoursPerMonth
+                ) {
+                    $('#physicianAppsChangeConfirmation').show();
+                    $('#physicianAppsChangeDate, #physicianAppsChangeReason').prop('required', true);
+                } else {
+                    $('#physicianAppsChangeConfirmation').hide();
+                    $('#physicianAppsChangeDate, #physicianAppsChangeReason').prop('required', false);
+                }
+            }
+        @endif
+
         function initAutocomplete() {
             var map, marker, mapOptions, markerOptions;
             var lat = Number($('#latitude').val());

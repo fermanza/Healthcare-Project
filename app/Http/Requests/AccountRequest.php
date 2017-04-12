@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\SiteCode;
 use App\PositionType;
+use App\PhysiciansApps;
 use App\AccountEmployee;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +17,7 @@ class AccountRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $commonRules = [
             'name' => 'required',
             'siteCode' => 'required|numeric',
             'photoPath' => '',
@@ -55,6 +56,17 @@ class AccountRequest extends FormRequest
             'searchFirmsNotified' => 'boolean',
             'departmentsCoordinated' => 'boolean',
         ];
+
+        if ($this->isCreate()) {
+            $methodRules = [];
+        } else {
+            $methodRules = [
+                'physicianAppsChangeDate' => ($this->physiciansOrAppsChanged() ? 'required|date_format:"Y-m-d"' : ''),
+                'physicianAppsChangeReason' => ($this->physiciansOrAppsChanged() ? 'required' : ''),
+            ];
+        }
+
+        return array_merge($commonRules, $methodRules);
     }
 
     /**
@@ -66,6 +78,10 @@ class AccountRequest extends FormRequest
     public function save(Model $account)
     {
         $pastSiteCode = $account->siteCode;
+
+        if ($this->isEdit() && $this->physiciansOrAppsChanged()) {
+            $this->createPhysiciansAppsHistory();
+        }
 
         $account->name = $this->name;
         $account->siteCode = $this->siteCode;
@@ -119,20 +135,6 @@ class AccountRequest extends FormRequest
     }
 
     /**
-     * Create a SiteCode record.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model  $account
-     * @return null
-     */
-    protected function createSiteCodeHistory($account)
-    {
-        $siteCode = new SiteCode;
-        $siteCode->accountId = $account->id;
-        $siteCode->siteCode = $this->siteCode;
-        $siteCode->save();
-    }
-
-    /**
      * Associates a Recruiter to the Account.
      *
      * @param  \Illuminate\Database\Eloquent\Model  $account
@@ -169,4 +171,50 @@ class AccountRequest extends FormRequest
         ]);
         AccountEmployee::reguard();
     }
+
+    /**
+     * Determine if Physicians or Apps inputs Changed.
+     *
+     * @return null
+     */
+    protected function physiciansOrAppsChanged()
+    {
+        return $this->account->physiciansNeeded != $this->physiciansNeeded ||
+                $this->account->appsNeeded != $this->appsNeeded ||
+                $this->account->physicianHoursPerMonth != $this->physicianHoursPerMonth ||
+                $this->account->appHoursPerMonth != $this->appHoursPerMonth;
+    }
+
+    /**
+     * Create a SiteCode record.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function createSiteCodeHistory($account)
+    {
+        $siteCode = new SiteCode;
+        $siteCode->accountId = $account->id;
+        $siteCode->siteCode = $this->siteCode;
+        $siteCode->save();
+    }
+
+    /**
+     * Create a PhysiciansApps record.
+     *
+     * @return null
+     */
+    protected function createPhysiciansAppsHistory()
+    {
+        $physiciansApps = new PhysiciansApps;
+        $physiciansApps->accountId = $this->account->id;
+        $physiciansApps->physiciansNeeded = $this->account->physiciansNeeded != $this->physiciansNeeded ? $this->physiciansNeeded : null;
+        $physiciansApps->appsNeeded = $this->account->appsNeeded != $this->appsNeeded ? $this->appsNeeded : null;
+        $physiciansApps->physicianHoursPerMonth = $this->account->physicianHoursPerMonth != $this->physicianHoursPerMonth ? $this->physicianHoursPerMonth : null;
+        $physiciansApps->appHoursPerMonth = $this->account->appHoursPerMonth != $this->appHoursPerMonth ? $this->appHoursPerMonth : null;
+        $physiciansApps->physicianAppsChangeDate = $this->physicianAppsChangeDate;
+        $physiciansApps->physicianAppsChangeReason = $this->physicianAppsChangeReason;
+        $physiciansApps->save();
+    }
 }
+
