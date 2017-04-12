@@ -60,7 +60,7 @@
         </td>
         <td>
             <strong>@lang('Site Code'):</strong>
-            {{ $account->site_code }}
+            {{ $account->siteCode }}
         </td>
     </tr>
 </table>
@@ -72,18 +72,18 @@
 <table class="table table-bordered">
     <tr>
         <td width="25px">
-            <div class="circle {{ $account->press_release ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->pressRelease ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Has a press release gone out announcing newstart, and if so when?')
         </td>
         <td width="220px">
-            {{ $account->press_release_date ? $account->press_release_date->format('Y-m-d') : '' }}
+            {{ $account->pressReleaseDate ? $account->pressReleaseDate->format('Y-m-d') : '' }}
         </td>
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->management_change_mailers ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->managementChangeMailers ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Have mailers gone out announcing management change?')
@@ -94,7 +94,7 @@
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->recruiting_mailers ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->recruitingMailers ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Have mailers gone out for recruiting?')
@@ -105,7 +105,7 @@
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->email_blast ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->emailBlast ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Have email blasts gone out?')
@@ -116,7 +116,7 @@
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->purl_campaign ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->purlCampaign ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('PURL Campaign')
@@ -127,7 +127,7 @@
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->marketing_slick ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->marketingSlick ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Account Marketing slick generated')
@@ -138,40 +138,40 @@
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->collaboration_recruiting_team ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->collaborationRecruitingTeam ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Do we need to set up a collaboration recruiting team, and if so, who is on the team?')
         </td>
         <td>
-            {{ $account->collaboration_recruiting_team_names }}
+            {{ $account->collaborationRecruitingTeamNames }}
         </td>
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->compensation_grid ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->compensationGrid ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('What is the compensation grid, including sign on bonuses or retention bonuses?')
         </td>
         <td>
-            {{ $account->compensation_grid_bonuses }}
+            {{ $account->compensationGridBonuses }}
         </td>
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->recruiting_incentives ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->recruitingIncentives ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('What additional recruiting incentives do we have in place?')
         </td>
         <td>
-            {{ $account->recruiting_incentives_description }}
+            {{ $account->recruitingIncentivesDescription }}
         </td>
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->locum_companies_notified ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->locumCompaniesNotified ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Have you notified the locum companies?')
@@ -182,7 +182,7 @@
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->search_firms_notified ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->searchFirmsNotified ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Have you notified the 3rd party search firms?')
@@ -193,7 +193,7 @@
     </tr>
     <tr>
         <td>
-            <div class="circle {{ $account->departments_coordinated ? 'circle-blue': '' }}"></div>
+            <div class="circle {{ $account->departmentsCoordinated ? 'circle-blue': '' }}"></div>
         </td>
         <td>
             @lang('Have you coordinated with the on site hospital marketing department physicians liaisons and internal recruiter?')
