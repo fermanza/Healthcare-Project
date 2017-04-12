@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use JavaScript;
 use App\Account;
 use App\Division;
 use App\Employee;
@@ -77,13 +78,22 @@ class AccountsController extends Controller
      */
     public function edit(Account $account)
     {
-        $account->load('siteCodes', 'practices', 'recruiter', 'manager');
+        $account->load('siteCodes', 'physiciansApps', 'practices', 'recruiter', 'manager');
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $action = 'edit';
 
         $params = compact('account', 'employees', 'practices', 'divisions', 'action');
+
+        JavaScript::put([
+            'account' => [
+                'physiciansNeeded' => $account->physiciansNeeded,
+                'appsNeeded' => $account->appsNeeded,
+                'physicianHoursPerMonth' => $account->physicianHoursPerMonth,
+                'appHoursPerMonth' => $account->appHoursPerMonth,
+            ],
+        ]);
 
         return view('admin.accounts.edit', $params);
     }

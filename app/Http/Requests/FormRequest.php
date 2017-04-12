@@ -25,4 +25,14 @@ class FormRequest extends BaseFormRequest
     {
         return $this->method() == 'POST';
     }
+
+    /**
+     * Determine if this is an edit request.
+     *
+     * @return bool
+     */
+    public function isEdit()
+    {
+        return $this->method() == 'PATCH';
+    }
 }

@@ -89,6 +89,16 @@ class Account extends Model
     }
 
     /**
+     * Get the PhysiciansApps for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function physiciansApps()
+    {
+        return $this->hasMany(PhysiciansApps::class, 'accountId')->latest();
+    }
+
+    /**
      * Determines if start date is less than 6 months ago.
      *
      * @return boolean
