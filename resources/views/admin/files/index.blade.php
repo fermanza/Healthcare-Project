@@ -11,9 +11,10 @@
 
 @section('content')
     <div class="table-responsive">
-        <table class="table table-hover table-bordered datatable">
+        <table class="table table-hover table-bordered datatable" data-datatable-config='{"order": [[ 0, "desc" ]]}'>
             <thead>
                 <tr>
+                    <th class="mw200 w50">@lang('File ID')</th>
                     <th class="mw200 w50">@lang('File Name')</th>
                     <th class="mw200 w50">@lang('File Type')</th>
                     <th class="mw100">@lang('Actions')</th>
@@ -22,6 +23,7 @@
             <tbody>
                 @foreach($files as $file)
                     <tr>
+                        <td>{{ $file->fileLogId }}</td>
                         <td>{{ $file->fileName }}</td>
                         <td>{{ $file->type->fileTypeName }}</td>
                         <td class="text-center">

@@ -19,8 +19,13 @@ $(() => {
     
 
     // DataTables
-    $('.datatable').dataTable({
-        bStateSave: true
+    $('.datatable').each(function () {
+        const defaultOptions = {
+            bStateSave: true
+        };
+        let options = $(this).data('datatable-config') || {};
+        options = $.extend({}, defaultOptions, options);
+        $(this).dataTable(options);
     });
 
 
