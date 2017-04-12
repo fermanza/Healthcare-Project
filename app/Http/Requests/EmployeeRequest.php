@@ -13,11 +13,20 @@ class EmployeeRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'personId' => 'required|exists:tPerson,id',
+        $commonRules = [
             'employeeType' => 'required',
             'isFullTime' => 'boolean',
         ];
+
+        if ($this->isCreate()) {
+            $methodRules = [
+                'personId' => 'required|exists:tPerson,id',
+            ];
+        } else {
+            $methodRules = [];
+        }
+
+        return array_merge($commonRules, $methodRules);
     }
 
     /**
@@ -28,7 +37,10 @@ class EmployeeRequest extends FormRequest
      */
     public function save(Model $employee)
     {
-        $employee->personId = $this->personId;
+        if ($this->isCreate()) {
+            $employee->personId = $this->personId;
+        }
+        
         $employee->employeeType = $this->employeeType;
         $employee->isFullTime = $this->isFullTime ?: false;
         $employee->save();

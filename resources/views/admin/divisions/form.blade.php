@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-             <div class="form-group{{ $errors->has('groupId') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->has('groupId') ? ' has-error' : '' }}">
                 <label for="groupId">@lang('Group')</label>
                 <select class="form-control select2" id="groupId" name="groupId" required>
                     <option value="" disabled selected></option>

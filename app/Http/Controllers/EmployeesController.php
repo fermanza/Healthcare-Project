@@ -72,6 +72,7 @@ class EmployeesController extends Controller
      */
     public function edit(Employee $employee)
     {
+        $employee->load('person');
         $people = Person::where('active', true)->get()->sortBy->fullName();
         $action = 'edit';
 

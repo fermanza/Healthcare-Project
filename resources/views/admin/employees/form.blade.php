@@ -7,9 +7,9 @@
     <div class="row">
         <div class="col-md-12">
 
-             <div class="form-group{{ $errors->has('personId') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->has('personId') ? ' has-error' : '' }}">
                 <label for="personId">@lang('Person')</label>
-                <select class="form-control select2" id="personId" name="personId" required>
+                <select class="form-control select2" id="personId" name="personId" required {{ $action == 'edit' ? 'disabled' : '' }}>
                     <option value="" disabled selected></option>
                     @foreach ($people as $person)
                         <option value="{{ $person->id }}" {{ (old('personId') == $person->id ?: $person->id == $employee->personId) ? 'selected': '' }}>{{ $person->fullName() }}</option>
