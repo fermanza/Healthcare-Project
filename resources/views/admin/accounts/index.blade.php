@@ -29,7 +29,7 @@
                         <td>{{ $account->siteCode }}</td>
                         <td>{{ $account->city }}</td>
                         <td>{{ $account->state }}</td>
-                        <td>{{ $account->startDate }}</td>
+                        <td>{{ $account->startDate->format('Y-m-d') }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.accounts.edit', [$account]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>
