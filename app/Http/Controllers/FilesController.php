@@ -75,8 +75,8 @@ class FilesController extends Controller
         $headers = [
             'Content-Type' => 'application/octet-stream',
             'Content-Description' => 'File Transfer',
-            'Content-Disposition' => "attachment; filename={$file->filename}",
-            'filename'=> $file->filename,
+            'Content-Disposition' => "attachment; filename={$file->fileName}",
+            'filename'=> $file->fileName,
         ];
 
         return response($privateFile, 200, $headers);
