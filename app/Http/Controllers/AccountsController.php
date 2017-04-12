@@ -132,7 +132,7 @@ class AccountsController extends Controller
 
         $path = $request->file('file')->store('account-images');
 
-        return response()->json(['path' => '/'.$path]);
+        return response()->json(['path' => '/storage/'.$path]);
     }
 
     /**
