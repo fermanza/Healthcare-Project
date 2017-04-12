@@ -25,9 +25,15 @@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <li>
+                            <a href="{{ route('admin.settings.credentials') }}">
+                                <i class="fa fa-gear"></i>
+                                @lang('Settings')
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('logout') }}">
                                 <i class="fa fa-sign-out"></i>
-                                Log out
+                                @lang('Log out')
                             </a>
                         </li>
                     </ul>

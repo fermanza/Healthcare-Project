@@ -46,7 +46,7 @@ class AccountsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\AccountRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(AccountRequest $request)
@@ -101,7 +101,7 @@ class AccountsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\AccountRequest  $request
      * @param  \App\Account  $account
      * @return \Illuminate\Http\Response
      */

@@ -20,6 +20,9 @@ $router->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], function ($router) {
 
+    $router->get('settings/credentials', 'SettingsController@credentials')->name('settings.credentials');
+    $router->patch('settings/credentials', 'SettingsController@updateCredentials');
+
     $router->get('sidebar-collapse', 'SidebarController@collapse');
     $router->get('sidebar-expand', 'SidebarController@expand');
 
