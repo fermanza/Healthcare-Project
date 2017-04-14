@@ -22,6 +22,16 @@ class Employee extends Model
     }
 
     /**
+     * Get the EmploymentStatus for the Employee.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function status()
+    {
+        return $this->belongsTo(EmployementStatus::class, 'employementStatusId');
+    }
+
+    /**
      * Get the Recruiting Accounts for the Employee.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

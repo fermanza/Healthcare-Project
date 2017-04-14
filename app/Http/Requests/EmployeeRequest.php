@@ -14,8 +14,10 @@ class EmployeeRequest extends FormRequest
     public function rules()
     {
         $commonRules = [
+            'employementStatusId' => 'required|exists:tEmployementStatus,id',
             'employeeType' => 'required',
-            'isFullTime' => 'boolean',
+            'EDPercent' => 'required|in:0,0.5,1',
+            'IPSPercent' => 'required|in:0,0.5,1',
         ];
 
         if ($this->isCreate()) {
@@ -41,8 +43,10 @@ class EmployeeRequest extends FormRequest
             $employee->personId = $this->personId;
         }
         
+        $employee->employementStatusId = $this->employementStatusId;
         $employee->employeeType = $this->employeeType;
-        $employee->isFullTime = $this->isFullTime ?: false;
+        $employee->EDPercent = $this->EDPercent;
+        $employee->IPSPercent = $this->IPSPercent;
         $employee->save();
     }
 }

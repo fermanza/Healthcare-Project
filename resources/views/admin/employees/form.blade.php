@@ -28,13 +28,43 @@
                 @endif
             </div>
 
-            <div class="form-group">
-                <div class="checkbox icheck">
-                    <label>
-                        <input type="checkbox" value="1" name="isFullTime" {{ (old('isFullTime') ?: $employee->isFullTime) ? 'checked' : '' }} />
-                        <strong>@lang('Is Full Time')</strong>
-                    </label>
-                </div>
+            <div class="form-group{{ $errors->has('employementStatusId') ? ' has-error' : '' }}">
+                <label for="employementStatusId">@lang('Status')</label>
+                <select class="form-control select2" id="employementStatusId" name="employementStatusId" required>
+                    <option value="" disabled selected></option>
+                    @foreach ($statuses as $status)
+                        <option value="{{ $status->id }}" {{ (old('employementStatusId') == $status->id ?: $status->id == $employee->employementStatusId) ? 'selected': '' }}>{{ $status->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('employementStatusId'))
+                    <span class="help-block"><strong>{{ $errors->first('employementStatusId') }}</strong></span>
+                @endif
+            </div>
+
+            <div class="form-group{{ $errors->has('EDPercent') ? ' has-error' : '' }}">
+                <label for="EDPercent">@lang('ED Percent')</label>
+                <select class="form-control select2" id="EDPercent" name="EDPercent" required>
+                    <option value="" disabled selected></option>
+                    <option value="0" {{ (old('EDPercent') == 0 ?: $employee->EDPercent == 0) ? 'selected': '' }}>0.0</option>
+                    <option value="0.5" {{ (old('EDPercent') == 0.5 ?: $employee->EDPercent == 0.5) ? 'selected': '' }}>0.5</option>
+                    <option value="1" {{ (old('EDPercent') == 1 ?: $employee->EDPercent == 1) ? 'selected': '' }}>1</option>
+                </select>
+                @if ($errors->has('EDPercent'))
+                    <span class="help-block"><strong>{{ $errors->first('EDPercent') }}</strong></span>
+                @endif
+            </div>
+
+            <div class="form-group{{ $errors->has('IPSPercent') ? ' has-error' : '' }}">
+                <label for="IPSPercent">@lang('IPS Percent')</label>
+                <select class="form-control select2" id="IPSPercent" name="IPSPercent" required>
+                    <option value="" disabled selected></option>
+                    <option value="0" {{ (old('IPSPercent') == 0 ?: $employee->IPSPercent == 0) ? 'selected': '' }}>0.0</option>
+                    <option value="0.5" {{ (old('IPSPercent') == 0.5 ?: $employee->IPSPercent == 0.5) ? 'selected': '' }}>0.5</option>
+                    <option value="1" {{ (old('IPSPercent') == 1 ?: $employee->IPSPercent == 1) ? 'selected': '' }}>1</option>
+                </select>
+                @if ($errors->has('IPSPercent'))
+                    <span class="help-block"><strong>{{ $errors->first('IPSPercent') }}</strong></span>
+                @endif
             </div>
 
         </div>

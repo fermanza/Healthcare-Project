@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Person;
 use App\Employee;
+use App\EmployementStatus;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
 
@@ -16,7 +17,7 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with('person')->where('active', true)->get();
+        $employees = Employee::with('person', 'status')->where('active', true)->get();
 
         return view('admin.employees.index', compact('employees'));
     }
@@ -30,9 +31,10 @@ class EmployeesController extends Controller
     {
         $employee = new Employee;
         $people = Person::where('active', true)->get()->sortBy->fullName();
+        $statuses = EmployementStatus::orderBy('name')->get();
         $action = 'create';
 
-        $params = compact('employee', 'people', 'action');
+        $params = compact('employee', 'people', 'statuses', 'action');
 
         return view('admin.employees.create', $params);
     }
@@ -74,9 +76,10 @@ class EmployeesController extends Controller
     {
         $employee->load('person');
         $people = Person::where('active', true)->get()->sortBy->fullName();
+        $statuses = EmployementStatus::orderBy('name')->get();
         $action = 'edit';
 
-        $params = compact('employee', 'people', 'action');
+        $params = compact('employee', 'people', 'statuses', 'action');
 
         return view('admin.employees.edit', $params);
     }

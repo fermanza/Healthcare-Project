@@ -16,7 +16,9 @@
                 <tr>
                     <th class="mw200 w100">@lang('Full Name')</th>
                     <th class="mw150">@lang('Type')</th>
-                    <th class="mw100">@lang('Is Full Time')</th>
+                    <th class="mw100">@lang('Status')</th>
+                    <th class="mw100">@lang('ED Percent')</th>
+                    <th class="mw100">@lang('IPS Percent')</th>
                     <th class="mw100">@lang('Actions')</th>
                 </tr>
             </thead>
@@ -25,7 +27,9 @@
                     <tr>
                         <td>{{ $employee->fullName() }}</td>
                         <td>{{ $employee->employeeType }}</td>
-                        <td>{{ $employee->isFullTime ? __('Yes') : __('No') }}</td>
+                        <td>{{ $employee->status->name }}</td>
+                        <td>{{ number_format($employee->EDPercent, 1) }}</td>
+                        <td>{{ number_format($employee->IPSPercent, 1) }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.employees.edit', [$employee]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>

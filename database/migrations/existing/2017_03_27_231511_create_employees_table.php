@@ -16,10 +16,13 @@ class CreateEmployeesTable extends Migration
         Schema::create('tEmployee', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('personId')->unsigned();
+            $table->integer('employementStatusId')->unsigned();
             $table->string('employeeType');
-            $table->boolean('isFullTime')->default(false);
+            $table->double('EDPercent')->nullable();
+            $table->double('IPSPercent')->nullable();
 
             $table->foreign('personId')->references('id')->on('tPerson')->onDelete('cascade');
+            $table->foreign('employementStatusId')->references('id')->on('tEmployementStatus')->onDelete('cascade');
         });
     }
 
