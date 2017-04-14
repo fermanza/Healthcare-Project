@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Database\Eloquent\Model;
 
-class GroupRequest extends FormRequest
+class RegionRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,6 @@ class GroupRequest extends FormRequest
     public function rules()
     {
         return [
-            'regionId' => 'required|exists:tRegion,id',
             'name' => 'required',
             'code' => '',
         ];
@@ -23,14 +22,13 @@ class GroupRequest extends FormRequest
     /**
      * Save the given model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $group
+     * @param  \Illuminate\Database\Eloquent\Model  $region
      * @return null
      */
-    public function save(Model $group)
+    public function save(Model $region)
     {
-        $group->regionId = $this->regionId;
-        $group->name = $this->name;
-        $group->code = $this->code;
-        $group->save();
+        $region->name = $this->name;
+        $region->code = $this->code;
+        $region->save();
     }
 }

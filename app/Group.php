@@ -20,4 +20,14 @@ class Group extends Model
     {
         return $this->hasMany(Division::class, 'groupId');
     }
+
+    /**
+     * Get the Region for the Group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function region()
+    {
+        return $this->belongsTo(Region::class, 'regionId');
+    }
 }

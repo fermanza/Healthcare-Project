@@ -31,6 +31,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->resource('accounts', 'AccountsController');
 
     $router->resource('files', 'FilesController');
+    $router->resource('regions', 'RegionsController');
     $router->resource('groups', 'GroupsController');
     $router->resource('practices', 'PracticesController');
     $router->resource('divisions', 'DivisionsController');

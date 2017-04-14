@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Group;
+use App\Region;
 use Illuminate\Http\Request;
 use App\Http\Requests\GroupRequest;
 
@@ -15,7 +16,7 @@ class GroupsController extends Controller
      */
     public function index()
     {
-        $groups = Group::where('active', true)->get();
+        $groups = Group::with('region')->where('active', true)->get();
 
         return view('admin.groups.index', compact('groups'));
     }
@@ -28,9 +29,10 @@ class GroupsController extends Controller
     public function create()
     {
         $group = new Group;
+        $regions = Region::where('active', true)->orderBy('name')->get();
         $action = 'create';
 
-        $params = compact('group', 'action');
+        $params = compact('group', 'regions', 'action');
 
         return view('admin.groups.create', $params);
     }
@@ -70,9 +72,10 @@ class GroupsController extends Controller
      */
     public function edit(Group $group)
     {
+        $regions = Region::where('active', true)->orderBy('name')->get();
         $action = 'edit';
 
-        $params = compact('group', 'action');
+        $params = compact('group', 'regions', 'action');
 
         return view('admin.groups.edit', $params);
     }

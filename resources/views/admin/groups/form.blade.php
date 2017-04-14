@@ -15,6 +15,19 @@
                 @endif
             </div>
 
+            <div class="form-group{{ $errors->has('regionId') ? ' has-error' : '' }}">
+                <label for="regionId">@lang('Region')</label>
+                <select class="form-control select2" id="regionId" name="regionId" required>
+                    <option value="" disabled selected></option>
+                    @foreach ($regions as $region)
+                        <option value="{{ $region->id }}" {{ (old('regionId') == $region->id ?: $region->id == $group->regionId) ? 'selected': '' }}>{{ $region->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('regionId'))
+                    <span class="help-block"><strong>{{ $errors->first('regionId') }}</strong></span>
+                @endif
+            </div>
+
             <div class="form-group{{ $errors->has('code') ? ' has-error' : '' }}">
                 <label for="code">@lang('Code')</label>
                 <input type="text" class="form-control" id="code" name="code" value="{{ old('code') ?: $group->code }}" />

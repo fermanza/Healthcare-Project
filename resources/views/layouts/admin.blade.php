@@ -92,6 +92,12 @@
                             <span>@lang('Groups')</span>
                         </a>
                     </li>
+                    <li class="{{ route_starts_with('admin.regions') }}">
+                        <a href="{{ route('admin.regions.index') }}">
+                            <i class="fa fa-globe"></i>
+                            <span>@lang('Regions')</span>
+                        </a>
+                    </li>
                 </ul>
             </section>
         </aside>
