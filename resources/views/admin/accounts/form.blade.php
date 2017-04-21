@@ -290,6 +290,22 @@
 
     <hr />
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group{{ $errors->has('accountDescription') ? ' has-error' : '' }}">
+                <label for="accountDescription">
+                    @lang('Account Description')
+                </label>
+                <textarea class="form-control" id="accountDescription" name="accountDescription">{{ old('accountDescription') ?: $account->accountDescription }}</textarea>
+                @if ($errors->has('accountDescription'))
+                    <span class="help-block"><strong>{{ $errors->first('accountDescription') }}</strong></span>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
     <div class="internal-plan-checkboxes">
         <div class="row">
             <div class="col-md-6">
