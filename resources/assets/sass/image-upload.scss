@@ -1,29 +1,27 @@
 .image-upload {
-    width: 350px;
-    height: 350px;
+    display: inline-block;
+    position: relative;
     border: 2px solid #888;
-    z-index: 100;
 
     &-preview {
-        width: 336px;
-        height: 336px;
         margin: 5px;
         cursor: pointer;
 
+        &:hover {
+            opacity: 0.4;
+        }
+
         &-helptext {
+            position: absolute;
+            width: 200px;
             display: none;
             font-size: 1.5em;
-            color: #fff;
-            text-align: center;
-            line-height: 336px;
-
-            &:hover {
-                background: rgba(0, 0, 0, 0.4);
-            }
+            color: #000;
         }
 
         &:hover &-helptext{
             display: block;
+            opacity: 1 !important;
         }
     }
 

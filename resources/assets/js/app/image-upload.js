@@ -9,16 +9,12 @@ $('.image-upload').each(function () {
     const responsePath = $element.data('response-path') || 'path';
     const errorResponseKey = $element.data('error-response-key') || 'message';
     const $preview = $('<div class="image-upload-preview"></div>');
+    const $image = $(`<img class="image-upload-preview-img" src="${imagePath}" alt="profile-image" />`);
     const $helpText = $('<span class="image-upload-preview-helptext">Click to upload photo.</span>');
     const $inputFile = $('<input type="file" class="image-upload-input" accept="image/*">');
     const $errorText = $(`<div class="${errorTextClass}"></div>`);
 
-    $preview.css({
-        'background-image': `url(${imagePath})`,
-        'background-repeat': 'no-repeat',
-        'background-size': '100% 100%'
-    });
-    $preview.append($helpText);
+    $preview.append($image, $helpText);
 
     $element.append($preview, $inputFile, $errorText);
 
@@ -41,7 +37,7 @@ $('.image-upload').each(function () {
                 contentType: false,
                 success: response => {
                     const path = response[responsePath];
-                    $preview.css('background-image', `url(${path})`);
+                    $image.attr('src', path);
 
                     if (successCallback) {
                         window[successCallback].apply(null, [response]);
@@ -59,5 +55,29 @@ $('.image-upload').each(function () {
 
     $preview.on('click', () => {
         $inputFile.click();
+    });
+
+    $image.on('load', function () {
+        const width = $(this).prop('naturalWidth');
+        const height = $(this).prop('naturalHeight');
+        let imageWidth;
+        let imageHeight;
+
+        if (width > height) {
+            let maxWidth = width > 325 ? 325 : width;
+            imageWidth = maxWidth < 250 ? 250 : maxWidth;
+            $(this).css('width', imageWidth);
+            $(this).css('height', 'auto');
+            imageHeight = $(this).height();
+        } else {
+            let maxHeight = height > 325 ? 325 : width;
+            imageHeight = maxHeight < 250 ? 250 : maxHeight;
+            $(this).css('height', imageHeight);
+            $(this).css('width', 'auto');
+            imageWidth = $(this).width();
+        }
+
+        $helpText.css('top', Math.floor((imageHeight / 2) - 11));
+        $helpText.css('left', Math.floor((imageWidth / 2) - 95));
     });
 });

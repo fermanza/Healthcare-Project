@@ -43,8 +43,8 @@
     <hr />
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="image-upload center-block mt15" 
+        <div class="col-md-6 text-center">
+            <div class="image-upload mt15" 
                 data-upload-path="/admin/accounts/image" 
                 data-current-path="{{ old('photoPath') ?: $account->photoPath ?: '/img/upload-placeholder.png' }}" 
                 data-success="updatePathInput"
