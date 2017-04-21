@@ -21,6 +21,7 @@ class CreateAccountsTable extends Migration
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->dateTime('startDate')->nullable();
+            $table->dateTime('endDate')->nullable();
             
             $table->foreign('divisionId')->references('id')->on('tDivision')->onDelete('cascade');
         });

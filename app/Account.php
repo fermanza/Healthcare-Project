@@ -29,6 +29,7 @@ class Account extends Model
      */
     protected $dates = [
         'startDate',
+        'endDate',
         'pressReleaseDate',
     ];
 
@@ -112,5 +113,19 @@ class Account extends Model
         $pastDate = Carbon::now()->subMonths(6);
 
         return $this->startDate->gte($pastDate);
+    }
+
+    /**
+     * Determines if end date has been met.
+     *
+     * @return boolean
+     */
+    public function hasEnded()
+    {
+        if (! $this->endDate) {
+            return false;
+        }
+
+        return Carbon::now()->gte($this->endDate);
     }
 }

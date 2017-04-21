@@ -19,17 +19,19 @@
                     <th class="mw150">@lang('City')</th>
                     <th class="mw150">@lang('State')</th>
                     <th class="mw150">@lang('Start Date')</th>
+                    <th class="mw150">@lang('End Date')</th>
                     <th class="mw100">@lang('Actions')</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($accounts as $account)
-                    <tr class="{{ $account->isRecentlyCreated() ? 'success' : '' }}">
+                    <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}">
                         <td>{{ $account->name }}</td>
                         <td>{{ $account->siteCode }}</td>
                         <td>{{ $account->city }}</td>
                         <td>{{ $account->state }}</td>
                         <td>{{ $account->startDate ? $account->startDate->format('Y-m-d') : '' }}</td>
+                        <td>{{ $account->endDate ? $account->endDate->format('Y-m-d') : '' }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.accounts.edit', [$account]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>

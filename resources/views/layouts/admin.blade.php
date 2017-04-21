@@ -105,7 +105,7 @@
         <div class="content-wrapper">
             <section class="content">
                 <div class="box">
-                    <div class="box-header with-border">
+                    <div class="box-header with-border @yield('content-header-class')">
                         <h1 class="box-title">
 
                             @yield('content-header')

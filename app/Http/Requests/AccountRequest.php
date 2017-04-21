@@ -35,6 +35,7 @@ class AccountRequest extends FormRequest
             'latitude' => 'between:-90,90',
             'longitude' => 'between:-180,180',
             'startDate' => 'nullable|date_format:"Y-m-d"',
+            'endDate' => 'nullable|date_format:"Y-m-d"',
             'physiciansNeeded' => 'integer|min:0',
             'appsNeeded' => 'integer|min:0',
             'physicianHoursPerMonth' => 'integer|min:0',
@@ -97,6 +98,7 @@ class AccountRequest extends FormRequest
         $account->latitude = $this->latitude;
         $account->longitude = $this->longitude;
         $account->startDate = $this->startDate ? $this->startDate: null;
+        $account->endDate = $this->endDate ? $this->endDate: null;
         $account->physiciansNeeded = $this->physiciansNeeded;
         $account->appsNeeded = $this->appsNeeded;
         $account->physicianHoursPerMonth = $this->physicianHoursPerMonth;

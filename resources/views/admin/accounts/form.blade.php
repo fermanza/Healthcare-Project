@@ -171,14 +171,31 @@
                     <span class="help-block"><strong>{{ $errors->first('startDate') }}</strong></span>
                 @endif
             </div>
-        </div>
-        <div class="col-md-6 text-center">
             @if ($action == 'edit' && $account->isRecentlyCreated())
-                <div class="bg-success">
+                <div class="bg-success text-center">
                     <br />
                     @lang('Account created in the last')
                     <strong>6</strong>
                     @lang('months').
+                    <br />&nbsp;
+                </div>
+            @endif
+        </div>
+        <div class="col-md-6">
+            <div class="form-group{{ $errors->has('endDate') ? ' has-error' : '' }}">
+                <label for="endDate">@lang('End Date')</label>
+                <div class="input-group date datepicker">
+                    <input type="text" class="form-control" id="endDate" name="endDate" value="{{ old('endDate') ?: ($account->endDate ? $account->endDate->format('Y-m-d') : '') }}" />
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+                @if ($errors->has('endDate'))
+                    <span class="help-block"><strong>{{ $errors->first('endDate') }}</strong></span>
+                @endif
+            </div>
+            @if ($action == 'edit' && $account->hasEnded())
+                <div class="bg-danger text-center">
+                    <br />
+                    <strong>@lang('Account has ended.')</strong>
                     <br />&nbsp;
                 </div>
             @endif
