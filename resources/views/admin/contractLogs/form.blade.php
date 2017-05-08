@@ -310,8 +310,9 @@
     <script>
         $(document).ready(function () {
             $('#accountId').on('change', function () {
+                var accounts = {!! $accounts->toJson() !!};
                 var accountId = Number($(this).val());
-                var account = _.find(BackendVars.accounts, { id: accountId });
+                var account = _.find(accounts, { id: accountId });
                 $('#division').val(account.division && account.division.name || 'NO DIVISION ASSOCIATED');
                 $('#hospitalName').val(account.name);
                 $('#group').val(account.division && account.division.group && account.division.group.name || 'NO GROUP ASSOCIATED');
