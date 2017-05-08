@@ -6,7 +6,7 @@ use JavaScript;
 use App\Account;
 use App\Employee;
 use App\Position;
-use App\Speciality;
+use App\Specialty;
 use App\ContractLog;
 use App\ContractNote;
 use App\ContractType;
@@ -47,7 +47,7 @@ class ContractLogsController extends Controller
         $contractLog->load('account.division.group', 'account.practices');
         $accounts = Account::with('division.group', 'practices')->orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
-        $specialities = Speciality::orderBy('speciality')->get();
+        $specialties = Specialty::orderBy('specialty')->get();
         $recruiters = AccountEmployee::position('Recruiter')->get()->sortBy->fullName();
         $managers = AccountEmployee::position('Manager')->get()->sortBy->fullName();
         $coordinators = Employee::all()->sortBy->fullName();
@@ -59,7 +59,7 @@ class ContractLogsController extends Controller
         JavaScript::put(compact('accounts'));
 
         $params = compact(
-            'contractLog', 'accounts', 'statuses', 'specialities', 'recruiters',
+            'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
             'managers', 'coordinators', 'types', 'notes', 'positions', 'action'
         );
 
@@ -104,7 +104,7 @@ class ContractLogsController extends Controller
         $contractLog->load('account.division.group', 'account.practices');
         $accounts = Account::with('division.group', 'practices')->orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
-        $specialities = Speciality::orderBy('speciality')->get();
+        $specialties = Specialty::orderBy('specialty')->get();
         $recruiters = AccountEmployee::position('Recruiter')->get()->sortBy->fullName();
         $managers = AccountEmployee::position('Manager')->get()->sortBy->fullName();
         $coordinators = Employee::all()->sortBy->fullName();
@@ -116,7 +116,7 @@ class ContractLogsController extends Controller
         JavaScript::put(compact('accounts'));
 
         $params = compact(
-            'contractLog', 'accounts', 'statuses', 'specialities', 'recruiters',
+            'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
             'managers', 'coordinators', 'types', 'notes', 'positions', 'action'
         );
 

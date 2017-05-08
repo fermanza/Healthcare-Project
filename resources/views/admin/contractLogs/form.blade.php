@@ -74,11 +74,11 @@
 
         <div class="col-md-2">
             <div class="form-group{{ $errors->has('specialtyId') ? ' has-error' : '' }}">
-                <label for="specialtyId">@lang('Speciality')</label>
+                <label for="specialtyId">@lang('Specialty')</label>
                 <select class="form-control select2" id="specialtyId" name="specialtyId" required>
                     <option value="" disabled selected></option>
-                    @foreach ($specialities as $speciality)
-                        <option value="{{ $speciality->id }}" {{ (old('specialtyId') == $speciality->id ?: $speciality->id == $contractLog->specialtyId) ? 'selected': '' }}>{{ $speciality->speciality }}</option>
+                    @foreach ($specialties as $specialty)
+                        <option value="{{ $specialty->id }}" {{ (old('specialtyId') == $specialty->id ?: $specialty->id == $contractLog->specialtyId) ? 'selected': '' }}>{{ $specialty->specialty }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('specialtyId'))
