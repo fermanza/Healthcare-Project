@@ -311,11 +311,13 @@
         $(document).ready(function () {
             $('#accountId').on('change', function () {
                 var accountId = Number($(this).val());
-                var account = _.find(BackendVars.accounts, { id: accountId });
-                $('#division').val(account.division && account.division.name || 'NO DIVISION ASSOCIATED');
-                $('#hospitalName').val(account.name);
-                $('#group').val(account.division && account.division.group && account.division.group.name || 'NO GROUP ASSOCIATED');
-                $('#practice').val(account.practices.length && account.practices[0].name || 'NO PRACTICE ASSOCIATED');
+                $.get('/admin/accounts/' + accountId, function(response) {
+                    var account = response;
+                    $('#division').val(account.division && account.division.name || 'NO DIVISION ASSOCIATED');
+                    $('#hospitalName').val(account.name);
+                    $('#group').val(account.division && account.division.group && account.division.group.name || 'NO GROUP ASSOCIATED');
+                    $('#practice').val(account.practices.length && account.practices[0].name || 'NO PRACTICE ASSOCIATED');
+                });
             });
         });
     </script>

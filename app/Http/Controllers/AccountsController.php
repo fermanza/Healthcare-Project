@@ -62,12 +62,12 @@ class AccountsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Account $account)
     {
-        //
+        return $account->load('division.group', 'practices');
     }
 
     /**

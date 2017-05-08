@@ -56,7 +56,7 @@ class ContractLogsController extends Controller
         $positions = Position::orderBy('position')->get();
         $action = 'create';
 
-        JavaScript::put(compact('accounts'));
+        // JavaScript::put(compact('accounts'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
@@ -113,7 +113,7 @@ class ContractLogsController extends Controller
         $positions = Position::orderBy('position')->get();
         $action = 'edit';
 
-        JavaScript::put(compact('accounts'));
+        // JavaScript::put(compact('accounts'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
