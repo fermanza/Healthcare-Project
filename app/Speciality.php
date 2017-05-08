@@ -11,5 +11,5 @@ class Speciality extends Model
      *
      * @var string
      */
-    protected $table = 'tSpecialty';
+    protected $table = 'tSpeciality';
 }
