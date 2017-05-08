@@ -38,6 +38,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->resource('people', 'PeopleController');
     $router->resource('positionTypes', 'PositionTypesController');
     $router->resource('employees', 'EmployeesController');
+    $router->resource('contractLogs', 'ContractLogsController');
 
 });
 

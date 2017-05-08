@@ -27,6 +27,6 @@ class PhysiciansApps extends Model
      */
     public function account()
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Account::class, 'accountId');
     }
 }

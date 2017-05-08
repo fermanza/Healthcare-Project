@@ -40,4 +40,28 @@ class AccountEmployee extends Model
     {
         return $this->belongsTo(PositionType::class, 'positionTypeId');
     }
+
+    /**
+     * Scope a query to only include recruiters.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string  $position
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePosition($query, $position)
+    {
+        return $query->whereHas('positionType', function ($query) use ($position) {
+            $query->where('name', $position);
+        });
+    }
+
+    /**
+     * Get Employee's full name.
+     *
+     * @return string
+     */
+    public function fullName()
+    {
+        return $this->employee->fullName();
+    }
 }

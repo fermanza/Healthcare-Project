@@ -49,7 +49,7 @@ class Account extends Model
     /**
      * Get the Manager (AccountEmployee) for the Account.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function manager()
     {
