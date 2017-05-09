@@ -25,7 +25,8 @@
                     <th class="mw100">@lang('Division')</th>
                     <th class="mw100">@lang('Contract Out')</th>
                     <th class="mw100">@lang('Contract In')</th>
-                    <th class="mw150">@lang('Project Start Date')</th>
+                    <th class="mw150">@lang('Projected Start Date')</th>
+                    <th class="mw150">@lang('Reason')</th>
                     <th class="mw100">@lang('Actions')</th>
                 </tr>
             </thead>
@@ -44,6 +45,7 @@
                         <td>{{ $contractLog->contractOutDate ? $contractLog->contractOutDate->format('Y-m-d') : '' }}</td>
                         <td>{{ $contractLog->contractInDate ? $contractLog->contractInDate->format('Y-m-d') : '' }}</td>
                         <td>{{ $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('Y-m-d') : '' }}</td>
+                        <td>{{ $contractLog->note ? $contractLog->note->contractNote : '' }}</td>
                         <td class="text-center">
                             <a href="{{ route('admin.contractLogs.edit', [$contractLog]) }}" class="btn btn-xs btn-primary">
                                 <i class="fa fa-pencil"></i>

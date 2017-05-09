@@ -168,11 +168,14 @@
         </div>
 
         <div class="col-md-2">
-            <div class="form-group{{ $errors->has('numOfHours') ? ' has-error' : '' }}">
-                <label for="numOfHours">@lang('No. of Hours')</label>
-                <input type="number" class="form-control" id="numOfHours" name="numOfHours" min="0" value="{{ old('numOfHours') ?: $contractLog->numOfHours }}" required />
-                @if ($errors->has('numOfHours'))
-                    <span class="help-block"><strong>{{ $errors->first('numOfHours') }}</strong></span>
+            <div class="form-group{{ $errors->has('actualStartDate') ? ' has-error' : '' }}">
+                <label for="actualStartDate">@lang('Actual Start Date')</label>
+                <div class="input-group date datepicker">
+                    <input type="text" class="form-control" id="actualStartDate" name="actualStartDate" value="{{ old('actualStartDate') ?: ($contractLog->actualStartDate ? $contractLog->actualStartDate->format('Y-m-d') : '') }}" />
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+                @if ($errors->has('actualStartDate'))
+                    <span class="help-block"><strong>{{ $errors->first('actualStartDate') }}</strong></span>
                 @endif
             </div>
         </div>
@@ -256,7 +259,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-offset-1 col-md-6">
+        <div class="col-md-offset-1 col-md-4">
             <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
                 <label for="comments">@lang('Comments')</label>
                 <input type="text" class="form-control" id="comments" name="comments" value="{{ old('comments') ?: $contractLog->comments }}" required />
@@ -282,14 +285,21 @@
         </div>
 
         <div class="col-md-2">
-            <div class="form-group{{ $errors->has('actualStartDate') ? ' has-error' : '' }}">
-                <label for="actualStartDate">@lang('Actual Start Date')</label>
-                <div class="input-group date datepicker">
-                    <input type="text" class="form-control" id="actualStartDate" name="actualStartDate" value="{{ old('actualStartDate') ?: ($contractLog->actualStartDate ? $contractLog->actualStartDate->format('Y-m-d') : '') }}" />
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                </div>
-                @if ($errors->has('actualStartDate'))
-                    <span class="help-block"><strong>{{ $errors->first('actualStartDate') }}</strong></span>
+            <div class="form-group{{ $errors->has('numOfHours') ? ' has-error' : '' }}">
+                <label for="numOfHours">@lang('No. of Hours')</label>
+                <input type="number" class="form-control" id="numOfHours" name="numOfHours" min="0" value="{{ old('numOfHours') ?: $contractLog->numOfHours }}" required />
+                @if ($errors->has('numOfHours'))
+                    <span class="help-block"><strong>{{ $errors->first('numOfHours') }}</strong></span>
+                @endif
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group{{ $errors->has('value') ? ' has-error' : '' }}">
+                <label for="value">@lang('Value')</label>
+                <input type="number" class="form-control" id="value" name="value" min="0" max="1" step="0.5" value="{{ old('value') ?: $contractLog->value }}" required />
+                @if ($errors->has('value'))
+                    <span class="help-block"><strong>{{ $errors->first('value') }}</strong></span>
                 @endif
             </div>
         </div>
@@ -310,7 +320,7 @@
     <script>
         $(document).ready(function () {
             $('#accountId').on('change', function () {
-                var accountId = Number($(this).val());
+                var accountId = $(this).val();
                 $.get('/admin/accounts/' + accountId, function(response) {
                     var account = response;
                     $('#division').val(account.division && account.division.name || 'NO DIVISION ASSOCIATED');
@@ -318,6 +328,12 @@
                     $('#group').val(account.division && account.division.group && account.division.group.name || 'NO GROUP ASSOCIATED');
                     $('#practice').val(account.practices.length && account.practices[0].name || 'NO PRACTICE ASSOCIATED');
                 });
+            });
+
+            $('#statusId').on('change', function () {
+                var statusId = Number($(this).val());
+                var status = _.find(BackendVars.statuses, { id: statusId });
+                $('#value').val(status.value);
             });
         });
     </script>

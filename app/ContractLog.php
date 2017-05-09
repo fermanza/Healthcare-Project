@@ -75,4 +75,14 @@ class ContractLog extends Model
     {
         return $this->belongsTo(Division::class, 'divisionId');
     }
+
+    /**
+     * Get the ContractNote for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function note()
+    {
+        return $this->belongsTo(ContractNote::class, 'contractNoteId');
+    }
 }

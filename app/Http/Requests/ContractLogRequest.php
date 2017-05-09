@@ -20,6 +20,7 @@ class ContractLogRequest extends FormRequest
             'recruiterId' => 'required|exists:tAccountToEmployee,id',
             'managerId' => 'required|exists:tAccountToEmployee,id',
             'statusId' => 'required|exists:tContractStatus,id',
+            'value' => 'required|in:0,0.5,1',
             'provider' => 'required',
             'specialtyId' => 'required|exists:tSpecialty,id',
             'contractOutDate' => 'date_format:"Y-m-d"',

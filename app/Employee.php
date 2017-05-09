@@ -32,23 +32,13 @@ class Employee extends Model
     }
 
     /**
-     * Get the Recruiting Accounts for the Employee.
+     * Get the AccountEmployees for the Employee.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function recruitingAccounts()
+    public function accountEmployees()
     {
-        return $this->hasMany(Account::class, 'recruiter_id');
-    }
-
-    /**
-     * Get the Managing Accounts for the Employee.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function managingAccounts()
-    {
-        return $this->hasMany(Account::class, 'manager_id');
+        return $this->hasMany(AccountEmployee::class, 'employeeId');
     }
 
     /**
@@ -59,5 +49,16 @@ class Employee extends Model
     public function fullName()
     {
         return $this->person->fullName();
+    }
+
+    /**
+     * Determine if the Employee belongs to an Account with the given position.
+     *
+     * @param  string  $position
+     * @return boolean
+     */
+    public function hasPosition($position)
+    {
+        return $this->accountEmployees->contains->hasPosition($position);
     }
 }

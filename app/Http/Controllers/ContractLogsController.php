@@ -26,11 +26,7 @@ class ContractLogsController extends Controller
     public function index()
     {
         $contractLogs = ContractLog::with([
-            'status',
-            'position',
-            'practice',
-            'account',
-            'division',
+            'status', 'position', 'practice', 'account', 'division',
         ])->get();
 
         return view('admin.contractLogs.index', compact('contractLogs'));
@@ -45,18 +41,19 @@ class ContractLogsController extends Controller
     {
         $contractLog = new ContractLog;
         $contractLog->load('account.division.group', 'account.practices');
-        $accounts = Account::with('division.group', 'practices')->orderBy('name')->get();
+        $accounts = Account::orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $specialties = Specialty::orderBy('specialty')->get();
-        $recruiters = AccountEmployee::position('Recruiter')->get()->sortBy->fullName();
-        $managers = AccountEmployee::position('Manager')->get()->sortBy->fullName();
-        $coordinators = Employee::all()->sortBy->fullName();
+        $employees =  Employee::with('accountEmployees.positionType', 'person')->get()->sortBy->fullName();
+        $recruiters = $employees->filter->hasPosition('Recruiter');
+        $managers = $employees->filter->hasPosition('Manager');
+        $coordinators = $employees;
         $types = ContractType::orderBy('contractType')->get();
         $notes = ContractNote::orderBy('contractNote')->get();
         $positions = Position::orderBy('position')->get();
         $action = 'create';
 
-        // JavaScript::put(compact('accounts'));
+        JavaScript::put(compact('statuses'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
@@ -102,18 +99,19 @@ class ContractLogsController extends Controller
     public function edit(ContractLog $contractLog)
     {
         $contractLog->load('account.division.group', 'account.practices');
-        $accounts = Account::with('division.group', 'practices')->orderBy('name')->get();
+        $accounts = Account::orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $specialties = Specialty::orderBy('specialty')->get();
-        $recruiters = AccountEmployee::position('Recruiter')->get()->sortBy->fullName();
-        $managers = AccountEmployee::position('Manager')->get()->sortBy->fullName();
-        $coordinators = Employee::all()->sortBy->fullName();
+        $employees =  Employee::with('accountEmployees.positionType', 'person')->get()->sortBy->fullName();
+        $recruiters = $employees->filter->hasPosition('Recruiter');
+        $managers = $employees->filter->hasPosition('Manager');
+        $coordinators = $employees;
         $types = ContractType::orderBy('contractType')->get();
         $notes = ContractNote::orderBy('contractNote')->get();
         $positions = Position::orderBy('position')->get();
         $action = 'edit';
 
-        // JavaScript::put(compact('accounts'));
+        JavaScript::put(compact('statuses'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',

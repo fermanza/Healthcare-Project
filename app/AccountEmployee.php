@@ -64,4 +64,15 @@ class AccountEmployee extends Model
     {
         return $this->employee->fullName();
     }
+
+    /**
+     * Determine if the AccountEmployee has the given position.
+     *
+     * @param  string  $position
+     * @return boolean
+     */
+    public function hasPosition($position)
+    {
+        return $this->positionType->name == $position;
+    }
 }
