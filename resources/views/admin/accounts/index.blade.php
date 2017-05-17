@@ -39,6 +39,7 @@
                                 data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Merge')"
                                 data-title="@lang('Merge Site Code')" data-account="{{ $account->name }}"
                                 data-action="{{ route('admin.accounts.merge', [$account]) }}"
+                                data-site-code="{{ $account->siteCode }}"
                             >
                                 @lang('Merge')
                             </button>
@@ -46,6 +47,7 @@
                                 data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Set Parent')"
                                 data-title="@lang('Parent Site Code')" data-account="{{ $account->name }}"
                                 data-action="{{ route('admin.accounts.parent', [$account]) }}"
+                                data-site-code="{{ $account->siteCode }}"
                             >
                                 @lang('Set Parent')
                             </button>
@@ -84,7 +86,7 @@
                         {{ method_field('PATCH') }}
                         <div class="form-group">
                             <label for="siteCode">@lang('Site Code')</label>
-                            <select width="100%" class="form-control select2" data-parent="#mergeOrParentSiteCode" id="siteCode" name="siteCode" required>
+                            <select class="form-control select2" data-parent="#mergeOrParentSiteCode" id="siteCode" name="siteCode" required>
                                 <option value="" disabled selected></option>
                                 @foreach ($accounts as $account)
                                     <option value="{{ $account->siteCode }}">{{ $account->siteCode }} - {{ $account->name }}</option>
@@ -116,10 +118,15 @@
                 var title = $(this).data('title');
                 var account = $(this).data('account');
                 var submit = $(this).data('submit');
+                var siteCode = $(this).data('site-code');
                 $('#formMergeOrParentSiteCode').attr('action', action);
                 $('#mergeOrParentSiteCodeTitle').text(title);
                 $('#mergeOrParentSiteCodeAccount').text(account);
                 $('#mergeOrParentSiteCodeSubmit').text(submit);
+                $('#siteCode option[value=' + siteCode + ']').attr('disabled', true).siblings('[value!=""][value!="' + siteCode + '"]').removeAttr('disabled');
+                $('#siteCode').select2('destroy');
+                $('#siteCode').val('');
+                $('#siteCode').select2({ dropdownParent: $('#mergeOrParentSiteCode') });
             });
         });
     </script>
