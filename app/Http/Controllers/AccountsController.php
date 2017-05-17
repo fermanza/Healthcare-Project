@@ -158,4 +158,51 @@ class AccountsController extends Controller
 
         return $pdf->download($fileName);
     }
+
+    /**
+     * Merge Site Code of given Account.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @return \Illuminate\Http\Response
+     */
+    public function merge(Request $request, Account $account)
+    {
+        if (! Account::where('siteCode', $request->siteCode)->exists()) {
+            flash(__('Site Code does not exist.'), 'error');
+
+            return back();
+        }
+
+        $account->mergedSiteCode = $request->siteCode;
+        $account->active = false;
+        $account->save();
+
+        flash(__('Account Merged.'));
+
+        return back();
+    }
+
+    /**
+     * Set Parent Site Code to given Account.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @return \Illuminate\Http\Response
+     */
+    public function parent(Request $request, Account $account)
+    {
+        if (! Account::where('siteCode', $request->siteCode)->exists()) {
+            flash(__('Site Code does not exist.'), 'error');
+
+            return back();
+        }
+
+        $account->parentSiteCode = $request->siteCode;
+        $account->save();
+
+        flash(__('Parent Site Code has been set.'));
+
+        return back();
+    }
 }

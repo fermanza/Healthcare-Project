@@ -23,6 +23,8 @@ class CreateAccountsTable extends Migration
             $table->dateTime('startDate')->nullable();
             $table->dateTime('endDate')->nullable();
             $table->text('accountDescription');
+            $table->string('mergedSiteCode');
+            $table->string('parentSiteCode');
             
             $table->foreign('divisionId')->references('id')->on('tDivision')->onDelete('cascade');
         });

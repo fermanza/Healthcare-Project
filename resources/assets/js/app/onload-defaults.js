@@ -30,7 +30,15 @@ $(() => {
 
 
     // Select2
-    $('.select2').select2();
+    $('.select2').each(function () {
+        const parent = $(this).data('parent');
+        let options = {};
+        if (parent) {
+            $(this).css('width', '100%');
+            options.dropdownParent = $(parent);
+        }
+        $(this).select2(options);
+    });
 
 
     // DateTime Picker

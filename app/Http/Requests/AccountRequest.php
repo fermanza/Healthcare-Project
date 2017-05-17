@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Account;
 use App\SiteCode;
 use App\PositionType;
 use App\PhysiciansApps;
@@ -136,6 +137,10 @@ class AccountRequest extends FormRequest
         if ($pastSiteCode != $this->siteCode) {
             $this->createSiteCodeHistory($account);
         }
+        
+        if ($this->isEdit() && $pastSiteCode != $this->siteCode) {
+            $this->updateRelatedSiteCodes($pastSiteCode);
+        }
     }
 
     /**
@@ -219,6 +224,23 @@ class AccountRequest extends FormRequest
         $physiciansApps->physicianAppsChangeDate = $this->physicianAppsChangeDate;
         $physiciansApps->physicianAppsChangeReason = $this->physicianAppsChangeReason;
         $physiciansApps->save();
+    }
+
+    /**
+     * Updates the related Merged SiteCodes with the new one.
+     *
+     * @param  string  $pastSiteCode
+     * @return null
+     */
+    public function updateRelatedSiteCodes($pastSiteCode)
+    {
+        Account::where('mergedSiteCode', $pastSiteCode)->update([
+            'mergedSiteCode' => $this->siteCode,
+        ]);
+
+        Account::where('parentSiteCode', $pastSiteCode)->update([
+            'parentSiteCode' => $this->siteCode,
+        ]);
     }
 }
 

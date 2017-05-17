@@ -41,10 +41,12 @@ class ContractLogsController extends Controller
     {
         $contractLog = new ContractLog;
         $contractLog->load('account.division.group', 'account.practices');
-        $accounts = Account::orderBy('name')->get();
+        $accounts = Account::where('active', true)->orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $specialties = Specialty::orderBy('specialty')->get();
-        $employees =  Employee::with('accountEmployees.positionType', 'person')->get()->sortBy->fullName();
+        $employees =  Employee::where('active', true)
+                                ->with('accountEmployees.positionType', 'person')
+                                ->get()->sortBy->fullName();
         $recruiters = $employees->filter->hasPosition('Recruiter');
         $managers = $employees->filter->hasPosition('Manager');
         $coordinators = $employees;
@@ -99,10 +101,12 @@ class ContractLogsController extends Controller
     public function edit(ContractLog $contractLog)
     {
         $contractLog->load('account.division.group', 'account.practices');
-        $accounts = Account::orderBy('name')->get();
+        $accounts = Account::where('active', true)->orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $specialties = Specialty::orderBy('specialty')->get();
-        $employees =  Employee::with('accountEmployees.positionType', 'person')->get()->sortBy->fullName();
+        $employees =  Employee::where('active', true)
+                                ->with('accountEmployees.positionType', 'person')
+                                ->get()->sortBy->fullName();
         $recruiters = $employees->filter->hasPosition('Recruiter');
         $managers = $employees->filter->hasPosition('Manager');
         $coordinators = $employees;

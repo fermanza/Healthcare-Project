@@ -27,6 +27,8 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->get('sidebar-expand', 'SidebarController@expand');
 
     $router->post('accounts/image', 'AccountsController@image');
+    $router->patch('accounts/{account}/merge', 'AccountsController@merge')->name('accounts.merge');
+    $router->patch('accounts/{account}/parent', 'AccountsController@parent')->name('accounts.parent');
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
     $router->resource('accounts', 'AccountsController');
 
