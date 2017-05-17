@@ -124,8 +124,7 @@
                 $('#mergeOrParentSiteCodeAccount').text(account);
                 $('#mergeOrParentSiteCodeSubmit').text(submit);
                 $('#siteCode option[value=' + siteCode + ']').attr('disabled', true).siblings('[value!=""][value!="' + siteCode + '"]').removeAttr('disabled');
-                $('#siteCode').select2('destroy');
-                $('#siteCode').val('');
+                $('#siteCode').select2('destroy').val('');
                 $('#siteCode').select2({ dropdownParent: $('#mergeOrParentSiteCode') });
             });
         });

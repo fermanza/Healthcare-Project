@@ -9,9 +9,11 @@
 
         <header class="main-header">
             <span class="logo">
-                <span class="logo-mini">Em</span>
+                <span class="logo-mini">
+                    <img src="{{ asset('img/app-logo-fav.png') }}" alt="Logo small" width="41" />
+                </span>
                 <span class="logo-lg">
-                    <img src="{{ asset('img/emcare-logo-sm.png') }}" alt="Logo small" width="150" />
+                    <img src="{{ asset('img/emcare-logo-sm.png') }}" alt="Logo small" width="200" />
                 </span>
             </span>
             <nav class="navbar navbar-static-top">
