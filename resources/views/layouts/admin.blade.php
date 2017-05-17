@@ -13,7 +13,7 @@
                     <img src="{{ asset('img/app-logo-fav.png') }}" alt="Logo small" width="41" />
                 </span>
                 <span class="logo-lg">
-                    <img src="{{ asset('img/emcare-logo-sm.png') }}" alt="Logo small" width="200" />
+                    <img src="{{ asset('img/app-logo-sm.png') }}" alt="Logo small" width="200" />
                 </span>
             </span>
             <nav class="navbar navbar-static-top">

@@ -48,7 +48,7 @@
 </style>
 
 <div class="text-center">
-    <img src="{{ asset('img/emcare-logo.png') }}" class="halft-width" />
+    <img src="{{ asset('img/app-logo.png') }}" class="halft-width" />
 </div>
 
 <div style="height: 50px;"></div>

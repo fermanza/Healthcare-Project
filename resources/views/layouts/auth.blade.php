@@ -7,9 +7,9 @@
         <div class="login-box-body">
             
             <div class="login-logo">
-                <img src="{{ asset('img/emcare-logo-sm.png') }}" alt="Logo small" />
+                <img src="{{ asset('img/app-logo-sm.png') }}" alt="Logo small" />
             </div>
-            
+
             @yield('content')
 
         </div>
