@@ -27,7 +27,9 @@
             </thead>
             <tbody>
                 @foreach($accounts as $account)
-                    <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}">
+                    <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}"
+                        data-id="{{ $account->id }}" data-name="{{ $account->name }}"
+                    >
                         <td></td>
                         <td>{{ $account->name }}</td>
                         <td>{{ $account->siteCode }}</td>
@@ -115,35 +117,7 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            // $('#datatable-accounts').each(function () {
-            //     var options = {
-            //         columnDefs: [ {
-            //             orderable: false,
-            //             className: 'select-checkbox',
-            //             targets:   0
-            //         } ],
-            //         select: {
-            //             style:    'multi',
-            //             selector: 'td:first-child'
-            //         },
-            //         order: [[ 1, 'asc' ]],
-            //         dom: "<'row'<'col-sm-4 dataTables_buttons mb5'B><'col-sm-4 text-center'l><'col-sm-4'f>>" +
-            //             "<'row'<'col-sm-12'tr>>" +
-            //             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-            //         buttons: [
-            //             {
-            //                 text: 'Merge selected',
-            //                 action: function (e, dt, node, config) {
-            //                     window.thedtmf = dt;
-            //                 }
-            //             }
-            //         ]
-            //     };
-            //     options = $.extend({}, defaultDTOptions, options);
-            //     $(this).dataTable(options);
-            // });
-
-            window.accountsTable = $('#datatable-accounts').DataTable($.extend({}, defaultDTOptions, {
+            var accountsDT = $('#datatable-accounts').DataTable($.extend({}, defaultDTOptions, {
                 columnDefs: [ {
                     orderable: false,
                     className: 'select-checkbox',
@@ -154,19 +128,22 @@
                     selector: 'td:first-child'
                 },
                 order: [[ 1, 'asc' ]],
-                dom: "<'row'<'col-sm-4 dataTables_buttons mb5'B><'col-sm-4 text-center'l><'col-sm-4'f>>" +
+                dom: "<'row'<'col-sm-4 dataTables_buttons mb5'><'col-sm-4 text-center'l><'col-sm-4'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                // buttons: [
-                //     {
-                //         text: 'Merge selected',
-                //         action: function (e, dt, node, config) {
-                //             console.log(dt.rows({ selected: true }))
-                //             window.thedtmf = accountsTable;
-                //         }
-                //     }
-                // ]
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>"
             }));
+
+            var $mergeSelected = $('<button class="btn btn-default">Merge selected</button>').on('click', function () {
+                var selected = [];
+                accountsDT.rows({ selected: true }).every(function () {
+                    var $row = $(this.node());
+                    selected.push({
+                        id: $row.data('id'),
+                        name: $row.data('name')
+                    });
+                });
+            });
+            $('.dataTables_buttons').append($mergeSelected);
 
             $('#datatable-accounts').on('click', '.btnMergeOrParentSiteCode', function () {
                 var action = $(this).data('action');
