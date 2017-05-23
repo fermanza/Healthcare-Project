@@ -10,6 +10,7 @@ use App\Employee;
 use App\Practice;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
+use Illuminate\Support\Facades\Validator;
 
 class AccountsController extends Controller
 {
@@ -163,20 +164,25 @@ class AccountsController extends Controller
      * Merge Site Code of given Account.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function merge(Request $request, Account $account)
+    public function merge(Request $request)
     {
-        if (! Account::where('siteCode', $request->siteCode)->exists()) {
-            flash(__('Site Code does not exist.'), 'error');
+        $validator = Validator::make($request->all(), [
+            'accounts' => 'required|array|exists:tAccount,id',
+            'siteCode' => 'required|exists:tAccount,siteCode',
+        ]);
+
+        if ($validator->fails()) {
+            flash(__('Account or Site Code does not exist.'), 'error');
 
             return back();
         }
 
-        $account->mergedSiteCode = $request->siteCode;
-        $account->active = false;
-        $account->save();
+        Account::whereIn('id', $request->accounts)->update([
+            'mergedSiteCode' => $request->siteCode,
+            'active' => false,
+        ]);
 
         flash(__('Account Merged.'));
 
@@ -187,19 +193,24 @@ class AccountsController extends Controller
      * Set Parent Site Code to given Account.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function parent(Request $request, Account $account)
+    public function parent(Request $request)
     {
-        if (! Account::where('siteCode', $request->siteCode)->exists()) {
-            flash(__('Site Code does not exist.'), 'error');
+        $validator = Validator::make($request->all(), [
+            'accounts' => 'required|array|exists:tAccount,id',
+            'siteCode' => 'required|exists:tAccount,siteCode',
+        ]);
+
+        if ($validator->fails()) {
+            flash(__('Account or Site Code does not exist.'), 'error');
 
             return back();
         }
 
-        $account->parentSiteCode = $request->siteCode;
-        $account->save();
+        Account::whereIn('id', $request->accounts)->update([
+            'parentSiteCode' => $request->siteCode,
+        ]);
 
         flash(__('Parent Site Code has been set.'));
 

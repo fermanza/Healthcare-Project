@@ -28,7 +28,7 @@
             <tbody>
                 @foreach($accounts as $account)
                     <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}"
-                        data-id="{{ $account->id }}" data-name="{{ $account->name }}"
+                        data-id="{{ $account->id }}" data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
                     >
                         <td></td>
                         <td>{{ $account->name }}</td>
@@ -42,7 +42,7 @@
                             <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
                                 data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Merge')"
                                 data-title="@lang('Merge Site Code')" data-account="{{ $account->name }}"
-                                data-action="{{ route('admin.accounts.merge', [$account]) }}"
+                                data-action="{{ route('admin.accounts.merge') }}" data-id="{{ $account->id }}"
                                 data-site-code="{{ $account->siteCode }}"
                             >
                                 @lang('Merge')
@@ -50,7 +50,7 @@
                             <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
                                 data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Set Parent')"
                                 data-title="@lang('Parent Site Code')" data-account="{{ $account->name }}"
-                                data-action="{{ route('admin.accounts.parent', [$account]) }}"
+                                data-action="{{ route('admin.accounts.parent') }}" data-id="{{ $account->id }}"
                                 data-site-code="{{ $account->siteCode }}" data-associated-site-code="{{ $account->parentSiteCode }}"
                             >
                                 @lang('Set Parent')
@@ -124,7 +124,7 @@
                     targets:   0
                 } ],
                 select: {
-                    style:    'multi',
+                    style: 'multi',
                     selector: 'td:first-child'
                 },
                 order: [[ 1, 'asc' ]],
@@ -133,33 +133,66 @@
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>"
             }));
 
-            var $mergeSelected = $('<button class="btn btn-default">Merge selected</button>').on('click', function () {
+            var $mergeSelected = $('<button data-toggle="modal" data-target="#mergeOrParentSiteCode" class="btn btn-default">Merge selected</button>').on('click', function () {
                 var selected = [];
                 accountsDT.rows({ selected: true }).every(function () {
                     var $row = $(this.node());
                     selected.push({
                         id: $row.data('id'),
-                        name: $row.data('name')
+                        name: $row.data('name'),
+                        siteCode: String($row.data('site-code'))
                     });
+                });
+                if (! selected.length) {
+                    alert("@lang('Select at least one Account.')");
+                    return false;
+                }
+                var ids = _.map(selected, 'id');
+                var siteCodes = _.map(selected, 'siteCode');
+                showMergeOrParentSiteCodeModal({
+                    ids: ids,
+                    action: "{{ route('admin.accounts.merge') }}",
+                    title: "@lang('Merge Site Code')",
+                    account: '',
+                    submit: "@lang('Merge')",
+                    siteCodes: siteCodes,
+                    associatedSiteCode: null
                 });
             });
             $('.dataTables_buttons').append($mergeSelected);
 
             $('#datatable-accounts').on('click', '.btnMergeOrParentSiteCode', function () {
-                var action = $(this).data('action');
-                var title = $(this).data('title');
-                var account = $(this).data('account');
-                var submit = $(this).data('submit');
-                var siteCode = $(this).data('site-code');
-                var associatedSiteCode = $(this).data('associated-site-code');
-                $('#formMergeOrParentSiteCode').attr('action', action);
-                $('#mergeOrParentSiteCodeTitle').text(title);
-                $('#mergeOrParentSiteCodeAccount').text(account);
-                $('#mergeOrParentSiteCodeSubmit').text(submit);
-                $('#siteCode option[value=' + siteCode + ']').attr('disabled', true).siblings('[value!=""][value!="' + siteCode + '"]').removeAttr('disabled');
-                $('#siteCode').select2('destroy').val(associatedSiteCode || '');
-                $('#siteCode').select2({ dropdownParent: $('#mergeOrParentSiteCode') });
+                var $this = $(this);
+                showMergeOrParentSiteCodeModal({
+                    ids: [$this.data('id')],
+                    action: $this.data('action'),
+                    title: $this.data('title'),
+                    account: $this.data('account'),
+                    submit: $this.data('submit'),
+                    siteCodes: [String($this.data('site-code'))],
+                    associatedSiteCode: $this.data('associated-site-code')
+                });
             });
+
+            function showMergeOrParentSiteCodeModal(options) {
+                $('#formMergeOrParentSiteCode').find('input[name="accounts[]"]').remove();
+                $('#formMergeOrParentSiteCode').attr('action', options.action);
+                $('#mergeOrParentSiteCodeTitle').text(options.title);
+                $('#mergeOrParentSiteCodeAccount').text(options.account);
+                $('#mergeOrParentSiteCodeSubmit').text(options.submit);
+                _.each(options.ids, function (id) {
+                    $('#formMergeOrParentSiteCode').append('<input type="hidden" name="accounts[]" value="' + id + '" />');
+                });
+                $('#siteCode option[value!=""]').each(function () {
+                    if (_.includes(options.siteCodes, $(this).val())) {
+                        $(this).attr('disabled', true);
+                    } else {
+                        $(this).attr('disabled', false);
+                    }
+                });
+                $('#siteCode').select2('destroy').val(options.associatedSiteCode || '');
+                $('#siteCode').select2({ dropdownParent: $('#mergeOrParentSiteCode') });
+            }
         });
     </script>
 @endpush
