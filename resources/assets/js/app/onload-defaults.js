@@ -19,15 +19,22 @@ $(() => {
     
 
     // DataTables
-    $('.datatable').each(function () {
+    (() => {
         const defaultOptions = {
-            bStateSave: true
+            bStateSave: true,
+            aLengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
+            ]
         };
-        let options = $(this).data('datatable-config') || {};
-        options = $.extend({}, defaultOptions, options);
-        $(this).dataTable(options);
-    });
-
+        
+        $('.datatable').each(function () {
+            let options = $(this).data('datatable-config') || {};
+            options = $.extend({}, defaultOptions, options);
+            $(this).dataTable(options);
+        });
+    })();
+        
 
     // Select2
     $('.select2').each(function () {

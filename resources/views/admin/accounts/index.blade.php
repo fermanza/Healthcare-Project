@@ -47,7 +47,7 @@
                                 data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Set Parent')"
                                 data-title="@lang('Parent Site Code')" data-account="{{ $account->name }}"
                                 data-action="{{ route('admin.accounts.parent', [$account]) }}"
-                                data-site-code="{{ $account->siteCode }}"
+                                data-site-code="{{ $account->siteCode }}" data-associated-site-code="{{ $account->parentSiteCode }}"
                             >
                                 @lang('Set Parent')
                             </button>
@@ -113,18 +113,19 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            $('.btnMergeOrParentSiteCode').on('click', function () {
+            $('.datatable').on('click', '.btnMergeOrParentSiteCode', function () {
                 var action = $(this).data('action');
                 var title = $(this).data('title');
                 var account = $(this).data('account');
                 var submit = $(this).data('submit');
                 var siteCode = $(this).data('site-code');
+                var associatedSiteCode = $(this).data('associated-site-code');
                 $('#formMergeOrParentSiteCode').attr('action', action);
                 $('#mergeOrParentSiteCodeTitle').text(title);
                 $('#mergeOrParentSiteCodeAccount').text(account);
                 $('#mergeOrParentSiteCodeSubmit').text(submit);
                 $('#siteCode option[value=' + siteCode + ']').attr('disabled', true).siblings('[value!=""][value!="' + siteCode + '"]').removeAttr('disabled');
-                $('#siteCode').select2('destroy').val('');
+                $('#siteCode').select2('destroy').val(associatedSiteCode || '');
                 $('#siteCode').select2({ dropdownParent: $('#mergeOrParentSiteCode') });
             });
         });

@@ -26,8 +26,8 @@ $factory->define(App\PositionType::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Person::class, function (Faker\Generator $faker) {
     return [
-        'first_name' => $faker->firstName,
-        'last_name' => $faker->lastName,
+        'firstName' => $faker->firstName,
+        'lastName' => $faker->lastName,
     ];
 });
 
@@ -38,72 +38,72 @@ $factory->define(App\Group::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\EmployementStatus::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+    ];
+});
+
 $factory->define(App\Employee::class, function (Faker\Generator $faker) {
     return [
-        'person_id' => function () {
+        'personId' => function () {
             return factory(App\Person::class)->create()->id;
         },
-        'type' => $faker->word,
-        'is_full_time' => $faker->boolean,
+        'employementStatusId' => function () {
+            return factory(App\EmployementStatus::class)->create()->id;
+        },
+        'employeeType' => $faker->word,
+        'isFullTime' => $faker->boolean,
     ];
 });
 
 $factory->define(App\Division::class, function (Faker\Generator $faker) {
     return [
-        'group_id' => function () {
+        'groupId' => function () {
             return factory(App\Group::class)->create()->id;
         },
         'name' => $faker->word,
         'code' => $faker->word,
-        'is_jv' => $faker->boolean,
+        'isJv' => $faker->boolean,
     ];
 });
 
 $factory->define(App\Account::class, function (Faker\Generator $faker) {
     return [
-        'recruiter_id' => function () {
-            return factory(App\Employee::class)->create()->id;
-        },
-        'manager_id' => function () {
-            return factory(App\Employee::class)->create()->id;
-        },
-        'practice_id' => function () {
-            return factory(App\Practice::class)->create()->id;
-        },
-        'division_id' => function () {
+        'divisionId' => function () {
             return factory(App\Division::class)->create()->id;
         },
         'name' => $faker->word,
-        'site_code' => $faker->randomNumber,
-        'photo_path' => $faker->image,
-        'google_address' => $faker->address,
+        'siteCode' => $faker->randomNumber,
+        'photoPath' => $faker->image,
+        'googleAddress' => $faker->address,
         'street' => $faker->streetName,
         'number' => $faker->randomNumber,
         'city' => $faker->city,
         'state' => $faker->state,
-        'zip_code' => $faker->randomNumber,
+        'zipCode' => $faker->randomNumber,
         'country' => $faker->country,
-        'start_date' => $faker->dateTime,
-        'physicians_needed' => $faker->randomNumber,
-        'apps_needed' => $faker->randomNumber,
-        'physician_hours_per_month' => $faker->randomNumber,
-        'app_hours_per_month' => $faker->randomNumber,
-        'press_release' => $faker->boolean,
-        'press_release_date' => $faker->date,
-        'management_change_mailers' => $faker->boolean,
-        'recruiting_mailers' => $faker->boolean,
-        'email_blast' => $faker->boolean,
-        'purl_campaign' => $faker->boolean,
-        'marketing_slick' => $faker->boolean,
-        'collaboration_recruiting_team' => $faker->boolean,
-        'collaboration_recruiting_team_names' => $faker->firstName,
-        'compensation_grid' => $faker->boolean,
-        'compensation_grid_bonuses' => $faker->sentence,
-        'recruiting_incentives' => $faker->boolean,
-        'recruiting_incentives_description' => $faker->sentence,
-        'locum_companies_notified' => $faker->boolean,
-        'search_firms_notified' => $faker->boolean,
-        'departments_coordinated' => $faker->boolean,
+        'startDate' => $faker->dateTime,
+        'physiciansNeeded' => $faker->randomNumber,
+        'appsNeeded' => $faker->randomNumber,
+        'physicianHoursPerMonth' => $faker->randomNumber,
+        'appHoursPerMonth' => $faker->randomNumber,
+        'pressRelease' => $faker->boolean,
+        'pressReleaseDate' => $faker->date,
+        'managementChangeMailers' => $faker->boolean,
+        'recruitingMailers' => $faker->boolean,
+        'emailBlast' => $faker->boolean,
+        'purlCampaign' => $faker->boolean,
+        'marketingSlick' => $faker->boolean,
+        'collaborationRecruitingTeam' => $faker->boolean,
+        'collaborationRecruitingTeamNames' => $faker->firstName,
+        'compensationGrid' => $faker->boolean,
+        'compensationGridBonuses' => $faker->sentence,
+        'recruitingIncentives' => $faker->boolean,
+        'recruitingIncentivesDescription' => $faker->sentence,
+        'locumCompaniesNotified' => $faker->boolean,
+        'searchFirmsNotified' => $faker->boolean,
+        'departmentsCoordinated' => $faker->boolean,
     ];
 });
 
@@ -121,10 +121,10 @@ $factory->define(App\FileStatus::class, function (Faker\Generator $faker) {
 
 $factory->define(App\File::class, function (Faker\Generator $faker) {
     return [
-        'file_type_id' => function () {
+        'fileTypeId' => function () {
             return factory(App\FileType::class)->create()->id;
         },
-        'file_status_id' => function () {
+        'fileStatusId' => function () {
             return factory(App\FileStatus::class)->create()->id;
         },
         'filename' => $faker->sentence,
