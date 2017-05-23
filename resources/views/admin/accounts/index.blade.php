@@ -81,13 +81,16 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
                         <span id="mergeOrParentSiteCodeTitle"></span>
-                        <small id="mergeOrParentSiteCodeAccount"></small>
                     </h4>
                 </div>
                 <div class="modal-body">
                     <form id="formMergeOrParentSiteCode" action="" method="POST">
                         {{ csrf_field() }}
                         {{ method_field('PATCH') }}
+                        <div class="well">
+                            <strong>@lang('Account(s)')</strong>
+                            <div id="mergeOrParentSiteCodeNames"></div>
+                        </div>
                         <div class="form-group">
                             <label for="siteCode">@lang('Site Code')</label>
                             <select class="form-control select2" data-parent="#mergeOrParentSiteCode" id="siteCode" name="siteCode" required>
@@ -149,13 +152,14 @@
                 }
                 var ids = _.map(selected, 'id');
                 var siteCodes = _.map(selected, 'siteCode');
+                var names = _.map(selected, 'name');
                 showMergeOrParentSiteCodeModal({
                     ids: ids,
                     action: "{{ route('admin.accounts.merge') }}",
                     title: "@lang('Merge Site Code')",
-                    account: '',
                     submit: "@lang('Merge')",
                     siteCodes: siteCodes,
+                    names: names,
                     associatedSiteCode: null
                 });
             });
@@ -167,9 +171,9 @@
                     ids: [$this.data('id')],
                     action: $this.data('action'),
                     title: $this.data('title'),
-                    account: $this.data('account'),
                     submit: $this.data('submit'),
                     siteCodes: [String($this.data('site-code'))],
+                    names: [$this.data('account')],
                     associatedSiteCode: $this.data('associated-site-code')
                 });
             });
@@ -178,8 +182,8 @@
                 $('#formMergeOrParentSiteCode').find('input[name="accounts[]"]').remove();
                 $('#formMergeOrParentSiteCode').attr('action', options.action);
                 $('#mergeOrParentSiteCodeTitle').text(options.title);
-                $('#mergeOrParentSiteCodeAccount').text(options.account);
                 $('#mergeOrParentSiteCodeSubmit').text(options.submit);
+                $('#mergeOrParentSiteCodeNames').html(options.names.join('<br />'));
                 _.each(options.ids, function (id) {
                     $('#formMergeOrParentSiteCode').append('<input type="hidden" name="accounts[]" value="' + id + '" />');
                 });
