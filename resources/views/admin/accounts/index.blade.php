@@ -11,9 +11,10 @@
 
 @section('content')
     <div class="table-responsive">
-        <table class="table table-hover table-bordered datatable">
+        <table id="datatable-accounts" class="table table-hover table-bordered">
             <thead>
                 <tr>
+                    <th class="mw30"></th>
                     <th class="mw200 w100">@lang('Name')</th>
                     <th class="mw100">@lang('Site Code')</th>
                     <th class="mw150">@lang('Parent Site Code')</th>
@@ -27,6 +28,7 @@
             <tbody>
                 @foreach($accounts as $account)
                     <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}">
+                        <td></td>
                         <td>{{ $account->name }}</td>
                         <td>{{ $account->siteCode }}</td>
                         <td>{{ $account->parentSiteCode }}</td>
@@ -113,7 +115,60 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            $('.datatable').on('click', '.btnMergeOrParentSiteCode', function () {
+            // $('#datatable-accounts').each(function () {
+            //     var options = {
+            //         columnDefs: [ {
+            //             orderable: false,
+            //             className: 'select-checkbox',
+            //             targets:   0
+            //         } ],
+            //         select: {
+            //             style:    'multi',
+            //             selector: 'td:first-child'
+            //         },
+            //         order: [[ 1, 'asc' ]],
+            //         dom: "<'row'<'col-sm-4 dataTables_buttons mb5'B><'col-sm-4 text-center'l><'col-sm-4'f>>" +
+            //             "<'row'<'col-sm-12'tr>>" +
+            //             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            //         buttons: [
+            //             {
+            //                 text: 'Merge selected',
+            //                 action: function (e, dt, node, config) {
+            //                     window.thedtmf = dt;
+            //                 }
+            //             }
+            //         ]
+            //     };
+            //     options = $.extend({}, defaultDTOptions, options);
+            //     $(this).dataTable(options);
+            // });
+
+            window.accountsTable = $('#datatable-accounts').DataTable($.extend({}, defaultDTOptions, {
+                columnDefs: [ {
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets:   0
+                } ],
+                select: {
+                    style:    'multi',
+                    selector: 'td:first-child'
+                },
+                order: [[ 1, 'asc' ]],
+                dom: "<'row'<'col-sm-4 dataTables_buttons mb5'B><'col-sm-4 text-center'l><'col-sm-4'f>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                // buttons: [
+                //     {
+                //         text: 'Merge selected',
+                //         action: function (e, dt, node, config) {
+                //             console.log(dt.rows({ selected: true }))
+                //             window.thedtmf = accountsTable;
+                //         }
+                //     }
+                // ]
+            }));
+
+            $('#datatable-accounts').on('click', '.btnMergeOrParentSiteCode', function () {
                 var action = $(this).data('action');
                 var title = $(this).data('title');
                 var account = $(this).data('account');

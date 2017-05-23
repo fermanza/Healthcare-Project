@@ -13,6 +13,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'fastclick',
         'datatables',
         'datatables-bootstrap3-plugin',
+        'datatables-select',
         'select2',
         'bootstrap-datetime-picker',
         'bootstrap-datepicker',

@@ -20,7 +20,7 @@ $(() => {
 
     // DataTables
     (() => {
-        const defaultOptions = {
+        window.defaultDTOptions = {
             bStateSave: true,
             aLengthMenu: [
                 [10, 25, 50, 100, -1],
@@ -30,7 +30,7 @@ $(() => {
         
         $('.datatable').each(function () {
             let options = $(this).data('datatable-config') || {};
-            options = $.extend({}, defaultOptions, options);
+            options = $.extend({}, defaultDTOptions, options);
             $(this).dataTable(options);
         });
     })();

@@ -13,6 +13,7 @@ require('icheck');
 // DataTables
 require('datatables');
 require('datatables-bootstrap3-plugin');
+require('datatables-select');
 
 // Select2
 require('select2');
