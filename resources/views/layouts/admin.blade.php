@@ -25,7 +25,7 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <li>
+                        <li class="{{ route_starts_with('admin.settings.credentials') }}">
                             <a href="{{ route('admin.settings.credentials') }}">
                                 <i class="fa fa-gear"></i>
                                 @lang('Settings')
