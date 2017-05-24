@@ -29,6 +29,7 @@
                 @foreach($accounts as $account)
                     <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}"
                         data-id="{{ $account->id }}" data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
+                        data-edit="{{ route('admin.accounts.edit', [$account]) }}"
                     >
                         <td></td>
                         <td>{{ $account->name }}</td>
@@ -164,6 +165,15 @@
                 });
             });
             $('.dataTables_buttons').append($mergeSelected);
+
+            $('#datatable-accounts').on('dblclick', '.select-checkbox', function (e) {
+                e.stopPropagation();
+            });
+
+            $('#datatable-accounts').on('dblclick', 'tbody tr', function () {
+                var editUrl = $(this).data('edit');
+                window.location = editUrl;
+            });
 
             $('#datatable-accounts').on('click', '.btnMergeOrParentSiteCode', function () {
                 var $this = $(this);
