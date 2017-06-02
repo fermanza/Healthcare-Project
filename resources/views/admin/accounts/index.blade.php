@@ -34,7 +34,18 @@
                         <td></td>
                         <td>{{ $account->name }}</td>
                         <td>{{ $account->siteCode }}</td>
-                        <td>{{ $account->parentSiteCode }}</td>
+                        <td>
+                            {{ $account->parentSiteCode }}
+                            @if ($account->parentSiteCode)
+                                <a href="javascript:;" 
+                                    class="pull-right text-danger removes-parent"
+                                    data-action="{{ route('admin.accounts.removeParent', [$account]) }}"
+                                    data-name="{{ $account->name }}"
+                                >
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            @endif
+                        </td>
                         <td>{{ $account->city }}</td>
                         <td>{{ $account->state }}</td>
                         <td>{{ $account->startDate ? $account->startDate->format('Y-m-d') : '' }}</td>
@@ -74,6 +85,11 @@
             </tbody>
         </table>
     </div>
+
+    <form id="remove-parent-form" action="" method="POST">
+        {{ csrf_field() }}
+        {{ method_field('PATCH') }}
+    </form>
 
     <div class="modal fade" id="mergeOrParentSiteCode" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -186,6 +202,18 @@
                     names: [$this.data('account')],
                     associatedSiteCode: $this.data('associated-site-code')
                 });
+            });
+
+            $('.removes-parent').on('click', function(e) {
+                e.preventDefault();
+                var $removeParentForm = $('#remove-parent-form');
+                var action = $(this).data('action');
+                var message = "@lang('Are you sure you want to unset Parent Site Code for')";
+                var name = $(this).data('name');
+                if (confirm(`${message} ${name}?`)) {
+                    $removeParentForm.attr('action', action);
+                    $removeParentForm.submit();
+                }
             });
 
             function showMergeOrParentSiteCodeModal(options) {

@@ -30,6 +30,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->patch('accounts/merge', 'AccountsController@merge')->name('accounts.merge');
     $router->patch('accounts/parent', 'AccountsController@parent')->name('accounts.parent');
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
+    $router->patch('accounts/{account}/remove-parent', 'AccountsController@removeParent')->name('accounts.removeParent');
     $router->resource('accounts', 'AccountsController');
 
     $router->resource('files', 'FilesController');

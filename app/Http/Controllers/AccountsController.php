@@ -216,4 +216,20 @@ class AccountsController extends Controller
 
         return back();
     }
+
+    /**
+     * Set Parent Site Code to given Account.
+     *
+     * @param  \App\Account  $account
+     * @return \Illuminate\Http\Response
+     */
+    public function removeParent(Account $account)
+    {
+        $account->parentSiteCode = null;
+        $account->save();
+
+        flash(__('Parent Site Code has been unset.'));
+
+        return back();
+    }
 }
