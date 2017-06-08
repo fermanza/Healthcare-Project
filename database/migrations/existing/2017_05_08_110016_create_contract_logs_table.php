@@ -19,8 +19,10 @@ class CreateContractLogsTable extends Migration
             $table->integer('recruiterId')->unsigned();
             $table->integer('managerId')->unsigned();
             $table->integer('statusId')->unsigned();
-            $table->integer('practiceId')->unsigned();
+            $table->integer('practiceId')->unsigned();providerFirstName
             $table->string('provider');
+            $table->string('providerFirstName');
+            $table->string('providerLastName');
             $table->integer('specialtyId')->unsigned();
             $table->integer('divisionId')->unsigned();
             $table->date('contractOutDate');

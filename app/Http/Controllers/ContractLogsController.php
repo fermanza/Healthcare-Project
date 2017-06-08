@@ -35,11 +35,12 @@ class ContractLogsController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        $contractLog = new ContractLog;
+        $contractLog = $request->has('id') ? ContractLog::findOrFail($request->id) : new ContractLog;
         $contractLog->load('account.division.group', 'account.practices');
         $accounts = Account::where('active', true)->orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();

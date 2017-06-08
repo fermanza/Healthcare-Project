@@ -67,23 +67,15 @@
 
         <div class="col-md-2">
             <div class="form-group">
-                <label for="provider">@lang('Provider')</label>
-                <input type="text" class="form-control" id="provider" name="provider" value="{{ old('provider') ?: $contractLog->provider }}" required />
+                <label for="providerFirstName">@lang('Provider First Name')</label>
+                <input type="text" class="form-control" id="providerFirstName" name="providerFirstName" value="{{ old('providerFirstName') ?: $contractLog->providerFirstName }}" required />
             </div>
         </div>
 
         <div class="col-md-2">
-            <div class="form-group{{ $errors->has('specialtyId') ? ' has-error' : '' }}">
-                <label for="specialtyId">@lang('Specialty')</label>
-                <select class="form-control select2" id="specialtyId" name="specialtyId" required>
-                    <option value="" disabled selected></option>
-                    @foreach ($specialties as $specialty)
-                        <option value="{{ $specialty->id }}" {{ (old('specialtyId') == $specialty->id ?: $specialty->id == $contractLog->specialtyId) ? 'selected': '' }}>{{ $specialty->specialty }}</option>
-                    @endforeach
-                </select>
-                @if ($errors->has('specialtyId'))
-                    <span class="help-block"><strong>{{ $errors->first('specialtyId') }}</strong></span>
-                @endif
+            <div class="form-group">
+                <label for="providerLastName">@lang('Provider Last Name')</label>
+                <input type="text" class="form-control" id="providerLastName" name="providerLastName" value="{{ old('providerLastName') ?: $contractLog->providerLastName }}" required />
             </div>
         </div>
 
@@ -259,16 +251,22 @@
     </div>
 
     <div class="row">
-        <div class="col-md-offset-1 col-md-4">
-            <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
-                <label for="comments">@lang('Comments')</label>
-                <input type="text" class="form-control" id="comments" name="comments" value="{{ old('comments') ?: $contractLog->comments }}" required />
-                @if ($errors->has('comments'))
-                    <span class="help-block"><strong>{{ $errors->first('comments') }}</strong></span>
+
+        <div class="col-md-offset-1 col-md-2">
+            <div class="form-group{{ $errors->has('specialtyId') ? ' has-error' : '' }}">
+                <label for="specialtyId">@lang('Specialty')</label>
+                <select class="form-control select2" id="specialtyId" name="specialtyId" required>
+                    <option value="" disabled selected></option>
+                    @foreach ($specialties as $specialty)
+                        <option value="{{ $specialty->id }}" {{ (old('specialtyId') == $specialty->id ?: $specialty->id == $contractLog->specialtyId) ? 'selected': '' }}>{{ $specialty->specialty }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('specialtyId'))
+                    <span class="help-block"><strong>{{ $errors->first('specialtyId') }}</strong></span>
                 @endif
             </div>
         </div>
-
+        
         <div class="col-md-2">
             <div class="form-group{{ $errors->has('positionId') ? ' has-error' : '' }}">
                 <label for="positionId">@lang('Phys/MLP')</label>
@@ -305,6 +303,18 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-offset-1 col-md-6">
+            <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
+                <label for="comments">@lang('Comments')</label>
+                <input type="text" class="form-control" id="comments" name="comments" value="{{ old('comments') ?: $contractLog->comments }}" required />
+                @if ($errors->has('comments'))
+                    <span class="help-block"><strong>{{ $errors->first('comments') }}</strong></span>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <hr />
     
     <div class="row">
@@ -319,7 +329,16 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            $('#accountId').on('change', function () {
+            $('#accountId').each(setAccountRelatedInput);
+            $('#accountId').on('change', setAccountRelatedInput);
+
+            $('#statusId').on('change', function () {
+                var statusId = Number($(this).val());
+                var status = _.find(BackendVars.statuses, { id: statusId });
+                $('#value').val(status.value);
+            });
+
+            function setAccountRelatedInput() {
                 var accountId = $(this).val();
                 $.get('/admin/accounts/' + accountId, function(response) {
                     var account = response;
@@ -328,13 +347,7 @@
                     $('#group').val(account.division && account.division.group && account.division.group.name || 'NO GROUP ASSOCIATED');
                     $('#practice').val(account.practices.length && account.practices[0].name || 'NO PRACTICE ASSOCIATED');
                 });
-            });
-
-            $('#statusId').on('change', function () {
-                var statusId = Number($(this).val());
-                var status = _.find(BackendVars.statuses, { id: statusId });
-                $('#value').val(status.value);
-            });
+            }
         });
     </script>
 @endpush
