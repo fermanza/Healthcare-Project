@@ -27,7 +27,7 @@ class ContractLogsController extends Controller
     {
         $contractLogs = ContractLog::with([
             'status', 'position', 'practice', 'account', 'division',
-        ])->get();
+        ])->where('active', true)->get();
 
         return view('admin.contractLogs.index', compact('contractLogs'));
     }
