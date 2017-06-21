@@ -46,7 +46,11 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <input type="text" class="form-control" name="hospitalName" value="{{ Request::input('hospitalName') }}" placeholder="@lang('Hospital Name')" />
+                    <select class="form-control select2" name="accounts[]" data-placeholder="@lang('Hospital Names')" multiple>
+                        @foreach ($accounts as $account)
+                            <option value="{{ $account->id }}" {{ in_array($account->id, Request::input('accounts') ?: []) ? 'selected' : '' }}>{{ $account->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
@@ -154,7 +158,12 @@
         </div>
     @endif
 
-    <div class="text-right">
-        {{ $contractLogs->appends(Request::except('page'))->links() }}
+    <div class="row">
+        <div class="col-md-6">
+            Showing {{ $contractLogs->firstItem() }} to {{ $contractLogs->lastItem() }} of {{ $contractLogs->total() }} entries
+        </div>
+        <div class="col-md-6 text-right">
+            {{ $contractLogs->appends(Request::except('page'))->links() }}
+        </div>
     </div>
 @endsection

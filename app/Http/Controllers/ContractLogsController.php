@@ -28,15 +28,19 @@ class ContractLogsController extends Controller
      */
     public function index(ContractLogsFilter $filter)
     {
-        $contractLogs = ContractLog::with([
-            'status', 'position', 'practice', 'account', 'division.group',
-        ])->where('active', true)->filter($filter)->paginate();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $practiceTypes = ['ED', 'IPS'];
         $positions = Position::orderBy('position')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
+        $accounts = Account::where('active', true)->orderBy('name')->get();
+        $contractLogs = ContractLog::with([
+            'status', 'position', 'practice', 'account', 'division.group',
+        ])->where('active', true)->filter($filter)->paginate();
 
-        $params = compact('contractLogs', 'divisions', 'practiceTypes', 'positions', 'statuses');
+        $params = compact(
+            'contractLogs', 'divisions', 'practiceTypes',
+            'positions', 'statuses', 'accounts'
+        );
 
         return view('admin.contractLogs.index', $params);
     }

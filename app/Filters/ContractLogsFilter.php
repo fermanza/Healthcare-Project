@@ -5,17 +5,6 @@ namespace App\Filters;
 class ContractLogsFilter extends Filter
 {
     /**
-     * Apply divisions filter.
-     *
-     * @param  array  $ids
-     * @return void
-     */
-    public function divisions($ids)
-    {
-        $this->query->whereIn('divisionId', $ids);
-    }
-
-    /**
      * Apply practices filter.
      *
      * @param  array  $names
@@ -33,6 +22,17 @@ class ContractLogsFilter extends Filter
     }
 
     /**
+     * Apply divisions filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function divisions($ids)
+    {
+        $this->query->whereIn('divisionId', $ids);
+    }
+
+    /**
      * Apply statuses filter.
      *
      * @param  array  $ids
@@ -40,9 +40,7 @@ class ContractLogsFilter extends Filter
      */
     public function statuses($ids)
     {
-        $this->query->whereHas('status', function ($query) use ($ids) {
-            $query->whereIn('id', $ids);
-        });
+        $this->query->whereIn('statusId', $ids);
     }
 
     /**
@@ -54,6 +52,17 @@ class ContractLogsFilter extends Filter
     public function positions($ids)
     {
         $this->query->whereIn('positionId', $ids);
+    }
+
+    /**
+     * Apply accounts filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function accounts($ids)
+    {
+        $this->query->whereIn('accountId', $ids);
     }
 
     /**
@@ -76,18 +85,5 @@ class ContractLogsFilter extends Filter
     public function contractInDate($date)
     {
         $this->query->where('contractInDate', $date);
-    }
-
-    /**
-     * Apply hospitalName filter.
-     *
-     * @param  string  $name
-     * @return void
-     */
-    public function hospitalName($name)
-    {
-        $this->query->whereHas('account', function ($query) use ($name) {
-            $query->where('name', $name);
-        });
     }
 }
