@@ -11,68 +11,70 @@
 
 @section('content')
     <form class="box-body">
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                <select class="form-control select2" name="divisions[]" data-placeholder="@lang('Divisions')" multiple>
-                    @foreach ($divisions as $division)
-                        <option value="{{ $division->id }}" {{ in_array($division->id, Request::input('divisions') ?: []) ? 'selected' : '' }}>{{ $division->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="flexboxgrid">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="divisions[]" data-placeholder="@lang('Divisions')" multiple>
+                        @foreach ($divisions as $division)
+                            <option value="{{ $division->id }}" {{ in_array($division->id, Request::input('divisions') ?: []) ? 'selected' : '' }}>{{ $division->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                <select class="form-control select2" name="practices[]" data-placeholder="@lang('Practices')" multiple>
-                    @foreach ($practiceTypes as $practice)
-                        <option value="{{ $practice }}" {{ in_array($practice, Request::input('practices') ?: []) ? 'selected' : '' }}>{{ $practice }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="practices[]" data-placeholder="@lang('Practices')" multiple>
+                        @foreach ($practiceTypes as $practice)
+                            <option value="{{ $practice }}" {{ in_array($practice, Request::input('practices') ?: []) ? 'selected' : '' }}>{{ $practice }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                <select class="form-control select2" name="positions[]" data-placeholder="@lang('Positions')" multiple>
-                    @foreach ($positions as $position)
-                        <option value="{{ $position->id }}" {{ in_array($position->id, Request::input('positions') ?: []) ? 'selected' : '' }}>{{ $position->position }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="positions[]" data-placeholder="@lang('Positions')" multiple>
+                        @foreach ($positions as $position)
+                            <option value="{{ $position->id }}" {{ in_array($position->id, Request::input('positions') ?: []) ? 'selected' : '' }}>{{ $position->position }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                <select class="form-control select2" name="statuses[]" data-placeholder="@lang('Statuses')" multiple>
-                    @foreach ($statuses as $status)
-                        <option value="{{ $status->id }}" {{ in_array($status->id, Request::input('statuses') ?: []) ? 'selected' : '' }}>{{ $status->contractStatus }}</option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="statuses[]" data-placeholder="@lang('Statuses')" multiple>
+                        @foreach ($statuses as $status)
+                            <option value="{{ $status->id }}" {{ in_array($status->id, Request::input('statuses') ?: []) ? 'selected' : '' }}>{{ $status->contractStatus }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                <input type="text" class="form-control" name="hospitalName" value="{{ Request::input('hospitalName') }}" placeholder="@lang('Hospital Name')" />
-            </div>
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <input type="text" class="form-control" name="hospitalName" value="{{ Request::input('hospitalName') }}" placeholder="@lang('Hospital Name')" />
+                </div>
 
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                <div class="input-group date datepicker">
-                    <input type="text" class="form-control" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <div class="input-group date datepicker">
+                        <input type="text" class="form-control" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <div class="input-group date datepicker">
+                        <input type="text" class="form-control" name="contractInDate" value="{{ Request::input('contractInDate') }}" placeholder="@lang('Contract In Date')" />
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                <div class="input-group date datepicker">
-                    <input type="text" class="form-control" name="contractInDate" value="{{ Request::input('contractInDate') }}" placeholder="@lang('Contract In Date')" />
-                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+        
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-sm btn-info">
+                        <i class="fa fa-filter"></i>
+                        @lang('Apply')
+                    </button>
+                    <a href="{{ route('admin.contractLogs.index') }}" type="submit" class="btn btn-sm btn-default">
+                        <i class="fa fa-times"></i>
+                        @lang('Clear')
+                    </a>
                 </div>
-            </div>
-        </div>
-    
-        <div class="row">
-            <div class="col-sm-12">
-                <button type="submit" class="btn btn-sm btn-info">
-                    <i class="fa fa-filter"></i>
-                    @lang('Apply')
-                </button>
-                <a href="{{ route('admin.contractLogs.index') }}" type="submit" class="btn btn-sm btn-default">
-                    <i class="fa fa-times"></i>
-                    @lang('Clear')
-                </a>
             </div>
         </div>
     </form>
