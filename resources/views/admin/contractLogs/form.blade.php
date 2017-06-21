@@ -340,6 +340,9 @@
 
             function setAccountRelatedInput() {
                 var accountId = $(this).val();
+                if (! accountId) {
+                    return;
+                }
                 $.get('/admin/accounts/' + accountId, function(response) {
                     var account = response;
                     $('#division').val(account.division && account.division.name || 'NO DIVISION ASSOCIATED');

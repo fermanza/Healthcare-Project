@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use JavaScript;
 use App\Account;
+use App\Division;
 use App\Employee;
 use App\Position;
 use App\Specialty;
@@ -14,6 +15,7 @@ use App\ContractStatus;
 use App\AccountEmployee;
 use App\EmployementStatus;
 use Illuminate\Http\Request;
+use App\Filters\ContractLogsFilter;
 use App\Http\Requests\ContractLogRequest;
 
 class ContractLogsController extends Controller
@@ -21,15 +23,22 @@ class ContractLogsController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\Filters\ContractLogsFilter
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ContractLogsFilter $filter)
     {
         $contractLogs = ContractLog::with([
-            'status', 'position', 'practice', 'account', 'division',
-        ])->where('active', true)->get();
+            'status', 'position', 'practice', 'account', 'division.group',
+        ])->where('active', true)->filter($filter)->paginate();
+        $divisions = Division::where('active', true)->orderBy('name')->get();
+        $practiceTypes = ['ED', 'IPS'];
+        $positions = Position::orderBy('position')->get();
+        $statuses = ContractStatus::orderBy('contractStatus')->get();
 
-        return view('admin.contractLogs.index', compact('contractLogs'));
+        $params = compact('contractLogs', 'divisions', 'practiceTypes', 'positions', 'statuses');
+
+        return view('admin.contractLogs.index', $params);
     }
 
     /**

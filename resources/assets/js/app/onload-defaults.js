@@ -39,7 +39,7 @@ $(() => {
     // Select2
     $('.select2').each(function () {
         const parent = $(this).data('parent');
-        let options = {};
+        let options = { width: '100%' };
         if (parent) {
             $(this).css('width', '100%');
             options.dropdownParent = $(parent);
