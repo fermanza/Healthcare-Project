@@ -160,7 +160,12 @@
 
     <div class="row">
         <div class="col-md-6">
-            Showing {{ $contractLogs->firstItem() }} to {{ $contractLogs->lastItem() }} of {{ $contractLogs->total() }} entries
+            @lang('Showing')
+            {{ $contractLogs->firstItem() }}
+            @lang('to')
+            {{ $contractLogs->lastItem() }}
+            @lang('of')
+            {{ $contractLogs->total() }} @lang('entries')
         </div>
         <div class="col-md-6 text-right">
             {{ $contractLogs->appends(Request::except('page'))->links() }}
