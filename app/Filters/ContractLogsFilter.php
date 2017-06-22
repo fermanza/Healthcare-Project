@@ -90,20 +90,32 @@ class ContractLogsFilter extends Filter
     /**
      * Apply sort filter.
      *
-     * @param  string  $column
+     * @param  string  $key
      * @return void
      */
-    public function sort($column)
+    public function sort($key)
     {
-        $order = $this->request->input('order');
+        $sorts = [
+            'value' => 'tContractLogs.value',
+            'status' => 'tContractStatus.contractStatus',
+            'provider_first_name' => 'tContractLogs.providerFirstName',
+            'provider_last_name' => 'tContractLogs.providerLastName',
+            'position' => 'tPosition.position',
+            'hours' => 'tContractLogs.numOfHours',
+            'practice' => 'tPractice.name',
+            'hospital_name' => 'tAccount.name',
+            'site_code' => 'tAccount.siteCode',
+            'group' => 'tGroup.name',
+            'division' => 'tDivision.name',
+            'contract_out' => 'tContractLogs.contractOutDate',
+            'contract_in' => 'tContractLogs.contractInDate',
+            'projected_start_date' => 'tContractLogs.projectedStartDate',
+            'reason' => 'tContractNote.contractNote',
+        ];
 
-        switch ($column) {
-            case 'value':
-                $this->query->orderBy('value', $order);
-                break;
-            
-            default:
-                break;
-        }
+        $order = $this->request->input('order', 'asc');
+        $column = array_get($sorts, $key, 'tContractLogs.id');
+
+        $this->query->orderBy($column, $order);
     }
 }

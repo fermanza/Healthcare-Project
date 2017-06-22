@@ -33,9 +33,17 @@ class ContractLogsController extends Controller
         $positions = Position::orderBy('position')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $accounts = Account::where('active', true)->orderBy('name')->get();
-        $contractLogs = ContractLog::with([
-            'status', 'position', 'practice', 'account', 'division.group',
-        ])->where('active', true)->filter($filter)->paginate();
+        $contractLogs = ContractLog::leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
+            ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
+            ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
+            ->leftJoin('tAccount', 'tContractLogs.accountId', '=', 'tAccount.id')
+            ->leftJoin('tContractNote', 'tContractLogs.contractNoteId', '=', 'tContractNote.id')
+            ->leftJoin('tDivision', 'tContractLogs.divisionId', '=', 'tDivision.id')
+            ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
+            ->select('tContractLogs.*')
+            ->with([
+                'status', 'position', 'practice', 'account', 'division.group', 'note',
+            ])->where('tContractLogs.active', true)->filter($filter)->paginate();
 
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
