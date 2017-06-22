@@ -1,3 +1,20 @@
 .pagination {
     margin: 0;
 }
+
+.pagination-link {
+    color: #636b6f;
+    display: block;
+    position: relative;
+
+    &:hover,
+    &:focus {
+        color: #636b6f;
+    }
+
+    .sort-caret {
+        position: absolute;
+        top: 4px;
+        right: 0;
+    }
+}

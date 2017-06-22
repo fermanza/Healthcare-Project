@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\HtmlString;
+
 if (! function_exists('route_starts_with')) {
     /**
      * Determines if current route name starts with given string.
@@ -54,5 +56,34 @@ if (! function_exists('flash')) {
     function flash($message, $type = 'success')
     {
         Session::flash('flash-message', ['type' => $type, 'message' => $message]);
+    }
+}
+
+if (! function_exists('sort_column_url')) {
+    /**
+     * Get sorting link for given column and label.
+     *
+     * @param  string  $column
+     * @param  string  $label
+     * @return \Illuminate\Support\HtmlString
+     */
+    function sort_column_link($column, $label)
+    {
+        if (Request::input('sort') == $column && Request::input('order') == 'asc') {
+            $order = 'desc';
+            $icon = '<i class="fa fa-sort-asc sort-caret"></i>';
+        } elseif (Request::input('sort') == $column && Request::input('order') == 'desc') {
+            $order = 'asc';
+            $icon = '<i class="fa fa-sort-desc sort-caret"></i>';
+        } else {
+            $order = 'asc';
+            $icon = '<i class="fa fa-sort sort-caret text-muted"></i>';
+        }
+
+        $url =  Request::fullUrlWithQuery(['sort' => $column, 'order' => $order]);
+
+        $link = "<a href=\"{$url}\" class=\"pagination-link\">{$label} {$icon}</a>";
+
+        return new HtmlString($link);
     }
 }

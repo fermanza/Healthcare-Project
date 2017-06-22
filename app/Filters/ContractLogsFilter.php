@@ -86,4 +86,24 @@ class ContractLogsFilter extends Filter
     {
         $this->query->where('contractInDate', $date);
     }
+
+    /**
+     * Apply sort filter.
+     *
+     * @param  string  $column
+     * @return void
+     */
+    public function sort($column)
+    {
+        $order = $this->request->input('order');
+
+        switch ($column) {
+            case 'value':
+                $this->query->orderBy('value', $order);
+                break;
+            
+            default:
+                break;
+        }
+    }
 }
