@@ -29,7 +29,7 @@ class ContractLogsFilter extends Filter
      */
     public function divisions($ids)
     {
-        $this->query->whereIn('divisionId', $ids);
+        $this->query->whereIn('tContractLogs.divisionId', $ids);
     }
 
     /**
@@ -40,7 +40,7 @@ class ContractLogsFilter extends Filter
      */
     public function statuses($ids)
     {
-        $this->query->whereIn('statusId', $ids);
+        $this->query->whereIn('tContractLogs.statusId', $ids);
     }
 
     /**
@@ -51,7 +51,7 @@ class ContractLogsFilter extends Filter
      */
     public function positions($ids)
     {
-        $this->query->whereIn('positionId', $ids);
+        $this->query->whereIn('tContractLogs.positionId', $ids);
     }
 
     /**
@@ -62,7 +62,7 @@ class ContractLogsFilter extends Filter
      */
     public function accounts($ids)
     {
-        $this->query->whereIn('accountId', $ids);
+        $this->query->whereIn('tContractLogs.accountId', $ids);
     }
 
     /**
@@ -73,7 +73,7 @@ class ContractLogsFilter extends Filter
      */
     public function contractOutDate($date)
     {
-        $this->query->where('contractOutDate', $date);
+        $this->query->where('tContractLogs.contractOutDate', $date);
     }
 
     /**
@@ -84,7 +84,7 @@ class ContractLogsFilter extends Filter
      */
     public function contractInDate($date)
     {
-        $this->query->where('contractInDate', $date);
+        $this->query->where('tContractLogs.contractInDate', $date);
     }
 
     /**
