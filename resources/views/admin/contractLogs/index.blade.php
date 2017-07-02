@@ -3,10 +3,12 @@
 @section('content-header', __('Contract Logs'))
 
 @section('tools')
-    <a href="{{ route('admin.contractLogs.create') }}" class="btn btn-sm btn-success">
-        <i class="fa fa-plus"></i>
-        New
-    </a>
+    @permission('admin.contractLogs.create')
+        <a href="{{ route('admin.contractLogs.create') }}" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+            New
+        </a>
+    @endpermission
 @endsection
 
 @section('content')
@@ -109,21 +111,29 @@
                 @foreach($contractLogs as $contractLog)
                     <tr>
                         <td class="text-center">
-                            <a href="{{ route('admin.contractLogs.edit', [$contractLog]) }}" class="btn btn-xs btn-primary">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <a 
-                                href="javascript:;"
-                                class="btn btn-xs btn-danger deletes-record"
-                                data-action="{{ route('admin.contractLogs.destroy', [$contractLog]) }}"
-                                data-record="{{ $contractLog->id }}"
-                                data-name="{{ $contractLog->id }}"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </a>
-                            <a href="{{ route('admin.contractLogs.create', ['id' => $contractLog->id]) }}" class="btn btn-xs btn-default">
-                                @lang('Amend')
-                            </a>
+                            @permission('admin.contractLogs.edit')
+                                <a href="{{ route('admin.contractLogs.edit', [$contractLog]) }}" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            @endpermission
+
+                            @permission('admin.contractLogs.destroy')
+                                <a 
+                                    href="javascript:;"
+                                    class="btn btn-xs btn-danger deletes-record"
+                                    data-action="{{ route('admin.contractLogs.destroy', [$contractLog]) }}"
+                                    data-record="{{ $contractLog->id }}"
+                                    data-name="{{ $contractLog->id }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            @endpermission
+
+                            @permission('admin.contractLogs.create')
+                                <a href="{{ route('admin.contractLogs.create', ['id' => $contractLog->id]) }}" class="btn btn-xs btn-default">
+                                    @lang('Amend')
+                                </a>
+                            @endpermission
                         </td>
                         <td>{{ $contractLog->value }}</td>
                         <td>{{ $contractLog->status ? $contractLog->status->contractStatus : '' }}</td>

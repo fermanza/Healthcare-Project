@@ -6,9 +6,11 @@
 
     <div class="row">
         <div class="col-md-12 text-right">
-            <button type="submit" class="btn {{ $action == 'create' ? 'btn-success' : 'btn-info' }}">
-                {{ $action == 'create' ? __('Create') : __('Update') }}
-            </button>
+            @include('admin.common.submit', [
+                'action' => $action,
+                'store' => 'admin.accounts.store',
+                'update' => 'admin.accounts.update'
+            ])
         </div>
     </div>
     
@@ -482,9 +484,11 @@
     @if ($action == 'edit')
         <div class="row">
             <div class="col-md-12 text-center">
-                <a href="{{ route('admin.accounts.internalPlan', [$account]) }}" class="btn btn-primary">@lang('Create PDF')</a>
-                <br />
-                @lang('To give internal plan')
+                @permission('admin.accounts.internalPlan')
+                    <a href="{{ route('admin.accounts.internalPlan', [$account]) }}" class="btn btn-primary">@lang('Create PDF')</a>
+                    <br />
+                    @lang('To give internal plan')
+                @endpermission
             </div>
         </div>
 
@@ -506,9 +510,11 @@
     
     <div class="row">
         <div class="col-md-12 text-right">
-            <button type="submit" class="btn {{ $action == 'create' ? 'btn-success' : 'btn-info' }}">
-                {{ $action == 'create' ? __('Create') : __('Update') }}
-            </button>
+            @include('admin.common.submit', [
+                'action' => $action,
+                'store' => 'admin.accounts.store',
+                'update' => 'admin.accounts.update'
+            ])
         </div>
     </div>
 

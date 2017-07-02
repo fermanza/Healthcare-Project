@@ -2,21 +2,24 @@
 
 use Illuminate\Foundation\Inspiring;
 
-/*
-|--------------------------------------------------------------------------
-| Console Routes
-|--------------------------------------------------------------------------
-|
-| This file is where you may define all of your Closure based console
-| commands. Each Closure is bound to a command instance allowing a
-| simple approach to interacting with each command's IO methods.
-|
-*/
-
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
 
-Artisan::command('send-reminders', function () {
-    $this->comment('mandando correos alv');
-})->describe('Send the schedules reminders');
+Artisan::command('set-new-routes', function () {
+    $aclNames = collect(config('acl'))->collapse();
+    App\Permission::unguard();
+
+    collect(Route::getRoutes())
+        ->filter(function ($route) {
+            return in_array('acl', $route->middleware());
+        })->each(function ($route) use ($aclNames) {
+            App\Permission::firstOrCreate([
+                'name' => $route->getName(),
+            ], [
+                'display_name' => array_get($aclNames, $route->getName()),
+            ]);
+        });
+
+    App\Permission::reguard();
+})->describe('Register any new route to the Permissions table');

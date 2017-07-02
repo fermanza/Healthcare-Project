@@ -3,10 +3,12 @@
 @section('content-header', __('Files'))
 
 @section('tools')
-    <a href="{{ route('admin.files.create') }}" class="btn btn-sm btn-success">
-        <i class="fa fa-plus"></i>
-        New
-    </a>
+    @permission('admin.files.create')
+        <a href="{{ route('admin.files.create') }}" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+            New
+        </a>
+    @endpermission
 @endsection
 
 @section('content')
@@ -27,21 +29,29 @@
                         <td>{{ $file->fileName }}</td>
                         <td>{{ $file->type->fileTypeName }}</td>
                         <td class="text-center">
-                            <a href="{{ route('admin.files.show', [$file]) }}" class="btn btn-xs btn-default">
-                                <i class="fa fa-download"></i>
-                            </a>
-                            <a href="{{ route('admin.files.edit', [$file]) }}" class="btn btn-xs btn-primary">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <a 
-                                href="javascript:;"
-                                class="btn btn-xs btn-danger deletes-record"
-                                data-action="{{ route('admin.files.destroy', [$file]) }}"
-                                data-record="{{ $file->fileLogId }}"
-                                data-name="{{ $file->name }}"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </a>
+                            @permission('admin.files.show')
+                                <a href="{{ route('admin.files.show', [$file]) }}" class="btn btn-xs btn-default">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                            @endpermission
+                                
+                            @permission('admin.files.edit')
+                                <a href="{{ route('admin.files.edit', [$file]) }}" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            @endpermission
+                                
+                            @permission('admin.files.destroy')
+                                <a 
+                                    href="javascript:;"
+                                    class="btn btn-xs btn-danger deletes-record"
+                                    data-action="{{ route('admin.files.destroy', [$file]) }}"
+                                    data-record="{{ $file->fileLogId }}"
+                                    data-name="{{ $file->name }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            @endpermission
                         </td>
                     </tr>
                 @endforeach

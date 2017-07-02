@@ -3,10 +3,12 @@
 @section('content-header', __('Employees'))
 
 @section('tools')
-    <a href="{{ route('admin.employees.create') }}" class="btn btn-sm btn-success">
-        <i class="fa fa-plus"></i>
-        New
-    </a>
+    @permission('admin.employees.create')
+        <a href="{{ route('admin.employees.create') }}" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+            New
+        </a>
+    @endpermission
 @endsection
 
 @section('content')
@@ -31,18 +33,23 @@
                         <td>{{ number_format($employee->EDPercent, 1) }}</td>
                         <td>{{ number_format($employee->IPSPercent, 1) }}</td>
                         <td class="text-center">
-                            <a href="{{ route('admin.employees.edit', [$employee]) }}" class="btn btn-xs btn-primary">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <a 
-                                href="javascript:;"
-                                class="btn btn-xs btn-danger deletes-record"
-                                data-action="{{ route('admin.employees.destroy', [$employee]) }}"
-                                data-record="{{ $employee->id }}"
-                                data-name="{{ $employee->fullName() }}"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </a>
+                            @permission('admin.employees.edit')
+                                <a href="{{ route('admin.employees.edit', [$employee]) }}" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            @endpermission
+                                
+                            @permission('admin.employees.destroy')
+                                <a 
+                                    href="javascript:;"
+                                    class="btn btn-xs btn-danger deletes-record"
+                                    data-action="{{ route('admin.employees.destroy', [$employee]) }}"
+                                    data-record="{{ $employee->id }}"
+                                    data-name="{{ $employee->fullName() }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            @endpermission
                         </td>
                     </tr>
                 @endforeach

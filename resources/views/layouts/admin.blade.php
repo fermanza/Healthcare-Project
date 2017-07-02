@@ -25,8 +25,8 @@
                 </a>
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <li class="{{ route_starts_with('admin.settings.credentials') }}">
-                            <a href="{{ route('admin.settings.credentials') }}">
+                        <li class="{{ route_starts_with('admin.settings.credentials.edit') }}">
+                            <a href="{{ route('admin.settings.credentials.edit') }}">
                                 <i class="fa fa-gear"></i>
                                 @lang('Settings')
                             </a>
@@ -45,66 +45,97 @@
         <aside class="main-sidebar">
             <section class="sidebar">
                 <ul class="sidebar-menu">
-                    <li class="{{ route_starts_with('admin.accounts') }}">
-                        <a href="{{ route('admin.accounts.index') }}">
-                            <i class="fa fa-hospital-o"></i>
-                            <span>@lang('Accounts')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.files') }}">
-                        <a href="{{ route('admin.files.index') }}">
-                            <i class="fa fa-upload"></i>
-                            <span>@lang('Files')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.employees') }}">
-                        <a href="{{ route('admin.employees.index') }}">
-                            <i class="fa fa-id-card-o"></i>
-                            <span>@lang('Employees')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.positionTypes') }}">
-                        <a href="{{ route('admin.positionTypes.index') }}">
-                            <i class="fa fa-id-badge"></i>
-                            <span>@lang('Position Types')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.people') }}">
-                        <a href="{{ route('admin.people.index') }}">
-                            <i class="fa fa-users"></i>
-                            <span>@lang('People')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.divisions') }}">
-                        <a href="{{ route('admin.divisions.index') }}">
-                            <i class="fa fa-map-marker"></i>
-                            <span>@lang('Divisions')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.practices') }}">
-                        <a href="{{ route('admin.practices.index') }}">
-                            <i class="fa fa-tag"></i>
-                            <span>@lang('Practices')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.groups') }}">
-                        <a href="{{ route('admin.groups.index') }}">
-                            <i class="fa fa-flag-o"></i>
-                            <span>@lang('Groups')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.regions') }}">
-                        <a href="{{ route('admin.regions.index') }}">
-                            <i class="fa fa-globe"></i>
-                            <span>@lang('Regions')</span>
-                        </a>
-                    </li>
-                    <li class="{{ route_starts_with('admin.contractLogs') }}">
-                        <a href="{{ route('admin.contractLogs.index') }}">
-                            <i class="fa fa-history"></i>
-                            <span>@lang('Contract Logs')</span>
-                        </a>
-                    </li>
+
+                    @permission('admin.accounts.index')
+                        <li class="{{ route_starts_with('admin.accounts') }}">
+                            <a href="{{ route('admin.accounts.index') }}">
+                                <i class="fa fa-hospital-o"></i>
+                                <span>@lang('Accounts')</span>
+                            </a>
+                        </li>
+                    @endpermission
+
+                    @permission('admin.files.index')
+                        <li class="{{ route_starts_with('admin.files') }}">
+                            <a href="{{ route('admin.files.index') }}">
+                                <i class="fa fa-upload"></i>
+                                <span>@lang('Files')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.employees.index')
+                        <li class="{{ route_starts_with('admin.employees') }}">
+                            <a href="{{ route('admin.employees.index') }}">
+                                <i class="fa fa-id-card-o"></i>
+                                <span>@lang('Employees')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.positionTypes.index')
+                        <li class="{{ route_starts_with('admin.positionTypes') }}">
+                            <a href="{{ route('admin.positionTypes.index') }}">
+                                <i class="fa fa-id-badge"></i>
+                                <span>@lang('Position Types')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.people.index')
+                        <li class="{{ route_starts_with('admin.people') }}">
+                            <a href="{{ route('admin.people.index') }}">
+                                <i class="fa fa-users"></i>
+                                <span>@lang('People')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.divisions.index')
+                        <li class="{{ route_starts_with('admin.divisions') }}">
+                            <a href="{{ route('admin.divisions.index') }}">
+                                <i class="fa fa-map-marker"></i>
+                                <span>@lang('Divisions')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.practices.index')
+                        <li class="{{ route_starts_with('admin.practices') }}">
+                            <a href="{{ route('admin.practices.index') }}">
+                                <i class="fa fa-tag"></i>
+                                <span>@lang('Practices')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.groups.index')
+                        <li class="{{ route_starts_with('admin.groups') }}">
+                            <a href="{{ route('admin.groups.index') }}">
+                                <i class="fa fa-flag-o"></i>
+                                <span>@lang('Groups')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.regions.index')
+                        <li class="{{ route_starts_with('admin.regions') }}">
+                            <a href="{{ route('admin.regions.index') }}">
+                                <i class="fa fa-globe"></i>
+                                <span>@lang('Regions')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.contractLogs.index')
+                        <li class="{{ route_starts_with('admin.contractLogs') }}">
+                            <a href="{{ route('admin.contractLogs.index') }}">
+                                <i class="fa fa-history"></i>
+                                <span>@lang('Contract Logs')</span>
+                            </a>
+                        </li>
+                    @endpermission
+
                 </ul>
             </section>
         </aside>

@@ -3,10 +3,12 @@
 @section('content-header', __('Regions'))
 
 @section('tools')
-    <a href="{{ route('admin.regions.create') }}" class="btn btn-sm btn-success">
-        <i class="fa fa-plus"></i>
-        New
-    </a>
+    @permission('admin.regions.create')
+        <a href="{{ route('admin.regions.create') }}" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+            New
+        </a>
+    @endpermission
 @endsection
 
 @section('content')
@@ -25,18 +27,23 @@
                         <td>{{ $region->name }}</td>
                         <td>{{ $region->code }}</td>
                         <td class="text-center">
-                            <a href="{{ route('admin.regions.edit', [$region]) }}" class="btn btn-xs btn-primary">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <a 
-                                href="javascript:;"
-                                class="btn btn-xs btn-danger deletes-record"
-                                data-action="{{ route('admin.regions.destroy', [$region]) }}"
-                                data-record="{{ $region->id }}"
-                                data-name="{{ $region->name }}"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </a>
+                            @permission('admin.regions.edit')
+                                <a href="{{ route('admin.regions.edit', [$region]) }}" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            @endpermission
+                            
+                            @permission('admin.regions.destroy')
+                                <a 
+                                    href="javascript:;"
+                                    class="btn btn-xs btn-danger deletes-record"
+                                    data-action="{{ route('admin.regions.destroy', [$region]) }}"
+                                    data-record="{{ $region->id }}"
+                                    data-name="{{ $region->name }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            @endpermission
                         </td>
                     </tr>
                 @endforeach

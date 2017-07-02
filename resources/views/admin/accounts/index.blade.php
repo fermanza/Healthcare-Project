@@ -3,7 +3,7 @@
 @section('content-header', __('Accounts'))
 
 @section('tools')
-    @permission('create-post')
+    @permission('admin.accounts.create')
         <a href="{{ route('admin.accounts.create') }}" class="btn btn-sm btn-success">
             <i class="fa fa-plus"></i>
             New
@@ -38,49 +38,62 @@
                         <td>{{ $account->siteCode }}</td>
                         <td>
                             {{ $account->parentSiteCode }}
-                            @if ($account->parentSiteCode)
-                                <a href="javascript:;" 
-                                    class="pull-right text-danger removes-parent"
-                                    data-action="{{ route('admin.accounts.removeParent', [$account]) }}"
-                                    data-name="{{ $account->name }}"
-                                >
-                                    <i class="fa fa-times"></i>
-                                </a>
-                            @endif
+                            @permission('admin.accounts.removeParent')
+                                @if ($account->parentSiteCode)
+                                    <a href="javascript:;" 
+                                        class="pull-right text-danger removes-parent"
+                                        data-action="{{ route('admin.accounts.removeParent', [$account]) }}"
+                                        data-name="{{ $account->name }}"
+                                    >
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                @endif
+                            @endpermission
                         </td>
                         <td>{{ $account->city }}</td>
                         <td>{{ $account->state }}</td>
                         <td>{{ $account->startDate ? $account->startDate->format('Y-m-d') : '' }}</td>
                         <td>{{ $account->endDate ? $account->endDate->format('Y-m-d') : '' }}</td>
                         <td class="text-center">
-                            <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
-                                data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Merge')"
-                                data-title="@lang('Merge Site Code')" data-account="{{ $account->name }}"
-                                data-action="{{ route('admin.accounts.merge') }}" data-id="{{ $account->id }}"
-                                data-site-code="{{ $account->siteCode }}"
-                            >
-                                @lang('Merge')
-                            </button>
-                            <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
-                                data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Set Parent')"
-                                data-title="@lang('Parent Site Code')" data-account="{{ $account->name }}"
-                                data-action="{{ route('admin.accounts.parent') }}" data-id="{{ $account->id }}"
-                                data-site-code="{{ $account->siteCode }}" data-associated-site-code="{{ $account->parentSiteCode }}"
-                            >
-                                @lang('Set Parent')
-                            </button>
-                            <a href="{{ route('admin.accounts.edit', [$account]) }}" class="btn btn-xs btn-primary">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <a 
-                                href="javascript:;"
-                                class="btn btn-xs btn-danger deletes-record"
-                                data-action="{{ route('admin.accounts.destroy', [$account]) }}"
-                                data-record="{{ $account->id }}"
-                                data-name="{{ $account->name }}"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </a>
+                            @permission('admin.accounts.merge')
+                                <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
+                                    data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Merge')"
+                                    data-title="@lang('Merge Site Code')" data-account="{{ $account->name }}"
+                                    data-action="{{ route('admin.accounts.merge') }}" data-id="{{ $account->id }}"
+                                    data-site-code="{{ $account->siteCode }}"
+                                >
+                                    @lang('Merge')
+                                </button>
+                            @endpermission
+
+                            @permission('admin.accounts.parent')
+                                <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
+                                    data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Set Parent')"
+                                    data-title="@lang('Parent Site Code')" data-account="{{ $account->name }}"
+                                    data-action="{{ route('admin.accounts.parent') }}" data-id="{{ $account->id }}"
+                                    data-site-code="{{ $account->siteCode }}" data-associated-site-code="{{ $account->parentSiteCode }}"
+                                >
+                                    @lang('Set Parent')
+                                </button>
+                            @endpermission
+
+                            @permission('admin.accounts.edit')
+                                <a href="{{ route('admin.accounts.edit', [$account]) }}" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            @endpermission
+                                
+                            @permission('admin.accounts.destroy')
+                                <a 
+                                    href="javascript:;"
+                                    class="btn btn-xs btn-danger deletes-record"
+                                    data-action="{{ route('admin.accounts.destroy', [$account]) }}"
+                                    data-record="{{ $account->id }}"
+                                    data-name="{{ $account->name }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            @endpermission
                         </td>
                     </tr>
                 @endforeach
@@ -155,6 +168,7 @@
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>"
             }));
 
+            @permission('admin.accounts.merge')
             var $mergeSelected = $('<button data-toggle="modal" data-target="#mergeOrParentSiteCode" class="btn btn-default">Merge selected</button>').on('click', function () {
                 var selected = [];
                 accountsDT.rows({ selected: true }).every(function () {
@@ -183,6 +197,7 @@
                 });
             });
             $('.dataTables_buttons').append($mergeSelected);
+            @endpermission
 
             $('#datatable-accounts').on('dblclick', '.select-checkbox', function (e) {
                 e.stopPropagation();

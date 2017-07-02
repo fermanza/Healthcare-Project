@@ -42,9 +42,11 @@
     
     <div class="row">
         <div class="col-md-12 text-right">
-            <button type="submit" class="btn {{ $action == 'create' ? 'btn-success' : 'btn-info' }}">
-                {{ $action == 'create' ? __('Create') : __('Update') }}
-            </button>
+            @include('admin.common.submit', [
+                'action' => $action,
+                'store' => 'admin.files.store',
+                'update' => 'admin.files.update'
+            ])
         </div>
     </div>
 </form>

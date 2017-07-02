@@ -5,7 +5,7 @@
 @section('content')
     @include('common/errors')
 
-    <form action="{{ route('admin.settings.credentials') }}" method="POST">
+    <form action="{{ route('admin.settings.credentials.update') }}" method="POST">
         {{ csrf_field() }}
         {{ method_field('PATCH') }}
 

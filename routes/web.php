@@ -19,18 +19,20 @@ $router->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetFo
 $router->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], function ($router) {
-
-    $router->get('settings/credentials', 'SettingsController@credentials')->name('settings.credentials');
-    $router->patch('settings/credentials', 'SettingsController@updateCredentials');
-
     $router->get('sidebar-collapse', 'SidebarController@collapse');
     $router->get('sidebar-expand', 'SidebarController@expand');
 
-    $router->post('accounts/image', 'AccountsController@image');
+    $router->get('settings/credentials', 'SettingsController@credentials')->name('settings.credentials.edit');
+    $router->patch('settings/credentials', 'SettingsController@updateCredentials')->name('settings.credentials.update');
+});
+
+$router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'acl']], function ($router) {
+
+    $router->post('accounts/image', 'AccountsController@image')->name('accounts.image');
     $router->patch('accounts/merge', 'AccountsController@merge')->name('accounts.merge');
     $router->patch('accounts/parent', 'AccountsController@parent')->name('accounts.parent');
-    $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
     $router->patch('accounts/{account}/remove-parent', 'AccountsController@removeParent')->name('accounts.removeParent');
+    $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
     $router->resource('accounts', 'AccountsController');
 
     $router->resource('files', 'FilesController');
@@ -44,4 +46,3 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->resource('contractLogs', 'ContractLogsController');
 
 });
-
