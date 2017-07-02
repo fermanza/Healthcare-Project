@@ -3,10 +3,12 @@
 @section('content-header', __('Accounts'))
 
 @section('tools')
-    <a href="{{ route('admin.accounts.create') }}" class="btn btn-sm btn-success">
-        <i class="fa fa-plus"></i>
-        New
-    </a>
+    @permission('create-post')
+        <a href="{{ route('admin.accounts.create') }}" class="btn btn-sm btn-success">
+            <i class="fa fa-plus"></i>
+            New
+        </a>
+    @endpermission
 @endsection
 
 @section('content')
