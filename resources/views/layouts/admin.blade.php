@@ -46,6 +46,33 @@
             <section class="sidebar">
                 <ul class="sidebar-menu">
 
+                    @permission('admin.users.index')
+                        <li class="{{ route_starts_with('admin.users') }}">
+                            <a href="{{ route('admin.users.index') }}">
+                                <i class="fa fa-user"></i>
+                                <span>@lang('Users')</span>
+                            </a>
+                        </li>
+                    @endpermission
+
+                    @permission('admin.roles.index')
+                        <li class="{{ route_starts_with('admin.roles') }}">
+                            <a href="{{ route('admin.roles.index') }}">
+                                <i class="fa fa-users"></i>
+                                <span>@lang('Roles')</span>
+                            </a>
+                        </li>
+                    @endpermission
+
+                    @permission('admin.permissions.index')
+                        <li class="{{ route_starts_with('admin.permissions') }}">
+                            <a href="{{ route('admin.permissions.index') }}">
+                                <i class="fa fa-key"></i>
+                                <span>@lang('Permissions')</span>
+                            </a>
+                        </li>
+                    @endpermission
+
                     @permission('admin.accounts.index')
                         <li class="{{ route_starts_with('admin.accounts') }}">
                             <a href="{{ route('admin.accounts.index') }}">

@@ -2,6 +2,36 @@
 
 return [
 
+    'Users' => [
+        'admin.users.index' => 'Users List',
+        'admin.users.create' => 'User Create View',
+        'admin.users.store' => 'User Create Action',
+        'admin.users.show' => 'View User',
+        'admin.users.edit' => 'User Edit View',
+        'admin.users.update' => 'User Edit Action',
+        'admin.users.destroy' => 'Delete User',
+    ],
+
+    'Roles' => [
+        'admin.roles.index' => 'Roles List',
+        'admin.roles.create' => 'Role Create View',
+        'admin.roles.store' => 'Role Create Action',
+        'admin.roles.show' => 'View Role',
+        'admin.roles.edit' => 'Role Edit View',
+        'admin.roles.update' => 'Role Edit Action',
+        'admin.roles.destroy' => 'Delete Role',
+    ],
+
+    'Permissions' => [
+        'admin.permissions.index' => 'Permissions List',
+        'admin.permissions.create' => 'Permission Create View',
+        'admin.permissions.store' => 'Permission Create Action',
+        'admin.permissions.show' => 'View Permission',
+        'admin.permissions.edit' => 'Permission Edit View',
+        'admin.permissions.update' => 'Permission Edit Action',
+        'admin.permissions.destroy' => 'Delete Permission',
+    ],
+
     'Accounts' => [
         'admin.accounts.image' => 'Upload Account Image',
         'admin.accounts.merge' => 'Merge Accounts',
