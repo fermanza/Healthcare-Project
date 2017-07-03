@@ -29,12 +29,10 @@ class RolesController extends Controller
     public function create()
     {
         $role = new Role;
-        $permissions = Permission::all();
         $action = 'create';
+        $view = 'admin.roles.create';
 
-        $params = compact('role', 'permissions', 'action');
-
-        return view('admin.roles.create', $params);
+        return $this->form($role, $action, $view);
     }
 
     /**
@@ -72,13 +70,10 @@ class RolesController extends Controller
      */
     public function edit(Role $role)
     {
-        $role->load('permissions');
-        $permissions = Permission::all();
         $action = 'edit';
+        $view = 'admin.roles.edit';
 
-        $params = compact('role', 'permissions', 'action');
-
-        return view('admin.roles.edit', $params);
+        return $this->form($role, $action, $view);
     }
 
     /**
@@ -110,5 +105,39 @@ class RolesController extends Controller
         flash(__('Role deleted.'));
 
         return back();
+    }
+
+    /**
+     * Show the form for the specified resource.
+     *
+     * @param  \App\Role  $role
+     * @param  string  $action
+     * @param  string  $view
+     * @return \Illuminate\Http\Response
+     */
+    protected function form($role, $action, $view)
+    {
+        $role->load('permissions');
+        $permissions = Permission::all();
+        $lists = collect(config('acl'))->map(function ($names, $group) use (&$permissions) {
+            return collect($names)->map(function ($display_name, $name) use (&$permissions) {
+                $permissionKey = null;
+                $permission = $permissions->first(function ($permission, $key) use ($name, &$permissionKey) {
+                    $bool = $permission->name == $name;
+                    if ($bool) {
+                        $permissionKey = $key;
+                    }
+                    return $bool;
+                });
+                if ($permissionKey !== null) {
+                    $permissions->pull($permissionKey);
+                }
+                return $permission;
+            })->filter();
+        });
+
+        $params = compact('role', 'permissions', 'lists', 'action');
+
+        return view($view, $params);
     }
 }

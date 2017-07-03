@@ -35,6 +35,42 @@
     </div>
 
     <hr />
+
+    <div class="lead">Permissions</div>
+
+    <div class="flexboxgrid">
+        <div class="row">
+            @foreach ($lists as $group => $routePermissions)
+                <div class="col-xs-12 col-sm-6 col-md-4 box">
+                    <h4>{{ $group }}</h4>
+                    @foreach ($routePermissions as $permission)
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" {{ (in_array($permission->id, old('permissions') ?: []) ?: $role->permissions->contains($permission)) ? 'checked' : '' }} />
+                                {{ $permission->display_name }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
+
+            @if ($permissions->count())
+                <div class="col-xs-12 col-sm-6 col-md-4 box">
+                    <h4>@lang('Others')</h4>
+                    @foreach ($permissions as $permission)
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" {{ (in_array($permission->id, old('permissions') ?: []) ?: $role->permissions->contains($permission)) ? 'checked' : '' }} />
+                                {{ $permission->display_name }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <hr />
     
     <div class="row">
         <div class="col-md-12 text-right">

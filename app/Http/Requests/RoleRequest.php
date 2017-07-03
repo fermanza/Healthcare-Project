@@ -17,7 +17,7 @@ class RoleRequest extends FormRequest
             'name' => 'required',
             'display_name' => 'required',
             'description' => '',
-            // 'permissions' => 'required|array|exists:tPermission,id',
+            'permissions' => 'required|array|exists:tPermission,id',
         ];
     }
 
@@ -29,11 +29,12 @@ class RoleRequest extends FormRequest
      */
     public function save(Model $role)
     {
+        // dd($this->permissions);
         $role->name = $this->name;
         $role->display_name = $this->display_name;
         $role->description = $this->description;
         $role->save();
 
-        // $role->permissions()->sync($this->permissions);
+        $role->permissions()->sync($this->permissions);
     }
 }
