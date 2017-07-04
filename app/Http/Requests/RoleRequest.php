@@ -29,7 +29,6 @@ class RoleRequest extends FormRequest
      */
     public function save(Model $role)
     {
-        // dd($this->permissions);
         $role->name = $this->name;
         $role->display_name = $this->display_name;
         $role->description = $this->description;

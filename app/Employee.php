@@ -42,6 +42,26 @@ class Employee extends Model
     }
 
     /**
+     * Get the PositionType for the Employee.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function positionType()
+    {
+        return $this->belongsTo(PositionType::class, 'positionTypeId');
+    }
+
+    /**
+     * Get the Manager (Employee) for the Employee.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function manager()
+    {
+        return $this->belongsTo(Employee::class, 'managerId');
+    }
+
+    /**
      * Get Employee's full name.
      *
      * @return string

@@ -20,7 +20,7 @@ class Acl
         $user = $request->user();
         $routeName = Route::getCurrentRoute()->getName();
 
-        // abort_unless($user->hasPermission($routeName), 403, __('Unauthorized'));
+        abort_unless($user->hasPermission($routeName), 403, __('Unauthorized'));
 
         return $next($request);
     }

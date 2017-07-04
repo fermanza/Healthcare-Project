@@ -221,7 +221,7 @@
                 });
             });
 
-            $('.removes-parent').on('click', function(e) {
+            $('#datatable-accounts').on('click', '.removes-parent', function (e) {
                 e.preventDefault();
                 var $removeParentForm = $('#remove-parent-form');
                 var action = $(this).data('action');

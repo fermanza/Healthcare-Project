@@ -17,12 +17,16 @@ class CreateEmployeesTable extends Migration
             $table->increments('id');
             $table->integer('personId')->unsigned();
             $table->integer('employementStatusId')->unsigned();
+            $table->integer('positionTypeId')->unsigned();
+            $table->integer('managerId')->unsigned();
             $table->string('employeeType');
             $table->double('EDPercent')->nullable();
             $table->double('IPSPercent')->nullable();
 
             $table->foreign('personId')->references('id')->on('tPerson')->onDelete('cascade');
             $table->foreign('employementStatusId')->references('id')->on('tEmployementStatus')->onDelete('cascade');
+            $table->foreign('positionTypeId')->references('id')->on('tPositionType')->onDelete('cascade');
+            $table->foreign('managerId')->references('id')->on('tEmployee')->onDelete('cascade');
         });
     }
 

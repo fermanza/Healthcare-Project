@@ -119,6 +119,8 @@ class RolesController extends Controller
     {
         $role->load('permissions');
         $permissions = Permission::all();
+
+        // refactor
         $lists = collect(config('acl'))->map(function ($names, $group) use (&$permissions) {
             return collect($names)->map(function ($display_name, $name) use (&$permissions) {
                 $permissionKey = null;

@@ -19,6 +19,8 @@ $router->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetFo
 $router->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], function ($router) {
+    $router->get('dashboard', 'AdminController@index')->name('dashboard');
+
     $router->get('sidebar-collapse', 'SidebarController@collapse');
     $router->get('sidebar-expand', 'SidebarController@expand');
 
@@ -33,19 +35,19 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->patch('accounts/parent', 'AccountsController@parent')->name('accounts.parent');
     $router->patch('accounts/{account}/remove-parent', 'AccountsController@removeParent')->name('accounts.removeParent');
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
-    $router->resource('accounts', 'AccountsController');
+    $router->resource('accounts', 'AccountsController', ['except' => 'show']);
 
-    $router->resource('users', 'UsersController');
-    $router->resource('roles', 'RolesController');
-    $router->resource('permissions', 'PermissionsController');
+    $router->resource('users', 'UsersController', ['except' => 'show']);
+    $router->resource('roles', 'RolesController', ['except' => 'show']);
+    $router->resource('permissions', 'PermissionsController', ['except' => ['create', 'store', 'show', 'destroy']]);
     $router->resource('files', 'FilesController');
-    $router->resource('regions', 'RegionsController');
-    $router->resource('groups', 'GroupsController');
-    $router->resource('practices', 'PracticesController');
-    $router->resource('divisions', 'DivisionsController');
-    $router->resource('people', 'PeopleController');
-    $router->resource('positionTypes', 'PositionTypesController');
-    $router->resource('employees', 'EmployeesController');
-    $router->resource('contractLogs', 'ContractLogsController');
+    $router->resource('regions', 'RegionsController', ['except' => 'show']);
+    $router->resource('groups', 'GroupsController', ['except' => 'show']);
+    $router->resource('practices', 'PracticesController', ['except' => 'show']);
+    $router->resource('divisions', 'DivisionsController', ['except' => 'show']);
+    $router->resource('people', 'PeopleController', ['except' => 'show']);
+    $router->resource('positionTypes', 'PositionTypesController', ['except' => 'show']);
+    $router->resource('employees', 'EmployeesController', ['except' => 'show']);
+    $router->resource('contractLogs', 'ContractLogsController', ['except' => 'show']);
 
 });

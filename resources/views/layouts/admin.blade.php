@@ -46,6 +46,13 @@
             <section class="sidebar">
                 <ul class="sidebar-menu">
 
+                    <li class="{{ route_starts_with('admin.dashboard') }}">
+                        <a href="{{ route('admin.dashboard') }}">
+                            <i class="fa fa-dashboard"></i>
+                            <span>@lang('Dashboard')</span>
+                        </a>
+                    </li>
+
                     @permission('admin.users.index')
                         <li class="{{ route_starts_with('admin.users') }}">
                             <a href="{{ route('admin.users.index') }}">
@@ -112,7 +119,7 @@
                     @permission('admin.people.index')
                         <li class="{{ route_starts_with('admin.people') }}">
                             <a href="{{ route('admin.people.index') }}">
-                                <i class="fa fa-users"></i>
+                                <i class="fa fa-male"></i>
                                 <span>@lang('People')</span>
                             </a>
                         </li>

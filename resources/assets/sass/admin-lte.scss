@@ -54,8 +54,28 @@
     color: #000;
 }
 
+.small-box .icon {
+    font-size: 80px;
+}
+
+.small-box:hover .icon {
+    font-size: 85px;
+}
+
 @media (max-width: 767px) {
     .skin-blue-light .main-header .navbar .dropdown-menu li a:hover {
         background: rgba(0, 0, 0, 0.1);
+    }
+
+    .small-box {
+        text-align: left;
+    }
+
+    .small-box .icon {
+        display: block;
+    }
+
+    .small-box p {
+        font-size: 15px;
     }
 }

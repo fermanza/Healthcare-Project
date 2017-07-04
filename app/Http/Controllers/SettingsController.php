@@ -44,6 +44,6 @@ class SettingsController extends Controller
 
         flash(__('Credentials Updated.'));
 
-        return redirect()->route('admin.accounts.index');
+        return redirect()->route('admin.dashboard');
     }
 }
