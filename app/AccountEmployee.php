@@ -48,12 +48,12 @@ class AccountEmployee extends Model
      * @param string  $position
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePosition($query, $position)
-    {
-        return $query->whereHas('positionType', function ($query) use ($position) {
-            $query->where('name', $position);
-        });
-    }
+    // public function scopePosition($query, $position)
+    // {
+    //     return $query->whereHas('positionType', function ($query) use ($position) {
+    //         $query->where('name', $position);
+    //     });
+    // }
 
     /**
      * Get Employee's full name.
@@ -68,11 +68,11 @@ class AccountEmployee extends Model
     /**
      * Determine if the AccountEmployee has the given position.
      *
-     * @param  string  $position
+     * @param  int  $positionId
      * @return boolean
      */
-    public function hasPosition($position)
+    public function hasPosition($positionId)
     {
-        return $this->positionType->name == $position;
+        return $this->positionTypeId == $positionId;
     }
 }

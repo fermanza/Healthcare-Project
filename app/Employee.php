@@ -74,11 +74,11 @@ class Employee extends Model
     /**
      * Determine if the Employee belongs to an Account with the given position.
      *
-     * @param  string  $position
+     * @param  int  $positionId
      * @return boolean
      */
-    public function hasPosition($position)
+    public function hasPosition($positionId)
     {
-        return $this->accountEmployees->contains->hasPosition($position);
+        return $this->accountEmployees->contains->hasPosition($positionId);
     }
 }

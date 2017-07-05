@@ -41,9 +41,7 @@ class Account extends Model
     public function recruiter()
     {
         return $this->hasOne(AccountEmployee::class, 'accountId')
-                    ->whereHas('positionType', function ($query) {
-                        $query->where('name', 'Recruiter');
-                    });
+            ->where('positionTypeId', config('instances.position_types.recruiter'));
     }
 
     /**
@@ -54,9 +52,7 @@ class Account extends Model
     public function manager()
     {
         return $this->hasOne(AccountEmployee::class, 'accountId')
-                    ->whereHas('positionType', function ($query) {
-                        $query->where('name', 'Manager');
-                    });
+            ->where('positionTypeId', config('instances.position_types.manager'));
     }
 
     /**

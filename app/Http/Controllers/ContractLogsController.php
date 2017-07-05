@@ -69,8 +69,8 @@ class ContractLogsController extends Controller
         $employees =  Employee::where('active', true)
                                 ->with('accountEmployees.positionType', 'person')
                                 ->get()->sortBy->fullName();
-        $recruiters = $employees->filter->hasPosition('Recruiter');
-        $managers = $employees->filter->hasPosition('Manager');
+        $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
+        $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         $coordinators = $employees;
         $types = ContractType::orderBy('contractType')->get();
         $notes = ContractNote::orderBy('contractNote')->get();
@@ -129,8 +129,8 @@ class ContractLogsController extends Controller
         $employees =  Employee::where('active', true)
                                 ->with('accountEmployees.positionType', 'person')
                                 ->get()->sortBy->fullName();
-        $recruiters = $employees->filter->hasPosition('Recruiter');
-        $managers = $employees->filter->hasPosition('Manager');
+        $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
+        $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         $coordinators = $employees;
         $types = ContractType::orderBy('contractType')->get();
         $notes = ContractNote::orderBy('contractNote')->get();

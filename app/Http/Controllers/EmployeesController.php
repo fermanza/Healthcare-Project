@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Person;
 use App\Employee;
+use App\PositionType;
 use App\EmployementStatus;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
@@ -30,13 +31,10 @@ class EmployeesController extends Controller
     public function create()
     {
         $employee = new Employee;
-        $people = Person::where('active', true)->get()->sortBy->fullName();
-        $statuses = EmployementStatus::orderBy('name')->get();
         $action = 'create';
+        $view = 'admin.employees.create';
 
-        $params = compact('employee', 'people', 'statuses', 'action');
-
-        return view('admin.employees.create', $params);
+        return $this->form($employee, $action, $view);
     }
 
     /**
@@ -74,14 +72,10 @@ class EmployeesController extends Controller
      */
     public function edit(Employee $employee)
     {
-        $employee->load('person');
-        $people = Person::where('active', true)->get()->sortBy->fullName();
-        $statuses = EmployementStatus::orderBy('name')->get();
         $action = 'edit';
+        $view = 'admin.employees.edit';
 
-        $params = compact('employee', 'people', 'statuses', 'action');
-
-        return view('admin.employees.edit', $params);
+        return $this->form($employee, $action, $view);
     }
 
     /**
@@ -114,5 +108,30 @@ class EmployeesController extends Controller
         flash(__('Employee deleted.'));
 
         return back();
+    }
+
+    /**
+     * Show the form for the specified resource.
+     *
+     * @param  \App\Employee  $employee
+     * @param  string  $action
+     * @param  string  $view
+     * @return \Illuminate\Http\Response
+     */
+    protected function form($employee, $action, $view)
+    {
+        $employee->load('person');
+        $people = Person::where('active', true)->get()->sortBy->fullName();
+        $statuses = EmployementStatus::orderBy('name')->get();
+        $positionTypes = PositionType::where('active', true)->orderBy('name')->get();
+        $managers = Employee::with('person')
+            ->where('positionTypeId', config('instances.position_types.manager'))
+            ->get()->sortBy->fullName();
+
+        $params = compact(
+            'employee', 'people', 'statuses', 'positionTypes', 'managers', 'action'
+        );
+
+        return view($view, $params);
     }
 }

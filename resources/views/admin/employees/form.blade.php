@@ -41,6 +41,32 @@
                 @endif
             </div>
 
+            <div class="form-group{{ $errors->has('positionTypeId') ? ' has-error' : '' }}">
+                <label for="positionTypeId">@lang('Position Type')</label>
+                <select class="form-control select2" id="positionTypeId" name="positionTypeId">
+                    <option value="" selected>@lang('NONE')</option>
+                    @foreach ($positionTypes as $positionType)
+                        <option value="{{ $positionType->id }}" {{ (old('positionTypeId') == $positionType->id ?: $positionType->id == $employee->positionTypeId) ? 'selected': '' }}>{{ $positionType->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('positionTypeId'))
+                    <span class="help-block"><strong>{{ $errors->first('positionTypeId') }}</strong></span>
+                @endif
+            </div>
+
+            <div class="form-group{{ $errors->has('managerId') ? ' has-error' : '' }}">
+                <label for="managerId">@lang('Manager')</label>
+                <select class="form-control select2" id="managerId" name="managerId">
+                    <option value="" selected>@lang('NONE')</option>
+                    @foreach ($managers as $manager)
+                        <option value="{{ $manager->id }}" {{ (old('managerId') == $manager->id ?: $manager->id == $employee->managerId) ? 'selected': '' }}>{{ $manager->fullName() }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('managerId'))
+                    <span class="help-block"><strong>{{ $errors->first('managerId') }}</strong></span>
+                @endif
+            </div>
+
             <div class="form-group{{ $errors->has('EDPercent') ? ' has-error' : '' }}">
                 <label for="EDPercent">@lang('ED Percent')</label>
                 <select class="form-control select2" id="EDPercent" name="EDPercent" required>

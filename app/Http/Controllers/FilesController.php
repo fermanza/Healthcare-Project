@@ -30,9 +30,8 @@ class FilesController extends Controller
     public function create()
     {
         $file = new File;
-        $fileTypes = FileType::whereHas('feed', function ($query) {
-            $query->where('feedName', 'Admin Uploads');
-        })->orderBy('fileTypeName')->get();
+        $fileTypes = FileType::where('feedId', config('instances.file_feeds.admin_uploads'))
+            ->orderBy('fileTypeName')->get();
         $action = 'create';
 
         $params = compact('file', 'fileTypes', 'action');
@@ -90,9 +89,8 @@ class FilesController extends Controller
      */
     public function edit(File $file)
     {
-        $fileTypes = FileType::whereHas('feed', function ($query) {
-            $query->where('feedName', 'Admin Uploads');
-        })->orderBy('fileTypeName')->get();
+        $fileTypes = FileType::where('feedId', config('instances.file_feeds.admin_uploads'))
+            ->orderBy('fileTypeName')->get();
         $action = 'edit';
 
         $params = compact('file', 'action', 'fileTypes');

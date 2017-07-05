@@ -44,8 +44,8 @@ class FileRequest extends FormRequest
             $filename = $uploadedFile->getClientOriginalName();
             $path = $uploadedFile->store('files', 's3');
 
-            $file->statusTypeId = FileStatus::where('statusName', 'To Process')->value('statusTypeId');
-            $file->feedId = FileFeed::where('feedName', 'Admin Uploads')->value('feedId');
+            $file->statusTypeId = config('instances.file_statuses.to_process');
+            $file->feedId = config('instances.file_feeds.admin_uploads');
             $file->filename = $filename;
             $file->path = $path;
             $file->downloadDate = Carbon::now();

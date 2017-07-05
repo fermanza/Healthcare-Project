@@ -151,11 +151,10 @@ class AccountRequest extends FormRequest
      */
     protected function associateRecruiter($account)
     {
-        $recruiterPosition = PositionType::where('name', 'Recruiter')->first();
         AccountEmployee::unguard();
         AccountEmployee::updateOrCreate([
             'accountId' => $account->id,
-            'positionTypeId' => $recruiterPosition->id,
+            'positionTypeId' => config('instances.position_types.recruiter'),
         ], [
             'employeeId' => $this->recruiterId,
         ]);
@@ -170,11 +169,10 @@ class AccountRequest extends FormRequest
      */
     protected function associateManager($account)
     {
-        $managerPosition = PositionType::where('name', 'Manager')->first();
         AccountEmployee::unguard();
         AccountEmployee::updateOrCreate([
             'accountId' => $account->id,
-            'positionTypeId' => $managerPosition->id,
+            'positionTypeId' => config('instances.position_types.manager'),
         ], [
             'employeeId' => $this->managerId,
         ]);
