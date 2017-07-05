@@ -19,6 +19,8 @@
                     <th class="mw200 w100">@lang('Full Name')</th>
                     <th class="mw150">@lang('Type')</th>
                     <th class="mw100">@lang('Status')</th>
+                    <th class="mw100">@lang('Position Type')</th>
+                    <th class="mw150">@lang('Manager')</th>
                     <th class="mw100">@lang('ED Percent')</th>
                     <th class="mw100">@lang('IPS Percent')</th>
                     <th class="mw100">@lang('Actions')</th>
@@ -30,6 +32,8 @@
                         <td>{{ $employee->fullName() }}</td>
                         <td>{{ $employee->employeeType }}</td>
                         <td>{{ $employee->status->name }}</td>
+                        <td>{{ $employee->positionType ? $employee->positionType->name : '' }}</td>
+                        <td>{{ $employee->manager ? $employee->manager->fullName() : '' }}</td>
                         <td>{{ number_format($employee->EDPercent, 1) }}</td>
                         <td>{{ number_format($employee->IPSPercent, 1) }}</td>
                         <td class="text-center">

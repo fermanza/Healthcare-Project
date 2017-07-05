@@ -18,7 +18,8 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with('person', 'status')->where('active', true)->get();
+        $employees = Employee::with('person', 'status', 'positionType', 'manager.person')
+            ->where('active', true)->get();
 
         return view('admin.employees.index', compact('employees'));
     }

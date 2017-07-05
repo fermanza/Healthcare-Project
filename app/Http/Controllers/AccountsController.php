@@ -21,7 +21,20 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        $accounts = Account::where('active', true)->get();
+        $user = auth()->user();
+        $accountsQB = Account::where('active', true);
+
+        if ($user->hasRoleId(config('instances.roles.manager'))) {
+            $accountsQB->whereHas('manager', function ($query) use ($user) {
+                $query->where('employeeId', $user->employeeId);
+            });
+        } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
+            $accountsQB->whereHas('recruiter', function ($query) use ($user) {
+                $query->where('employeeId', $user->employeeId);
+            });
+        }
+
+        $accounts = $accountsQB->get();
 
         return view('admin.accounts.index', compact('accounts'));
     }

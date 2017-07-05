@@ -18,6 +18,7 @@
                 <tr>
                     <th class="mw200 w50">@lang('Name')</th>
                     <th class="mw150 w50">@lang('E-mail')</th>
+                    <th class="mw150">@lang('Employee')</th>
                     <th class="mw150">@lang('Role')</th>
                     <th class="mw100">@lang('Actions')</th>
                 </tr>
@@ -27,6 +28,7 @@
                     <tr>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->employee ? $user->employee->fullName() : '' }}</td>
                         <td>{{ $user->roles->implode('display_name', ', ') }}</td>
                         <td class="text-center">
                             @permission('admin.users.edit')

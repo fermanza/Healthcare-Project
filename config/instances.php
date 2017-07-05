@@ -4,6 +4,11 @@ return [
     
     'roles' => [
         'super_admin' => 1,
+        'director' => 2,
+        'manager' => 3,
+        'contract_coordinator' => 4,
+        'dca' => 5,
+        'recruiter' => 6,
     ],
     
     'file_feeds' => [
