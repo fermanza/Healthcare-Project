@@ -28,12 +28,13 @@ class ContractLogsController extends Controller
      */
     public function index(ContractLogsFilter $filter)
     {
+        $user = auth()->user();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $practiceTypes = ['ED', 'IPS'];
         $positions = Position::orderBy('position')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $accounts = Account::where('active', true)->orderBy('name')->get();
-        $contractLogs = ContractLog::leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
+        $contractLogsQB = ContractLog::leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
             ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
             ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
             ->leftJoin('tAccount', 'tContractLogs.accountId', '=', 'tAccount.id')
@@ -43,7 +44,19 @@ class ContractLogsController extends Controller
             ->select('tContractLogs.*')
             ->with([
                 'status', 'position', 'practice', 'account', 'division.group', 'note',
-            ])->where('tContractLogs.active', true)->filter($filter)->paginate();
+            ])->where('tContractLogs.active', true)->filter($filter);
+
+        if ($user->hasRoleId(config('instances.roles.manager'))) {
+            $contractLogsQB->whereHas('account.manager', function ($query) use ($user) {
+                $query->where('employeeId', $user->employeeId);
+            });
+        } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
+            $contractLogsQB->whereHas('account.recruiter', function ($query) use ($user) {
+                $query->where('employeeId', $user->employeeId);
+            });
+        }
+
+        $contractLogs =$contractLogsQB->paginate();
 
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
