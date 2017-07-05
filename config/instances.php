@@ -2,6 +2,10 @@
 
 return [
     
+    'roles' => [
+        'super_admin' => 1,
+    ],
+    
     'file_feeds' => [
         'divisional_file_data' => 1,
         'contract_log_file_data' => 2,

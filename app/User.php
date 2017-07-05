@@ -40,8 +40,8 @@ class User extends Authenticatable
     public function hasPermission($permission, $team = null, $requireAll = false)
     {
         return $this->isSuperUser() 
-                ? true
-                : $this->laratrustHasPermission($permission, $team, $requireAll);
+            ? true
+            : $this->laratrustHasPermission($permission, $team, $requireAll);
     }
 
     /**
@@ -51,6 +51,6 @@ class User extends Authenticatable
      */
     public function isSuperUser()
     {
-        return $this->hasRole('super-admin');
+        return $this->cachedRoles()->contains(config('instances.roles.super_admin'));
     }
 }

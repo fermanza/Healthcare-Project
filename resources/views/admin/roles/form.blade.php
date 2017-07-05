@@ -5,6 +5,16 @@
     {{ $action == 'edit' ? method_field('PATCH') : '' }}
 
     <div class="row">
+        <div class="col-md-12 text-right">
+            @include('admin.common.submit', [
+                'action' => $action,
+                'store' => 'admin.roles.store',
+                'update' => 'admin.roles.update'
+            ])
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-12">
 
             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
