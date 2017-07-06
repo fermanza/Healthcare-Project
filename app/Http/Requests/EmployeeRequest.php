@@ -20,7 +20,10 @@ class EmployeeRequest extends FormRequest
             'managerId' => [
                 'nullable',
                 Rule::exists('tEmployee', 'id')->where(function ($query) {
-                    $query->where('positionTypeId', config('instances.position_types.manager'));
+                    $query->whereIn('positionTypeId', [
+                        config('instances.position_types.manager'),
+                        config('instances.position_types.director'),
+                    ]);
                 }),
             ],
             'employeeType' => 'required',

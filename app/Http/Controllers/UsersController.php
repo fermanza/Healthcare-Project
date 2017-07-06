@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Role;
 use App\User;
+use App\Employee;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 
@@ -29,12 +30,10 @@ class UsersController extends Controller
     public function create()
     {
         $user = new User;
-        $roles = Role::orderBy('name')->get();
         $action = 'create';
+        $view = 'admin.users.create';
 
-        $params = compact('user', 'roles', 'action');
-
-        return view('admin.users.create', $params);
+        return $this->form($user, $action, $view);
     }
 
     /**
@@ -72,13 +71,10 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load('roles');
-        $roles = Role::orderBy('name')->get();
         $action = 'edit';
+        $view = 'admin.users.edit';
 
-        $params = compact('user', 'roles', 'action');
-
-        return view('admin.users.edit', $params);
+        return $this->form($user, $action, $view);
     }
 
     /**
@@ -110,5 +106,26 @@ class UsersController extends Controller
         flash(__('User deleted.'));
 
         return back();
+    }
+
+    /**
+     * Show the form for the specified resource.
+     *
+     * @param  \App\User  $user
+     * @param  string  $action
+     * @param  string  $view
+     * @return \Illuminate\Http\Response
+     */
+    protected function form($user, $action, $view)
+    {
+        $user->load('roles');
+        $roles = Role::orderBy('name')->get();
+        $employees = Employee::with('person')
+            ->where('active', true)
+            ->get()->sortBy->fullName();
+
+        $params = compact('user', 'roles', 'employees', 'action');
+
+        return view($view, $params);
     }
 }

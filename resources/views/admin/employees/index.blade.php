@@ -19,8 +19,8 @@
                     <th class="mw200 w100">@lang('Full Name')</th>
                     <th class="mw150">@lang('Type')</th>
                     <th class="mw100">@lang('Status')</th>
-                    <th class="mw100">@lang('Position Type')</th>
-                    <th class="mw150">@lang('Manager')</th>
+                    <th class="mw150">@lang('Position Type')</th>
+                    <th class="mw150">@lang('Manager/Director')</th>
                     <th class="mw100">@lang('ED Percent')</th>
                     <th class="mw100">@lang('IPS Percent')</th>
                     <th class="mw100">@lang('Actions')</th>

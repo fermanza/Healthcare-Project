@@ -58,6 +58,10 @@ class ContractLogsController extends Controller
             $contractLogsQB->whereHas('account.coordinator', function ($query) use ($user) {
                 $query->where('employeeId', $user->employeeId);
             });
+        } else if ($user->hasRoleId(config('instances.roles.director'))) {
+            $contractLogsQB->whereHas('account.manager.employee', function ($query) use ($user) {
+                $query->where('managerId', $user->employeeId);
+            });
         }
 
         $contractLogs =$contractLogsQB->paginate();
@@ -84,8 +88,8 @@ class ContractLogsController extends Controller
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $specialties = Specialty::orderBy('specialty')->get();
         $employees =  Employee::where('active', true)
-                                ->with('accountEmployees.positionType', 'person')
-                                ->get()->sortBy->fullName();
+            ->with('accountEmployees.positionType', 'person')
+            ->get()->sortBy->fullName();
         $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
         $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         $coordinators = $employees;
@@ -144,8 +148,8 @@ class ContractLogsController extends Controller
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $specialties = Specialty::orderBy('specialty')->get();
         $employees =  Employee::where('active', true)
-                                ->with('accountEmployees.positionType', 'person')
-                                ->get()->sortBy->fullName();
+            ->with('accountEmployees.positionType', 'person')
+            ->get()->sortBy->fullName();
         $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
         $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         $coordinators = $employees;

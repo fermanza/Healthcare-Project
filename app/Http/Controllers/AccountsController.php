@@ -36,6 +36,10 @@ class AccountsController extends Controller
             $accountsQB->whereHas('coordinator', function ($query) use ($user) {
                 $query->where('employeeId', $user->employeeId);
             });
+        } else if ($user->hasRoleId(config('instances.roles.director'))) {
+            $accountsQB->whereHas('manager.employee', function ($query) use ($user) {
+                $query->where('managerId', $user->employeeId);
+            });
         }
 
         $accounts = $accountsQB->get();

@@ -48,6 +48,19 @@
                 @endif
             </div>
 
+            <div class="form-group{{ $errors->has('employeeId') ? ' has-error' : '' }}">
+                <label for="employeeId">@lang('Employee')</label>
+                <select class="form-control select2" id="employeeId" name="employeeId">
+                    <option value="" {{ $user->employeeId ? '' : 'selected' }}>@lang('NONE')</option>
+                    @foreach ($employees as $employee)
+                        <option value="{{ $employee->id }}" {{ (old('employeeId') == $employee->id ?: $employee->id == $user->employeeId) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('employeeId'))
+                    <span class="help-block"><strong>{{ $errors->first('employeeId') }}</strong></span>
+                @endif
+            </div>
+
         </div>
     </div>
 

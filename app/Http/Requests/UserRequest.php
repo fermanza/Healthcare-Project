@@ -17,6 +17,7 @@ class UserRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email',
             'roles' => 'required|array|exists:tRole,id',
+            'employeeId' => 'nullable|exists:tEmployee,id',
         ];
 
         if ($this->isCreate()) {
@@ -43,6 +44,7 @@ class UserRequest extends FormRequest
         $user->name = $this->name;
         $user->email = $this->email;
         $user->password = $this->password ? bcrypt($this->password) : $user->password;
+        $user->employeeId = $this->employeeId;
         $user->save();
 
         $user->roles()->sync($this->roles);

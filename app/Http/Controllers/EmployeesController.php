@@ -126,7 +126,10 @@ class EmployeesController extends Controller
         $statuses = EmployementStatus::orderBy('name')->get();
         $positionTypes = PositionType::where('active', true)->orderBy('name')->get();
         $managers = Employee::with('person')
-            ->where('positionTypeId', config('instances.position_types.manager'))
+            ->whereIn('positionTypeId', [
+                config('instances.position_types.manager'),
+                config('instances.position_types.director'),
+            ])
             ->get()->sortBy->fullName();
 
         $params = compact(
