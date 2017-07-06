@@ -56,6 +56,17 @@ class Account extends Model
     }
 
     /**
+     * Get the Contract Coordinator (AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function coordinator()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.contract_coordinator'));
+    }
+
+    /**
      * Get the Practices for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -26,7 +26,9 @@ return [
     'position_types' => [
         'manager' => 1,
         'recruiter' => 2,
-        'director' => 3,
+        'director' => 5,
+        'dca' => 6,
+        'contract_coordinator' => 7,
     ],
 
 ];

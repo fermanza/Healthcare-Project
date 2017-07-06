@@ -54,6 +54,10 @@ class ContractLogsController extends Controller
             $contractLogsQB->whereHas('account.recruiter', function ($query) use ($user) {
                 $query->where('employeeId', $user->employeeId);
             });
+        } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
+            $contractLogsQB->whereHas('account.coordinator', function ($query) use ($user) {
+                $query->where('employeeId', $user->employeeId);
+            });
         }
 
         $contractLogs =$contractLogsQB->paginate();
