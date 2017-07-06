@@ -26,19 +26,23 @@ class AccountsController extends Controller
 
         if ($user->hasRoleId(config('instances.roles.manager'))) {
             $accountsQB->whereHas('manager', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId);
+                $query->where('employeeId', $user->employeeId)
+                    ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
             $accountsQB->whereHas('recruiter', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId);
+                $query->where('employeeId', $user->employeeId)
+                    ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
             $accountsQB->whereHas('coordinator', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId);
+                $query->where('employeeId', $user->employeeId)
+                    ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
             $accountsQB->whereHas('manager.employee', function ($query) use ($user) {
-                $query->where('managerId', $user->employeeId);
+                $query->where('managerId', $user->employeeId)
+                    ->whereNotNull('managerId');
             });
         }
 

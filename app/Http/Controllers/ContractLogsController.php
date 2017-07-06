@@ -48,19 +48,23 @@ class ContractLogsController extends Controller
 
         if ($user->hasRoleId(config('instances.roles.manager'))) {
             $contractLogsQB->whereHas('account.manager', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId);
+                $query->where('employeeId', $user->employeeId)
+                    ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
             $contractLogsQB->whereHas('account.recruiter', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId);
+                $query->where('employeeId', $user->employeeId)
+                    ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
             $contractLogsQB->whereHas('account.coordinator', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId);
+                $query->where('employeeId', $user->employeeId)
+                    ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
             $contractLogsQB->whereHas('account.manager.employee', function ($query) use ($user) {
-                $query->where('managerId', $user->employeeId);
+                $query->where('managerId', $user->employeeId)
+                    ->whereNotNull('managerId');
             });
         }
 
