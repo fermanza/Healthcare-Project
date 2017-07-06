@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th class="mw200 w50">@lang('Name')</th>
-                    <th class="mw200 w50">@lang('Region')</th>
+                    <th class="mw200 w50">@lang('Operating Unit')</th>
                     <th class="mw150">@lang('Code')</th>
                     <th class="mw100">@lang('Actions')</th>
                 </tr>

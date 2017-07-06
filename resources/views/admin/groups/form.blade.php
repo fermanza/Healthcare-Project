@@ -16,7 +16,7 @@
             </div>
 
             <div class="form-group{{ $errors->has('regionId') ? ' has-error' : '' }}">
-                <label for="regionId">@lang('Region')</label>
+                <label for="regionId">@lang('Operating Unit')</label>
                 <select class="form-control select2" id="regionId" name="regionId" required>
                     <option value="" disabled selected></option>
                     @foreach ($regions as $region)

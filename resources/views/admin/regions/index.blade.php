@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('content-header', __('Regions'))
+@section('content-header', __('Operating Units'))
 
 @section('tools')
     @permission('admin.regions.create')

@@ -156,7 +156,7 @@
                         <li class="{{ route_starts_with('admin.regions') }}">
                             <a href="{{ route('admin.regions.index') }}">
                                 <i class="fa fa-globe"></i>
-                                <span>@lang('Regions')</span>
+                                <span>@lang('Operating Units')</span>
                             </a>
                         </li>
                     @endpermission

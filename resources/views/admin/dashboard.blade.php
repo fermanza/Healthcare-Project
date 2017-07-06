@@ -76,7 +76,7 @@
 
             @component('admin/dashboard-card')
                 @slot('route', 'admin.regions.index')
-                @slot('resource', 'Regions')
+                @slot('resource', 'Operating Units')
                 @slot('icon', 'fa-globe')
             @endcomponent
 

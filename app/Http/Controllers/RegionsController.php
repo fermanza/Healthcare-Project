@@ -46,7 +46,7 @@ class RegionsController extends Controller
         $region = new Region;
         $request->save($region);
 
-        flash(__('Region created.'));
+        flash(__('Operating Unit created.'));
 
         return redirect()->route('admin.regions.index');
     }
@@ -88,7 +88,7 @@ class RegionsController extends Controller
     {
         $request->save($region);
 
-        flash(__('Region updated.'));
+        flash(__('Operating Unit updated.'));
 
         return redirect()->route('admin.regions.index');
     }
@@ -104,7 +104,7 @@ class RegionsController extends Controller
         $region->active = false;
         $region->save();
 
-        flash(__('Region deleted.'));
+        flash(__('Operating Unit deleted.'));
 
         return back();
     }

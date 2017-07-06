@@ -57,14 +57,14 @@ return [
         'admin.files.destroy' => 'Delete File',
     ],
 
-    'Regions' => [
-        'admin.regions.index' => 'Regions List',
-        'admin.regions.create' => 'Region Create View',
-        'admin.regions.store' => 'Region Create Action',
-        'admin.regions.show' => 'View Region',
-        'admin.regions.edit' => 'Region Edit View',
-        'admin.regions.update' => 'Region Edit Action',
-        'admin.regions.destroy' => 'Delete Region',
+    'Operating Units' => [
+        'admin.regions.index' => 'Operating Units List',
+        'admin.regions.create' => 'Operating Unit Create View',
+        'admin.regions.store' => 'Operating Unit Create Action',
+        'admin.regions.show' => 'View Operating Unit',
+        'admin.regions.edit' => 'Operating Unit Edit View',
+        'admin.regions.update' => 'Operating Unit Edit Action',
+        'admin.regions.destroy' => 'Delete Operating Unit',
     ],
 
     'Groups' => [
