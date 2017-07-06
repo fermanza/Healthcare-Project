@@ -71,7 +71,7 @@
     <hr />
     
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="form-group{{ $errors->has('recruiterId') ? ' has-error' : '' }}">
                 <label for="recruiterId">@lang('Recruiter')</label>
                 <select class="form-control select2" id="recruiterId" name="recruiterId">
@@ -85,7 +85,7 @@
                 @endif
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="form-group{{ $errors->has('managerId') ? ' has-error' : '' }}">
                 <label for="managerId">@lang('Manager')</label>
                 <select class="form-control select2" id="managerId" name="managerId">
@@ -96,6 +96,20 @@
                 </select>
                 @if ($errors->has('managerId'))
                     <span class="help-block"><strong>{{ $errors->first('managerId') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('rscId') ? ' has-error' : '' }}">
+                <label for="rscId">@lang('Regional Support Center')</label>
+                <select class="form-control select2" id="rscId" name="rscId">
+                    <option value="" disabled selected></option>
+                    @foreach ($RSCs as $RSC)
+                        <option value="{{ $RSC->id }}" {{ (old('rscId') == $RSC->id ?: ($RSC->id == $account->rscId)) ? 'selected': '' }}>{{ $RSC->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('rscId'))
+                    <span class="help-block"><strong>{{ $errors->first('rscId') }}</strong></span>
                 @endif
             </div>
         </div>

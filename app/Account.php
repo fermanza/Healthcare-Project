@@ -87,6 +87,16 @@ class Account extends Model
     }
 
     /**
+     * Get the RSC for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function rsc()
+    {
+        return $this->belongsTo(RSC::class, 'rscId');
+    }
+
+    /**
      * Get the SiteCodes for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

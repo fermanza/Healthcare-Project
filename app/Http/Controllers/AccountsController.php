@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\RSC;
 use JavaScript;
 use App\Account;
 use App\Division;
@@ -59,14 +60,10 @@ class AccountsController extends Controller
     public function create()
     {
         $account = new Account;
-        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
-        $practices = Practice::where('active', true)->orderBy('name')->get();
-        $divisions = Division::where('active', true)->orderBy('name')->get();
         $action = 'create';
+        $view = 'admin.accounts.create';
 
-        $params = compact('account', 'employees', 'practices', 'divisions', 'action');
-
-        return view('admin.accounts.create', $params);
+        return $this->form($account, $action, $view);
     }
 
     /**
@@ -104,24 +101,10 @@ class AccountsController extends Controller
      */
     public function edit(Account $account)
     {
-        $account->load('siteCodes', 'physiciansApps', 'practices', 'recruiter', 'manager');
-        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
-        $practices = Practice::where('active', true)->orderBy('name')->get();
-        $divisions = Division::where('active', true)->orderBy('name')->get();
         $action = 'edit';
+        $view = 'admin.accounts.edit';
 
-        $params = compact('account', 'employees', 'practices', 'divisions', 'action');
-
-        JavaScript::put([
-            'account' => [
-                'physiciansNeeded' => $account->physiciansNeeded,
-                'appsNeeded' => $account->appsNeeded,
-                'physicianHoursPerMonth' => $account->physicianHoursPerMonth,
-                'appHoursPerMonth' => $account->appHoursPerMonth,
-            ],
-        ]);
-
-        return view('admin.accounts.edit', $params);
+        return $this->form($account, $action, $view);
     }
 
     /**
@@ -154,6 +137,36 @@ class AccountsController extends Controller
         flash(__('Account deleted.'));
 
         return back();
+    }
+
+    /**
+     * Show the form for the specified resource.
+     *
+     * @param  \App\Account  $account
+     * @param  string  $action
+     * @param  string  $view
+     * @return \Illuminate\Http\Response
+     */
+    protected function form($account, $action, $view)
+    {
+        $account->load('siteCodes', 'physiciansApps', 'practices', 'recruiter', 'manager');
+        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+        $practices = Practice::where('active', true)->orderBy('name')->get();
+        $divisions = Division::where('active', true)->orderBy('name')->get();
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
+
+        $params = compact('account', 'employees', 'practices', 'divisions', 'RSCs', 'action');
+
+        JavaScript::put([
+            'account' => [
+                'physiciansNeeded' => $account->physiciansNeeded,
+                'appsNeeded' => $account->appsNeeded,
+                'physicianHoursPerMonth' => $account->physicianHoursPerMonth,
+                'appHoursPerMonth' => $account->appHoursPerMonth,
+            ],
+        ]);
+
+        return view($view, $params);
     }
 
     /**
