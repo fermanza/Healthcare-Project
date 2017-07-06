@@ -14,7 +14,7 @@ class GroupRequest extends FormRequest
     public function rules()
     {
         return [
-            'regionId' => 'required|exists:tRegion,id',
+            'regionId' => 'required|exists:tOperatingUnit,id',
             'name' => 'required',
             'code' => '',
         ];

@@ -16,7 +16,7 @@ class AddRegionToGroupsTable extends Migration
         Schema::table('tGroup', function (Blueprint $table) {
             $table->integer('regionId')->unsigned()->nullable();
 
-            $table->foreign('regionId')->references('id')->on('tRegion')->onDelete('cascade');
+            $table->foreign('regionId')->references('id')->on('tOperatingUnit')->onDelete('cascade');
         });
     }
 

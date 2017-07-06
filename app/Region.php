@@ -9,7 +9,7 @@ class Region extends Model
      *
      * @var string
      */
-    protected $table = 'tRegion';
+    protected $table = 'tOperatingUnit';
 
     /**
      * Get the Groups for the Region.
