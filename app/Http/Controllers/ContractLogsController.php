@@ -52,22 +52,22 @@ class ContractLogsController extends Controller
             ])->where('tContractLogs.active', true)->filter($filter);
 
         if ($user->hasRoleId(config('instances.roles.manager'))) {
-            $contractLogsQB->whereHas('account.manager', function ($query) use ($user) {
+            $contractLogsQB->whereHas('accounts.manager', function ($query) use ($user) {
                 $query->where('employeeId', $user->employeeId)
                     ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
-            $contractLogsQB->whereHas('account.recruiter', function ($query) use ($user) {
+            $contractLogsQB->whereHas('accounts.recruiter', function ($query) use ($user) {
                 $query->where('employeeId', $user->employeeId)
                     ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
-            $contractLogsQB->whereHas('account.coordinator', function ($query) use ($user) {
+            $contractLogsQB->whereHas('accounts.coordinator', function ($query) use ($user) {
                 $query->where('employeeId', $user->employeeId)
                     ->whereNotNull('employeeId');
             });
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
-            $contractLogsQB->whereHas('account.manager.employee', function ($query) use ($user) {
+            $contractLogsQB->whereHas('accounts.manager.employee', function ($query) use ($user) {
                 $query->where('managerId', $user->employeeId)
                     ->whereNotNull('managerId');
             });
