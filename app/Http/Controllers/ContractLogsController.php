@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\RSC;
+use App\Region;
 use JavaScript;
 use App\Account;
 use App\Division;
@@ -14,6 +16,7 @@ use App\ContractType;
 use App\ContractStatus;
 use App\AccountEmployee;
 use App\EmployementStatus;
+use App\ProviderDesignation;
 use Illuminate\Http\Request;
 use App\Filters\ContractLogsFilter;
 use App\Http\Requests\ContractLogRequest;
@@ -34,6 +37,8 @@ class ContractLogsController extends Controller
         $positions = Position::orderBy('position')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $accounts = Account::where('active', true)->orderBy('name')->get();
+        $regions = Region::where('active', true)->orderBy('name')->get();
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $contractLogsQB = ContractLog::leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
             ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
             ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
@@ -72,7 +77,8 @@ class ContractLogsController extends Controller
 
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
-            'positions', 'statuses', 'accounts'
+            'positions', 'statuses', 'accounts', 'regions',
+            'RSCs'
         );
 
         return view('admin.contractLogs.index', $params);
@@ -100,13 +106,16 @@ class ContractLogsController extends Controller
         $types = ContractType::orderBy('contractType')->get();
         $notes = ContractNote::orderBy('contractNote')->get();
         $positions = Position::orderBy('position')->get();
+        $designations = ProviderDesignation::orderBy('name')->get();
+        $additionalAccounts = collect();
         $action = 'create';
 
         JavaScript::put(compact('statuses'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
-            'managers', 'coordinators', 'types', 'notes', 'positions', 'action'
+            'managers', 'coordinators', 'types', 'notes', 'positions',
+            'designations', 'additionalAccounts', 'action'
         );
 
         return view('admin.contractLogs.create', $params);
@@ -147,7 +156,7 @@ class ContractLogsController extends Controller
      */
     public function edit(ContractLog $contractLog)
     {
-        $contractLog->load('account.division.group', 'account.practices');
+        $contractLog->load('account.division.group', 'account.practices', 'accounts');
         $accounts = Account::where('active', true)->orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $specialties = Specialty::orderBy('specialty')->get();
@@ -160,13 +169,16 @@ class ContractLogsController extends Controller
         $types = ContractType::orderBy('contractType')->get();
         $notes = ContractNote::orderBy('contractNote')->get();
         $positions = Position::orderBy('position')->get();
+        $designations = ProviderDesignation::orderBy('name')->get();
+        $additionalAccounts = $contractLog->accounts->diff([$contractLog->account]);
         $action = 'edit';
 
         JavaScript::put(compact('statuses'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
-            'managers', 'coordinators', 'types', 'notes', 'positions', 'action'
+            'managers', 'coordinators', 'types', 'notes', 'positions',
+            'designations', 'additionalAccounts', 'action'
         );
 
         return view('admin.contractLogs.edit', $params);

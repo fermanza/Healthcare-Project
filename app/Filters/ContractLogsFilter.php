@@ -12,12 +12,10 @@ class ContractLogsFilter extends Filter
      */
     public function practices($names)
     {
-        $this->query->whereHas('practice', function ($query) use ($names) {
-            $query->where(function ($query) use ($names) {
-                foreach ($names as $name) {
-                    $query->orWhere('name', 'like', "{$name}%");
-                }
-            });
+        $this->query->where(function ($query) use ($names) {
+            foreach ($names as $name) {
+                $query->orWhere('tPractice.name', 'like', "{$name}%");
+            }
         });
     }
 
@@ -63,6 +61,42 @@ class ContractLogsFilter extends Filter
     public function accounts($ids)
     {
         $this->query->whereIn('tContractLogs.accountId', $ids);
+    }
+
+    /**
+     * Apply regions filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function regions($ids)
+    {
+        $this->query->whereIn('tGroup.regionId', $ids);
+    }
+    
+    /**
+     * Apply RSCs filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function RSCs($ids)
+    {
+        $this->query->whereIn('tAccount.rscId', $ids);
+    }
+    
+    /**
+     * Apply provider filter.
+     *
+     * @param  string  $text
+     * @return void
+     */
+    public function provider($text)
+    {
+        $this->query->where(function ($query) use ($text) {
+            $query->where('tContractLogs.providerFirstName', 'like', "%{$text}%")
+                ->orWhere('tContractLogs.providerLastName', 'like', "%{$text}%");
+        });
     }
 
     /**

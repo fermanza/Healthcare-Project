@@ -20,6 +20,8 @@ class ContractLogRequest extends FormRequest
             'recruiterId' => 'required|exists:tAccountToEmployee,id',
             'managerId' => 'required|exists:tAccountToEmployee,id',
             'statusId' => 'required|exists:tContractStatus,id',
+            'providerDesignationId' => 'required|exists:tProviderDesignation,id',
+            'accounts' => 'nullable|array|exists:tAccount,id',
             'value' => 'required|in:0,0.5,1',
             'providerFirstName' => 'required',
             'providerLastName' => 'required',
@@ -65,6 +67,7 @@ class ContractLogRequest extends FormRequest
         $contractLog->recruiterId = $this->recruiterId;
         $contractLog->managerId = $this->managerId;
         $contractLog->statusId = $this->statusId;
+        $contractLog->providerDesignationId = $this->providerDesignationId;
         $contractLog->practiceId = $account->practices->count() ? $account->practices->first()->id : null;
         $contractLog->providerFirstName = $this->providerFirstName;
         $contractLog->providerLastName = $this->providerLastName;
@@ -85,5 +88,10 @@ class ContractLogRequest extends FormRequest
         $contractLog->positionId = $this->positionId;
         $contractLog->value = $status->value;
         $contractLog->save();
+
+        $contractLog->accounts()->sync(array_merge(
+            [$this->accountId],
+            $this->accounts ?: []
+        ));
     }
 }

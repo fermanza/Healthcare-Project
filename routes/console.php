@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-
 Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
+    $this->comment(Illuminate\Foundation\Inspiring::quote());
 })->describe('Display an inspiring quote');
 
 Artisan::command('set-new-routes', function () {
@@ -23,3 +21,9 @@ Artisan::command('set-new-routes', function () {
 
     App\Permission::reguard();
 })->describe('Register any new route to the Permissions table');
+
+Artisan::command('sync-current-contractlogs-to-accounts', function () {
+    App\ContractLog::all()->each(function ($contractLog) {
+        $contractLog->accounts()->syncWithoutDetaching([$contractLog->account->id]);
+    });
+})->describe('Sync the existing Contract Logs with their initial Account to pivot');

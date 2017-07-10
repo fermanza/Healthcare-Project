@@ -37,6 +37,16 @@ class ContractLog extends Model
     }
 
     /**
+     * Get the Accounts for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function accounts()
+    {
+        return $this->belongsToMany(Account::class, 'tContractLogToAccounts', 'contractLogId', 'accountId');
+    }
+
+    /**
      * Get the ContractStatus for the ContractLog.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -84,5 +94,15 @@ class ContractLog extends Model
     public function note()
     {
         return $this->belongsTo(ContractNote::class, 'contractNoteId');
+    }
+
+    /**
+     * Get the ProviderDesignation for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function designation()
+    {
+        return $this->belongsTo(ProviderDesignation::class, 'providerDesignationId');
     }
 }

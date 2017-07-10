@@ -56,6 +56,26 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="regions[]" data-placeholder="@lang('Operating Unit')" multiple>
+                        @foreach ($regions as $region)
+                            <option value="{{ $region->id }}" {{ in_array($region->id, Request::input('regions') ?: []) ? 'selected' : '' }}>{{ $region->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="RSCs[]" data-placeholder="@lang('Regional Support Center')" multiple>
+                        @foreach ($RSCs as $RSC)
+                            <option value="{{ $RSC->id }}" {{ in_array($RSC->id, Request::input('RSCs') ?: []) ? 'selected' : '' }}>{{ $RSC->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <input type="text" class="form-control" name="provider" value="{{ Request::input('provider') }}" placeholder="@lang('Provider')" />
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
                     <div class="input-group date datepicker">
                         <input type="text" class="form-control" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
