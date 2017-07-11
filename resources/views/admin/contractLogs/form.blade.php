@@ -361,21 +361,30 @@
             $('#statusId').on('change', function () {
                 var statusId = Number($(this).val());
                 var status = _.find(BackendVars.statuses, { id: statusId });
-                $('#value').val(status.value);
+
+                if (status) {
+                    $('#value').val(status.value);
+                } else {
+                    $('#value').val('');
+                }
             });
 
             function setAccountRelatedInput() {
                 var accountId = $(this).val();
-                if (! accountId) {
-                    return;
+                if (accountId) {
+                    $.get('/admin/accounts/' + accountId, function(response) {
+                        var account = response;
+                        $('#division').val(account.division && account.division.name || 'NO DIVISION ASSOCIATED');
+                        $('#hospitalName').val(account.name);
+                        $('#group').val(account.division && account.division.group && account.division.group.name || 'NO GROUP ASSOCIATED');
+                        $('#practice').val(account.practices.length && account.practices[0].name || 'NO PRACTICE ASSOCIATED');
+                    });
+                } else {
+                    $('#division').val('');
+                    $('#hospitalName').val('');
+                    $('#group').val('');
+                    $('#practice').val('');
                 }
-                $.get('/admin/accounts/' + accountId, function(response) {
-                    var account = response;
-                    $('#division').val(account.division && account.division.name || 'NO DIVISION ASSOCIATED');
-                    $('#hospitalName').val(account.name);
-                    $('#group').val(account.division && account.division.group && account.division.group.name || 'NO GROUP ASSOCIATED');
-                    $('#practice').val(account.practices.length && account.practices[0].name || 'NO PRACTICE ASSOCIATED');
-                });
             }
         });
     </script>

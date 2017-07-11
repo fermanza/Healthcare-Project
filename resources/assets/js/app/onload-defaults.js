@@ -37,16 +37,25 @@ $(() => {
         
 
     // Select2
-    $('.select2').each(function () {
-        const parent = $(this).data('parent');
-        let options = { width: '100%' };
-        if (parent) {
-            $(this).css('width', '100%');
-            options.dropdownParent = $(parent);
-        }
-        $(this).select2(options);
-    });
+    (() => {
+        window.defaultSelect2Options = {
+            allowClear: true,
+            placeholder: '',
+            width: '100%'
+        };
 
+        $('.select2').each(function () {
+            const parent = $(this).data('parent');
+            let options = {};
+            if (parent) {
+                $(this).css('width', '100%');
+                options.dropdownParent = $(parent);
+            }
+            options = $.extend({}, defaultSelect2Options, options);
+            $(this).select2(options);
+        });
+    })();
+        
 
     // DateTime Picker
     $('.datetimepicker').datetimepicker({

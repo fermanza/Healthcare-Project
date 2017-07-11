@@ -169,34 +169,34 @@
             }));
 
             @permission('admin.accounts.merge')
-            var $mergeSelected = $('<button data-toggle="modal" data-target="#mergeOrParentSiteCode" class="btn btn-default">Merge selected</button>').on('click', function () {
-                var selected = [];
-                accountsDT.rows({ selected: true }).every(function () {
-                    var $row = $(this.node());
-                    selected.push({
-                        id: $row.data('id'),
-                        name: $row.data('name'),
-                        siteCode: String($row.data('site-code'))
+                var $mergeSelected = $('<button data-toggle="modal" data-target="#mergeOrParentSiteCode" class="btn btn-default">Merge selected</button>').on('click', function () {
+                    var selected = [];
+                    accountsDT.rows({ selected: true }).every(function () {
+                        var $row = $(this.node());
+                        selected.push({
+                            id: $row.data('id'),
+                            name: $row.data('name'),
+                            siteCode: String($row.data('site-code'))
+                        });
+                    });
+                    if (! selected.length) {
+                        alert("@lang('Select at least one Account.')");
+                        return false;
+                    }
+                    var ids = _.map(selected, 'id');
+                    var siteCodes = _.map(selected, 'siteCode');
+                    var names = _.map(selected, 'name');
+                    showMergeOrParentSiteCodeModal({
+                        ids: ids,
+                        action: "{{ route('admin.accounts.merge') }}",
+                        title: "@lang('Merge Site Code')",
+                        submit: "@lang('Merge')",
+                        siteCodes: siteCodes,
+                        names: names,
+                        associatedSiteCode: null
                     });
                 });
-                if (! selected.length) {
-                    alert("@lang('Select at least one Account.')");
-                    return false;
-                }
-                var ids = _.map(selected, 'id');
-                var siteCodes = _.map(selected, 'siteCode');
-                var names = _.map(selected, 'name');
-                showMergeOrParentSiteCodeModal({
-                    ids: ids,
-                    action: "{{ route('admin.accounts.merge') }}",
-                    title: "@lang('Merge Site Code')",
-                    submit: "@lang('Merge')",
-                    siteCodes: siteCodes,
-                    names: names,
-                    associatedSiteCode: null
-                });
-            });
-            $('.dataTables_buttons').append($mergeSelected);
+                $('.dataTables_buttons').append($mergeSelected);
             @endpermission
 
             $('#datatable-accounts').on('dblclick', '.select-checkbox', function (e) {
@@ -250,7 +250,7 @@
                     }
                 });
                 $('#siteCode').select2('destroy').val(options.associatedSiteCode || '');
-                $('#siteCode').select2({ dropdownParent: $('#mergeOrParentSiteCode') });
+                $('#siteCode').select2($.extend({dropdownParent: $('#mergeOrParentSiteCode')}, defaultSelect2Options));
             }
         });
     </script>

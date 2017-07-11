@@ -35,7 +35,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->patch('accounts/parent', 'AccountsController@parent')->name('accounts.parent');
     $router->patch('accounts/{account}/remove-parent', 'AccountsController@removeParent')->name('accounts.removeParent');
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
-    $router->resource('accounts', 'AccountsController', ['except' => 'show']);
+    $router->resource('accounts', 'AccountsController');
 
     $router->resource('users', 'UsersController', ['except' => 'show']);
     $router->resource('roles', 'RolesController', ['except' => 'show']);
