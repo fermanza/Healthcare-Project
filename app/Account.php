@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class Account extends Model
 {
@@ -32,6 +33,44 @@ class Account extends Model
         'endDate',
         'pressReleaseDate',
     ];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('role', function (Builder $builder) {
+            if (! $user = auth()->user()) {
+                return;
+            }
+
+            if ($user->hasRoleId(config('instances.roles.manager'))) {
+                $builder->whereHas('manager', function ($query) use ($user) {
+                    $query->where('employeeId', $user->employeeId)
+                        ->whereNotNull('employeeId');
+                });
+            } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
+                $builder->whereHas('recruiter', function ($query) use ($user) {
+                    $query->where('employeeId', $user->employeeId)
+                        ->whereNotNull('employeeId');
+                });
+            } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
+                $builder->whereHas('coordinator', function ($query) use ($user) {
+                    $query->where('employeeId', $user->employeeId)
+                        ->whereNotNull('employeeId');
+                });
+            } else if ($user->hasRoleId(config('instances.roles.director'))) {
+                $builder->whereHas('manager.employee', function ($query) use ($user) {
+                    $query->where('managerId', $user->employeeId)
+                        ->whereNotNull('managerId');
+                });
+            }
+        });
+    }
 
     /**
      * Get the Recruiter (AccountEmployee) for the Account.

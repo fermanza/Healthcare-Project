@@ -9,6 +9,7 @@ use App\Account;
 use App\Division;
 use App\Employee;
 use App\Practice;
+use App\Scopes\AccountScope;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use Illuminate\Support\Facades\Validator;
@@ -22,32 +23,7 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-        $accountsQB = Account::where('active', true);
-
-        if ($user->hasRoleId(config('instances.roles.manager'))) {
-            $accountsQB->whereHas('manager', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId)
-                    ->whereNotNull('employeeId');
-            });
-        } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
-            $accountsQB->whereHas('recruiter', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId)
-                    ->whereNotNull('employeeId');
-            });
-        } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
-            $accountsQB->whereHas('coordinator', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId)
-                    ->whereNotNull('employeeId');
-            });
-        } else if ($user->hasRoleId(config('instances.roles.director'))) {
-            $accountsQB->whereHas('manager.employee', function ($query) use ($user) {
-                $query->where('managerId', $user->employeeId)
-                    ->whereNotNull('managerId');
-            });
-        }
-
-        $accounts = $accountsQB->get();
+        $accounts = Account::where('active', true)->get();
 
         return view('admin.accounts.index', compact('accounts'));
     }

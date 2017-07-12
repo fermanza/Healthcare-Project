@@ -39,7 +39,7 @@ class ContractLogsController extends Controller
         $accounts = Account::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
-        $contractLogsQB = ContractLog::leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
+        $contractLogs = ContractLog::leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
             ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
             ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
             ->leftJoin('tAccount', 'tContractLogs.accountId', '=', 'tAccount.id')
@@ -47,33 +47,8 @@ class ContractLogsController extends Controller
             ->leftJoin('tDivision', 'tContractLogs.divisionId', '=', 'tDivision.id')
             ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
             ->select('tContractLogs.*')
-            ->with([
-                'status', 'position', 'practice', 'account', 'division.group', 'note',
-            ])->where('tContractLogs.active', true)->filter($filter);
-
-        if ($user->hasRoleId(config('instances.roles.manager'))) {
-            $contractLogsQB->whereHas('accounts.manager', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId)
-                    ->whereNotNull('employeeId');
-            });
-        } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
-            $contractLogsQB->whereHas('accounts.recruiter', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId)
-                    ->whereNotNull('employeeId');
-            });
-        } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
-            $contractLogsQB->whereHas('accounts.coordinator', function ($query) use ($user) {
-                $query->where('employeeId', $user->employeeId)
-                    ->whereNotNull('employeeId');
-            });
-        } else if ($user->hasRoleId(config('instances.roles.director'))) {
-            $contractLogsQB->whereHas('accounts.manager.employee', function ($query) use ($user) {
-                $query->where('managerId', $user->employeeId)
-                    ->whereNotNull('managerId');
-            });
-        }
-
-        $contractLogs =$contractLogsQB->paginate();
+            ->with('status', 'position', 'practice', 'division.group', 'note', 'account')
+            ->where('tContractLogs.active', true)->filter($filter)->paginate();
 
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
@@ -93,32 +68,10 @@ class ContractLogsController extends Controller
     public function create(Request $request)
     {
         $contractLog = $request->has('id') ? ContractLog::findOrFail($request->id) : new ContractLog;
-        $contractLog->load('account.division.group', 'account.practices');
-        $accounts = Account::where('active', true)->orderBy('name')->get();
-        $statuses = ContractStatus::orderBy('contractStatus')->get();
-        $specialties = Specialty::orderBy('specialty')->get();
-        $employees =  Employee::where('active', true)
-            ->with('accountEmployees.positionType', 'person')
-            ->get()->sortBy->fullName();
-        $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
-        $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
-        $coordinators = $employees;
-        $types = ContractType::orderBy('contractType')->get();
-        $notes = ContractNote::orderBy('contractNote')->get();
-        $positions = Position::orderBy('position')->get();
-        $designations = ProviderDesignation::orderBy('name')->get();
-        $additionalAccounts = collect();
         $action = 'create';
+        $view = 'admin.contractLogs.create';
 
-        JavaScript::put(compact('statuses'));
-
-        $params = compact(
-            'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
-            'managers', 'coordinators', 'types', 'notes', 'positions',
-            'designations', 'additionalAccounts', 'action'
-        );
-
-        return view('admin.contractLogs.create', $params);
+        return $this->form($contractLog, $action, $view);
     }
 
     /**
@@ -156,32 +109,10 @@ class ContractLogsController extends Controller
      */
     public function edit(ContractLog $contractLog)
     {
-        $contractLog->load('account.division.group', 'account.practices', 'accounts');
-        $accounts = Account::where('active', true)->orderBy('name')->get();
-        $statuses = ContractStatus::orderBy('contractStatus')->get();
-        $specialties = Specialty::orderBy('specialty')->get();
-        $employees =  Employee::where('active', true)
-            ->with('accountEmployees.positionType', 'person')
-            ->get()->sortBy->fullName();
-        $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
-        $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
-        $coordinators = $employees;
-        $types = ContractType::orderBy('contractType')->get();
-        $notes = ContractNote::orderBy('contractNote')->get();
-        $positions = Position::orderBy('position')->get();
-        $designations = ProviderDesignation::orderBy('name')->get();
-        $additionalAccounts = $contractLog->accounts->diff([$contractLog->account]);
         $action = 'edit';
+        $view = 'admin.contractLogs.edit';
 
-        JavaScript::put(compact('statuses'));
-
-        $params = compact(
-            'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
-            'managers', 'coordinators', 'types', 'notes', 'positions',
-            'designations', 'additionalAccounts', 'action'
-        );
-
-        return view('admin.contractLogs.edit', $params);
+        return $this->form($contractLog, $action, $view);
     }
 
     /**
@@ -214,5 +145,44 @@ class ContractLogsController extends Controller
         flash(__('ContractLog deleted.'));
 
         return back();
+    }
+
+    /**
+     * Show the form for the specified resource.
+     *
+     * @param  \App\ContractLog  $contractLog
+     * @param  string  $action
+     * @param  string  $view
+     * @return \Illuminate\Http\Response
+     */
+    protected function form($contractLog, $action, $view)
+    {
+        $contractLog->load('account.division.group', 'account.practices', 'accounts');
+        $accounts = Account::withoutGlobalScope('role')->where('active', true)->orderBy('name')->get();
+        $statuses = ContractStatus::orderBy('contractStatus')->get();
+        $specialties = Specialty::orderBy('specialty')->get();
+        $employees =  Employee::where('active', true)
+            ->with('accountEmployees.positionType', 'person')
+            ->get()->sortBy->fullName();
+        $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
+        $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
+        $coordinators = $employees;
+        $types = ContractType::orderBy('contractType')->get();
+        $notes = ContractNote::orderBy('contractNote')->get();
+        $positions = Position::orderBy('position')->get();
+        $designations = ProviderDesignation::orderBy('name')->get();
+        $additionalAccounts = $contractLog->accounts->diff(
+            $contractLog->account ? [$contractLog->account] : []
+        );
+
+        JavaScript::put(compact('statuses'));
+
+        $params = compact(
+            'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
+            'managers', 'coordinators', 'types', 'notes', 'positions',
+            'designations', 'additionalAccounts', 'action'
+        );
+
+        return view($view, $params);
     }
 }

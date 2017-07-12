@@ -17,8 +17,8 @@ class ContractLogRequest extends FormRequest
     {
         $commonRules = [
             'accountId' => 'required|exists:tAccount,id',
-            'recruiterId' => 'required|exists:tAccountToEmployee,id',
-            'managerId' => 'required|exists:tAccountToEmployee,id',
+            'recruiterId' => 'required|exists:tEmployee,id',
+            'managerId' => 'required|exists:tEmployee,id',
             'statusId' => 'required|exists:tContractStatus,id',
             'providerDesignationId' => 'required|exists:tProviderDesignation,id',
             'accounts' => 'nullable|array|exists:tAccount,id',
