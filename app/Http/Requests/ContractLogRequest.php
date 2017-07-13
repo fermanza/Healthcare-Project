@@ -35,8 +35,8 @@ class ContractLogRequest extends FormRequest
             'actualStartDate' => 'nullable|date_format:"Y-m-d"',
             'numOfHours' => 'required|numeric|min:0',
             'contractTypeId' => 'nullable|exists:tContractType,id',
-            'contractNoteId' => 'required|exists:tContractNote,id',
-            'comments' => 'required',
+            'contractNoteId' => 'nullable|exists:tContractNote,id',
+            'comments' => '',
             'contractCoordinatorId' => 'required|exists:tEmployee,id',
             'positionId' => 'required|exists:tPosition,id',
         ];

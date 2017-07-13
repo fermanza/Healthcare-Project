@@ -247,7 +247,7 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group{{ $errors->has('contractNoteId') ? ' has-error' : '' }}">
                     <label for="contractNoteId">@lang('Notes')</label>
-                    <select class="form-control select2" id="contractNoteId" name="contractNoteId" required>
+                    <select class="form-control select2" id="contractNoteId" name="contractNoteId">
                         <option value="" disabled selected></option>
                         @foreach ($notes as $note)
                             <option value="{{ $note->id }}" {{ (old('contractNoteId') == $note->id ?: $note->id == $contractLog->contractNoteId) ? 'selected': '' }}>{{ $note->contractNote }}</option>
@@ -312,7 +312,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
                     <label for="comments">@lang('Comments')</label>
-                    <input type="text" class="form-control" id="comments" name="comments" value="{{ old('comments') ?: $contractLog->comments }}" required />
+                    <input type="text" class="form-control" id="comments" name="comments" value="{{ old('comments') ?: $contractLog->comments }}" />
                     @if ($errors->has('comments'))
                         <span class="help-block"><strong>{{ $errors->first('comments') }}</strong></span>
                     @endif
