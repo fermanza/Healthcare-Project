@@ -63,12 +63,14 @@ class Account extends Model
                     $query->where('employeeId', $user->employeeId)
                         ->whereNotNull('employeeId');
                 });
-            } else if ($user->hasRoleId(config('instances.roles.director'))) {
-                $builder->whereHas('manager.employee', function ($query) use ($user) {
-                    $query->where('managerId', $user->employeeId)
-                        ->whereNotNull('managerId');
-                });
             }
+
+            // if ($user->hasRoleId(config('instances.roles.director'))) {
+            //     $builder->whereHas('manager.employee', function ($query) use ($user) {
+            //         $query->where('managerId', $user->employeeId)
+            //             ->whereNotNull('managerId');
+            //     });
+            // }
         });
     }
 
