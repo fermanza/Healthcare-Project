@@ -92,7 +92,7 @@
                             </div>
                         </dd>
 
-                        @if ($practice->isIPS())
+                        @if ($practice && $practice->isIPS())
                             <dt>
                                 <div class="form-group{{ $errors->has('practiceTime') ? ' has-error' : '' }}">
                                     <label for="practiceTime">@lang('Practice Time'):</label>
@@ -154,7 +154,7 @@
             <h4>@lang('Complete Staffing and Current Openings')</h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
-                    <thead>
+                    <thead class="bg-gray">
                         <tr>
                             <th colspan="2" class="text-center">@lang('Physician')</th>
                             <th colspan="2" class="text-center">@lang('APPs')</th>
@@ -206,11 +206,15 @@
             {{-- @endpermission --}}
         </form>
 
+
+        <hr />
+
+
         <h4>@lang('Current Roster')</h4>
-        <form @submit.prevent.stop="addRosterBench('roster', 'physician', 'rosterPhysicians', 'rosterPhysician')">
+        <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysicians', 'rosterPhysician')">
             <div class="table-responsive">
                 <table class="table table-bordered">
-                    <thead>
+                    <thead class="bg-gray">
                         <tr>
                             <th colspan="7" class="text-center">@lang('Physician')</th>
                         </tr>
@@ -270,10 +274,10 @@
             </div>
         </form>
 
-        <form @submit.prevent.stop="addRosterBench('roster', 'app', 'rosterApps', 'rosterApps')">
+        <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps', 'rosterApps')">
             <div class="table-responsive">
                 <table class="table table-bordered">
-                    <thead>
+                    <thead class="bg-gray">
                         <tr>
                             <th colspan="7" class="text-center">@lang('APPs')</th>
                         </tr>
@@ -332,6 +336,472 @@
                 </table>
             </div>
         </form>
+
+
+        <hr />
+
+
+        <h4>@lang('Current Bench')</h4>
+        <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysicians', 'benchPhysician')">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th colspan="7" class="text-center">@lang('Physician')</th>
+                        </tr>
+                        <tr>
+                            <th>@lang('Name')</th>
+                            <th>@lang('Hours')</th>
+                            <th>@lang('Interview')</th>
+                            <th>@lang('Contract Out')</th>
+                            <th>@lang('Contract In')</th>
+                            <th>@lang('First Shift')</th>
+                            <th>@lang('Actions')</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="bench in pipeline.benchPhysicians">
+                            <td>@{{ bench.name }}</td>
+                            <td>@{{ bench.hours }}</td>
+                            <td>@{{ bench.interview }}</td>
+                            <td>@{{ bench.contractOut }}</td>
+                            <td>@{{ bench.contractIn }}</td>
+                            <td>@{{ bench.firstShift }}</td>
+                            <td class="text-center">
+                                <button @click="deleteRosterBench(bench, 'benchPhysicians')" type="button" class="btn btn-xs btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" v-model="benchPhysician.name" required />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" v-model="benchPhysician.hours" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="benchPhysician.interview" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="benchPhysician.contractOut" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="benchPhysician.contractIn" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" required />
+                            </td>
+                            <td class="text-center">
+                                <button type="submit" class="btn btn-xs btn-success">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+
+        <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps', 'benchApps')">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th colspan="7" class="text-center">@lang('APPs')</th>
+                        </tr>
+                        <tr>
+                            <th>@lang('Name')</th>
+                            <th>@lang('Hours')</th>
+                            <th>@lang('Interview')</th>
+                            <th>@lang('Contract Out')</th>
+                            <th>@lang('Contract In')</th>
+                            <th>@lang('First Shift')</th>
+                            <th>@lang('Actions')</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="bench in pipeline.benchApps">
+                            <td>@{{ bench.name }}</td>
+                            <td>@{{ bench.hours }}</td>
+                            <td>@{{ bench.interview }}</td>
+                            <td>@{{ bench.contractOut }}</td>
+                            <td>@{{ bench.contractIn }}</td>
+                            <td>@{{ bench.firstShift }}</td>
+                            <td class="text-center">
+                                <button @click="deleteRosterBench(bench, 'benchApps')" type="button" class="btn btn-xs btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" v-model="benchApps.name" required />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" v-model="benchApps.hours" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="benchApps.interview" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="benchApps.contractOut" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="benchApps.contractIn" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" required />
+                            </td>
+                            <td class="text-center">
+                                <button type="submit" class="btn btn-xs btn-success">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+
+
+        <hr />
+
+
+        <h4>@lang('Recruiting Pipeline')</h4>
+        <form @submit.prevent="addRecruiting">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th>@lang('MD/APP')</th>
+                            <th>@lang('Name')</th>
+                            <th>@lang('FT/PT')</th>
+                            <th>@lang('Interview')</th>
+                            <th>@lang('Contract Out')</th>
+                            <th>@lang('Contract In')</th>
+                            <th>@lang('First Shift')</th>
+                            <th>@lang('Notes')</th>
+                            <th>@lang('Actions')</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="recruiting in sortedRecruitings" :class="{'bg-success': currentRecruiting(recruiting)}">
+                            <td class="text-uppercase">@{{ recruiting.type }}</td>
+                            <td>@{{ recruiting.name }}</td>
+                            <td class="text-uppercase">@{{ recruiting.contract }}</td>
+                            <td>@{{ recruiting.interview }}</td>
+                            <td>@{{ recruiting.contractOut }}</td>
+                            <td>@{{ recruiting.contractIn }}</td>
+                            <td>@{{ recruiting.firstShift }}</td>
+                            <td>@{{ recruiting.notes }}</td>
+                            <td class="text-center">
+                                <button @click="deleteRecruiting(recruiting)" type="button" class="btn btn-xs btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <button type="button" class="btn btn-xs btn-warning"
+                                    data-toggle="modal" data-target="#declineModal"
+                                    @click="setDeclining(recruiting, 'recruiting')"
+                                >
+                                    @lang('Decline')
+                                </button>
+                                <button type="button" class="btn btn-xs btn-warning"
+                                    data-toggle="modal" data-target="#resignModal"
+                                    @click="setResigning(recruiting, 'recruiting')"
+                                >
+                                    @lang('Resign')
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <select style="width: 154px;" data-width="154px" class="form-control" v-model="newRecruiting.type" required>
+                                    <option :value="null" disabled selected></option>
+                                    @foreach ($recruitingTypes as $name => $recruitingType)
+                                        <option value="{{ $recruitingType }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" v-model="newRecruiting.name" required />
+                            </td>
+                            <td>
+                                <select style="width: 154px;" data-width="154px" class="form-control" v-model="newRecruiting.contract" required>
+                                    <option :value="null" disabled selected></option>
+                                    @foreach ($contractTypes as $name => $contractType)
+                                        <option value="{{ $contractType }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="newRecruiting.interview" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="newRecruiting.contractOut" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="newRecruiting.firstShift" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" v-model="newRecruiting.notes" />
+                            </td>
+                            <td class="text-center">
+                                <button type="submit" class="btn btn-xs btn-success">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+
+
+        <hr />
+
+
+        <h4>@lang('Locums Pipeline')</h4>
+        <form @submit.prevent="addLocum">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th>@lang('MD/APP')</th>
+                            <th>@lang('Name')</th>
+                            <th>@lang('Agency')</th>
+                            <th>@lang('Potential Start')</th>
+                            <th>@lang('Credentialing Notes')</th>
+                            <th>@lang('Shifts Offered')</th>
+                            <th>@lang('Start Date')</th>
+                            <th>@lang('Comments')</th>
+                            <th>@lang('Actions')</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="locum in sortedLocums">
+                            <td class="text-uppercase">@{{ locum.type }}</td>
+                            <td>@{{ locum.name }}</td>
+                            <td>@{{ locum.agency }}</td>
+                            <td>@{{ locum.potentialStart }}</td>
+                            <td>@{{ locum.credentialingNotes }}</td>
+                            <td>@{{ locum.shiftsOffered }}</td>
+                            <td>@{{ locum.startDate }}</td>
+                            <td>@{{ locum.comments }}</td>
+                            <td class="text-center">
+                                <button @click="deleteLocum(locum)" type="button" class="btn btn-xs btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <button type="button" class="btn btn-xs btn-warning"
+                                    data-toggle="modal" data-target="#declineModal"
+                                    @click="setDeclining(locum, 'locum')"
+                                >
+                                    @lang('Decline')
+                                </button>
+                                <button type="button" class="btn btn-xs btn-warning"
+                                    data-toggle="modal" data-target="#resignModal"
+                                    @click="setResigning(locum, 'locum')"
+                                >
+                                    @lang('Resign')
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <select style="width: 154px;" data-width="154px" class="form-control" v-model="newLocum.type" required>
+                                    <option :value="null" disabled selected></option>
+                                    @foreach ($recruitingTypes as $name => $recruitingType)
+                                        <option value="{{ $recruitingType }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" v-model="newLocum.name" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" v-model="newLocum.agency" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="newLocum.potentialStart" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" v-model="newLocum.credentialingNotes" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" v-model="newLocum.shiftsOffered" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control datepicker" v-model="newLocum.startDate" required />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" v-model="newLocum.comments" />
+                            </td>
+                            <td class="text-center">
+                                <button type="submit" class="btn btn-xs btn-success">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+
+
+        <hr />
+
+
+        <h4>@lang('Declined List')</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="bg-gray">
+                    <tr>
+                        <th>@lang('Name')</th>
+                        <th>@lang('FT/PT')</th>
+                        <th>@lang('Interview')</th>
+                        <th>@lang('Application')</th>
+                        <th>@lang('Contract Out')</th>
+                        <th>@lang('Declined')</th>
+                        <th>@lang('Reason')</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="declined in declines">
+                        <td>@{{ declined.name }}</td>
+                        <td class="text-uppercase">@{{ declined.contract }}</td>
+                        <td>@{{ declined.interview }}</td>
+                        <td>@{{ declined.application }}</td>
+                        <td>@{{ declined.contractOut }}</td>
+                        <td>@{{ declined.declined }}</td>
+                        <td>@{{ declined.reason }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal fade" id="declineModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            @lang('Decline')
+                            @{{ declining.name }}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit.prevent="decline">
+                            <div class="form-group">
+                                <label for="decliningcontract">@lang('Contract')</label>
+                                <select id="decliningcontract" class="form-control" v-model="declining.contract">
+                                    <option :value="null" disabled selected></option>
+                                    @foreach ($contractTypes as $name => $contractType)
+                                        <option value="{{ $contractType }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="declininginterview">@lang('Interview')</label>
+                                <input id="declininginterview" type="text" class="form-control datepicker" v-model="declining.interview" />
+                            </div>
+                            <div class="form-group">
+                                <label for="decliningapplication">@lang('Application')</label>
+                                <input id="decliningapplication" type="text" class="form-control datepicker" v-model="declining.application" />
+                            </div>
+                            <div class="form-group">
+                                <label for="decliningcontractout">@lang('Contract Out')</label>
+                                <input id="decliningcontractout" type="text" class="form-control datepicker" v-model="declining.contractOut" />
+                            </div>
+                            <div class="form-group">
+                                <label for="decliningdeclined">@lang('Declined')</label>
+                                <input id="decliningdeclined" type="text" class="form-control datetimepicker" v-model="declining.declined" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="decliningreason">@lang('Reason')</label>
+                                <input id="decliningreason" type="text" class="form-control" v-model="declining.reason" required />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <button type="submit" class="btn btn-warning">
+                                        @lang('Decline')
+                                    </button>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">@lang('Close')</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4>@lang('Resigned List')</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="bg-gray">
+                    <tr>
+                        <th>@lang('MD/APP')</th>
+                        <th>@lang('Name')</th>
+                        <th>@lang('Resigned')</th>
+                        <th>@lang('Reason')</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="resigned in resigns">
+                        <td class="text-uppercase">@{{ resigned.type }}</td>
+                        <td>@{{ resigned.name }}</td>
+                        <td>@{{ resigned.resigned }}</td>
+                        <td>@{{ resigned.reason }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal fade" id="resignModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            @lang('Resign')
+                            @{{ resigning.name }}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit.prevent="resign">
+                            <div class="form-group">
+                                <label for="decliningdeclined">@lang('Resigned')</label>
+                                <input id="decliningdeclined" type="text" class="form-control datetimepicker" v-model="resigning.resigned" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="decliningreason">@lang('Reason')</label>
+                                <input id="decliningreason" type="text" class="form-control" v-model="resigning.reason" required />
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <button type="submit" class="btn btn-warning">
+                                        @lang('Resign')
+                                    </button>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">@lang('Close')</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
 
@@ -366,6 +836,75 @@
                     contractIn: '',
                     firstShift: '',
                 },
+
+
+                benchPhysician: {
+                    name: '',
+                    hours: '',
+                    interview: '',
+                    contractOut: '',
+                    contractIn: '',
+                    firstShift: '',
+                },
+
+                benchApps: {
+                    name: '',
+                    hours: '',
+                    interview: '',
+                    contractOut: '',
+                    contractIn: '',
+                    firstShift: '',
+                },
+
+
+                newRecruiting: {
+                    type: null,
+                    name: '',
+                    contract: null,
+                    interview: '',
+                    contractOut: '',
+                    contractIn: '',
+                    firstShift: '',
+                    notes: '',
+                },
+
+
+                newLocum: {
+                    type: null,
+                    name: '',
+                    agency: '',
+                    potentialStart: '',
+                    credentialingNotes: '',
+                    shiftsOffered: '',
+                    startDate: '',
+                    comments: '',
+                },
+
+
+                declining: {
+                    id: null,
+                    contract: null,
+                    interview: '',
+                    application: '',
+                    contractOut: '',
+                    declined: '',
+                    reason: '',
+                },
+                decliningType: '',
+                toDecline: {},
+
+
+                resigning: {
+                    id: null,
+                    contract: null,
+                    interview: '',
+                    application: '',
+                    contractOut: '',
+                    resigned: '',
+                    reason: '',
+                },
+                resigningType: '',
+                toResign: {},
             },
 
             computed: {
@@ -384,16 +923,41 @@
                 staffAppsOpenings: function () {
                     return this.staffAppsNeeds - this.staffAppsHaves;
                 },
+
+                sortedRecruitings: function () {
+                    return _.chain(this.pipeline.recruitings).reject(function (recruiting) {
+                        return recruiting.declined || recruiting.resigned;
+                    }).orderBy(['type', function (recruiting) {
+                        return recruiting.name.toLowerCase();
+                    }], ['desc', 'asc']).value();
+                },
+
+                sortedLocums: function () {
+                    return _.chain(this.pipeline.locums).reject(function (locum) {
+                        return locum.declined || locum.resigned;
+                    }).orderBy(['type', function (locum) {
+                        return locum.name.toLowerCase();
+                    }], ['desc', 'asc']).value();
+                },
+
+                declines: function () {
+                    return _.chain(this.pipeline.recruitings)
+                        .concat(this.pipeline.locums)
+                        .filter(function (recruitingLocum) {
+                            return recruitingLocum.declined;
+                        }).value();
+                },
+
+                resigns: function () {
+                    return _.chain(this.pipeline.recruitings)
+                        .concat(this.pipeline.locums)
+                        .filter(function (recruitingLocum) {
+                            return recruitingLocum.resigned;
+                        }).value();
+                },
             },
 
             methods: {
-                deleteRosterBench: function (rosterBench, location) {
-                    axios.delete('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id)
-                        .then(function (response) {
-                            this.pipeline[location] = _.reject(this.pipeline[location], { 'id': rosterBench.id });
-                        }.bind(this));
-                },
-
                 addRosterBench: function (place, activity, location, entity) {
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
                         place: place,
@@ -403,6 +967,101 @@
                             const rosterBench = response.data;
                             this.pipeline[location].push(rosterBench);
                             this[entity] = {};
+                        }.bind(this));
+                },
+
+                deleteRosterBench: function (rosterBench, location) {
+                    axios.delete('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id)
+                        .then(function (response) {
+                            this.pipeline[location] = _.reject(this.pipeline[location], { 'id': rosterBench.id });
+                        }.bind(this));
+                },
+
+
+                addRecruiting: function () {
+                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting', this.newRecruiting)
+                        .then(function (response) {
+                            const recruiting = response.data;
+                            this.pipeline.recruitings.push(recruiting);
+                            this.newRecruiting = {};
+                        }.bind(this));
+                },
+
+                deleteRecruiting: function (recruiting) {
+                    axios.delete('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id)
+                        .then(function (response) {
+                            this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
+                        }.bind(this));
+                },
+
+                currentRecruiting: function (recruiting) {
+                    const firstOfMonth = moment().startOf('month');
+
+                    return moment(recruiting.firstShift).isAfter(firstOfMonth);
+                },
+
+
+                addLocum: function () {
+                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum', this.newLocum)
+                        .then(function (response) {
+                            const locum = response.data;
+                            this.pipeline.locums.push(locum);
+                            this.newLocum = {};
+                        }.bind(this));
+                },
+
+                deleteLocum: function (locum) {
+                    axios.delete('/admin/accounts/' + this.account.id + '/pipeline/locum/' + locum.id)
+                        .then(function (response) {
+                            this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': locum.id });
+                        }.bind(this));
+                },
+
+
+                setDeclining: function (toDecline, type) {
+                    this.declining = _.cloneDeep(toDecline);
+                    this.decliningType = type;
+                    this.toDecline = toDecline;
+                },
+
+                decline: function () {
+                    let endpoint;
+
+                    if (this.decliningType == 'recruiting') {
+                        endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.declining.id + '/decline';
+                    } else {
+                        endpoint = '/admin/accounts/' + this.account.id + '/pipeline/locum/' + this.declining.id + '/decline';
+                    }
+
+                    axios.patch(endpoint, this.declining)
+                        .then(function (response) {
+                            const declined = response.data;
+                            _.assignIn(this.toDecline, declined);
+                            $('#declineModal').modal('hide');
+                        }.bind(this));
+                },
+
+
+                setResigning: function (toResign, type) {
+                    this.resigning = _.cloneDeep(toResign);
+                    this.resigningType = type;
+                    this.toResign = toResign;
+                },
+
+                resign: function () {
+                    let endpoint;
+
+                    if (this.resigningType == 'recruiting') {
+                        endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.resigning.id + '/resign';
+                    } else {
+                        endpoint = '/admin/accounts/' + this.account.id + '/pipeline/locum/' + this.resigning.id + '/resign';
+                    }
+
+                    axios.patch(endpoint, this.resigning)
+                        .then(function (response) {
+                            const resigned = response.data;
+                            _.assignIn(this.toResign, resigned);
+                            $('#resignModal').modal('hide');
                         }.bind(this));
                 },
             }

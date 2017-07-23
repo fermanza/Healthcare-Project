@@ -21,6 +21,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'lodash',
         'vue',
         'axios',
+        'moment',
     ]);
    
 mix.sass('resources/assets/sass/vendor.scss', 'public/css');

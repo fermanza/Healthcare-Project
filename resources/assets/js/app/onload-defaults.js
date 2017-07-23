@@ -62,6 +62,9 @@ $(() => {
         format: 'yyyy-mm-dd hh:ii',
         autoclose: true,
         todayHighlight: true
+    }).on('changeDate', function () {
+        const event = new Event('input');
+        this.dispatchEvent(event);
     });
 
 

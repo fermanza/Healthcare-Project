@@ -54,4 +54,24 @@ class Pipeline extends Model
         return $this->hasMany(PipelineRosterBench::class, 'pipelineId')
             ->where('place', 'bench')->where('activity', 'app');
     }
+
+    /**
+     * Get the Recruitings for the Pipeline.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function recruitings()
+    {
+        return $this->hasMany(PipelineRecruiting::class, 'pipelineId');
+    }
+
+    /**
+     * Get the Locums for the Pipeline.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function locums()
+    {
+        return $this->hasMany(PipelineLocum::class, 'pipelineId');
+    }
 }

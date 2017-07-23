@@ -16,5 +16,15 @@ return [
         'Physician' => 'physician',
         'APPs' => 'app',
     ],
+    
+    'recruiting_types' => [
+        'MD' => 'md',
+        'APP' => 'app',
+    ],
+
+    'contract_types' => [
+        'FT' => 'ft',
+        'PT' => 'pt',
+    ],
 
 ];

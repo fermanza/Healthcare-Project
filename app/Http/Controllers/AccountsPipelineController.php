@@ -19,7 +19,10 @@ class AccountsPipelineController extends Controller
     {
         $account->load([
             'pipeline' => function ($query) {
-                $query->with('rosterPhysicians', 'rosterApps', 'benchPhysicians', 'benchApps');
+                $query->with([
+                    'rosterPhysicians', 'rosterApps', 'benchPhysicians',
+                    'benchApps', 'recruitings', 'locums',
+                ]);
             },
             'recruiter.employee' => function ($query) {
                 $query->with('person', 'manager.person');
@@ -33,8 +36,13 @@ class AccountsPipelineController extends Controller
             : null;
         $practice = $account->practices->count() ? $account->practices->first() : null;
         $practiceTimes = config('pipeline.practice_times');
+        $recruitingTypes = config('pipeline.recruiting_types');
+        $contractTypes = config('pipeline.contract_types');
 
-        $params = compact('account', 'pipeline', 'region', 'practice', 'practiceTimes');
+        $params = compact(
+            'account', 'pipeline', 'region', 'practice', 'practiceTimes',
+            'recruitingTypes', 'contractTypes'
+        );
 
         JavaScript::put($params);
 

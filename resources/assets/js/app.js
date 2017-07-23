@@ -42,5 +42,8 @@ window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelect
 const FastClick = require('fastclick');
 FastClick.attach(document.body);
 
+// Moment
+window.moment = require('moment');
+
 // Onload Defaults
 require('./app/onload-defaults');
