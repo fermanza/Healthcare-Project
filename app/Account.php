@@ -158,6 +158,16 @@ class Account extends Model
     }
 
     /**
+     * Get the Pipeline for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function pipeline()
+    {
+        return $this->hasOne(Pipeline::class, 'accountId');
+    }
+
+    /**
      * Determines if start date is less than 6 months ago.
      *
      * @return boolean

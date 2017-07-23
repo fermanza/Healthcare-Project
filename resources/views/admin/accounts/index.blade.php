@@ -19,6 +19,7 @@
                     <th class="mw30"></th>
                     <th class="mw200 w100">@lang('Name')</th>
                     <th class="mw100">@lang('Site Code')</th>
+                    <th class="mw100">@lang('Pipeline')</th>
                     <th class="mw150">@lang('Parent Site Code')</th>
                     <th class="mw150">@lang('City')</th>
                     <th class="mw150">@lang('State')</th>
@@ -36,6 +37,13 @@
                         <td></td>
                         <td>{{ $account->name }}</td>
                         <td>{{ $account->siteCode }}</td>
+                        <td class="text-center">
+                            {{-- @permission('admin.accounts.removeParent') --}}
+                                <a href="{{ route('admin.accounts.pipeline.index', [$account]) }}" class="btn btn-xs btn-default">
+                                    @lang('Pipeline')
+                                </a>
+                            {{-- @endpermission --}}
+                        </td>
                         <td>
                             {{ $account->parentSiteCode }}
                             @permission('admin.accounts.removeParent')

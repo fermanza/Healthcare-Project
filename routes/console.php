@@ -27,3 +27,13 @@ Artisan::command('sync-current-contractlogs-to-accounts', function () {
         $contractLog->accounts()->syncWithoutDetaching([$contractLog->account->id]);
     });
 })->describe('Sync the existing Contract Logs with their initial Account to pivot');
+
+Artisan::command('create-initial-pipeline-to-accounts', function () {
+    App\Account::with('pipeline')->get()->each(function ($account) {
+        if (! $account->pipeline) {
+            $pipeline = new App\Pipeline;
+            $pipeline->accountId = $account->id;
+            $pipeline->save();
+        }
+    });
+})->describe('Creates an initial Pipeline to existing Accounts');

@@ -37,6 +37,11 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
     $router->resource('accounts', 'AccountsController');
 
+    $router->get('accounts/{account}/pipeline', 'AccountsPipelineController@index')->name('accounts.pipeline.index');
+    $router->patch('accounts/{account}/pipeline', 'AccountsPipelineController@update')->name('accounts.pipeline.update');
+    $router->post('accounts/{account}/pipeline/rosterBench', 'PipelineRosterBenchController@store')->name('accounts.pipeline.rosterBench.store');
+    $router->delete('accounts/{account}/pipeline/rosterBench/{rosterBench}', 'PipelineRosterBenchController@destroy')->name('accounts.pipeline.rosterBench.destroy');
+
     $router->resource('users', 'UsersController', ['except' => 'show']);
     $router->resource('roles', 'RolesController', ['except' => 'show']);
     $router->resource('permissions', 'PermissionsController', ['except' => ['create', 'store', 'show', 'destroy']]);

@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "admin-lte": "^2.3.11",
+    "axios": "^0.16.2",
     "bootstrap-datepicker": "^1.6.4",
     "bootstrap-datetime-picker": "^2.4.4",
     "bootstrap-sass": "^3.3.7",
@@ -24,6 +25,7 @@
     "laravel-mix": "^0.8.3",
     "lodash": "^4.17.4",
     "select2": "^4.0.3",
-    "toastr": "^2.1.2"
+    "toastr": "^2.1.2",
+    "vue": "^2.4.2"
   }
 }

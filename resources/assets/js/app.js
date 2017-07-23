@@ -30,6 +30,14 @@ window.toastr = require('toastr');
 // LoDash
 window._ = require('lodash');
 
+// Vue
+window.Vue = require('vue');
+
+// Axios
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content;
+
 // FastClick
 const FastClick = require('fastclick');
 FastClick.attach(document.body);

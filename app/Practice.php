@@ -20,4 +20,24 @@ class Practice extends Model
     {
         return $this->hasMany(Account::class);
     }
+
+    /**
+     * Check if Practice is IPS
+     *
+     * @return bool
+     */
+    public function isIPS()
+    {
+        return starts_with($this->name, 'IPS');
+    }
+
+    /**
+     * Check if Practice is ED
+     *
+     * @return bool
+     */
+    public function isED()
+    {
+        return starts_with($this->name, 'ED');
+    }
 }

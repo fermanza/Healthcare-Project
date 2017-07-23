@@ -19,6 +19,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'bootstrap-datepicker',
         'toastr',
         'lodash',
+        'vue',
+        'axios',
     ]);
    
 mix.sass('resources/assets/sass/vendor.scss', 'public/css');

@@ -16,6 +16,13 @@ class Model extends BaseModel
     public $timestamps = false;
 
     /**
+     * Indicates whether attributes are snake cased on arrays.
+     *
+     * @var bool
+     */
+    public static $snakeAttributes = false;
+
+    /**
      * Scope a query to the given Filter.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
