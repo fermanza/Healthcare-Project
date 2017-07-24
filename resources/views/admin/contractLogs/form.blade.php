@@ -232,7 +232,7 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group{{ $errors->has('contractTypeId') ? ' has-error' : '' }}">
                     <label for="contractTypeId">@lang('Contract Type')</label>
-                    <select class="form-control select2" id="contractTypeId" name="contractTypeId">
+                    <select class="form-control select2" id="contractTypeId" name="contractTypeId" required>
                         <option value="" disabled selected></option>
                         @foreach ($types as $type)
                             <option value="{{ $type->id }}" {{ (old('contractTypeId') == $type->id ?: $type->id == $contractLog->contractTypeId) ? 'selected': '' }}>{{ $type->contractType }}</option>

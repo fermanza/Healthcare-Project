@@ -34,7 +34,7 @@ class ContractLogRequest extends FormRequest
             'projectedStartDate' => 'date_format:"Y-m-d"',
             'actualStartDate' => 'nullable|date_format:"Y-m-d"',
             'numOfHours' => 'required|numeric|min:0',
-            'contractTypeId' => 'nullable|exists:tContractType,id',
+            'contractTypeId' => 'required|exists:tContractType,id',
             'contractNoteId' => 'nullable|exists:tContractNote,id',
             'comments' => '',
             'contractCoordinatorId' => 'required|exists:tEmployee,id',
@@ -60,7 +60,7 @@ class ContractLogRequest extends FormRequest
      */
     public function save(Model $contractLog)
     {
-        $account = Account::with('practices')->find($this->accountId);
+        $account = Account::withoutGlobalScope('role')->with('practices')->find($this->accountId);
         $status = ContractStatus::find($this->statusId);
 
         $contractLog->accountId = $this->accountId;
