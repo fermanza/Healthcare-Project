@@ -38,11 +38,11 @@
                         <td>{{ $account->name }}</td>
                         <td>{{ $account->siteCode }}</td>
                         <td class="text-center">
-                            {{-- @permission('admin.accounts.removeParent') --}}
+                            @permission('admin.accounts.pipeline.index')
                                 <a href="{{ route('admin.accounts.pipeline.index', [$account]) }}" class="btn btn-xs btn-default">
                                     @lang('Pipeline')
                                 </a>
-                            {{-- @endpermission --}}
+                            @endpermission
                         </td>
                         <td>
                             {{ $account->parentSiteCode }}
