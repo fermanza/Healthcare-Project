@@ -47,6 +47,21 @@ return [
         'admin.accounts.destroy' => 'Delete Account',
     ],
 
+    'Account Pipeline' => [
+        'admin.accounts.pipeline.index' => 'View Account Pipeline',
+        'admin.accounts.pipeline.update' => 'Account Pipeline Edit Action',
+        'admin.accounts.pipeline.rosterBench.store' => 'Account Pipeline Roster/Bench Create Action',
+        'admin.accounts.pipeline.rosterBench.destroy' => 'Account Pipeline Delete Roster/Bench',
+        'admin.accounts.pipeline.recruiting.store' => 'Account Pipeline Recruiting Create Action',
+        'admin.accounts.pipeline.recruiting.decline' => 'Account Pipeline Recruiting Decline Action',
+        'admin.accounts.pipeline.recruiting.resign' => 'Account Pipeline Recruiting Resign Action',
+        'admin.accounts.pipeline.recruiting.destroy' => 'Account Pipeline Delete Recruiting',
+        'admin.accounts.pipeline.locum.store' => 'Account Pipeline Locum Create Action',
+        'admin.accounts.pipeline.locum.decline' => 'Account Pipeline Locum Decline Action',
+        'admin.accounts.pipeline.locum.resign' => 'Account Pipeline Locum Resign Action',
+        'admin.accounts.pipeline.locum.destroy' => 'Account Pipeline Delete Locum',
+    ],
+
     'Files' => [
         'admin.files.index' => 'Files List',
         'admin.files.create' => 'File Create View',
