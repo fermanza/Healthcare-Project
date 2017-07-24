@@ -57,7 +57,7 @@
                         <div class="checkbox icheck">
                             <label>
                                 <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" {{ (in_array($permission->id, old('permissions') ?: []) ?: $role->permissions->contains($permission)) ? 'checked' : '' }} />
-                                {{ $permission->display_name }}
+                                {{ $permission->display_name ?: $permission->name }}
                             </label>
                         </div>
                     @endforeach
