@@ -21,13 +21,13 @@ class CreatePipelineLocumsTable extends Migration
             $table->string('name');
             $table->string('agency');
             $table->date('potentialStart');
-            $table->text('credentialingNotes')->nullable();
+            $table->string('credentialingNotes', 1000)->nullable();
             $table->integer('shiftsOffered')->unsigned();
             $table->date('startDate');
-            $table->text('comments')->nullable();
+            $table->string('comments', 1000)->nullable();
             $table->dateTime('declined')->nullable();
             $table->dateTime('resigned')->nullable();
-            $table->text('reason')->nullable();
+            $table->string('reason', 1000)->nullable();
             $table->date('application')->nullable();
             $table->date('interview')->nullable();
             $table->date('contractOut')->nullable();

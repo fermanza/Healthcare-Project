@@ -23,10 +23,10 @@ class CreatePipelineRecruitingsTable extends Migration
             $table->date('contractOut');
             $table->date('contractIn');
             $table->date('firstShift');
-            $table->text('notes')->nullable();
+            $table->string('notes', 1000)->nullable();
             $table->dateTime('declined')->nullable();
             $table->dateTime('resigned')->nullable();
-            $table->text('reason')->nullable();
+            $table->string('reason', 1000)->nullable();
             $table->date('application')->nullable();
 
             $table->foreign('pipelineId')->references('id')->on('tAccountPipeline');
