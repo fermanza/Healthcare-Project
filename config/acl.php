@@ -47,18 +47,18 @@ return [
         'admin.accounts.destroy' => 'Delete Account',
     ],
 
-    'Account Pipeline' => [
-        'admin.accounts.pipeline.index' => 'View Account Pipeline',
-        'admin.accounts.pipeline.update' => 'Account Pipeline Edit Action',
-        'admin.accounts.pipeline.rosterBench.store' => 'Account Pipeline Roster/Bench Create Action',
-        'admin.accounts.pipeline.rosterBench.resign' => 'Account Pipeline Roster/Bench Resign Action',
-        'admin.accounts.pipeline.rosterBench.destroy' => 'Account Pipeline Delete Roster/Bench',
-        'admin.accounts.pipeline.recruiting.store' => 'Account Pipeline Recruiting Create Action',
-        'admin.accounts.pipeline.recruiting.decline' => 'Account Pipeline Recruiting Decline Action',
-        'admin.accounts.pipeline.recruiting.destroy' => 'Account Pipeline Delete Recruiting',
-        'admin.accounts.pipeline.locum.store' => 'Account Pipeline Locum Create Action',
-        'admin.accounts.pipeline.locum.decline' => 'Account Pipeline Locum Decline Action',
-        'admin.accounts.pipeline.locum.destroy' => 'Account Pipeline Delete Locum',
+    'Account Summary' => [
+        'admin.accounts.pipeline.index' => 'View Account Summary',
+        'admin.accounts.pipeline.update' => 'Account Summary Edit Action',
+        'admin.accounts.pipeline.rosterBench.store' => 'Account Summary Roster/Bench Create Action',
+        'admin.accounts.pipeline.rosterBench.resign' => 'Account Summary Roster/Bench Resign Action',
+        'admin.accounts.pipeline.rosterBench.destroy' => 'Account Summary Delete Roster/Bench',
+        'admin.accounts.pipeline.recruiting.store' => 'Account Summary Recruiting Create Action',
+        'admin.accounts.pipeline.recruiting.decline' => 'Account Summary Recruiting Decline Action',
+        'admin.accounts.pipeline.recruiting.destroy' => 'Account Summary Delete Recruiting',
+        'admin.accounts.pipeline.locum.store' => 'Account Summary Locum Create Action',
+        'admin.accounts.pipeline.locum.decline' => 'Account Summary Locum Decline Action',
+        'admin.accounts.pipeline.locum.destroy' => 'Account Summary Delete Locum',
     ],
 
     'Files' => [

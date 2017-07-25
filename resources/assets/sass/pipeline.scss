@@ -1,5 +1,5 @@
 .pipeline {
-    // font-size: 12px;
+    font-size: 12px;
 
     dl.dl-horizontal dt label {
         margin-top: 5px;
@@ -16,6 +16,6 @@
     .table > tbody > tr > td,
     .table > tfoot > tr > th,
     .table > tfoot > tr > td {
-        // padding: 4px;
+        padding: 4px;
     }
 }

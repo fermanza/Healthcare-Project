@@ -572,7 +572,7 @@
                     <tfoot>
                         <tr>
                             <td>
-                                <select style="width: 154px;" data-width="154px" class="form-control" v-model="newRecruiting.type" required>
+                                <select style="width: 70px;" data-width="70px" class="form-control" v-model="newRecruiting.type" required>
                                     <option :value="null" disabled selected></option>
                                     @foreach ($recruitingTypes as $name => $recruitingType)
                                         <option value="{{ $recruitingType }}">{{ $name }}</option>
@@ -583,7 +583,7 @@
                                 <input type="text" class="form-control" v-model="newRecruiting.name" required />
                             </td>
                             <td>
-                                <select style="width: 154px;" data-width="154px" class="form-control" v-model="newRecruiting.contract" required>
+                                <select style="width: 70px;" data-width="70px" class="form-control" v-model="newRecruiting.contract" required>
                                     <option :value="null" disabled selected></option>
                                     @foreach ($contractTypes as $name => $contractType)
                                         <option value="{{ $contractType }}">{{ $name }}</option>
@@ -670,7 +670,7 @@
                     <tfoot>
                         <tr>
                             <td>
-                                <select style="width: 154px;" data-width="154px" class="form-control" v-model="newLocum.type" required>
+                                <select style="width: 70px;" data-width="70px" class="form-control" v-model="newLocum.type" required>
                                     <option :value="null" disabled selected></option>
                                     @foreach ($recruitingTypes as $name => $recruitingType)
                                         <option value="{{ $recruitingType }}">{{ $name }}</option>
