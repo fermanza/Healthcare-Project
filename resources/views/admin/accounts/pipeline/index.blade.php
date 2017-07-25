@@ -244,13 +244,13 @@
                                     >
                                         @lang('Resign')
                                     </button>
-                                @permission
+                                @endpermission
                                 
                                 @permission('admin.accounts.pipeline.rosterBench.destroy')
                                     <button @click="deleteRosterBench(roster, 'rosterPhysicians')" type="button" class="btn btn-xs btn-danger">
                                         <i class="fa fa-trash"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tbody>
@@ -279,7 +279,7 @@
                                     <button type="submit" class="btn btn-xs btn-success">
                                         <i class="fa fa-plus"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tfoot>
@@ -320,13 +320,13 @@
                                     >
                                         @lang('Resign')
                                     </button>
-                                @permission
+                                @endpermission
 
                                 @permission('admin.accounts.pipeline.rosterBench.destroy')
                                     <button @click="deleteRosterBench(roster, 'rosterApps')" type="button" class="btn btn-xs btn-danger">
                                         <i class="fa fa-trash"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tbody>
@@ -355,7 +355,7 @@
                                     <button type="submit" class="btn btn-xs btn-success">
                                         <i class="fa fa-plus"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tfoot>
@@ -401,13 +401,13 @@
                                     >
                                         @lang('Resign')
                                     </button>
-                                @permission
+                                @endpermission
 
                                 @permission('admin.accounts.pipeline.rosterBench.destroy')
                                     <button @click="deleteRosterBench(bench, 'benchPhysicians')" type="button" class="btn btn-xs btn-danger">
                                         <i class="fa fa-trash"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tbody>
@@ -436,7 +436,7 @@
                                     <button type="submit" class="btn btn-xs btn-success">
                                         <i class="fa fa-plus"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tfoot>
@@ -477,13 +477,13 @@
                                     >
                                         @lang('Resign')
                                     </button>
-                                @permission
+                                @endpermission
 
                                 @permission('admin.accounts.pipeline.rosterBench.destroy')
                                     <button @click="deleteRosterBench(bench, 'benchApps')" type="button" class="btn btn-xs btn-danger">
                                         <i class="fa fa-trash"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tbody>
@@ -512,7 +512,7 @@
                                     <button type="submit" class="btn btn-xs btn-success">
                                         <i class="fa fa-plus"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tfoot>
@@ -559,13 +559,13 @@
                                     >
                                         @lang('Decline')
                                     </button>
-                                @permission
+                                @endpermission
 
                                 @permission('admin.accounts.pipeline.recruiting.destroy')
                                     <button @click="deleteRecruiting(recruiting)" type="button" class="btn btn-xs btn-danger">
                                         <i class="fa fa-trash"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tbody>
@@ -610,7 +610,7 @@
                                     <button type="submit" class="btn btn-xs btn-success">
                                         <i class="fa fa-plus"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tfoot>
@@ -657,13 +657,13 @@
                                     >
                                         @lang('Decline')
                                     </button>
-                                @permission
+                                @endpermission
 
                                 @permission('admin.accounts.pipeline.locum.destroy')
                                     <button @click="deleteLocum(locum)" type="button" class="btn btn-xs btn-danger">
                                         <i class="fa fa-trash"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tbody>
@@ -703,7 +703,7 @@
                                     <button type="submit" class="btn btn-xs btn-success">
                                         <i class="fa fa-plus"></i>
                                     </button>
-                                @permission
+                                @endpermission
                             </td>
                         </tr>
                     </tfoot>
