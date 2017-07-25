@@ -642,26 +642,26 @@
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th>@lang('MD/APP')</th>
+                                <th width="70px">@lang('MD/APP')</th>
                                 <th>@lang('Name')</th>
                                 <th>@lang('Agency')</th>
-                                <th>@lang('Potential Start')</th>
+                                <th width="100px">@lang('Potential Start')</th>
                                 <th>@lang('Credentialing Notes')</th>
-                                <th>@lang('Shifts')</th>
-                                <th>@lang('Start Date')</th>
+                                <th width="70px">@lang('Shifts')</th>
+                                <th width="100px">@lang('Start Date')</th>
                                 <th>@lang('Comments')</th>
                                 <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="locum in sortedLocums">
-                                <td width="70px" class="text-uppercase">@{{ locum.type }}</td>
+                                <td class="text-uppercase">@{{ locum.type }}</td>
                                 <td>@{{ locum.name }}</td>
                                 <td>@{{ locum.agency }}</td>
-                                <td width="100px">@{{ locum.potentialStart }}</td>
+                                <td>@{{ locum.potentialStart }}</td>
                                 <td>@{{ locum.credentialingNotes }}</td>
-                                <td width="70px">@{{ locum.shiftsOffered }}</td>
-                                <td width="100px">@{{ locum.startDate }}</td>
+                                <td>@{{ locum.shiftsOffered }}</td>
+                                <td>@{{ locum.startDate }}</td>
                                 <td>@{{ locum.comments }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.locum.decline')
