@@ -79,6 +79,6 @@ class Employee extends Model
      */
     public function hasPosition($positionId)
     {
-        return $this->accountEmployees->contains->hasPosition($positionId);
+        return $this->positionTypeId == $positionId;
     }
 }
