@@ -20,10 +20,13 @@ class CreatePipelineRosterBenchesTable extends Migration
             $table->enum('activity', config('pipeline.activities'));
             $table->string('name');
             $table->integer('hours')->unsigned();
-            $table->date('interview');
-            $table->date('contractOut');
-            $table->date('contractIn');
-            $table->date('firstShift');
+            $table->date('interview')->nullable();
+            $table->date('contractOut')->nullable();
+            $table->date('contractIn')->nullable();
+            $table->date('firstShift')->nullable();
+            $table->enum('type', config('pipeline.recruiting_types'))->nullable();
+            $table->date('resigned')->nullable();
+            $table->string('resignedReason', 2047)->nullable();
 
             $table->foreign('pipelineId')->references('id')->on('tAccountPipeline');
         });

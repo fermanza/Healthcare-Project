@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('content-header', __('Pipeline'))
+@section('content-header', __('Summary'))
 
 @section('content')
     <div id="app" class="pipeline"{{--  style="min-width: 1000px;" --}}>
@@ -139,7 +139,7 @@
                 </div>
             </div>
 
-            {{-- @permission('admin.accounts.create') --}}
+            @permission('admin.accounts.pipeline.update')
                 <div class="row">
                     <div class="col-md-12 text-right">
                         <button type="submit" class="btn btn-info">
@@ -147,7 +147,7 @@
                         </button>
                     </div>
                 </div>
-            {{-- @endpermission --}}
+            @endpermission
 
             <hr />
 
@@ -195,7 +195,7 @@
                 </table>
             </div>
 
-            {{-- @permission('admin.accounts.create') --}}
+            @permission('admin.accounts.pipeline.update')
                 <div class="row">
                     <div class="col-md-12 text-right">
                         <button type="submit" class="btn btn-info">
@@ -203,7 +203,7 @@
                         </button>
                     </div>
                 </div>
-            {{-- @endpermission --}}
+            @endpermission
         </form>
 
 
@@ -229,7 +229,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="roster in pipeline.rosterPhysicians">
+                        <tr v-for="roster in activeRosterPhysicians">
                             <td>@{{ roster.name }}</td>
                             <td>@{{ roster.hours }}</td>
                             <td>@{{ roster.interview }}</td>
@@ -237,19 +237,30 @@
                             <td>@{{ roster.contractIn }}</td>
                             <td>@{{ roster.firstShift }}</td>
                             <td class="text-center">
-                                <button @click="deleteRosterBench(roster, 'rosterPhysicians')" type="button" class="btn btn-xs btn-danger">
-                                    <i class="fa fa-trash"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.rosterBench.resign')
+                                    <button type="button" class="btn btn-xs btn-warning"
+                                        data-toggle="modal" data-target="#resignModal"
+                                        @click="setResigning(roster)"
+                                    >
+                                        @lang('Resign')
+                                    </button>
+                                @permission
+                                
+                                @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                    <button @click="deleteRosterBench(roster, 'rosterPhysicians')" type="button" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td>
-                                <input type="text" class="form-control" v-model="rosterPhysician.name" />
+                                <input type="text" class="form-control" v-model="rosterPhysician.name" required />
                             </td>
                             <td>
-                                <input type="number" class="form-control" v-model="rosterPhysician.hours" />
+                                <input type="number" class="form-control" v-model="rosterPhysician.hours" required />
                             </td>
                             <td>
                                 <input type="text" class="form-control datepicker" v-model="rosterPhysician.interview" />
@@ -264,9 +275,11 @@
                                 <input type="text" class="form-control datepicker" v-model="rosterPhysician.firstShift" />
                             </td>
                             <td class="text-center">
-                                <button type="submit" class="btn btn-xs btn-success">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.rosterBench.store')
+                                    <button type="submit" class="btn btn-xs btn-success">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tfoot>
@@ -292,7 +305,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="roster in pipeline.rosterApps">
+                        <tr v-for="roster in activeRosterApps">
                             <td>@{{ roster.name }}</td>
                             <td>@{{ roster.hours }}</td>
                             <td>@{{ roster.interview }}</td>
@@ -300,9 +313,20 @@
                             <td>@{{ roster.contractIn }}</td>
                             <td>@{{ roster.firstShift }}</td>
                             <td class="text-center">
-                                <button @click="deleteRosterBench(roster, 'rosterApps')" type="button" class="btn btn-xs btn-danger">
-                                    <i class="fa fa-trash"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.rosterBench.resign')
+                                    <button type="button" class="btn btn-xs btn-warning"
+                                        data-toggle="modal" data-target="#resignModal"
+                                        @click="setResigning(roster)"
+                                    >
+                                        @lang('Resign')
+                                    </button>
+                                @permission
+
+                                @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                    <button @click="deleteRosterBench(roster, 'rosterApps')" type="button" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tbody>
@@ -315,21 +339,23 @@
                                 <input type="number" class="form-control" v-model="rosterApps.hours" required />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterApps.interview" required />
+                                <input type="text" class="form-control datepicker" v-model="rosterApps.interview" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterApps.contractOut" required />
+                                <input type="text" class="form-control datepicker" v-model="rosterApps.contractOut" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterApps.contractIn" required />
+                                <input type="text" class="form-control datepicker" v-model="rosterApps.contractIn" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterApps.firstShift" required />
+                                <input type="text" class="form-control datepicker" v-model="rosterApps.firstShift" />
                             </td>
                             <td class="text-center">
-                                <button type="submit" class="btn btn-xs btn-success">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.rosterBench.store')
+                                    <button type="submit" class="btn btn-xs btn-success">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tfoot>
@@ -360,7 +386,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="bench in pipeline.benchPhysicians">
+                        <tr v-for="bench in activeBenchPhysicians">
                             <td>@{{ bench.name }}</td>
                             <td>@{{ bench.hours }}</td>
                             <td>@{{ bench.interview }}</td>
@@ -368,9 +394,20 @@
                             <td>@{{ bench.contractIn }}</td>
                             <td>@{{ bench.firstShift }}</td>
                             <td class="text-center">
-                                <button @click="deleteRosterBench(bench, 'benchPhysicians')" type="button" class="btn btn-xs btn-danger">
-                                    <i class="fa fa-trash"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.rosterBench.resign')
+                                    <button type="button" class="btn btn-xs btn-warning"
+                                        data-toggle="modal" data-target="#resignModal"
+                                        @click="setResigning(bench)"
+                                    >
+                                        @lang('Resign')
+                                    </button>
+                                @permission
+
+                                @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                    <button @click="deleteRosterBench(bench, 'benchPhysicians')" type="button" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tbody>
@@ -383,21 +420,23 @@
                                 <input type="number" class="form-control" v-model="benchPhysician.hours" required />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="benchPhysician.interview" required />
+                                <input type="text" class="form-control datepicker" v-model="benchPhysician.interview" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="benchPhysician.contractOut" required />
+                                <input type="text" class="form-control datepicker" v-model="benchPhysician.contractOut" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="benchPhysician.contractIn" required />
+                                <input type="text" class="form-control datepicker" v-model="benchPhysician.contractIn" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" required />
+                                <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" />
                             </td>
                             <td class="text-center">
-                                <button type="submit" class="btn btn-xs btn-success">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.rosterBench.store')
+                                    <button type="submit" class="btn btn-xs btn-success">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tfoot>
@@ -423,7 +462,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="bench in pipeline.benchApps">
+                        <tr v-for="bench in activeBenchApps">
                             <td>@{{ bench.name }}</td>
                             <td>@{{ bench.hours }}</td>
                             <td>@{{ bench.interview }}</td>
@@ -431,9 +470,20 @@
                             <td>@{{ bench.contractIn }}</td>
                             <td>@{{ bench.firstShift }}</td>
                             <td class="text-center">
-                                <button @click="deleteRosterBench(bench, 'benchApps')" type="button" class="btn btn-xs btn-danger">
-                                    <i class="fa fa-trash"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.rosterBench.resign')
+                                    <button type="button" class="btn btn-xs btn-warning"
+                                        data-toggle="modal" data-target="#resignModal"
+                                        @click="setResigning(bench)"
+                                    >
+                                        @lang('Resign')
+                                    </button>
+                                @permission
+
+                                @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                    <button @click="deleteRosterBench(bench, 'benchApps')" type="button" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tbody>
@@ -446,21 +496,23 @@
                                 <input type="number" class="form-control" v-model="benchApps.hours" required />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="benchApps.interview" required />
+                                <input type="text" class="form-control datepicker" v-model="benchApps.interview" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="benchApps.contractOut" required />
+                                <input type="text" class="form-control datepicker" v-model="benchApps.contractOut" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="benchApps.contractIn" required />
+                                <input type="text" class="form-control datepicker" v-model="benchApps.contractIn" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" required />
+                                <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" />
                             </td>
                             <td class="text-center">
-                                <button type="submit" class="btn btn-xs btn-success">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.rosterBench.store')
+                                    <button type="submit" class="btn btn-xs btn-success">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tfoot>
@@ -500,21 +552,20 @@
                             <td>@{{ recruiting.firstShift }}</td>
                             <td>@{{ recruiting.notes }}</td>
                             <td class="text-center">
-                                <button @click="deleteRecruiting(recruiting)" type="button" class="btn btn-xs btn-danger">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                                <button type="button" class="btn btn-xs btn-warning"
-                                    data-toggle="modal" data-target="#declineModal"
-                                    @click="setDeclining(recruiting, 'recruiting')"
-                                >
-                                    @lang('Decline')
-                                </button>
-                                <button type="button" class="btn btn-xs btn-warning"
-                                    data-toggle="modal" data-target="#resignModal"
-                                    @click="setResigning(recruiting, 'recruiting')"
-                                >
-                                    @lang('Resign')
-                                </button>
+                                @permission('admin.accounts.pipeline.recruiting.decline')
+                                    <button type="button" class="btn btn-xs btn-warning"
+                                        data-toggle="modal" data-target="#declineModal"
+                                        @click="setDeclining(recruiting, 'recruiting')"
+                                    >
+                                        @lang('Decline')
+                                    </button>
+                                @permission
+
+                                @permission('admin.accounts.pipeline.recruiting.destroy')
+                                    <button @click="deleteRecruiting(recruiting)" type="button" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tbody>
@@ -540,24 +591,26 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="newRecruiting.interview" required />
+                                <input type="text" class="form-control datepicker" v-model="newRecruiting.interview" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="newRecruiting.contractOut" required />
+                                <input type="text" class="form-control datepicker" v-model="newRecruiting.contractOut" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" required />
+                                <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="newRecruiting.firstShift" required />
+                                <input type="text" class="form-control datepicker" v-model="newRecruiting.firstShift" />
                             </td>
                             <td>
                                 <input type="text" class="form-control" v-model="newRecruiting.notes" />
                             </td>
                             <td class="text-center">
-                                <button type="submit" class="btn btn-xs btn-success">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.recruiting.decline')
+                                    <button type="submit" class="btn btn-xs btn-success">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tfoot>
@@ -597,21 +650,20 @@
                             <td>@{{ locum.startDate }}</td>
                             <td>@{{ locum.comments }}</td>
                             <td class="text-center">
-                                <button @click="deleteLocum(locum)" type="button" class="btn btn-xs btn-danger">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                                <button type="button" class="btn btn-xs btn-warning"
-                                    data-toggle="modal" data-target="#declineModal"
-                                    @click="setDeclining(locum, 'locum')"
-                                >
-                                    @lang('Decline')
-                                </button>
-                                <button type="button" class="btn btn-xs btn-warning"
-                                    data-toggle="modal" data-target="#resignModal"
-                                    @click="setResigning(locum, 'locum')"
-                                >
-                                    @lang('Resign')
-                                </button>
+                                @permission('admin.accounts.pipeline.locum.decline')
+                                    <button type="button" class="btn btn-xs btn-warning"
+                                        data-toggle="modal" data-target="#declineModal"
+                                        @click="setDeclining(locum, 'locum')"
+                                    >
+                                        @lang('Decline')
+                                    </button>
+                                @permission
+
+                                @permission('admin.accounts.pipeline.locum.destroy')
+                                    <button @click="deleteLocum(locum)" type="button" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tbody>
@@ -632,24 +684,26 @@
                                 <input type="text" class="form-control" v-model="newLocum.agency" required />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="newLocum.potentialStart" required />
+                                <input type="text" class="form-control datepicker" v-model="newLocum.potentialStart" />
                             </td>
                             <td>
                                 <input type="text" class="form-control" v-model="newLocum.credentialingNotes" />
                             </td>
                             <td>
-                                <input type="number" class="form-control" v-model="newLocum.shiftsOffered" required />
+                                <input type="number" class="form-control" v-model="newLocum.shiftsOffered" />
                             </td>
                             <td>
-                                <input type="text" class="form-control datepicker" v-model="newLocum.startDate" required />
+                                <input type="text" class="form-control datepicker" v-model="newLocum.startDate" />
                             </td>
                             <td>
                                 <input type="text" class="form-control" v-model="newLocum.comments" />
                             </td>
                             <td class="text-center">
-                                <button type="submit" class="btn btn-xs btn-success">
-                                    <i class="fa fa-plus"></i>
-                                </button>
+                                @permission('admin.accounts.pipeline.locum.store')
+                                    <button type="submit" class="btn btn-xs btn-success">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                @permission
                             </td>
                         </tr>
                     </tfoot>
@@ -683,7 +737,7 @@
                         <td>@{{ declined.application }}</td>
                         <td>@{{ declined.contractOut }}</td>
                         <td>@{{ declined.declined }}</td>
-                        <td>@{{ declined.reason }}</td>
+                        <td>@{{ declined.declinedReason }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -723,11 +777,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="decliningdeclined">@lang('Declined')</label>
-                                <input id="decliningdeclined" type="text" class="form-control datetimepicker" v-model="declining.declined" required />
+                                <input id="decliningdeclined" type="text" class="form-control datepicker" v-model="declining.declined" required />
                             </div>
                             <div class="form-group">
                                 <label for="decliningreason">@lang('Reason')</label>
-                                <input id="decliningreason" type="text" class="form-control" v-model="declining.reason" required />
+                                <input id="decliningreason" type="text" class="form-control" v-model="declining.declinedReason" required />
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
@@ -761,7 +815,7 @@
                         <td class="text-uppercase">@{{ resigned.type }}</td>
                         <td>@{{ resigned.name }}</td>
                         <td>@{{ resigned.resigned }}</td>
-                        <td>@{{ resigned.reason }}</td>
+                        <td>@{{ resigned.resignedReason }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -779,12 +833,21 @@
                     <div class="modal-body">
                         <form @submit.prevent="resign">
                             <div class="form-group">
-                                <label for="decliningdeclined">@lang('Resigned')</label>
-                                <input id="decliningdeclined" type="text" class="form-control datetimepicker" v-model="resigning.resigned" required />
+                                <label for="resigningtype">@lang('Type')</label>
+                                <select id="resigningtype" class="form-control" v-model="resigning.type">
+                                    <option :value="null" disabled selected></option>
+                                    @foreach ($recruitingTypes as $name => $recruitingType)
+                                        <option value="{{ $recruitingType }}">{{ $name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="decliningreason">@lang('Reason')</label>
-                                <input id="decliningreason" type="text" class="form-control" v-model="resigning.reason" required />
+                                <label for="resigningresigned">@lang('Resigned')</label>
+                                <input id="resigningresigned" type="text" class="form-control datepicker" v-model="resigning.resigned" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="resigningreason">@lang('Reason')</label>
+                                <input id="resigningreason" type="text" class="form-control" v-model="resigning.resignedReason" required />
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
@@ -888,7 +951,7 @@
                     application: '',
                     contractOut: '',
                     declined: '',
-                    reason: '',
+                    declinedReason: '',
                 },
                 decliningType: '',
                 toDecline: {},
@@ -896,24 +959,20 @@
 
                 resigning: {
                     id: null,
-                    contract: null,
-                    interview: '',
-                    application: '',
-                    contractOut: '',
+                    type: null,
                     resigned: '',
-                    reason: '',
+                    resignedReason: '',
                 },
-                resigningType: '',
                 toResign: {},
             },
 
             computed: {
                 staffPhysicianHaves: function () {
-                    return this.practiceTime == 'hours' ? _(this.pipeline.rosterPhysicians).sumBy('hours') : this.pipeline.rosterPhysicians.length;
+                    return this.practiceTime == 'hours' ? _(this.activeRosterPhysicians).sumBy('hours') : this.activeRosterPhysicians.length;
                 },
 
                 staffAppsHaves: function () {
-                    return this.practiceTime == 'hours' ? _(this.pipeline.rosterApps).sumBy('hours') : this.pipeline.rosterApps.length;
+                    return this.practiceTime == 'hours' ? _(this.activeRosterApps).sumBy('hours') : this.activeRosterApps.length;
                 },
 
                 staffPhysicianOpenings: function () {
@@ -924,36 +983,48 @@
                     return this.staffAppsNeeds - this.staffAppsHaves;
                 },
 
+                activeRosterPhysicians: function () {
+                    return _.reject(this.pipeline.rosterPhysicians, 'resigned');
+                },
+
+                activeRosterApps: function () {
+                    return _.reject(this.pipeline.rosterApps, 'resigned');
+                },
+
+                activeBenchPhysicians: function () {
+                    return _.reject(this.pipeline.benchPhysicians, 'resigned');
+                },
+
+                activeBenchApps: function () {
+                    return _.reject(this.pipeline.benchApps, 'resigned');
+                },
+
                 sortedRecruitings: function () {
-                    return _.chain(this.pipeline.recruitings).reject(function (recruiting) {
-                        return recruiting.declined || recruiting.resigned;
-                    }).orderBy(['type', function (recruiting) {
-                        return recruiting.name.toLowerCase();
-                    }], ['desc', 'asc']).value();
+                    return _.chain(this.pipeline.recruitings).reject('declined')
+                        .orderBy(['type', function (recruiting) {
+                            return recruiting.name.toLowerCase();
+                        }], ['desc', 'asc']).value();
                 },
 
                 sortedLocums: function () {
-                    return _.chain(this.pipeline.locums).reject(function (locum) {
-                        return locum.declined || locum.resigned;
-                    }).orderBy(['type', function (locum) {
-                        return locum.name.toLowerCase();
-                    }], ['desc', 'asc']).value();
+                    return _.chain(this.pipeline.locums).reject('declined')
+                        .orderBy(['type', function (locum) {
+                            return locum.name.toLowerCase();
+                        }], ['desc', 'asc']).value();
                 },
 
                 declines: function () {
                     return _.chain(this.pipeline.recruitings)
                         .concat(this.pipeline.locums)
-                        .filter(function (recruitingLocum) {
-                            return recruitingLocum.declined;
-                        }).value();
+                        .filter('declined').value();
                 },
 
                 resigns: function () {
-                    return _.chain(this.pipeline.recruitings)
-                        .concat(this.pipeline.locums)
-                        .filter(function (recruitingLocum) {
-                            return recruitingLocum.resigned;
-                        }).value();
+                    return _.chain(this.pipeline.rosterPhysicians)
+                        .concat(this.pipeline.rosterApps)
+                        .concat(this.pipeline.benchPhysicians)
+                        .concat(this.pipeline.benchApps)
+                        .filter('resigned').value();
                 },
             },
 
@@ -1042,20 +1113,13 @@
                 },
 
 
-                setResigning: function (toResign, type) {
+                setResigning: function (toResign) {
                     this.resigning = _.cloneDeep(toResign);
-                    this.resigningType = type;
                     this.toResign = toResign;
                 },
 
                 resign: function () {
-                    let endpoint;
-
-                    if (this.resigningType == 'recruiting') {
-                        endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.resigning.id + '/resign';
-                    } else {
-                        endpoint = '/admin/accounts/' + this.account.id + '/pipeline/locum/' + this.resigning.id + '/resign';
-                    }
+                    const endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this.resigning.id + '/resign';
 
                     axios.patch(endpoint, this.resigning)
                         .then(function (response) {

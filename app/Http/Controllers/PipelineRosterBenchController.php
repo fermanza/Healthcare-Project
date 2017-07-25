@@ -49,10 +49,10 @@ class PipelineRosterBenchController extends Controller
             ],
             'name' => 'required',
             'hours' => 'required',
-            'interview' => 'required|date_format:"Y-m-d"',
-            'contractOut' => 'required|date_format:"Y-m-d"',
-            'contractIn' => 'required|date_format:"Y-m-d"',
-            'firstShift' => 'required|date_format:"Y-m-d"',
+            'interview' => 'nullable|date_format:"Y-m-d"',
+            'contractOut' => 'nullable|date_format:"Y-m-d"',
+            'contractIn' => 'nullable|date_format:"Y-m-d"',
+            'firstShift' => 'nullable|date_format:"Y-m-d"',
         ]);
 
         $rosterBench = new PipelineRosterBench;
@@ -67,7 +67,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->firstShift = $request->firstShift;
         $rosterBench->save();
 
-        return $rosterBench;
+        return $rosterBench->fresh();
     }
 
     /**
@@ -102,6 +102,33 @@ class PipelineRosterBenchController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @param  \App\PipelineRosterBench  $rosterBench
+     * @return \Illuminate\Http\Response
+     */
+    public function resign(Request $request, Account $account, PipelineRosterBench $rosterBench)
+    {
+        $this->validate($request, [
+            'type' => [
+                'nullable',
+                Rule::in(config('pipeline.recruiting_types')),
+            ],
+            'resigned' => 'required|date_format:"Y-m-d"',
+            'resignedReason' => 'required',
+        ]);
+
+        $rosterBench->type = $request->type;
+        $rosterBench->resigned = $request->resigned;
+        $rosterBench->resignedReason = $request->resignedReason;
+        $rosterBench->save();
+
+        return $rosterBench;
     }
 
     /**

@@ -19,14 +19,13 @@ class CreatePipelineRecruitingsTable extends Migration
             $table->enum('type', config('pipeline.recruiting_types'));
             $table->enum('contract', config('pipeline.contract_types'));
             $table->string('name');
-            $table->date('interview');
-            $table->date('contractOut');
-            $table->date('contractIn');
-            $table->date('firstShift');
-            $table->string('notes', 1000)->nullable();
-            $table->dateTime('declined')->nullable();
-            $table->dateTime('resigned')->nullable();
-            $table->string('reason', 1000)->nullable();
+            $table->date('interview')->nullable();
+            $table->date('contractOut')->nullable();
+            $table->date('contractIn')->nullable();
+            $table->date('firstShift')->nullable();
+            $table->string('notes', 2047)->nullable();
+            $table->date('declined')->nullable();
+            $table->string('declinedReason', 2047)->nullable();
             $table->date('application')->nullable();
 
             $table->foreign('pipelineId')->references('id')->on('tAccountPipeline');

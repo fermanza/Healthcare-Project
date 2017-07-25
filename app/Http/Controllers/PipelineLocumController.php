@@ -45,10 +45,10 @@ class PipelineLocumController extends Controller
             ],
             'name' => 'required',
             'agency' => 'required',
-            'potentialStart' => 'required|date_format:"Y-m-d"',
+            'potentialStart' => 'nullable|date_format:"Y-m-d"',
             'credentialingNotes' => '',
-            'shiftsOffered' => 'required|integer|min:0',
-            'startDate' => 'required|date_format:"Y-m-d"',
+            'shiftsOffered' => 'nullable|integer|min:0',
+            'startDate' => 'nullable|date_format:"Y-m-d"',
             'comments' => '',
         ]);
 
@@ -93,6 +93,18 @@ class PipelineLocumController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Account  $account
      * @param  \App\PipelineLocum  $locum
      * @return \Illuminate\Http\Response
@@ -107,8 +119,8 @@ class PipelineLocumController extends Controller
             'interview' => 'nullable|date_format:"Y-m-d"',
             'application' => 'nullable|date_format:"Y-m-d"',
             'contractOut' => 'nullable|date_format:"Y-m-d"',
-            'declined' => 'required|date_format:"Y-m-d H:i"',
-            'reason' => 'required',
+            'declined' => 'required|date_format:"Y-m-d"',
+            'declinedReason' => 'required',
         ]);
 
         $locum->contract = $request->contract;
@@ -116,29 +128,7 @@ class PipelineLocumController extends Controller
         $locum->application = $request->application;
         $locum->contractOut = $request->contractOut;
         $locum->declined = $request->declined;
-        $locum->reason = $request->reason;
-        $locum->save();
-
-        return $locum;
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Account  $account
-     * @param  \App\PipelineLocum  $locum
-     * @return \Illuminate\Http\Response
-     */
-    public function resign(Request $request, Account $account, PipelineLocum $locum)
-    {
-        $this->validate($request, [
-            'resigned' => 'required|date_format:"Y-m-d H:i"',
-            'reason' => 'required',
-        ]);
-
-        $locum->resigned = $request->resigned;
-        $locum->reason = $request->reason;
+        $locum->declinedReason = $request->declinedReason;
         $locum->save();
 
         return $locum;

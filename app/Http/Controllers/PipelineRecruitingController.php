@@ -48,10 +48,10 @@ class PipelineRecruitingController extends Controller
                 Rule::in(config('pipeline.contract_types')),
             ],
             'name' => 'required',
-            'interview' => 'required|date_format:"Y-m-d"',
-            'contractOut' => 'required|date_format:"Y-m-d"',
-            'contractIn' => 'required|date_format:"Y-m-d"',
-            'firstShift' => 'required|date_format:"Y-m-d"',
+            'interview' => 'nullable|date_format:"Y-m-d"',
+            'contractOut' => 'nullable|date_format:"Y-m-d"',
+            'contractIn' => 'nullable|date_format:"Y-m-d"',
+            'firstShift' => 'nullable|date_format:"Y-m-d"',
             'notes' => '',
         ]);
 
@@ -96,6 +96,18 @@ class PipelineRecruitingController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Account  $account
      * @param  \App\PipelineRecruiting  $recruiting
      * @return \Illuminate\Http\Response
@@ -110,8 +122,8 @@ class PipelineRecruitingController extends Controller
             'interview' => 'nullable|date_format:"Y-m-d"',
             'application' => 'nullable|date_format:"Y-m-d"',
             'contractOut' => 'nullable|date_format:"Y-m-d"',
-            'declined' => 'required|date_format:"Y-m-d H:i"',
-            'reason' => 'required',
+            'declined' => 'required|date_format:"Y-m-d"',
+            'declinedReason' => 'required',
         ]);
 
         $recruiting->contract = $request->contract;
@@ -119,29 +131,7 @@ class PipelineRecruitingController extends Controller
         $recruiting->application = $request->application;
         $recruiting->contractOut = $request->contractOut;
         $recruiting->declined = $request->declined;
-        $recruiting->reason = $request->reason;
-        $recruiting->save();
-
-        return $recruiting;
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Account  $account
-     * @param  \App\PipelineRecruiting  $recruiting
-     * @return \Illuminate\Http\Response
-     */
-    public function resign(Request $request, Account $account, PipelineRecruiting $recruiting)
-    {
-        $this->validate($request, [
-            'resigned' => 'required|date_format:"Y-m-d H:i"',
-            'reason' => 'required',
-        ]);
-
-        $recruiting->resigned = $request->resigned;
-        $recruiting->reason = $request->reason;
+        $recruiting->declinedReason = $request->declinedReason;
         $recruiting->save();
 
         return $recruiting;
