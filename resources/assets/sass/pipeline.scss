@@ -1,13 +1,32 @@
 .pipeline {
     font-size: 12px;
 
-    dl.dl-horizontal dt label {
-        margin-top: 5px;
+    label {
+        margin-bottom: 0;
+        // margin-top: 3px;
+    }
+
+    .form-control {
+        height: 24px;
+        width: 100%;
+        padding: 0 8px;
+    }
+
+    .form-group {
         margin-bottom: 0;
     }
 
-    .form-inline table .form-control {
-        width: 100%;
+    dl.dl-horizontal dt label {
+        margin-bottom: 0;
+    }
+
+    .pseudo-header {
+        text-align: center;
+        font-weight: bold;
+        margin: 0;
+        padding: 4px;
+        line-height: 1.6;
+        border: 1px solid #ddd;
     }
 
     .table > thead > tr > th,
@@ -17,5 +36,13 @@
     .table > tfoot > tr > th,
     .table > tfoot > tr > td {
         padding: 4px;
+    }
+}
+
+@media print {
+    .pipeline {
+        .no-break-inside {
+            page-break-inside: avoid;
+        }
     }
 }

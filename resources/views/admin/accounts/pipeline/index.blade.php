@@ -2,745 +2,762 @@
 
 @section('content-header', __('Summary'))
 
+@section('tools')
+    <a href="javascript:print();" class="btn btn-default btn-sm hidden-print">
+        <i class="fa fa-print"></i>
+        @lang('Print')
+    </a>
+@endsection
+
 @section('content')
-    <div id="app" class="pipeline"{{--  style="min-width: 1000px;" --}}>
-        <form class="form-inline" action="{{ route('admin.accounts.pipeline.update', [$account]) }}" method="POST">
+    <div id="app" class="pipeline">
+        <form action="{{ route('admin.accounts.pipeline.update', [$account]) }}" method="POST">
             {{ csrf_field() }}
             {{ method_field('PATCH') }}
 
-            <div class="row">
-                <div class="col-md-12 text-center lead">
-                    {{ $account->name }}, {{ $account->siteCode }}
-                    <br />
-                    {{ $account->googleAddress }}
-                    <br />
-                    {{ $account->recruiter ? ($account->recruiter->fullName().', ') : '' }}
-                    {{ ($account->recruiter && $account->recruiter->manager) ? $account->recruiter->manager->fullName() : '' }}
+            <div class="no-break-inside">
+                <div class="row">
+                    <div class="col-md-12 text-center lead">
+                        {{ $account->name }}, {{ $account->siteCode }}
+                        <br />
+                        {{ $account->googleAddress }}
+                        <br />
+                        {{ $account->recruiter ? ($account->recruiter->fullName().', ') : '' }}
+                        {{ ($account->recruiter && $account->recruiter->manager) ? $account->recruiter->manager->fullName() : '' }}
+                    </div>
                 </div>
             </div>
 
             <hr />
 
-            <div class="row">
-                <div class="col-sm-4">
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <div class="form-group{{ $errors->has('medicalDirector') ? ' has-error' : '' }}">
-                                <label for="medicalDirector">@lang('Medical Director'):</label>
-                            </div>
-                        </dt>
-                        <dd>
-                            <div class="form-group{{ $errors->has('medicalDirector') ? ' has-error' : '' }}">
-                                <input type="text" class="form-control" id="medicalDirector" name="medicalDirector" value="{{ old('medicalDirector') ?: $pipeline->medicalDirector }}" />
-                                @if ($errors->has('medicalDirector'))
-                                    <span class="help-block"><strong>{{ $errors->first('medicalDirector') }}</strong></span>
-                                @endif
-                            </div>
-                        </dd>
-
-                        <dt>
-                            <div class="form-group{{ $errors->has('svp') ? ' has-error' : '' }}">
-                                <label for="svp">@lang('SVP'):</label>
-                            </div>
-                        </dt>
-                        <dd>
-                            <div class="form-group{{ $errors->has('svp') ? ' has-error' : '' }}">
-                                <input type="text" class="form-control" id="svp" name="svp" value="{{ old('svp') ?: $pipeline->svp }}" />
-                                @if ($errors->has('svp'))
-                                    <span class="help-block"><strong>{{ $errors->first('svp') }}</strong></span>
-                                @endif
-                            </div>
-                        </dd>
-
-                        <dt>
-                            <div class="form-group{{ $errors->has('practice') ? ' has-error' : '' }}">
-                                <label for="practice">@lang('Practice'):</label>
-                            </div>
-                        </dt>
-                        <dd>
-                            <input type="text" class="form-control" id="practice" name="practice" value="{{ $practice ? $practice->name : '' }}" disabled />
-                        </dd>
-                    </dl>
+            <div class="no-break-inside">
+                <div class="row">
+                    <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
+                        <div class="form-group{{ $errors->has('medicalDirector') ? ' has-error' : '' }}">
+                            <label for="medicalDirector">@lang('Medical Director'):</label>
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-5 col-sm-2">
+                        <div class="form-group{{ $errors->has('medicalDirector') ? ' has-error' : '' }}">
+                            <input type="text" class="form-control hidden-print" id="medicalDirector" name="medicalDirector" v-model="pipeline.medicalDirector" value="{{ old('medicalDirector') ?: $pipeline->medicalDirector }}" />
+                            <span class="visible-print">@{{ pipeline.medicalDirector }}</span>
+                            @if ($errors->has('medicalDirector'))
+                                <span class="help-block"><strong>{{ $errors->first('medicalDirector') }}</strong></span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
+                        <div class="form-group{{ $errors->has('rmd') ? ' has-error' : '' }}">
+                            <label for="rmd">@lang('RMD'):</label>
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-5 col-sm-2">
+                        <div class="form-group{{ $errors->has('rmd') ? ' has-error' : '' }}">
+                            <input type="text" class="form-control hidden-print" id="rmd" name="rmd" value="{{ old('rmd') ?: $pipeline->rmd }}" />
+                            <span class="visible-print">@{{ pipeline.rmd }}</span>
+                            @if ($errors->has('rmd'))
+                                <span class="help-block"><strong>{{ $errors->first('rmd') }}</strong></span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
+                        <div class="form-group{{ $errors->has('rsc') ? ' has-error' : '' }}">
+                            <label for="rsc">@lang('RSC'):</label>
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-5 col-sm-2">
+                        <input type="text" class="form-control hidden-print" id="rsc" name="rsc" value="{{ $account->rsc ? $account->rsc->name : '' }}" disabled />
+                        <span class="visible-print">{{ $account->rsc ? $account->rsc->name : '' }}</span>
+                    </div>
                 </div>
-                <div class="col-sm-4">
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <div class="form-group{{ $errors->has('rmd') ? ' has-error' : '' }}">
-                                <label for="rmd">@lang('RMD'):</label>
+                
+                <div class="row">
+                    <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
+                        <div class="form-group{{ $errors->has('svp') ? ' has-error' : '' }}">
+                            <label for="svp">@lang('SVP'):</label>
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-5 col-sm-2">
+                        <div class="form-group{{ $errors->has('svp') ? ' has-error' : '' }}">
+                            <input type="text" class="form-control hidden-print" id="svp" name="svp" value="{{ old('svp') ?: $pipeline->svp }}" />
+                            <span class="visible-print">@{{ pipeline.svp }}</span>
+                            @if ($errors->has('svp'))
+                                <span class="help-block"><strong>{{ $errors->first('svp') }}</strong></span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
+                        <div class="form-group{{ $errors->has('dca') ? ' has-error' : '' }}">
+                            <label for="dca">@lang('DCA'):</label>
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-5 col-sm-2">
+                        <div class="form-group{{ $errors->has('dca') ? ' has-error' : '' }}">
+                            <input type="text" class="form-control hidden-print" id="dca" name="dca" value="{{ old('dca') ?: $pipeline->dca }}" />
+                            <span class="visible-print">@{{ pipeline.dca }}</span>
+                            @if ($errors->has('dca'))
+                                <span class="help-block"><strong>{{ $errors->first('dca') }}</strong></span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
+                        <div class="form-group{{ $errors->has('region') ? ' has-error' : '' }}">
+                            <label for="region">@lang('Operating Unit'):</label>
+                        </div>
+                    </div>
+                    <div class="mb5 col-xs-5 col-sm-2">
+                        <input type="text" class="form-control hidden-print" id="region" name="region" value="{{ $region ? $region->name : '' }}" disabled />
+                        <span class="visible-print">{{ $region ? $region->name : '' }}</span>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
+                        <label for="practice">@lang('Practice'):</label>
+                    </div>
+                    <div class="mb5 col-xs-5 col-sm-2">
+                        <input type="text" class="form-control hidden-print" id="practice" name="practice" value="{{ $practice ? $practice->name : '' }}" disabled />
+                        <span class="visible-print">{{ $practice ? $practice->name : '' }}</span>
+                    </div>
+                    @if ($practice && $practice->isIPS())
+                        <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
+                            <div class="form-group{{ $errors->has('practiceTime') ? ' has-error' : '' }}">
+                                <label for="practiceTime">@lang('Practice Time'):</label>
                             </div>
-                        </dt>
-                        <dd>
-                            <div class="form-group{{ $errors->has('rmd') ? ' has-error' : '' }}">
-                                <input type="text" class="form-control" id="rmd" name="rmd" value="{{ old('rmd') ?: $pipeline->rmd }}" />
-                                @if ($errors->has('rmd'))
-                                    <span class="help-block"><strong>{{ $errors->first('rmd') }}</strong></span>
+                        </div>
+                        <div class="mb5 col-xs-5 col-sm-2">
+                            <div class="form-group{{ $errors->has('practiceTime') ? ' has-error' : '' }}">
+                                <select class="form-control hidden-print" id="practiceTime" name="practiceTime" v-model="practiceTime">
+                                    {{-- <option value="" disabled selected></option> --}}
+                                    @foreach ($practiceTimes as $name => $practiceTime)
+                                        <option value="{{ $practiceTime }}" {{ (old('practiceTime') == $practiceTime ?: ($pipeline->practiceTime == $practiceTime)) ? 'selected': '' }}>{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="visible-print text-uppercase">@{{ pipeline.practiceTime }}</span>
+                                @if ($errors->has('practiceTime'))
+                                    <span class="help-block"><strong>{{ $errors->first('practiceTime') }}</strong></span>
                                 @endif
                             </div>
-                        </dd>
+                        </div>
+                    @else
+                        <input type="hidden" name="practiceTime" value="hours" />
+                    @endif
+                </div>
+            </div>
 
-                        <dt>
-                            <div class="form-group{{ $errors->has('dca') ? ' has-error' : '' }}">
-                                <label for="dca">@lang('DCA'):</label>
-                            </div>
-                        </dt>
-                        <dd>
-                            <div class="form-group{{ $errors->has('dca') ? ' has-error' : '' }}">
-                                <input type="text" class="form-control" id="dca" name="dca" value="{{ old('dca') ?: $pipeline->dca }}" />
-                                @if ($errors->has('dca'))
-                                    <span class="help-block"><strong>{{ $errors->first('dca') }}</strong></span>
-                                @endif
-                            </div>
-                        </dd>
+            @permission('admin.accounts.pipeline.update')
+                <div class="row hidden-print">
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-info">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            @endpermission
 
-                        @if ($practice && $practice->isIPS())
-                            <dt>
-                                <div class="form-group{{ $errors->has('practiceTime') ? ' has-error' : '' }}">
-                                    <label for="practiceTime">@lang('Practice Time'):</label>
-                                </div>
-                            </dt>
-                            <dd>
-                                <div class="form-group{{ $errors->has('practiceTime') ? ' has-error' : '' }}">
-                                    <select style="width: 154px;" data-width="154px" class="form-control" id="practiceTime" name="practiceTime" v-model="practiceTime">
-                                        {{-- <option value="" disabled selected></option> --}}
-                                        @foreach ($practiceTimes as $name => $practiceTime)
-                                            <option value="{{ $practiceTime }}" {{ (old('practiceTime') == $practiceTime ?: ($pipeline->practiceTime == $practiceTime)) ? 'selected': '' }}>{{ $name }}</option>
+            <hr />
+
+            <div class="no-break-inside">
+                <h4>@lang('Complete Staffing and Current Openings')</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th colspan="2" class="text-center">@lang('Physician')</th>
+                                <th colspan="2" class="text-center">@lang('APPs')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td width="25%">@lang('Haves')</td>
+                                <td width="25%">
+                                    <input type="text" class="form-control hidden-print" name="staffPhysicianHaves" value="{{ old('staffPhysicianHaves') ?: $pipeline->staffPhysicianHaves }}" v-model="staffPhysicianHaves" readonly />
+                                    <span class="visible-print">@{{ staffPhysicianHaves }}</span>
+                                </td>
+                                <td width="25%">@lang('Haves')</td>
+                                <td width="25%">
+                                    <input type="text" class="form-control hidden-print" name="staffAppsHaves" value="{{ old('staffAppsHaves') ?: $pipeline->staffAppsHaves }}" v-model="staffAppsHaves" readonly />
+                                    <span class="visible-print">@{{ staffAppsHaves }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="25%">@lang('Needs')</td>
+                                <td width="25%">
+                                    <input type="text" class="form-control hidden-print" name="staffPhysicianNeeds" value="{{ old('staffPhysicianNeeds') ?: $pipeline->staffPhysicianNeeds }}" v-model="staffPhysicianNeeds" />
+                                    <span class="visible-print">@{{ pipeline.staffPhysicianNeeds }}</span>
+                                </td>
+                                <td width="25%">@lang('Needs')</td>
+                                <td width="25%">
+                                    <input type="text" class="form-control hidden-print" name="staffAppsNeeds" value="{{ old('staffAppsNeeds') ?: $pipeline->staffAppsNeeds }}" v-model="staffAppsNeeds" />
+                                    <span class="visible-print">@{{ pipeline.staffAppsNeeds }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="25%">@lang('Openings')</td>
+                                <td width="25%">
+                                    <input type="text" class="form-control hidden-print" name="staffPhysicianOpenings" value="{{ old('staffPhysicianOpenings') ?: $pipeline->staffPhysicianOpenings }}" v-model="staffPhysicianOpenings" readonly />
+                                    <span class="visible-print">@{{ staffPhysicianOpenings }}</span>
+                                </td>
+                                <td width="25%">@lang('Openings')</td>
+                                <td width="25%">
+                                    <input type="text" class="form-control hidden-print" name="staffAppsOpenings" value="{{ old('staffAppsOpenings') ?: $pipeline->staffAppsOpenings }}" v-model="staffAppsOpenings" readonly />
+                                    <span class="visible-print">@{{ staffAppsOpenings }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @permission('admin.accounts.pipeline.update')
+                <div class="row hidden-print">
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-info">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            @endpermission
+        </form>
+
+
+        <hr />
+
+
+        <div class="no-break-inside">
+            <h4>@lang('Current Roster')</h4>
+            <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
+            <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysicians', 'rosterPhysician')">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th>@lang('Name')</th>
+                                <th width="70px">@lang('Hours')</th>
+                                <th width="100px">@lang('Interview')</th>
+                                <th width="100px">@lang('Contract Out')</th>
+                                <th width="100px">@lang('Contract In')</th>
+                                <th width="100px">@lang('First Shift')</th>
+                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="roster in activeRosterPhysicians">
+                                <td>@{{ roster.name }}</td>
+                                <td>@{{ roster.hours }}</td>
+                                <td>@{{ roster.interview }}</td>
+                                <td>@{{ roster.contractOut }}</td>
+                                <td>@{{ roster.contractIn }}</td>
+                                <td>@{{ roster.firstShift }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.resign')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#resignModal"
+                                            @click="setResigning(roster)"
+                                        >
+                                            @lang('Resign')
+                                        </button>
+                                    @endpermission
+                                    
+                                    @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                        <button @click="deleteRosterBench(roster, 'rosterPhysicians')" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" v-model="rosterPhysician.name" required />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="rosterPhysician.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.interview" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.contractOut" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.firstShift" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+        <div class="no-break-inside">
+            <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
+            <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps', 'rosterApps')">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th>@lang('Name')</th>
+                                <th width="70px">@lang('Hours')</th>
+                                <th width="100px">@lang('Interview')</th>
+                                <th width="100px">@lang('Contract Out')</th>
+                                <th width="100px">@lang('Contract In')</th>
+                                <th width="100px">@lang('First Shift')</th>
+                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="roster in activeRosterApps">
+                                <td>@{{ roster.name }}</td>
+                                <td>@{{ roster.hours }}</td>
+                                <td>@{{ roster.interview }}</td>
+                                <td>@{{ roster.contractOut }}</td>
+                                <td>@{{ roster.contractIn }}</td>
+                                <td>@{{ roster.firstShift }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.resign')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#resignModal"
+                                            @click="setResigning(roster)"
+                                        >
+                                            @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                        <button @click="deleteRosterBench(roster, 'rosterApps')" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" v-model="rosterApps.name" required />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="rosterApps.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.interview" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.contractOut" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.firstShift" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+
+        <hr />
+
+
+        <div class="no-break-inside">
+            <h4>@lang('Current Bench')</h4>
+            <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
+            <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysicians', 'benchPhysician')">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th>@lang('Name')</th>
+                                <th width="70px">@lang('Hours')</th>
+                                <th width="100px">@lang('Interview')</th>
+                                <th width="100px">@lang('Contract Out')</th>
+                                <th width="100px">@lang('Contract In')</th>
+                                <th width="100px">@lang('First Shift')</th>
+                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="bench in activeBenchPhysicians">
+                                <td>@{{ bench.name }}</td>
+                                <td>@{{ bench.hours }}</td>
+                                <td>@{{ bench.interview }}</td>
+                                <td>@{{ bench.contractOut }}</td>
+                                <td>@{{ bench.contractIn }}</td>
+                                <td>@{{ bench.firstShift }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.resign')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#resignModal"
+                                            @click="setResigning(bench)"
+                                        >
+                                            @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                        <button @click="deleteRosterBench(bench, 'benchPhysicians')" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" v-model="benchPhysician.name" required />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="benchPhysician.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.interview" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.contractOut" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+        <div class="no-break-inside">
+            <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
+            <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps', 'benchApps')">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th>@lang('Name')</th>
+                                <th width="70px">@lang('Hours')</th>
+                                <th width="100px">@lang('Interview')</th>
+                                <th width="100px">@lang('Contract Out')</th>
+                                <th width="100px">@lang('Contract In')</th>
+                                <th width="100px">@lang('First Shift')</th>
+                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="bench in activeBenchApps">
+                                <td>@{{ bench.name }}</td>
+                                <td>@{{ bench.hours }}</td>
+                                <td>@{{ bench.interview }}</td>
+                                <td>@{{ bench.contractOut }}</td>
+                                <td>@{{ bench.contractIn }}</td>
+                                <td>@{{ bench.firstShift }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.resign')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#resignModal"
+                                            @click="setResigning(bench)"
+                                        >
+                                            @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                        <button @click="deleteRosterBench(bench, 'benchApps')" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print">
+                            <tr>
+                                <td>
+                                    <input type="text" class="form-control" v-model="benchApps.name" required />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="benchApps.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.interview" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.contractOut" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+
+        <hr />
+
+
+        <div class="no-break-inside">
+            <h4>@lang('Recruiting Pipeline')</h4>
+            <form @submit.prevent="addRecruiting">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th width="70px">@lang('MD/APP')</th>
+                                <th>@lang('Name')</th>
+                                <th width="70px">@lang('FT/PT')</th>
+                                <th width="100px">@lang('Interview')</th>
+                                <th width="100px">@lang('Contract Out')</th>
+                                <th width="100px">@lang('Contract In')</th>
+                                <th width="100px">@lang('First Shift')</th>
+                                <th>@lang('Notes')</th>
+                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="recruiting in sortedRecruitings" :class="{'bg-success': currentRecruiting(recruiting)}">
+                                <td class="text-uppercase">@{{ recruiting.type }}</td>
+                                <td>@{{ recruiting.name }}</td>
+                                <td class="text-uppercase">@{{ recruiting.contract }}</td>
+                                <td>@{{ recruiting.interview }}</td>
+                                <td>@{{ recruiting.contractOut }}</td>
+                                <td>@{{ recruiting.contractIn }}</td>
+                                <td>@{{ recruiting.firstShift }}</td>
+                                <td>@{{ recruiting.notes }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.recruiting.decline')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#declineModal"
+                                            @click="setDeclining(recruiting, 'recruiting')"
+                                        >
+                                            @lang('Decline')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.recruiting.destroy')
+                                        <button @click="deleteRecruiting(recruiting)" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print">
+                            <tr>
+                                <td>
+                                    <select class="form-control" v-model="newRecruiting.type" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($recruitingTypes as $name => $recruitingType)
+                                            <option value="{{ $recruitingType }}">{{ $name }}</option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('practiceTime'))
-                                        <span class="help-block"><strong>{{ $errors->first('practiceTime') }}</strong></span>
-                                    @endif
-                                </div>
-                            </dd>
-                        @else
-                            <input type="hidden" name="practiceTime" value="hours" />
-                        @endif
-                    </dl>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="newRecruiting.name" required />
+                                </td>
+                                <td>
+                                    <select class="form-control" v-model="newRecruiting.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($contractTypes as $name => $contractType)
+                                            <option value="{{ $contractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="newRecruiting.interview" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="newRecruiting.contractOut" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="newRecruiting.firstShift" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="newRecruiting.notes" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.recruiting.decline')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="col-sm-4">
-                    <dl class="dl-horizontal">
-                        <dt>
-                            <div class="form-group{{ $errors->has('rsc') ? ' has-error' : '' }}">
-                                <label for="rsc">@lang('RSC'):</label>
-                            </div>
-                        </dt>
-                        <dd>
-                            <input type="text" class="form-control" id="rsc" name="rsc" value="{{ $account->rsc ? $account->rsc->name : '' }}" disabled />
-                        </dd>
+            </form>
+        </div>
 
-                        <dt>
-                            <div class="form-group{{ $errors->has('region') ? ' has-error' : '' }}">
-                                <label for="region">@lang('Operating Unit'):</label>
-                            </div>
-                        </dt>
-                        <dd>
-                            <input type="text" class="form-control" id="region" name="region" value="{{ $region ? $region->name : '' }}" disabled />
-                        </dd>
-                    </dl>
+
+        <div class="no-break-inside">
+            <h4>@lang('Locums Pipeline')</h4>
+            <form @submit.prevent="addLocum">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th>@lang('MD/APP')</th>
+                                <th>@lang('Name')</th>
+                                <th>@lang('Agency')</th>
+                                <th>@lang('Potential Start')</th>
+                                <th>@lang('Credentialing Notes')</th>
+                                <th>@lang('Shifts')</th>
+                                <th>@lang('Start Date')</th>
+                                <th>@lang('Comments')</th>
+                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="locum in sortedLocums">
+                                <td width="70px" class="text-uppercase">@{{ locum.type }}</td>
+                                <td>@{{ locum.name }}</td>
+                                <td>@{{ locum.agency }}</td>
+                                <td width="100px">@{{ locum.potentialStart }}</td>
+                                <td>@{{ locum.credentialingNotes }}</td>
+                                <td width="70px">@{{ locum.shiftsOffered }}</td>
+                                <td width="100px">@{{ locum.startDate }}</td>
+                                <td>@{{ locum.comments }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.locum.decline')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#declineModal"
+                                            @click="setDeclining(locum, 'locum')"
+                                        >
+                                            @lang('Decline')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.locum.destroy')
+                                        <button @click="deleteLocum(locum)" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print">
+                            <tr>
+                                <td>
+                                    <select class="form-control" v-model="newLocum.type" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($recruitingTypes as $name => $recruitingType)
+                                            <option value="{{ $recruitingType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="newLocum.name" required />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="newLocum.agency" required />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="newLocum.potentialStart" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="newLocum.credentialingNotes" />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="newLocum.shiftsOffered" min="0" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="newLocum.startDate" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="newLocum.comments" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.locum.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-            </div>
-
-            @permission('admin.accounts.pipeline.update')
-                <div class="row">
-                    <div class="col-md-12 text-right">
-                        <button type="submit" class="btn btn-info">
-                            Update
-                        </button>
-                    </div>
-                </div>
-            @endpermission
-
-            <hr />
-
-            <h4>@lang('Complete Staffing and Current Openings')</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="bg-gray">
-                        <tr>
-                            <th colspan="2" class="text-center">@lang('Physician')</th>
-                            <th colspan="2" class="text-center">@lang('APPs')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td width="25%">@lang('Haves')</td>
-                            <td width="25%">
-                                <input type="text" class="form-control" name="staffPhysicianHaves" value="{{ old('staffPhysicianHaves') ?: $pipeline->staffPhysicianHaves }}" v-model="staffPhysicianHaves" readonly />
-                            </td>
-                            <td width="25%">@lang('Haves')</td>
-                            <td width="25%">
-                                <input type="text" class="form-control" name="staffAppsHaves" value="{{ old('staffAppsHaves') ?: $pipeline->staffAppsHaves }}" v-model="staffAppsHaves" readonly />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="25%">@lang('Needs')</td>
-                            <td width="25%">
-                                <input type="text" class="form-control" name="staffPhysicianNeeds" value="{{ old('staffPhysicianNeeds') ?: $pipeline->staffPhysicianNeeds }}" v-model="staffPhysicianNeeds" />
-                            </td>
-                            <td width="25%">@lang('Needs')</td>
-                            <td width="25%">
-                                <input type="text" class="form-control" name="staffAppsNeeds" value="{{ old('staffAppsNeeds') ?: $pipeline->staffAppsNeeds }}" v-model="staffAppsNeeds" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="25%">@lang('Openings')</td>
-                            <td width="25%">
-                                <input type="text" class="form-control" name="staffPhysicianOpenings" value="{{ old('staffPhysicianOpenings') ?: $pipeline->staffPhysicianOpenings }}" v-model="staffPhysicianOpenings" readonly />
-                            </td>
-                            <td width="25%">@lang('Openings')</td>
-                            <td width="25%">
-                                <input type="text" class="form-control" name="staffAppsOpenings" value="{{ old('staffAppsOpenings') ?: $pipeline->staffAppsOpenings }}" v-model="staffAppsOpenings" readonly />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            @permission('admin.accounts.pipeline.update')
-                <div class="row">
-                    <div class="col-md-12 text-right">
-                        <button type="submit" class="btn btn-info">
-                            Update
-                        </button>
-                    </div>
-                </div>
-            @endpermission
-        </form>
+            </form>
+        </div>
 
 
         <hr />
 
 
-        <h4>@lang('Current Roster')</h4>
-        <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysicians', 'rosterPhysician')">
+        <div class="no-break-inside">
+            <h4>@lang('Declined List')</h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="bg-gray">
                         <tr>
-                            <th colspan="7" class="text-center">@lang('Physician')</th>
-                        </tr>
-                        <tr>
                             <th>@lang('Name')</th>
-                            <th>@lang('Hours')</th>
-                            <th>@lang('Interview')</th>
-                            <th>@lang('Contract Out')</th>
-                            <th>@lang('Contract In')</th>
-                            <th>@lang('First Shift')</th>
-                            <th>@lang('Actions')</th>
+                            <th width="70px">@lang('FT/PT')</th>
+                            <th width="100px">@lang('Interview')</th>
+                            <th width="100px">@lang('Application')</th>
+                            <th width="100px">@lang('Contract Out')</th>
+                            <th width="100px">@lang('Declined')</th>
+                            <th>@lang('Reason')</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="roster in activeRosterPhysicians">
-                            <td>@{{ roster.name }}</td>
-                            <td>@{{ roster.hours }}</td>
-                            <td>@{{ roster.interview }}</td>
-                            <td>@{{ roster.contractOut }}</td>
-                            <td>@{{ roster.contractIn }}</td>
-                            <td>@{{ roster.firstShift }}</td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.rosterBench.resign')
-                                    <button type="button" class="btn btn-xs btn-warning"
-                                        data-toggle="modal" data-target="#resignModal"
-                                        @click="setResigning(roster)"
-                                    >
-                                        @lang('Resign')
-                                    </button>
-                                @endpermission
-                                
-                                @permission('admin.accounts.pipeline.rosterBench.destroy')
-                                    <button @click="deleteRosterBench(roster, 'rosterPhysicians')" type="button" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                @endpermission
-                            </td>
+                        <tr v-for="declined in declines">
+                            <td>@{{ declined.name }}</td>
+                            <td class="text-uppercase">@{{ declined.contract }}</td>
+                            <td>@{{ declined.interview }}</td>
+                            <td>@{{ declined.application }}</td>
+                            <td>@{{ declined.contractOut }}</td>
+                            <td>@{{ declined.declined }}</td>
+                            <td>@{{ declined.declinedReason }}</td>
                         </tr>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                <input type="text" class="form-control" v-model="rosterPhysician.name" required />
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" v-model="rosterPhysician.hours" required />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterPhysician.interview" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterPhysician.contractOut" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterPhysician.contractIn" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterPhysician.firstShift" />
-                            </td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.rosterBench.store')
-                                    <button type="submit" class="btn btn-xs btn-success">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
-        </form>
-
-        <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps', 'rosterApps')">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="bg-gray">
-                        <tr>
-                            <th colspan="7" class="text-center">@lang('APPs')</th>
-                        </tr>
-                        <tr>
-                            <th>@lang('Name')</th>
-                            <th>@lang('Hours')</th>
-                            <th>@lang('Interview')</th>
-                            <th>@lang('Contract Out')</th>
-                            <th>@lang('Contract In')</th>
-                            <th>@lang('First Shift')</th>
-                            <th>@lang('Actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="roster in activeRosterApps">
-                            <td>@{{ roster.name }}</td>
-                            <td>@{{ roster.hours }}</td>
-                            <td>@{{ roster.interview }}</td>
-                            <td>@{{ roster.contractOut }}</td>
-                            <td>@{{ roster.contractIn }}</td>
-                            <td>@{{ roster.firstShift }}</td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.rosterBench.resign')
-                                    <button type="button" class="btn btn-xs btn-warning"
-                                        data-toggle="modal" data-target="#resignModal"
-                                        @click="setResigning(roster)"
-                                    >
-                                        @lang('Resign')
-                                    </button>
-                                @endpermission
-
-                                @permission('admin.accounts.pipeline.rosterBench.destroy')
-                                    <button @click="deleteRosterBench(roster, 'rosterApps')" type="button" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                <input type="text" class="form-control" v-model="rosterApps.name" required />
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" v-model="rosterApps.hours" required />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterApps.interview" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterApps.contractOut" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterApps.contractIn" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="rosterApps.firstShift" />
-                            </td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.rosterBench.store')
-                                    <button type="submit" class="btn btn-xs btn-success">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </form>
-
-
-        <hr />
-
-
-        <h4>@lang('Current Bench')</h4>
-        <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysicians', 'benchPhysician')">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="bg-gray">
-                        <tr>
-                            <th colspan="7" class="text-center">@lang('Physician')</th>
-                        </tr>
-                        <tr>
-                            <th>@lang('Name')</th>
-                            <th>@lang('Hours')</th>
-                            <th>@lang('Interview')</th>
-                            <th>@lang('Contract Out')</th>
-                            <th>@lang('Contract In')</th>
-                            <th>@lang('First Shift')</th>
-                            <th>@lang('Actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="bench in activeBenchPhysicians">
-                            <td>@{{ bench.name }}</td>
-                            <td>@{{ bench.hours }}</td>
-                            <td>@{{ bench.interview }}</td>
-                            <td>@{{ bench.contractOut }}</td>
-                            <td>@{{ bench.contractIn }}</td>
-                            <td>@{{ bench.firstShift }}</td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.rosterBench.resign')
-                                    <button type="button" class="btn btn-xs btn-warning"
-                                        data-toggle="modal" data-target="#resignModal"
-                                        @click="setResigning(bench)"
-                                    >
-                                        @lang('Resign')
-                                    </button>
-                                @endpermission
-
-                                @permission('admin.accounts.pipeline.rosterBench.destroy')
-                                    <button @click="deleteRosterBench(bench, 'benchPhysicians')" type="button" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                <input type="text" class="form-control" v-model="benchPhysician.name" required />
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" v-model="benchPhysician.hours" required />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="benchPhysician.interview" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="benchPhysician.contractOut" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="benchPhysician.contractIn" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" />
-                            </td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.rosterBench.store')
-                                    <button type="submit" class="btn btn-xs btn-success">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </form>
-
-        <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps', 'benchApps')">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="bg-gray">
-                        <tr>
-                            <th colspan="7" class="text-center">@lang('APPs')</th>
-                        </tr>
-                        <tr>
-                            <th>@lang('Name')</th>
-                            <th>@lang('Hours')</th>
-                            <th>@lang('Interview')</th>
-                            <th>@lang('Contract Out')</th>
-                            <th>@lang('Contract In')</th>
-                            <th>@lang('First Shift')</th>
-                            <th>@lang('Actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="bench in activeBenchApps">
-                            <td>@{{ bench.name }}</td>
-                            <td>@{{ bench.hours }}</td>
-                            <td>@{{ bench.interview }}</td>
-                            <td>@{{ bench.contractOut }}</td>
-                            <td>@{{ bench.contractIn }}</td>
-                            <td>@{{ bench.firstShift }}</td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.rosterBench.resign')
-                                    <button type="button" class="btn btn-xs btn-warning"
-                                        data-toggle="modal" data-target="#resignModal"
-                                        @click="setResigning(bench)"
-                                    >
-                                        @lang('Resign')
-                                    </button>
-                                @endpermission
-
-                                @permission('admin.accounts.pipeline.rosterBench.destroy')
-                                    <button @click="deleteRosterBench(bench, 'benchApps')" type="button" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                <input type="text" class="form-control" v-model="benchApps.name" required />
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" v-model="benchApps.hours" required />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="benchApps.interview" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="benchApps.contractOut" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="benchApps.contractIn" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" />
-                            </td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.rosterBench.store')
-                                    <button type="submit" class="btn btn-xs btn-success">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </form>
-
-
-        <hr />
-
-
-        <h4>@lang('Recruiting Pipeline')</h4>
-        <form @submit.prevent="addRecruiting">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="bg-gray">
-                        <tr>
-                            <th>@lang('MD/APP')</th>
-                            <th>@lang('Name')</th>
-                            <th>@lang('FT/PT')</th>
-                            <th>@lang('Interview')</th>
-                            <th>@lang('Contract Out')</th>
-                            <th>@lang('Contract In')</th>
-                            <th>@lang('First Shift')</th>
-                            <th>@lang('Notes')</th>
-                            <th>@lang('Actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="recruiting in sortedRecruitings" :class="{'bg-success': currentRecruiting(recruiting)}">
-                            <td class="text-uppercase">@{{ recruiting.type }}</td>
-                            <td>@{{ recruiting.name }}</td>
-                            <td class="text-uppercase">@{{ recruiting.contract }}</td>
-                            <td>@{{ recruiting.interview }}</td>
-                            <td>@{{ recruiting.contractOut }}</td>
-                            <td>@{{ recruiting.contractIn }}</td>
-                            <td>@{{ recruiting.firstShift }}</td>
-                            <td>@{{ recruiting.notes }}</td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.recruiting.decline')
-                                    <button type="button" class="btn btn-xs btn-warning"
-                                        data-toggle="modal" data-target="#declineModal"
-                                        @click="setDeclining(recruiting, 'recruiting')"
-                                    >
-                                        @lang('Decline')
-                                    </button>
-                                @endpermission
-
-                                @permission('admin.accounts.pipeline.recruiting.destroy')
-                                    <button @click="deleteRecruiting(recruiting)" type="button" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                <select style="width: 70px;" data-width="70px" class="form-control" v-model="newRecruiting.type" required>
-                                    <option :value="null" disabled selected></option>
-                                    @foreach ($recruitingTypes as $name => $recruitingType)
-                                        <option value="{{ $recruitingType }}">{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" v-model="newRecruiting.name" required />
-                            </td>
-                            <td>
-                                <select style="width: 70px;" data-width="70px" class="form-control" v-model="newRecruiting.contract" required>
-                                    <option :value="null" disabled selected></option>
-                                    @foreach ($contractTypes as $name => $contractType)
-                                        <option value="{{ $contractType }}">{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="newRecruiting.interview" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="newRecruiting.contractOut" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="newRecruiting.firstShift" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" v-model="newRecruiting.notes" />
-                            </td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.recruiting.decline')
-                                    <button type="submit" class="btn btn-xs btn-success">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </form>
-
-
-        <hr />
-
-
-        <h4>@lang('Locums Pipeline')</h4>
-        <form @submit.prevent="addLocum">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead class="bg-gray">
-                        <tr>
-                            <th>@lang('MD/APP')</th>
-                            <th>@lang('Name')</th>
-                            <th>@lang('Agency')</th>
-                            <th>@lang('Potential Start')</th>
-                            <th>@lang('Credentialing Notes')</th>
-                            <th>@lang('Shifts Offered')</th>
-                            <th>@lang('Start Date')</th>
-                            <th>@lang('Comments')</th>
-                            <th>@lang('Actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="locum in sortedLocums">
-                            <td class="text-uppercase">@{{ locum.type }}</td>
-                            <td>@{{ locum.name }}</td>
-                            <td>@{{ locum.agency }}</td>
-                            <td>@{{ locum.potentialStart }}</td>
-                            <td>@{{ locum.credentialingNotes }}</td>
-                            <td>@{{ locum.shiftsOffered }}</td>
-                            <td>@{{ locum.startDate }}</td>
-                            <td>@{{ locum.comments }}</td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.locum.decline')
-                                    <button type="button" class="btn btn-xs btn-warning"
-                                        data-toggle="modal" data-target="#declineModal"
-                                        @click="setDeclining(locum, 'locum')"
-                                    >
-                                        @lang('Decline')
-                                    </button>
-                                @endpermission
-
-                                @permission('admin.accounts.pipeline.locum.destroy')
-                                    <button @click="deleteLocum(locum)" type="button" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                <select style="width: 70px;" data-width="70px" class="form-control" v-model="newLocum.type" required>
-                                    <option :value="null" disabled selected></option>
-                                    @foreach ($recruitingTypes as $name => $recruitingType)
-                                        <option value="{{ $recruitingType }}">{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" v-model="newLocum.name" required />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" v-model="newLocum.agency" required />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="newLocum.potentialStart" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" v-model="newLocum.credentialingNotes" />
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" v-model="newLocum.shiftsOffered" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control datepicker" v-model="newLocum.startDate" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" v-model="newLocum.comments" />
-                            </td>
-                            <td class="text-center">
-                                @permission('admin.accounts.pipeline.locum.store')
-                                    <button type="submit" class="btn btn-xs btn-success">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                @endpermission
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </form>
-
-
-        <hr />
-
-
-        <h4>@lang('Declined List')</h4>
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead class="bg-gray">
-                    <tr>
-                        <th>@lang('Name')</th>
-                        <th>@lang('FT/PT')</th>
-                        <th>@lang('Interview')</th>
-                        <th>@lang('Application')</th>
-                        <th>@lang('Contract Out')</th>
-                        <th>@lang('Declined')</th>
-                        <th>@lang('Reason')</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="declined in declines">
-                        <td>@{{ declined.name }}</td>
-                        <td class="text-uppercase">@{{ declined.contract }}</td>
-                        <td>@{{ declined.interview }}</td>
-                        <td>@{{ declined.application }}</td>
-                        <td>@{{ declined.contractOut }}</td>
-                        <td>@{{ declined.declined }}</td>
-                        <td>@{{ declined.declinedReason }}</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
         <div class="modal fade" id="declineModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -799,26 +816,28 @@
             </div>
         </div>
 
-        <h4>@lang('Resigned List')</h4>
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead class="bg-gray">
-                    <tr>
-                        <th>@lang('MD/APP')</th>
-                        <th>@lang('Name')</th>
-                        <th>@lang('Resigned')</th>
-                        <th>@lang('Reason')</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="resigned in resigns">
-                        <td class="text-uppercase">@{{ resigned.type }}</td>
-                        <td>@{{ resigned.name }}</td>
-                        <td>@{{ resigned.resigned }}</td>
-                        <td>@{{ resigned.resignedReason }}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="no-break-inside">
+            <h4>@lang('Resigned List')</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="bg-gray">
+                        <tr>
+                            <th width="70px">@lang('MD/APP')</th>
+                            <th>@lang('Name')</th>
+                            <th width="100px">@lang('Resigned')</th>
+                            <th>@lang('Reason')</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="resigned in resigns">
+                            <td class="text-uppercase">@{{ resigned.type }}</td>
+                            <td>@{{ resigned.name }}</td>
+                            <td>@{{ resigned.resigned }}</td>
+                            <td>@{{ resigned.resignedReason }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="modal fade" id="resignModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">

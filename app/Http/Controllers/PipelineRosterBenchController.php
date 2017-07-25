@@ -48,7 +48,7 @@ class PipelineRosterBenchController extends Controller
                 Rule::in(config('pipeline.activities')),
             ],
             'name' => 'required',
-            'hours' => 'required',
+            'hours' => 'required|numeric|min:0',
             'interview' => 'nullable|date_format:"Y-m-d"',
             'contractOut' => 'nullable|date_format:"Y-m-d"',
             'contractIn' => 'nullable|date_format:"Y-m-d"',
