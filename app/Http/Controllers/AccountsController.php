@@ -23,7 +23,13 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        $accounts = Account::where('active', true)->get();
+        $accounts = Account::with([
+                'rsc',
+                'division.group.region',
+                'recruiter.employee.person',
+                'manager.employee.person',
+            ])
+            ->where('active', true)->get();
 
         return view('admin.accounts.index', compact('accounts'));
     }

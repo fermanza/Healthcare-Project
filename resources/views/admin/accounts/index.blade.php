@@ -19,12 +19,16 @@
                     <th class="mw30"></th>
                     <th class="mw200 w100">@lang('Name')</th>
                     <th class="mw100">@lang('Site Code')</th>
-                    <th class="mw100">@lang('Summary')</th>
-                    <th class="mw150">@lang('Parent Site Code')</th>
+                    <th class="mw70">@lang('Summary')</th>
                     <th class="mw150">@lang('City')</th>
-                    <th class="mw150">@lang('State')</th>
-                    <th class="mw150">@lang('Start Date')</th>
-                    <th class="mw150">@lang('End Date')</th>
+                    <th class="mw80">@lang('State')</th>
+                    <th class="mw80">@lang('Start Date')</th>
+                    <th class="mw80">@lang('End Date')</th>
+                    <th class="mw150">@lang('Parent Site Code')</th>
+                    <th class="mw150">@lang('RSC')</th>
+                    <th class="mw100">@lang('Operating Unit')</th>
+                    <th class="mw150">@lang('Recruiter')</th>
+                    <th class="mw150">@lang('Manager')</th>
                     <th class="mw200">@lang('Actions')</th>
                 </tr>
             </thead>
@@ -44,6 +48,10 @@
                                 </a>
                             @endpermission
                         </td>
+                        <td>{{ $account->city }}</td>
+                        <td>{{ $account->state }}</td>
+                        <td>{{ $account->startDate ? $account->startDate->format('Y-m-d') : '' }}</td>
+                        <td>{{ $account->endDate ? $account->endDate->format('Y-m-d') : '' }}</td>
                         <td>
                             {{ $account->parentSiteCode }}
                             @permission('admin.accounts.removeParent')
@@ -58,10 +66,10 @@
                                 @endif
                             @endpermission
                         </td>
-                        <td>{{ $account->city }}</td>
-                        <td>{{ $account->state }}</td>
-                        <td>{{ $account->startDate ? $account->startDate->format('Y-m-d') : '' }}</td>
-                        <td>{{ $account->endDate ? $account->endDate->format('Y-m-d') : '' }}</td>
+                        <td>{{ $account->rsc ? $account->rsc->name : '' }}</td>
+                        <td>{{ ($account->division && $account->division->group && $account->division->group->region) ? $account->division->group->region->name : '' }}</td>
+                        <td>{{ $account->recruiter ? $account->recruiter->fullName() : '' }}</td>
+                        <td>{{ $account->manager ? $account->manager->fullName() : '' }}</td>
                         <td class="text-center">
                             @permission('admin.accounts.merge')
                                 <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
