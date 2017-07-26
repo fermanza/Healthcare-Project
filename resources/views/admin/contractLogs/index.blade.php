@@ -109,22 +109,22 @@
         <table class="table table-hover table-bordered table-sortable">
             <thead>
                 <tr>
-                    <th class="mw130">@lang('Actions')</th>
-                    <th class="mw100">{{ sort_column_link('value', __('Value')) }}</th>
-                    <th class="mw100">{{ sort_column_link('status', __('Status')) }}</th>
-                    <th class="mw170">{{ sort_column_link('provider_first_name', __('Provider First Name')) }}</th>
-                    <th class="mw170">{{ sort_column_link('provider_last_name', __('Provider Last Name')) }}</th>
-                    <th class="mw100">{{ sort_column_link('position', __('Position')) }}</th>
-                    <th class="mw100">{{ sort_column_link('hours', __('Hours')) }}</th>
+                    <th class="mw110">@lang('Actions')</th>
+                    <th class="mw60">{{ sort_column_link('value', __('Value')) }}</th>
+                    <th class="mw140">{{ sort_column_link('status', __('Status')) }}</th>
+                    <th class="mw90">{{ sort_column_link('provider_first_name', __('Provider First Name')) }}</th>
+                    <th class="mw90">{{ sort_column_link('provider_last_name', __('Provider Last Name')) }}</th>
+                    <th class="mw80">{{ sort_column_link('position', __('Position')) }}</th>
+                    <th class="mw60">{{ sort_column_link('hours', __('Hours')) }}</th>
                     <th class="mw100">{{ sort_column_link('practice', __('Practice')) }}</th>
                     <th class="mw200">{{ sort_column_link('hospital_name', __('Hospital Name')) }}</th>
-                    <th class="mw100">{{ sort_column_link('site_code', __('Site Code')) }}</th>
+                    <th class="mw80">{{ sort_column_link('site_code', __('Site Code')) }}</th>
                     <th class="mw100">{{ sort_column_link('group', __('Group')) }}</th>
-                    <th class="mw100">{{ sort_column_link('division', __('Division')) }}</th>
-                    <th class="mw120">{{ sort_column_link('contract_out', __('Contract Out')) }}</th>
-                    <th class="mw120">{{ sort_column_link('contract_in', __('Contract In')) }}</th>
-                    <th class="mw170">{{ sort_column_link('projected_start_date', __('Projected Start Date')) }}</th>
-                    <th class="mw150">{{ sort_column_link('reason', __('Reason')) }}</th>
+                    <th class="mw110">{{ sort_column_link('division', __('Division')) }}</th>
+                    <th class="mw100">{{ sort_column_link('contract_out', __('Contract Out')) }}</th>
+                    <th class="mw100">{{ sort_column_link('contract_in', __('Contract In')) }}</th>
+                    <th class="mw100">{{ sort_column_link('projected_start_date', __('Projected Start Date')) }}</th>
+                    <th class="mw200">{{ sort_column_link('reason', __('Reason')) }}</th>
                 </tr>
             </thead>
             <tbody>

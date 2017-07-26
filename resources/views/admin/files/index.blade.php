@@ -16,10 +16,10 @@
         <table class="table table-hover table-bordered datatable" data-datatable-config='{"order": [[ 0, "desc" ]]}'>
             <thead>
                 <tr>
-                    <th class="mw50">@lang('File ID')</th>
+                    <th class="mw40">@lang('File ID')</th>
                     <th class="mw200 w50">@lang('File Name')</th>
                     <th class="mw200 w50">@lang('File Type')</th>
-                    <th class="mw100">@lang('Actions')</th>
+                    <th class="mw50">@lang('Actions')</th>
                 </tr>
             </thead>
             <tbody>

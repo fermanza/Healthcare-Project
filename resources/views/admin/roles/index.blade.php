@@ -16,10 +16,10 @@
         <table class="table table-hover table-bordered datatable">
             <thead>
                 <tr>
-                    <th class="mw150">@lang('Display Name')</th>
-                    <th class="mw150">@lang('Name')</th>
+                    <th class="mw110">@lang('Display Name')</th>
+                    <th class="mw110">@lang('Name')</th>
                     <th class="mw200 w100">@lang('Description')</th>
-                    <th class="mw100">@lang('Actions')</th>
+                    <th class="mw50">@lang('Actions')</th>
                 </tr>
             </thead>
             <tbody>

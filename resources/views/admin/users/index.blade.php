@@ -16,11 +16,11 @@
         <table class="table table-hover table-bordered datatable">
             <thead>
                 <tr>
-                    <th class="mw200 w50">@lang('Name')</th>
+                    <th class="mw150 w50">@lang('Name')</th>
                     <th class="mw150 w50">@lang('E-mail')</th>
-                    <th class="mw150">@lang('Employee')</th>
-                    <th class="mw150">@lang('Role')</th>
-                    <th class="mw100">@lang('Actions')</th>
+                    <th class="mw110">@lang('Employee')</th>
+                    <th class="mw110">@lang('Role')</th>
+                    <th class="mw50">@lang('Actions')</th>
                 </tr>
             </thead>
             <tbody>
