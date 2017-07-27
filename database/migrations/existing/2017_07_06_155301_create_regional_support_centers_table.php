@@ -21,9 +21,9 @@ class CreateRegionalSupportCentersTable extends Migration
         });
 
         Schema::table('tAccount', function (Blueprint $table) {
-            $table->integer('rscId')->unsigned()->nullable();
+            $table->integer('RSCId')->unsigned()->nullable();
 
-            $table->foreign('rscId')->references('id')->on('tRSC')->onDelete('cascade');
+            $table->foreign('RSCId')->references('id')->on('tRSC')->onDelete('cascade');
         });
     }
 

@@ -134,7 +134,7 @@ class Account extends Model
      */
     public function rsc()
     {
-        return $this->belongsTo(RSC::class, 'rscId');
+        return $this->belongsTo(RSC::class, 'RSCId');
     }
 
     /**

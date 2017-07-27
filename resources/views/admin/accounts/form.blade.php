@@ -100,16 +100,16 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="form-group{{ $errors->has('rscId') ? ' has-error' : '' }}">
-                <label for="rscId">@lang('Regional Support Center')</label>
-                <select class="form-control select2" id="rscId" name="rscId">
+            <div class="form-group{{ $errors->has('RSCId') ? ' has-error' : '' }}">
+                <label for="RSCId">@lang('Regional Support Center')</label>
+                <select class="form-control select2" id="RSCId" name="RSCId">
                     <option value="" disabled selected></option>
                     @foreach ($RSCs as $RSC)
-                        <option value="{{ $RSC->id }}" {{ (old('rscId') == $RSC->id ?: ($RSC->id == $account->rscId)) ? 'selected': '' }}>{{ $RSC->name }}</option>
+                        <option value="{{ $RSC->id }}" {{ (old('RSCId') == $RSC->id ?: ($RSC->id == $account->RSCId)) ? 'selected': '' }}>{{ $RSC->name }}</option>
                     @endforeach
                 </select>
-                @if ($errors->has('rscId'))
-                    <span class="help-block"><strong>{{ $errors->first('rscId') }}</strong></span>
+                @if ($errors->has('RSCId'))
+                    <span class="help-block"><strong>{{ $errors->first('RSCId') }}</strong></span>
                 @endif
             </div>
         </div>

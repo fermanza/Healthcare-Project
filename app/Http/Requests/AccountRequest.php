@@ -26,7 +26,7 @@ class AccountRequest extends FormRequest
             'managerId' => 'exists:tEmployee,id',
             'practiceId' => 'exists:tPractice,id',
             'divisionId' => 'exists:tDivision,id',
-            'rscId' => 'exists:tRSC,id',
+            'RSCId' => 'exists:tRSC,id',
             'googleAddress' => '',
             'street' => '',
             'number' => '',
@@ -91,7 +91,7 @@ class AccountRequest extends FormRequest
         $account->siteCode = $this->siteCode;
         $account->photoPath = $this->photoPath;
         $account->divisionId = $this->divisionId;
-        $account->rscId = $this->rscId;
+        $account->RSCId = $this->RSCId;
         $account->googleAddress = $this->googleAddress;
         $account->street = $this->street;
         $account->number = $this->number;

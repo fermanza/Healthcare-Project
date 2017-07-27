@@ -82,7 +82,7 @@ class ContractLogsFilter extends Filter
      */
     public function RSCs($ids)
     {
-        $this->query->whereIn('tAccount.rscId', $ids);
+        $this->query->whereIn('tAccount.RSCId', $ids);
     }
     
     /**
