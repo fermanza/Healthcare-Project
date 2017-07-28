@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Account;
+use App\Pipeline;
 use App\SiteCode;
 use App\PositionType;
 use App\PhysiciansApps;
@@ -126,6 +127,10 @@ class AccountRequest extends FormRequest
         $account->departmentsCoordinated = $this->departmentsCoordinated ?: false;
         $account->save();
 
+        if ($this->isCreate()) {
+            $this->createPipeline($account);
+        }
+
         if ($this->recruiterId) {
             $this->associateRecruiter($account);
         }
@@ -143,6 +148,19 @@ class AccountRequest extends FormRequest
         if ($this->isEdit() && $pastSiteCode != $this->siteCode) {
             $this->updateRelatedSiteCodes($pastSiteCode);
         }
+    }
+
+    /**
+     * Creates a Pipeline for the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function createPipeline($account)
+    {
+        $pipeline = new Pipeline;
+        $pipeline->accountId = $account->id;
+        $pipeline->save();
     }
 
     /**
