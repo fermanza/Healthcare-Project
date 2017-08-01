@@ -10,4 +10,23 @@ class PipelineLocum extends Model
      * @var string
      */
     protected $table = 'tAccountPipelineLocum';
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'instance',
+    ];
+
+    /**
+     * Accessor for instance attribute.
+     *
+     * @return string
+     */
+    public function getInstanceAttribute()
+    {
+        return 'locum';
+    }
 }

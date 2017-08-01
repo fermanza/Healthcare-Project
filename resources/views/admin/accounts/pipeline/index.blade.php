@@ -165,41 +165,49 @@
                             <tr>
                                 <th colspan="2" class="text-center">@lang('Physician')</th>
                                 <th colspan="2" class="text-center">@lang('APPs')</th>
+                                <th class="text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td width="25%">@lang('Haves')</td>
-                                <td width="25%">
+                                <td class="w20">@lang('Haves')</td>
+                                <td class="w20">
                                     <input type="text" class="form-control hidden-print" name="staffPhysicianHaves" value="{{ old('staffPhysicianHaves') ?: $pipeline->staffPhysicianHaves }}" v-model="staffPhysicianHaves" readonly />
                                     <span class="visible-print">@{{ staffPhysicianHaves }}</span>
                                 </td>
-                                <td width="25%">@lang('Haves')</td>
-                                <td width="25%">
+                                <td class="w20">@lang('Haves')</td>
+                                <td class="w20">
                                     <input type="text" class="form-control hidden-print" name="staffAppsHaves" value="{{ old('staffAppsHaves') ?: $pipeline->staffAppsHaves }}" v-model="staffAppsHaves" readonly />
                                     <span class="visible-print">@{{ staffAppsHaves }}</span>
                                 </td>
+                                <td rowspan="3" class="text-center hidden-print">
+                                     @permission('admin.accounts.pipeline.update')
+                                        <button type="submit" class="btn btn-info">
+                                            Update
+                                        </button>
+                                    @endpermission
+                                </td>
                             </tr>
                             <tr>
-                                <td width="25%">@lang('Needs')</td>
-                                <td width="25%">
+                                <td>@lang('Needs')</td>
+                                <td>
                                     <input type="text" class="form-control hidden-print" name="staffPhysicianNeeds" value="{{ old('staffPhysicianNeeds') ?: $pipeline->staffPhysicianNeeds }}" v-model="staffPhysicianNeeds" />
                                     <span class="visible-print">@{{ pipeline.staffPhysicianNeeds }}</span>
                                 </td>
-                                <td width="25%">@lang('Needs')</td>
-                                <td width="25%">
+                                <td>@lang('Needs')</td>
+                                <td>
                                     <input type="text" class="form-control hidden-print" name="staffAppsNeeds" value="{{ old('staffAppsNeeds') ?: $pipeline->staffAppsNeeds }}" v-model="staffAppsNeeds" />
                                     <span class="visible-print">@{{ pipeline.staffAppsNeeds }}</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td width="25%">@lang('Openings')</td>
-                                <td width="25%">
+                                <td>@lang('Openings')</td>
+                                <td>
                                     <input type="text" class="form-control hidden-print" name="staffPhysicianOpenings" value="{{ old('staffPhysicianOpenings') ?: $pipeline->staffPhysicianOpenings }}" v-model="staffPhysicianOpenings" readonly />
                                     <span class="visible-print">@{{ staffPhysicianOpenings }}</span>
                                 </td>
-                                <td width="25%">@lang('Openings')</td>
-                                <td width="25%">
+                                <td>@lang('Openings')</td>
+                                <td>
                                     <input type="text" class="form-control hidden-print" name="staffAppsOpenings" value="{{ old('staffAppsOpenings') ?: $pipeline->staffAppsOpenings }}" v-model="staffAppsOpenings" readonly />
                                     <span class="visible-print">@{{ staffAppsOpenings }}</span>
                                 </td>
@@ -208,16 +216,6 @@
                     </table>
                 </div>
             </div>
-
-            @permission('admin.accounts.pipeline.update')
-                <div class="row hidden-print">
-                    <div class="col-md-12 text-right">
-                        <button type="submit" class="btn btn-info">
-                            Update
-                        </button>
-                    </div>
-                </div>
-            @endpermission
         </form>
 
 
@@ -232,13 +230,14 @@
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th>@lang('Name')</th>
-                                <th width="70px">@lang('Hours')</th>
-                                <th width="100px">@lang('Interview')</th>
-                                <th width="100px">@lang('Contract Out')</th>
-                                <th width="100px">@lang('Contract In')</th>
-                                <th width="100px">@lang('First Shift')</th>
-                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw200">@lang('Name')</th>
+                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -249,6 +248,7 @@
                                 <td>@{{ roster.contractOut }}</td>
                                 <td>@{{ roster.contractIn }}</td>
                                 <td>@{{ roster.firstShift }}</td>
+                                <td>@{{ roster.notes }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -256,6 +256,14 @@
                                             @click="setResigning(roster)"
                                         >
                                             @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(roster, 'rosterPhysicians', 'rosterPhysician')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
                                     
@@ -287,6 +295,9 @@
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="rosterPhysician.firstShift" />
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="rosterPhysician.notes" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -308,13 +319,14 @@
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th>@lang('Name')</th>
-                                <th width="70px">@lang('Hours')</th>
-                                <th width="100px">@lang('Interview')</th>
-                                <th width="100px">@lang('Contract Out')</th>
-                                <th width="100px">@lang('Contract In')</th>
-                                <th width="100px">@lang('First Shift')</th>
-                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw200">@lang('Name')</th>
+                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -325,6 +337,7 @@
                                 <td>@{{ roster.contractOut }}</td>
                                 <td>@{{ roster.contractIn }}</td>
                                 <td>@{{ roster.firstShift }}</td>
+                                <td>@{{ roster.notes }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -332,6 +345,14 @@
                                             @click="setResigning(roster)"
                                         >
                                             @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(roster, 'rosterApps', 'rosterApps')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -363,6 +384,9 @@
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="rosterApps.firstShift" />
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="rosterApps.notes" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -389,13 +413,14 @@
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th>@lang('Name')</th>
-                                <th width="70px">@lang('Hours')</th>
-                                <th width="100px">@lang('Interview')</th>
-                                <th width="100px">@lang('Contract Out')</th>
-                                <th width="100px">@lang('Contract In')</th>
-                                <th width="100px">@lang('First Shift')</th>
-                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw200">@lang('Name')</th>
+                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -406,6 +431,7 @@
                                 <td>@{{ bench.contractOut }}</td>
                                 <td>@{{ bench.contractIn }}</td>
                                 <td>@{{ bench.firstShift }}</td>
+                                <td>@{{ bench.notes }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -413,6 +439,14 @@
                                             @click="setResigning(bench)"
                                         >
                                             @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(bench, 'benchPhysicians', 'benchPhysician')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -444,6 +478,9 @@
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" />
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="benchPhysician.notes" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -465,13 +502,14 @@
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th>@lang('Name')</th>
-                                <th width="70px">@lang('Hours')</th>
-                                <th width="100px">@lang('Interview')</th>
-                                <th width="100px">@lang('Contract Out')</th>
-                                <th width="100px">@lang('Contract In')</th>
-                                <th width="100px">@lang('First Shift')</th>
-                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw200">@lang('Name')</th>
+                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -482,6 +520,7 @@
                                 <td>@{{ bench.contractOut }}</td>
                                 <td>@{{ bench.contractIn }}</td>
                                 <td>@{{ bench.firstShift }}</td>
+                                <td>@{{ bench.notes }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -489,6 +528,14 @@
                                             @click="setResigning(bench)"
                                         >
                                             @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(bench, 'benchApps', 'benchApps')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -520,6 +567,9 @@
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" />
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="benchApps.notes" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -545,15 +595,15 @@
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th width="70px">@lang('MD/APP')</th>
-                                <th>@lang('Name')</th>
-                                <th width="70px">@lang('FT/PT')</th>
-                                <th width="100px">@lang('Interview')</th>
-                                <th width="100px">@lang('Contract Out')</th>
-                                <th width="100px">@lang('Contract In')</th>
-                                <th width="100px">@lang('First Shift')</th>
-                                <th>@lang('Notes')</th>
-                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw60">@lang('MD/APP')</th>
+                                <th class="mw200">@lang('Name')</th>
+                                <th class="mw60">@lang('FT/PT')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -570,9 +620,17 @@
                                     @permission('admin.accounts.pipeline.recruiting.decline')
                                         <button type="button" class="btn btn-xs btn-warning"
                                             data-toggle="modal" data-target="#declineModal"
-                                            @click="setDeclining(recruiting, 'recruiting')"
+                                            @click="setDeclining(recruiting)"
                                         >
                                             @lang('Decline')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.recruiting.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRecruiting(recruiting)"
+                                        >
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -642,15 +700,15 @@
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th width="70px">@lang('MD/APP')</th>
-                                <th>@lang('Name')</th>
-                                <th>@lang('Agency')</th>
-                                <th width="100px">@lang('Potential Start')</th>
-                                <th>@lang('Credentialing Notes')</th>
-                                <th width="70px">@lang('Shifts')</th>
-                                <th width="100px">@lang('Start Date')</th>
-                                <th>@lang('Comments')</th>
-                                <th width="100px" class="text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw60">@lang('MD/APP')</th>
+                                <th class="mw200">@lang('Name')</th>
+                                <th class="mw100">@lang('Agency')</th>
+                                <th class="mw100">@lang('Potential Start')</th>
+                                <th class="mw200 w50">@lang('Credentialing Notes')</th>
+                                <th class="mw70">@lang('Shifts')</th>
+                                <th class="mw100">@lang('Start Date')</th>
+                                <th class="mw200 w50">@lang('Comments')</th>
+                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -667,9 +725,17 @@
                                     @permission('admin.accounts.pipeline.locum.decline')
                                         <button type="button" class="btn btn-xs btn-warning"
                                             data-toggle="modal" data-target="#declineModal"
-                                            @click="setDeclining(locum, 'locum')"
+                                            @click="setDeclining(locum)"
                                         >
                                             @lang('Decline')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.locum.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editLocum(locum)"
+                                        >
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -736,13 +802,14 @@
                 <table class="table table-bordered">
                     <thead class="bg-gray">
                         <tr>
-                            <th>@lang('Name')</th>
-                            <th width="70px">@lang('FT/PT')</th>
-                            <th width="100px">@lang('Interview')</th>
-                            <th width="100px">@lang('Application')</th>
-                            <th width="100px">@lang('Contract Out')</th>
-                            <th width="100px">@lang('Declined')</th>
-                            <th>@lang('Reason')</th>
+                            <th class="mw200">@lang('Name')</th>
+                            <th class="mw60">@lang('FT/PT')</th>
+                            <th class="mw100">@lang('Interview')</th>
+                            <th class="mw100">@lang('Application')</th>
+                            <th class="mw100">@lang('Contract Out')</th>
+                            <th class="mw100">@lang('Declined')</th>
+                            <th class="mw200 w100">@lang('Reason')</th>
+                            <th class="mw50 text-center hidden-print">@lang('Actions')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -754,6 +821,16 @@
                             <td>@{{ declined.contractOut }}</td>
                             <td>@{{ declined.declined }}</td>
                             <td>@{{ declined.declinedReason }}</td>
+                            <td class="text-center hidden-print">
+                                @permission('admin.accounts.pipeline.locum.decline')
+                                    <button type="button" class="btn btn-xs btn-info"
+                                        data-toggle="modal" data-target="#declineModal"
+                                        @click="setDeclining(declined)"
+                                    >
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                @endpermission
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -800,10 +877,10 @@
                                 <label for="decliningreason">@lang('Reason')</label>
                                 <input id="decliningreason" type="text" class="form-control" v-model="declining.declinedReason" required />
                             </div>
-                            <div class="row">
+                            <div class="row mt5">
                                 <div class="col-xs-6">
                                     <button type="submit" class="btn btn-warning">
-                                        @lang('Decline')
+                                        @lang('Confirm')
                                     </button>
                                 </div>
                                 <div class="col-xs-6 text-right">
@@ -822,10 +899,11 @@
                 <table class="table table-bordered">
                     <thead class="bg-gray">
                         <tr>
-                            <th width="70px">@lang('MD/APP')</th>
-                            <th>@lang('Name')</th>
-                            <th width="100px">@lang('Resigned')</th>
-                            <th>@lang('Reason')</th>
+                            <th class="mw60">@lang('MD/APP')</th>
+                            <th class="mw200">@lang('Name')</th>
+                            <th class="mw100">@lang('Resigned')</th>
+                            <th class="mw200 w100">@lang('Reason')</th>
+                            <th class="mw50 text-center hidden-print">@lang('Actions')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -834,6 +912,16 @@
                             <td>@{{ resigned.name }}</td>
                             <td>@{{ resigned.resigned }}</td>
                             <td>@{{ resigned.resignedReason }}</td>
+                            <td class="text-center hidden-print">
+                                @permission('admin.accounts.pipeline.rosterBench.resign')
+                                    <button type="button" class="btn btn-xs btn-info"
+                                        data-toggle="modal" data-target="#resignModal"
+                                        @click="setResigning(resigned)"
+                                    >
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                @endpermission
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -868,10 +956,10 @@
                                 <label for="resigningreason">@lang('Reason')</label>
                                 <input id="resigningreason" type="text" class="form-control" v-model="resigning.resignedReason" required />
                             </div>
-                            <div class="row">
+                            <div class="row mt5">
                                 <div class="col-xs-6">
                                     <button type="submit" class="btn btn-warning">
-                                        @lang('Resign')
+                                        @lang('Confirm')
                                     </button>
                                 </div>
                                 <div class="col-xs-6 text-right">
@@ -908,6 +996,7 @@
                     contractOut: '',
                     contractIn: '',
                     firstShift: '',
+                    notes: '',
                 },
 
                 rosterApps: {
@@ -917,6 +1006,7 @@
                     contractOut: '',
                     contractIn: '',
                     firstShift: '',
+                    notes: '',
                 },
 
 
@@ -927,6 +1017,7 @@
                     contractOut: '',
                     contractIn: '',
                     firstShift: '',
+                    notes: '',
                 },
 
                 benchApps: {
@@ -936,6 +1027,7 @@
                     contractOut: '',
                     contractIn: '',
                     firstShift: '',
+                    notes: '',
                 },
 
 
@@ -971,8 +1063,8 @@
                     contractOut: '',
                     declined: '',
                     declinedReason: '',
+                    instance: '',
                 },
-                decliningType: '',
                 toDecline: {},
 
 
@@ -1060,11 +1152,21 @@
                         }.bind(this));
                 },
 
-                deleteRosterBench: function (rosterBench, location) {
+                editRosterBench: function (rosterBench, location, object) {
                     axios.delete('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id)
                         .then(function (response) {
+                            _.assignIn(this[object], rosterBench);
                             this.pipeline[location] = _.reject(this.pipeline[location], { 'id': rosterBench.id });
                         }.bind(this));
+                },
+
+                deleteRosterBench: function (rosterBench, location) {
+                    if (confirm("@lang('Are you sure you want to delete this record?')")) {
+                        axios.delete('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id)
+                            .then(function (response) {
+                                this.pipeline[location] = _.reject(this.pipeline[location], { 'id': rosterBench.id });
+                            }.bind(this));
+                    }
                 },
 
 
@@ -1077,11 +1179,21 @@
                         }.bind(this));
                 },
 
-                deleteRecruiting: function (recruiting) {
+                editRecruiting: function (recruiting) {
                     axios.delete('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id)
                         .then(function (response) {
+                            _.assignIn(this.newRecruiting, recruiting);
                             this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
                         }.bind(this));
+                },
+
+                deleteRecruiting: function (recruiting) {
+                    if (confirm("@lang('Are you sure you want to delete this record?')")) {
+                        axios.delete('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id)
+                            .then(function (response) {
+                                this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
+                            }.bind(this));
+                    }
                 },
 
                 currentRecruiting: function (recruiting) {
@@ -1100,24 +1212,33 @@
                         }.bind(this));
                 },
 
-                deleteLocum: function (locum) {
+                editLocum: function (locum) {
                     axios.delete('/admin/accounts/' + this.account.id + '/pipeline/locum/' + locum.id)
                         .then(function (response) {
+                            _.assignIn(this.newLocum, locum);
                             this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': locum.id });
                         }.bind(this));
                 },
 
+                deleteLocum: function (locum) {
+                    if (confirm("@lang('Are you sure you want to delete this record?')")) {
+                        axios.delete('/admin/accounts/' + this.account.id + '/pipeline/locum/' + locum.id)
+                            .then(function (response) {
+                                this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': locum.id });
+                            }.bind(this));
+                    }
+                },
 
-                setDeclining: function (toDecline, type) {
+
+                setDeclining: function (toDecline) {
                     this.declining = _.cloneDeep(toDecline);
-                    this.decliningType = type;
                     this.toDecline = toDecline;
                 },
 
                 decline: function () {
                     let endpoint;
 
-                    if (this.decliningType == 'recruiting') {
+                    if (this.declining.instance == 'recruiting') {
                         endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.declining.id + '/decline';
                     } else {
                         endpoint = '/admin/accounts/' + this.account.id + '/pipeline/locum/' + this.declining.id + '/decline';

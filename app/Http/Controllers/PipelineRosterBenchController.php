@@ -53,6 +53,7 @@ class PipelineRosterBenchController extends Controller
             'contractOut' => 'nullable|date_format:"Y-m-d"',
             'contractIn' => 'nullable|date_format:"Y-m-d"',
             'firstShift' => 'nullable|date_format:"Y-m-d"',
+            'notes' => 'nullable',
         ]);
 
         $rosterBench = new PipelineRosterBench;
@@ -65,6 +66,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contractOut = $request->contractOut;
         $rosterBench->contractIn = $request->contractIn;
         $rosterBench->firstShift = $request->firstShift;
+        $rosterBench->notes = $request->notes;
         $rosterBench->save();
 
         return $rosterBench->fresh();
