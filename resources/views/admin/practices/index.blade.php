@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('content-header', __('Practices'))
+@section('content-header', __('Service Lines'))
 
 @section('tools')
     @permission('admin.practices.create')

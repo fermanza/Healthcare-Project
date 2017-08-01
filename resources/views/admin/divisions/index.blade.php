@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('content-header', __('Divisions'))
+@section('content-header', __('Alliance OU Divisions'))
 
 @section('tools')
     @permission('admin.divisions.create')

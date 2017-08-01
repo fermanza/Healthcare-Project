@@ -46,7 +46,7 @@ class PracticesController extends Controller
         $practice = new Practice;
         $request->save($practice);
 
-        flash(__('Practice created.'));
+        flash(__('Service Line created.'));
 
         return redirect()->route('admin.practices.index');
     }
@@ -88,7 +88,7 @@ class PracticesController extends Controller
     {
         $request->save($practice);
 
-        flash(__('Practice updated.'));
+        flash(__('Service Line updated.'));
 
         return redirect()->route('admin.practices.index');
     }
@@ -104,7 +104,7 @@ class PracticesController extends Controller
         $practice->active = false;
         $practice->save();
 
-        flash(__('Practice deleted.'));
+        flash(__('Service Line deleted.'));
 
         return back();
     }

@@ -58,13 +58,13 @@
 
             @component('admin/dashboard-card')
                 @slot('route', 'admin.divisions.index')
-                @slot('resource', 'Divisions')
+                @slot('resource', 'Alliance OU Divisions')
                 @slot('icon', 'fa-map-marker')
             @endcomponent
 
             @component('admin/dashboard-card')
                 @slot('route', 'admin.practices.index')
-                @slot('resource', 'Practices')
+                @slot('resource', 'Service Lines')
                 @slot('icon', 'fa-tag')
             @endcomponent
 

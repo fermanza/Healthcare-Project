@@ -113,7 +113,7 @@
                 
                 <div class="row">
                     <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
-                        <label for="practice">@lang('Practice'):</label>
+                        <label for="practice">@lang('Service Line'):</label>
                     </div>
                     <div class="mb5 col-xs-5 col-sm-2">
                         <input type="text" class="form-control hidden-print" id="practice" name="practice" value="{{ $practice ? $practice->name : '' }}" disabled />
@@ -122,7 +122,7 @@
                     @if ($practice && $practice->isIPS())
                         <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
                             <div class="form-group{{ $errors->has('practiceTime') ? ' has-error' : '' }}">
-                                <label for="practiceTime">@lang('Practice Time'):</label>
+                                <label for="practiceTime">@lang('Service Line Time'):</label>
                             </div>
                         </div>
                         <div class="mb5 col-xs-5 col-sm-2">

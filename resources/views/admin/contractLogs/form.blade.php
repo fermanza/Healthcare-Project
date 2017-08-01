@@ -23,7 +23,7 @@
 
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group">
-                    <label for="division">@lang('Division')</label>
+                    <label for="division">@lang('Alliance OU Division')</label>
                     <input type="text" class="form-control" id="division" name="division" value="{{ ($contractLog->account && $contractLog->account->division) ? $contractLog->account->division->name : '' }}" readonly />
                 </div>
             </div>
@@ -44,7 +44,7 @@
 
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group">
-                    <label for="practice">@lang('Practice')</label>
+                    <label for="practice">@lang('Service Line')</label>
                     <input type="text" class="form-control" id="practice" name="practice" value="{{ ($contractLog->account && $contractLog->account->practices->count()) ? $contractLog->account->practices->first()->name : '' }}" readonly />
                 </div>
             </div>

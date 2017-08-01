@@ -92,24 +92,24 @@ return [
         'admin.groups.destroy' => 'Delete Group',
     ],
 
-    'Practices' => [
-        'admin.practices.index' => 'Practices List',
-        'admin.practices.create' => 'Practice Create View',
-        'admin.practices.store' => 'Practice Create Action',
-        'admin.practices.show' => 'View Practice',
-        'admin.practices.edit' => 'Practice Edit View',
-        'admin.practices.update' => 'Practice Edit Action',
-        'admin.practices.destroy' => 'Delete Practice',
+    'Service Lines' => [
+        'admin.practices.index' => 'Service Lines List',
+        'admin.practices.create' => 'Service Line Create View',
+        'admin.practices.store' => 'Service Line Create Action',
+        'admin.practices.show' => 'View Service Line',
+        'admin.practices.edit' => 'Service Line Edit View',
+        'admin.practices.update' => 'Service Line Edit Action',
+        'admin.practices.destroy' => 'Delete Service Line',
     ],
 
-    'Divisions' => [
-        'admin.divisions.index' => 'Divisions List',
-        'admin.divisions.create' => 'Division Create View',
-        'admin.divisions.store' => 'Division Create Action',
-        'admin.divisions.show' => 'View Division',
-        'admin.divisions.edit' => 'Division Edit View',
-        'admin.divisions.update' => 'Division Edit Action',
-        'admin.divisions.destroy' => 'Delete Division',
+    'Alliance OU Divisions' => [
+        'admin.divisions.index' => 'Alliance OU Divisions List',
+        'admin.divisions.create' => 'Alliance OU Division Create View',
+        'admin.divisions.store' => 'Alliance OU Division Create Action',
+        'admin.divisions.show' => 'View Alliance OU Division',
+        'admin.divisions.edit' => 'Alliance OU Division Edit View',
+        'admin.divisions.update' => 'Alliance OU Division Edit Action',
+        'admin.divisions.destroy' => 'Delete Alliance OU Division',
     ],
 
     'People' => [

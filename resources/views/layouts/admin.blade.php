@@ -125,20 +125,11 @@
                         </li>
                     @endpermission
                         
-                    @permission('admin.divisions.index')
-                        <li class="{{ route_starts_with('admin.divisions') }}">
-                            <a href="{{ route('admin.divisions.index') }}">
-                                <i class="fa fa-map-marker"></i>
-                                <span>@lang('Divisions')</span>
-                            </a>
-                        </li>
-                    @endpermission
-                        
                     @permission('admin.practices.index')
                         <li class="{{ route_starts_with('admin.practices') }}">
                             <a href="{{ route('admin.practices.index') }}">
                                 <i class="fa fa-tag"></i>
-                                <span>@lang('Practices')</span>
+                                <span>@lang('Service Lines')</span>
                             </a>
                         </li>
                     @endpermission
@@ -157,6 +148,15 @@
                             <a href="{{ route('admin.regions.index') }}">
                                 <i class="fa fa-globe"></i>
                                 <span>@lang('Operating Units')</span>
+                            </a>
+                        </li>
+                    @endpermission
+                        
+                    @permission('admin.divisions.index')
+                        <li class="{{ route_starts_with('admin.divisions') }}">
+                            <a href="{{ route('admin.divisions.index') }}">
+                                <i class="fa fa-map-marker"></i>
+                                <span>@lang('Alliance OU Divisions')</span>
                             </a>
                         </li>
                     @endpermission

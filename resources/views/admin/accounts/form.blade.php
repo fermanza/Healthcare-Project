@@ -120,7 +120,7 @@
     <div class="row">
         <div class="col-md-3">
             <div class="form-group{{ $errors->has('practiceId') ? ' has-error' : '' }}">
-                <label for="practiceId">@lang('Practice')</label>
+                <label for="practiceId">@lang('Service Line')</label>
                 <select class="form-control select2" id="practiceId" name="practiceId">
                     <option value="" disabled selected></option>
                     @foreach ($practices as $practice)
@@ -134,7 +134,7 @@
         </div>
         <div class="col-md-3">
             <div class="form-group{{ $errors->has('divisionId') ? ' has-error' : '' }}">
-                <label for="divisionId">@lang('Division')</label>
+                <label for="divisionId">@lang('Alliance OU Division')</label>
                 <select class="form-control select2" id="divisionId" name="divisionId">
                     <option value="" disabled selected></option>
                     @foreach ($divisions as $division)

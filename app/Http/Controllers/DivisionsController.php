@@ -48,7 +48,7 @@ class DivisionsController extends Controller
         $division = new Division;
         $request->save($division);
 
-        flash(__('Division created.'));
+        flash(__('Alliance OU Division created.'));
 
         return redirect()->route('admin.divisions.index');
     }
@@ -91,7 +91,7 @@ class DivisionsController extends Controller
     {
         $request->save($division);
 
-        flash(__('Division updated.'));
+        flash(__('Alliance OU Division updated.'));
 
         return redirect()->route('admin.divisions.index');
     }
@@ -107,7 +107,7 @@ class DivisionsController extends Controller
         $division->active = false;
         $division->save();
 
-        flash(__('Division deleted.'));
+        flash(__('Alliance OU Division deleted.'));
 
         return back();
     }
