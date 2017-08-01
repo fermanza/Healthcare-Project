@@ -3,6 +3,10 @@
 @section('content-header', __('Accounts'))
 
 @section('tools')
+    <a href="{{ route('admin.accounts.toggleScope') }}" class="btn btn-sm btn-default{{ session('ignore-account-role-scope') ? ' active' : '' }}">
+        @lang('View All')
+    </a>
+
     @permission('admin.accounts.create')
         <a href="{{ route('admin.accounts.create') }}" class="btn btn-sm btn-success">
             <i class="fa fa-plus"></i>

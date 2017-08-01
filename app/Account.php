@@ -44,7 +44,9 @@ class Account extends Model
         parent::boot();
 
         static::addGlobalScope('role', function (Builder $builder) {
-            if (! $user = auth()->user()) {
+            $user = auth()->user();
+            
+            if (! $user || session('ignore-account-role-scope')) {
                 return;
             }
 

@@ -254,4 +254,18 @@ class AccountsController extends Controller
 
         return back();
     }
+
+    /**
+     * Toggle the global 'role' scope to current Session.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleScope()
+    {
+        $ignore = session('ignore-account-role-scope', false);
+
+        session(['ignore-account-role-scope' => ! $ignore]);
+
+        return back();
+    }
 }

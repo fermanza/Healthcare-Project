@@ -21,6 +21,8 @@ $router->post('password/reset', 'Auth\ResetPasswordController@reset');
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], function ($router) {
     $router->get('dashboard', 'AdminController@index')->name('dashboard');
 
+    $router->get('accounts/toggleScope', 'AccountsController@toggleScope')->name('accounts.toggleScope');
+
     $router->get('sidebar-collapse', 'SidebarController@collapse');
     $router->get('sidebar-expand', 'SidebarController@expand');
 
