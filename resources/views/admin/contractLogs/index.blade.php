@@ -3,6 +3,10 @@
 @section('content-header', __('Contract Logs'))
 
 @section('tools')
+    <a href="{{ route('admin.contractLogs.toggleScope') }}" class="btn btn-sm btn-default{{ session('ignore-contract-log-role-scope') ? ' active' : '' }}">
+        @lang('View All')
+    </a>
+
     @permission('admin.contractLogs.create')
         <a href="{{ route('admin.contractLogs.create') }}" class="btn btn-sm btn-success">
             <i class="fa fa-plus"></i>

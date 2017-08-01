@@ -38,7 +38,9 @@ class ContractLog extends Model
         parent::boot();
 
         static::addGlobalScope('role', function (Builder $builder) {
-            if (! $user = auth()->user()) {
+            $user = auth()->user();
+            
+            if (! $user || session('ignore-contract-log-role-scope')) {
                 return;
             }
 

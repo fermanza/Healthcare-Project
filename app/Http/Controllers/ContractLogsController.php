@@ -185,4 +185,18 @@ class ContractLogsController extends Controller
 
         return view($view, $params);
     }
+
+    /**
+     * Toggle the global 'role' scope to current Session.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleScope()
+    {
+        $ignore = session('ignore-contract-log-role-scope', false);
+
+        session(['ignore-contract-log-role-scope' => ! $ignore]);
+
+        return back();
+    }
 }
