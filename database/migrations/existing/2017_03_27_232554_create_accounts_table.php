@@ -16,6 +16,7 @@ class CreateAccountsTable extends Migration
         Schema::create('tAccount', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('divisionId')->unsigned()->nullable();
+            $table->integer('operatingUnitId')->unsigned()->nullable();
             $table->string('name');
             $table->string('siteCode');
             $table->string('city')->nullable();
@@ -27,6 +28,7 @@ class CreateAccountsTable extends Migration
             $table->string('parentSiteCode');
             
             $table->foreign('divisionId')->references('id')->on('tDivision')->onDelete('cascade');
+            $table->foreign('operatingUnitId')->references('id')->on('tOperatingUnit')->onDelete('cascade');
         });
     }
 

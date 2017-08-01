@@ -67,7 +67,7 @@
                             @endpermission
                         </td>
                         <td>{{ $account->rsc ? $account->rsc->name : '' }}</td>
-                        <td>{{ ($account->division && $account->division->group && $account->division->group->region) ? $account->division->group->region->name : '' }}</td>
+                        <td>{{ $account->region ? $account->region->name : '' }}</td>
                         <td>{{ $account->recruiter ? $account->recruiter->fullName() : '' }}</td>
                         <td>{{ $account->manager ? $account->manager->fullName() : '' }}</td>
                         <td class="text-center">

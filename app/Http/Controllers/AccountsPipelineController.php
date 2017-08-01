@@ -31,9 +31,7 @@ class AccountsPipelineController extends Controller
             'practices',
         ]);
         $pipeline = $account->pipeline;
-        $region = ($account->division && $account->division->group && $account->division->group->region)
-            ? $account->division->group->region
-            : null;
+        $region = $account->region;
         $practice = $account->practices->count() ? $account->practices->first() : null;
         $practiceTimes = config('pipeline.practice_times');
         $recruitingTypes = config('pipeline.recruiting_types');

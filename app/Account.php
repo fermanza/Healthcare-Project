@@ -128,6 +128,16 @@ class Account extends Model
     }
 
     /**
+     * Get the Region for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function region()
+    {
+        return $this->belongsTo(Region::class, 'operatingUnitId');
+    }
+
+    /**
      * Get the RSC for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

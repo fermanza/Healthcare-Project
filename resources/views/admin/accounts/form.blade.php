@@ -113,6 +113,20 @@
                 @endif
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('operatingUnitId') ? ' has-error' : '' }}">
+                <label for="operatingUnitId">@lang('Operating Unit')</label>
+                <select class="form-control select2" id="operatingUnitId" name="operatingUnitId">
+                    <option value="" disabled selected></option>
+                    @foreach ($regions as $region)
+                        <option value="{{ $region->id }}" {{ (old('operatingUnitId') == $region->id ?: $region->id == $account->operatingUnitId) ? 'selected': '' }}>{{ $region->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('operatingUnitId'))
+                    <span class="help-block"><strong>{{ $errors->first('operatingUnitId') }}</strong></span>
+                @endif
+            </div>
+        </div>
     </div>
 
     <hr />

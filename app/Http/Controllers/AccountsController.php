@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use PDF;
 use App\RSC;
+use App\Region;
 use JavaScript;
 use App\Account;
 use App\Division;
@@ -25,7 +26,7 @@ class AccountsController extends Controller
     {
         $accounts = Account::with([
                 'rsc',
-                'division.group.region',
+                'region',
                 'recruiter.employee.person',
                 'manager.employee.person',
             ])
@@ -136,8 +137,9 @@ class AccountsController extends Controller
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
+        $regions = Region::where('active', true)->orderBy('name')->get();
 
-        $params = compact('account', 'employees', 'practices', 'divisions', 'RSCs', 'action');
+        $params = compact('account', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'action');
 
         JavaScript::put([
             'account' => [
