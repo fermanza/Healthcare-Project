@@ -24,9 +24,15 @@ Artisan::command('set-new-routes', function () {
 
 Artisan::command('sync-current-contractlogs-to-accounts', function () {
     App\ContractLog::all()->each(function ($contractLog) {
-        $contractLog->accounts()->syncWithoutDetaching([$contractLog->account->id]);
+        $contractLog->accounts()->syncWithoutDetaching([$contractLog->accountId]);
     });
 })->describe('Sync the existing Contract Logs with their initial Account to pivot');
+
+Artisan::command('sync-current-contractlogs-to-employees', function () {
+    App\ContractLog::all()->each(function ($contractLog) {
+        $contractLog->recruiters()->syncWithoutDetaching([$contractLog->recruiterId]);
+    });
+})->describe('Sync the existing Contract Logs with their initial Recruiter to pivot');
 
 Artisan::command('create-initial-pipeline-to-accounts', function () {
     App\Account::with('pipeline')->get()->each(function ($account) {

@@ -174,13 +174,16 @@ class ContractLogsController extends Controller
         $additionalAccounts = $contractLog->accounts->diff(
             $contractLog->account ? [$contractLog->account] : []
         );
+        $additionalRecruiters = $contractLog->recruiters->diff(
+            $contractLog->recruiter ? [$contractLog->recruiter] : []
+        );
 
         JavaScript::put(compact('statuses'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
             'managers', 'coordinators', 'types', 'notes', 'positions',
-            'designations', 'additionalAccounts', 'action'
+            'designations', 'additionalAccounts', 'additionalRecruiters', 'action'
         );
 
         return view($view, $params);

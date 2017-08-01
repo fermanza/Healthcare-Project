@@ -151,4 +151,44 @@ class ContractLog extends Model
     {
         return $this->belongsTo(ProviderDesignation::class, 'providerDesignationId');
     }
+
+    /**
+     * Get the Recruiter for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function recruiter()
+    {
+        return $this->belongsTo(Employee::class, 'recruiterId');
+    }
+
+    /**
+     * Get the Recruiters for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function recruiters()
+    {
+        return $this->belongsToMany(Employee::class, 'tContractLogToEmployee', 'contractLogId', 'employeeId');
+    }
+
+    /**
+     * Get the Manager for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function manager()
+    {
+        return $this->belongsTo(Employee::class, 'managerId');
+    }
+
+    /**
+     * Get the Contract Coordinator for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function coordinator()
+    {
+        return $this->belongsTo(Employee::class, 'contractCoordinatorId');
+    }
 }

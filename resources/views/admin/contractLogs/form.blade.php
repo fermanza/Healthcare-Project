@@ -343,6 +343,20 @@
                     @endif
                 </div>
             </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group{{ $errors->has('recruiters') ? ' has-error' : '' }}">
+                    <label for="recruiters[]">@lang('Additional Recruiters')</label>
+                    <select class="form-control select2" id="recruiters" name="recruiters[]" multiple>
+                        @foreach ($recruiters as $recruiter)
+                            <option value="{{ $recruiter->id }}" {{ (in_array($recruiter->id, old('recruiters') ?: []) ?: $additionalRecruiters->contains($recruiter)) ? 'selected': '' }}>{{ $recruiter->fullName() }}</option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('recruiters'))
+                        <span class="help-block"><strong>{{ $errors->first('recruiters') }}</strong></span>
+                    @endif
+                </div>
+            </div>
         </div>
 
         <hr />
