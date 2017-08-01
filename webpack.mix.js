@@ -20,6 +20,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'toastr',
         'lodash',
         'vue',
+        'es6-promise',
         'axios',
         'moment',
     ]);
