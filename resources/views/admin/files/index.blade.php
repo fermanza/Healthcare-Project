@@ -6,7 +6,7 @@
     @permission('admin.files.create')
         <a href="{{ route('admin.files.create') }}" class="btn btn-sm btn-success">
             <i class="fa fa-plus"></i>
-            New
+            @lang('New')
         </a>
     @endpermission
 @endsection

@@ -6,7 +6,7 @@
     @permission('admin.employees.create')
         <a href="{{ route('admin.employees.create') }}" class="btn btn-sm btn-success">
             <i class="fa fa-plus"></i>
-            New
+            @lang('New')
         </a>
     @endpermission
 @endsection

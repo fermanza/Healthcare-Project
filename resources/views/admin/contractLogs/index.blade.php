@@ -6,7 +6,7 @@
     @permission('admin.contractLogs.create')
         <a href="{{ route('admin.contractLogs.create') }}" class="btn btn-sm btn-success">
             <i class="fa fa-plus"></i>
-            New
+            @lang('New')
         </a>
     @endpermission
 @endsection
