@@ -24,6 +24,7 @@ class ContractLogRequest extends FormRequest
             'accounts' => 'nullable|array|exists:tAccount,id',
             'value' => 'required|in:0,0.5,1',
             'providerFirstName' => 'required',
+            'providerMiddleInitial' => 'nullable',
             'providerLastName' => 'required',
             'specialtyId' => 'required|exists:tSpecialty,id',
             'contractOutDate' => 'date_format:"Y-m-d"',
@@ -70,6 +71,7 @@ class ContractLogRequest extends FormRequest
         $contractLog->providerDesignationId = $this->providerDesignationId;
         $contractLog->practiceId = $account->practices->count() ? $account->practices->first()->id : null;
         $contractLog->providerFirstName = $this->providerFirstName;
+        $contractLog->providerMiddleInitial = $this->providerMiddleInitial;
         $contractLog->providerLastName = $this->providerLastName;
         $contractLog->specialtyId = $this->specialtyId;
         $contractLog->divisionId = $account->divisionId;

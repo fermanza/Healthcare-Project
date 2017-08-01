@@ -114,10 +114,10 @@
             <thead>
                 <tr>
                     <th class="mw110">@lang('Actions')</th>
+                    <th class="mw90">{{ sort_column_link('provider_last_name', __('Provider Last Name')) }}</th>
+                    <th class="mw90">{{ sort_column_link('provider_first_name', __('Provider First Name')) }}</th>
                     <th class="mw60">{{ sort_column_link('value', __('Value')) }}</th>
                     <th class="mw140">{{ sort_column_link('status', __('Status')) }}</th>
-                    <th class="mw90">{{ sort_column_link('provider_first_name', __('Provider First Name')) }}</th>
-                    <th class="mw90">{{ sort_column_link('provider_last_name', __('Provider Last Name')) }}</th>
                     <th class="mw80">{{ sort_column_link('position', __('Position')) }}</th>
                     <th class="mw60">{{ sort_column_link('hours', __('Hours')) }}</th>
                     <th class="mw100">{{ sort_column_link('practice', __('Service Line')) }}</th>
@@ -159,10 +159,10 @@
                                 </a>
                             @endpermission
                         </td>
+                        <td>{{ $contractLog->providerLastName }}</td>
+                        <td>{{ $contractLog->providerFirstName }}</td>
                         <td>{{ $contractLog->value }}</td>
                         <td>{{ $contractLog->status ? $contractLog->status->contractStatus : '' }}</td>
-                        <td>{{ $contractLog->providerFirstName }}</td>
-                        <td>{{ $contractLog->providerLastName }}</td>
                         <td>{{ $contractLog->position ? $contractLog->position->position : '' }}</td>
                         <td>{{ $contractLog->numOfHours }}</td>
                         <td>{{ $contractLog->practice ? $contractLog->practice->name : '' }}</td>

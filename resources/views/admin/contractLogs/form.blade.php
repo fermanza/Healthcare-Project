@@ -1,11 +1,62 @@
 @include('common/errors')
 
-<form action="{{ $action == 'create' ? route('admin.contractLogs.store') : route('admin.contractLogs.update', [$contractLog]) }}" method="POST">
+<form style="font-size: 1.1em;" action="{{ $action == 'create' ? route('admin.contractLogs.store') : route('admin.contractLogs.update', [$contractLog]) }}" method="POST">
     {{ csrf_field() }}
     {{ $action == 'edit' ? method_field('PATCH') : '' }}
 
     <div class="flexboxgrid">
         <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group">
+                    <label for="providerLastName">@lang('Provider Last Name')</label>
+                    <input type="text" class="form-control" id="providerLastName" name="providerLastName" value="{{ old('providerLastName') ?: $contractLog->providerLastName }}" required />
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group">
+                    <label for="providerMiddleInitial">@lang('Provider Middle Initial')</label>
+                    <input type="text" class="form-control" id="providerMiddleInitial" name="providerMiddleInitial" value="{{ old('providerMiddleInitial') ?: $contractLog->providerMiddleInitial }}" />
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group">
+                    <label for="providerFirstName">@lang('Provider First Name')</label>
+                    <input type="text" class="form-control" id="providerFirstName" name="providerFirstName" value="{{ old('providerFirstName') ?: $contractLog->providerFirstName }}" required />
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group{{ $errors->has('providerDesignationId') ? ' has-error' : '' }}">
+                    <label for="providerDesignationId">@lang('Provider Designation')</label>
+                    <select class="form-control select2" id="providerDesignationId" name="providerDesignationId" required>
+                        <option value="" disabled selected></option>
+                        @foreach ($designations as $designation)
+                            <option value="{{ $designation->id }}" {{ (old('providerDesignationId') == $designation->id ?: $designation->id == $contractLog->providerDesignationId) ? 'selected': '' }}>{{ $designation->name }}</option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('providerDesignationId'))
+                        <span class="help-block"><strong>{{ $errors->first('providerDesignationId') }}</strong></span>
+                    @endif
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group{{ $errors->has('statusId') ? ' has-error' : '' }}">
+                    <label for="statusId">@lang('Status')</label>
+                    <select class="form-control select2" id="statusId" name="statusId" required>
+                        <option value="" disabled selected></option>
+                        @foreach ($statuses as $status)
+                            <option value="{{ $status->id }}" {{ (old('statusId') == $status->id ?: $status->id == $contractLog->statusId) ? 'selected': '' }}>{{ $status->contractStatus }}</option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('statusId'))
+                        <span class="help-block"><strong>{{ $errors->first('statusId') }}</strong></span>
+                    @endif
+                </div>
+            </div>
+
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group{{ $errors->has('accountId') ? ' has-error' : '' }}">
                     <label for="accountId">@lang('Site Code')</label>
@@ -46,50 +97,6 @@
                 <div class="form-group">
                     <label for="practice">@lang('Service Line')</label>
                     <input type="text" class="form-control" id="practice" name="practice" value="{{ ($contractLog->account && $contractLog->account->practices->count()) ? $contractLog->account->practices->first()->name : '' }}" readonly />
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="form-group{{ $errors->has('statusId') ? ' has-error' : '' }}">
-                    <label for="statusId">@lang('Status')</label>
-                    <select class="form-control select2" id="statusId" name="statusId" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($statuses as $status)
-                            <option value="{{ $status->id }}" {{ (old('statusId') == $status->id ?: $status->id == $contractLog->statusId) ? 'selected': '' }}>{{ $status->contractStatus }}</option>
-                        @endforeach
-                    </select>
-                    @if ($errors->has('statusId'))
-                        <span class="help-block"><strong>{{ $errors->first('statusId') }}</strong></span>
-                    @endif
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="form-group">
-                    <label for="providerFirstName">@lang('Provider First Name')</label>
-                    <input type="text" class="form-control" id="providerFirstName" name="providerFirstName" value="{{ old('providerFirstName') ?: $contractLog->providerFirstName }}" required />
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="form-group">
-                    <label for="providerLastName">@lang('Provider Last Name')</label>
-                    <input type="text" class="form-control" id="providerLastName" name="providerLastName" value="{{ old('providerLastName') ?: $contractLog->providerLastName }}" required />
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="form-group{{ $errors->has('providerDesignationId') ? ' has-error' : '' }}">
-                    <label for="providerDesignationId">@lang('Provider Designation')</label>
-                    <select class="form-control select2" id="providerDesignationId" name="providerDesignationId" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($designations as $designation)
-                            <option value="{{ $designation->id }}" {{ (old('providerDesignationId') == $designation->id ?: $designation->id == $contractLog->providerDesignationId) ? 'selected': '' }}>{{ $designation->name }}</option>
-                        @endforeach
-                    </select>
-                    @if ($errors->has('providerDesignationId'))
-                        <span class="help-block"><strong>{{ $errors->first('providerDesignationId') }}</strong></span>
-                    @endif
                 </div>
             </div>
 
