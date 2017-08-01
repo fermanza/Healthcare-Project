@@ -63,7 +63,7 @@ $(() => {
         autoclose: true,
         todayHighlight: true
     }).on('changeDate', function () {
-        const event = new Event('input');
+        const event = new CustomEvent('input');
         this.dispatchEvent(event);
     });
 
@@ -74,7 +74,7 @@ $(() => {
         autoclose: true,
         todayHighlight: true
     }).on('changeDate', function () {
-        const event = new Event('input');
+        const event = new CustomEvent('input');
         this.dispatchEvent(event);
     });
 
