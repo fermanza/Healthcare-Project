@@ -51,6 +51,7 @@ return [
         'admin.accounts.pipeline.index' => 'View Account Summary',
         'admin.accounts.pipeline.update' => 'Account Summary Edit Action',
         'admin.accounts.pipeline.rosterBench.store' => 'Account Summary Roster/Bench Create Action',
+        'admin.accounts.pipeline.rosterBench.update' => 'Account Summary Roster/Bench Switch Action',
         'admin.accounts.pipeline.rosterBench.resign' => 'Account Summary Roster/Bench Resign Action',
         'admin.accounts.pipeline.rosterBench.destroy' => 'Account Summary Delete Roster/Bench',
         'admin.accounts.pipeline.recruiting.store' => 'Account Summary Recruiting Create Action',

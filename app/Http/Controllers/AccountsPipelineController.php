@@ -20,8 +20,8 @@ class AccountsPipelineController extends Controller
         $account->load([
             'pipeline' => function ($query) {
                 $query->with([
-                    'rosterPhysicians', 'rosterApps', 'benchPhysicians',
-                    'benchApps', 'recruitings', 'locums',
+                    'rostersBenchs', 'recruitings', 'locums',
+                    // 'rosterPhysicians', 'rosterApps', 'benchPhysicians', 'benchApps',
                 ]);
             },
             'recruiter.employee' => function ($query) {

@@ -225,7 +225,7 @@
         <div class="no-break-inside">
             <h4>@lang('Current Roster')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
-            <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysicians', 'rosterPhysician')">
+            <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysician')">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="bg-gray">
@@ -237,7 +237,7 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Notes')</th>
-                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -259,16 +259,24 @@
                                         </button>
                                     @endpermission
 
+                                    @permission('admin.accounts.pipeline.rosterBench.update')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="switchRosterBenchTo(roster, 'bench')"
+                                        >
+                                            @lang('Bench')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="editRosterBench(roster, 'rosterPhysicians', 'rosterPhysician')"
+                                            @click="editRosterBench(roster, 'rosterPhysician')"
                                         >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
                                     
                                     @permission('admin.accounts.pipeline.rosterBench.destroy')
-                                        <button @click="deleteRosterBench(roster, 'rosterPhysicians')" type="button" class="btn btn-xs btn-danger">
+                                        <button @click="deleteRosterBench(roster)" type="button" class="btn btn-xs btn-danger">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     @endpermission
@@ -314,7 +322,7 @@
 
         <div class="no-break-inside">
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
-            <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps', 'rosterApps')">
+            <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps')">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="bg-gray">
@@ -326,7 +334,7 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Notes')</th>
-                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -348,16 +356,24 @@
                                         </button>
                                     @endpermission
 
+                                    @permission('admin.accounts.pipeline.rosterBench.update')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="switchRosterBenchTo(roster, 'bench')"
+                                        >
+                                            @lang('Bench')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="editRosterBench(roster, 'rosterApps', 'rosterApps')"
+                                            @click="editRosterBench(roster, 'rosterApps')"
                                         >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.destroy')
-                                        <button @click="deleteRosterBench(roster, 'rosterApps')" type="button" class="btn btn-xs btn-danger">
+                                        <button @click="deleteRosterBench(roster)" type="button" class="btn btn-xs btn-danger">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     @endpermission
@@ -408,7 +424,7 @@
         <div class="no-break-inside">
             <h4>@lang('Current Bench')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
-            <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysicians', 'benchPhysician')">
+            <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="bg-gray">
@@ -420,7 +436,7 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Notes')</th>
-                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -442,16 +458,24 @@
                                         </button>
                                     @endpermission
 
+                                    @permission('admin.accounts.pipeline.rosterBench.update')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="switchRosterBenchTo(bench, 'roster')"
+                                        >
+                                            @lang('Roster')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="editRosterBench(bench, 'benchPhysicians', 'benchPhysician')"
+                                            @click="editRosterBench(bench, 'benchPhysician')"
                                         >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.destroy')
-                                        <button @click="deleteRosterBench(bench, 'benchPhysicians')" type="button" class="btn btn-xs btn-danger">
+                                        <button @click="deleteRosterBench(bench)" type="button" class="btn btn-xs btn-danger">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     @endpermission
@@ -497,7 +521,7 @@
 
         <div class="no-break-inside">
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
-            <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps', 'benchApps')">
+            <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps')">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="bg-gray">
@@ -509,7 +533,7 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Notes')</th>
-                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -531,16 +555,24 @@
                                         </button>
                                     @endpermission
 
+                                    @permission('admin.accounts.pipeline.rosterBench.update')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="switchRosterBenchTo(bench, 'roster')"
+                                        >
+                                            @lang('Roster')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="editRosterBench(bench, 'benchApps', 'benchApps')"
+                                            @click="editRosterBench(bench, 'benchApps')"
                                         >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.destroy')
-                                        <button @click="deleteRosterBench(bench, 'benchApps')" type="button" class="btn btn-xs btn-danger">
+                                        <button @click="deleteRosterBench(bench)" type="button" class="btn btn-xs btn-danger">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     @endpermission
@@ -1095,19 +1127,31 @@
                 },
 
                 activeRosterPhysicians: function () {
-                    return _.reject(this.pipeline.rosterPhysicians, 'resigned');
+                    return _.chain(this.pipeline.rostersBenchs)
+                        .filter({ place: 'roster', activity: 'physician' })
+                        .reject('resigned')
+                        .value();
                 },
 
                 activeRosterApps: function () {
-                    return _.reject(this.pipeline.rosterApps, 'resigned');
+                    return _.chain(this.pipeline.rostersBenchs)
+                        .filter({ place: 'roster', activity: 'app' })
+                        .reject('resigned')
+                        .value();
                 },
 
                 activeBenchPhysicians: function () {
-                    return _.reject(this.pipeline.benchPhysicians, 'resigned');
+                    return _.chain(this.pipeline.rostersBenchs)
+                        .filter({ place: 'bench', activity: 'physician' })
+                        .reject('resigned')
+                        .value();
                 },
 
                 activeBenchApps: function () {
-                    return _.reject(this.pipeline.benchApps, 'resigned');
+                    return _.chain(this.pipeline.rostersBenchs)
+                        .filter({ place: 'bench', activity: 'app' })
+                        .reject('resigned')
+                        .value();
                 },
 
                 sortedRecruitings: function () {
@@ -1131,40 +1175,46 @@
                 },
 
                 resigns: function () {
-                    return _.chain(this.pipeline.rosterPhysicians)
-                        .concat(this.pipeline.rosterApps)
-                        .concat(this.pipeline.benchPhysicians)
-                        .concat(this.pipeline.benchApps)
-                        .filter('resigned').value();
+                    return _.filter(this.pipeline.rostersBenchs, 'resigned');
                 },
             },
 
             methods: {
-                addRosterBench: function (place, activity, location, entity) {
+                addRosterBench: function (place, activity, entity) {
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
                         place: place,
                         activity: activity
                     }, this[entity]))
                         .then(function (response) {
-                            const rosterBench = response.data;
-                            this.pipeline[location].push(rosterBench);
+                            var rosterBench = response.data;
+                            this.pipeline.rostersBenchs.push(rosterBench);
                             this[entity] = {};
                         }.bind(this));
                 },
 
-                editRosterBench: function (rosterBench, location, object) {
+                editRosterBench: function (rosterBench, object) {
                     axios.delete('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id)
                         .then(function (response) {
                             _.assignIn(this[object], rosterBench);
-                            this.pipeline[location] = _.reject(this.pipeline[location], { 'id': rosterBench.id });
+                            this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': rosterBench.id });
                         }.bind(this));
                 },
 
-                deleteRosterBench: function (rosterBench, location) {
+                switchRosterBenchTo: function (rosterBench, place) {
+                    axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, {
+                        place: place
+                    })
+                        .then(function (response) {
+                            var newRosterBench = response.data;
+                            _.assignIn(rosterBench, newRosterBench);
+                        }.bind(this));
+                },
+
+                deleteRosterBench: function (rosterBench) {
                     if (confirm("@lang('Are you sure you want to delete this record?')")) {
                         axios.delete('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id)
                             .then(function (response) {
-                                this.pipeline[location] = _.reject(this.pipeline[location], { 'id': rosterBench.id });
+                                this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': rosterBench.id });
                             }.bind(this));
                     }
                 },
@@ -1173,7 +1223,7 @@
                 addRecruiting: function () {
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting', this.newRecruiting)
                         .then(function (response) {
-                            const recruiting = response.data;
+                            var recruiting = response.data;
                             this.pipeline.recruitings.push(recruiting);
                             this.newRecruiting = {};
                         }.bind(this));
@@ -1197,7 +1247,7 @@
                 },
 
                 currentRecruiting: function (recruiting) {
-                    const firstOfMonth = moment().startOf('month');
+                    var firstOfMonth = moment().startOf('month');
 
                     return moment(recruiting.firstShift).isAfter(firstOfMonth);
                 },
@@ -1206,7 +1256,7 @@
                 addLocum: function () {
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum', this.newLocum)
                         .then(function (response) {
-                            const locum = response.data;
+                            var locum = response.data;
                             this.pipeline.locums.push(locum);
                             this.newLocum = {};
                         }.bind(this));
@@ -1246,7 +1296,7 @@
 
                     axios.patch(endpoint, this.declining)
                         .then(function (response) {
-                            const declined = response.data;
+                            var declined = response.data;
                             _.assignIn(this.toDecline, declined);
                             $('#declineModal').modal('hide');
                         }.bind(this));
@@ -1259,11 +1309,11 @@
                 },
 
                 resign: function () {
-                    const endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this.resigning.id + '/resign';
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this.resigning.id + '/resign';
 
                     axios.patch(endpoint, this.resigning)
                         .then(function (response) {
-                            const resigned = response.data;
+                            var resigned = response.data;
                             _.assignIn(this.toResign, resigned);
                             $('#resignModal').modal('hide');
                         }.bind(this));

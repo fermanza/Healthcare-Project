@@ -98,12 +98,23 @@ class PipelineRosterBenchController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Account  $account
+     * @param  \App\PipelineRosterBench  $rosterBench
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Account $account, PipelineRosterBench $rosterBench)
     {
-        //
+        $this->validate($request, [
+            'place' => [
+                'required',
+                Rule::in(config('pipeline.places')),
+            ],
+        ]);
+
+        $rosterBench->place = $request->place;
+        $rosterBench->save();
+
+        return $rosterBench;
     }
 
     /**
