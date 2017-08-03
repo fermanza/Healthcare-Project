@@ -132,7 +132,7 @@ class AccountsController extends Controller
      */
     protected function form($account, $action, $view)
     {
-        $account->load('siteCodes', 'physiciansApps', 'practices', 'recruiter', 'manager');
+        $account->load('siteCodes', 'physiciansApps', 'practices', 'recruiter', 'recruiters', 'manager');
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();

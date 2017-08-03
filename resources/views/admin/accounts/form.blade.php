@@ -86,6 +86,19 @@
             </div>
         </div>
         <div class="col-md-3">
+            <div class="form-group{{ $errors->has('recruiters') ? ' has-error' : '' }}">
+                <label for="recruiters[]">@lang('Additional Recruiters')</label>
+                <select class="form-control select2" id="recruiters" name="recruiters[]" multiple>
+                    @foreach ($employees as $employee)
+                        <option value="{{ $employee->id }}" {{ (in_array($employee->id, old('employees') ?: []) ?: $account->recruiters->pluck('employeeId')->contains($employee->id)) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('recruiters'))
+                    <span class="help-block"><strong>{{ $errors->first('recruiters') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="form-group{{ $errors->has('managerId') ? ' has-error' : '' }}">
                 <label for="managerId">@lang('Manager')</label>
                 <select class="form-control select2" id="managerId" name="managerId">
@@ -99,6 +112,9 @@
                 @endif
             </div>
         </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-3">
             <div class="form-group{{ $errors->has('RSCId') ? ' has-error' : '' }}">
                 <label for="RSCId">@lang('Regional Support Center')</label>

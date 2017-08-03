@@ -84,7 +84,20 @@ class Account extends Model
     public function recruiter()
     {
         return $this->hasOne(AccountEmployee::class, 'accountId')
-            ->where('positionTypeId', config('instances.position_types.recruiter'));
+            ->where('positionTypeId', config('instances.position_types.recruiter'))
+            ->where('isPrimary', true);
+    }
+
+    /**
+     * Get the Secondary Recruiters (AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function recruiters()
+    {
+        return $this->hasMany(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.recruiter'))
+            ->where('isPrimary', false);
     }
 
     /**

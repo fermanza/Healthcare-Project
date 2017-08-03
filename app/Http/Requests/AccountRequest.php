@@ -24,6 +24,7 @@ class AccountRequest extends FormRequest
             'siteCode' => 'required|numeric',
             'photoPath' => '',
             'recruiterId' => 'exists:tEmployee,id',
+            'recruiters' => 'nullable|array|exists:tEmployee,id',
             'managerId' => 'exists:tEmployee,id',
             'practiceId' => 'exists:tPractice,id',
             'divisionId' => 'exists:tDivision,id',
@@ -137,6 +138,8 @@ class AccountRequest extends FormRequest
             $this->associateRecruiter($account);
         }
 
+        $this->associateRecruiters($account);
+
         if ($this->managerId) {
             $this->associateManager($account);
         }
@@ -177,9 +180,36 @@ class AccountRequest extends FormRequest
         AccountEmployee::updateOrCreate([
             'accountId' => $account->id,
             'positionTypeId' => config('instances.position_types.recruiter'),
+            'isPrimary' => true,
         ], [
             'employeeId' => $this->recruiterId,
         ]);
+        AccountEmployee::reguard();
+    }
+
+    /**
+     * Associates secondary Recruiters to the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function associateRecruiters($account)
+    {
+        AccountEmployee::unguard();
+        AccountEmployee::where([
+            'accountId' => $account->id,
+            'positionTypeId' => config('instances.position_types.recruiter'),
+            'isPrimary' => false,
+        ])->delete();
+
+        foreach ($this->input('recruiters', []) as $recruiter) {
+            AccountEmployee::create([
+                'employeeId' => $recruiter,
+                'accountId' => $account->id,
+                'positionTypeId' => config('instances.position_types.recruiter'),
+                'isPrimary' => false,
+            ]);
+        }
         AccountEmployee::reguard();
     }
 
