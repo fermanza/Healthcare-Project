@@ -1176,7 +1176,7 @@
                 staffPhysicianFTEHaves: function () {
                     if (this.pipeline.practiceTime == 'fte') return '';
                     if (this.fullTimeHoursPhys == 0) return 0;
-                    var result = this.staffPhysicianHaves * 30 / this.fullTimeHoursPhys;
+                    var result = this.staffPhysicianHaves / this.fullTimeHoursPhys;
                     
                     return this.roundStep(result, 0.5);
                 },
@@ -1184,7 +1184,7 @@
                 staffAppsFTEHaves: function () {
                     if (this.pipeline.practiceTime == 'fte') return '';
                     if (this.fullTimeHoursApps == 0) return 0;
-                    var result = this.staffAppsHaves * 30 / this.fullTimeHoursApps;
+                    var result = this.staffAppsHaves / this.fullTimeHoursApps;
                     
                     return this.roundStep(result, 0.5);
                 },
@@ -1192,7 +1192,7 @@
                 staffPhysicianFTENeeds: function () {
                     if (this.pipeline.practiceTime == 'fte') return '';
                     if (this.fullTimeHoursPhys == 0) return 0;
-                    var result = this.staffPhysicianNeeds * 30 / this.fullTimeHoursPhys;
+                    var result = this.staffPhysicianNeeds / this.fullTimeHoursPhys;
                     
                     return this.roundStep(result, 0.5);
                 },
@@ -1200,7 +1200,7 @@
                 staffAppsFTENeeds: function () {
                     if (this.pipeline.practiceTime == 'fte') return '';
                     if (this.fullTimeHoursApps == 0) return 0;
-                    var result = this.staffAppsNeeds * 30 / this.fullTimeHoursApps;
+                    var result = this.staffAppsNeeds / this.fullTimeHoursApps;
                     
                     return this.roundStep(result, 0.5);
                 },
@@ -1208,7 +1208,7 @@
                 staffPhysicianFTEOpenings: function () {
                     if (this.pipeline.practiceTime == 'fte') return '';
                     if (this.fullTimeHoursPhys == 0) return 0;
-                    var result = this.staffPhysicianOpenings * 30 / this.fullTimeHoursPhys;
+                    var result = this.staffPhysicianOpenings / this.fullTimeHoursPhys;
                     
                     return this.roundStep(result, 0.5);
                 },
@@ -1216,7 +1216,7 @@
                 staffAppsFTEOpenings: function () {
                     if (this.pipeline.practiceTime == 'fte') return '';
                     if (this.fullTimeHoursApps == 0) return 0;
-                    var result = this.staffAppsOpenings * 30 / this.fullTimeHoursApps;
+                    var result = this.staffAppsOpenings / this.fullTimeHoursApps;
                     
                     return this.roundStep(result, 0.5);
                 },
