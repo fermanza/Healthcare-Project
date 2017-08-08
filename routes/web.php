@@ -33,11 +33,14 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
 
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'acl']], function ($router) {
 
+    $router->get('reports/summary', 'ReportsController@summary')->name('reports.summary.index');
+
     $router->post('accounts/image', 'AccountsController@image')->name('accounts.image');
     $router->patch('accounts/merge', 'AccountsController@merge')->name('accounts.merge');
     $router->patch('accounts/parent', 'AccountsController@parent')->name('accounts.parent');
     $router->patch('accounts/{account}/remove-parent', 'AccountsController@removeParent')->name('accounts.removeParent');
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
+    $router->get('accounts/termed', 'AccountsController@index')->name('termedSites.index');
     $router->resource('accounts', 'AccountsController');
 
     $router->get('accounts/{account}/pipeline', 'AccountsPipelineController@index')->name('accounts.pipeline.index');

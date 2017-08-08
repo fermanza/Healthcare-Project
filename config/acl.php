@@ -39,6 +39,7 @@ return [
         'admin.accounts.removeParent' => 'Remove Account Parent Site Code',
         'admin.accounts.internalPlan' => 'View Account Internal Plan',
         'admin.accounts.index' => 'Accounts List',
+        'admin.termedSites.index' => 'Termed Sites List',
         'admin.accounts.create' => 'Account Create View',
         'admin.accounts.store' => 'Account Create Action',
         'admin.accounts.show' => 'View Account',
@@ -150,6 +151,10 @@ return [
         'admin.contractLogs.edit' => 'Contract Log Edit View',
         'admin.contractLogs.update' => 'Contract Log Edit Action',
         'admin.contractLogs.destroy' => 'Delete Contract Log',
+    ],
+
+    'Reports' => [
+        'admin.reports.summary.index' => 'Summary Report',
     ],
     
 ];

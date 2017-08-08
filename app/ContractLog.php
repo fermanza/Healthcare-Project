@@ -59,6 +59,11 @@ class ContractLog extends Model
                     $query->where('employeeId', $user->employeeId)
                         ->whereNotNull('employeeId');
                 });
+            } else if ($user->hasRoleId(config('instances.roles.director'))) {
+                $builder->whereHas('accounts.rsc', function ($query) use ($user) {
+                    $query->where('directorId', $user->employeeId)
+                        ->whereNotNull('directorId');
+                });
             }
 
             // if ($user->hasRoleId(config('instances.roles.director'))) {

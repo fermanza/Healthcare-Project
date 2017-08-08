@@ -1,0 +1,26 @@
+.reports-summary {
+	.table {
+		color: #000000;
+		font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+
+		th {
+			background-color: #d9d9d9;
+		}
+
+		th, td {
+			text-align: center;
+		}
+
+		td.recently-created {
+			background-color: #1aaf54;
+		}
+	}
+	.table-bordered {
+		th, td {
+			border: 1px solid #000000;
+		}
+	}
+	.table > thead:first-child > tr:first-child > th {
+		border-top: 1px solid #000000;
+	}
+}

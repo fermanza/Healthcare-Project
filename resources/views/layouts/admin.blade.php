@@ -53,6 +53,26 @@
                         </a>
                     </li>
 
+                    {{-- @permission(['admin.reports.summary.index'])
+                        <li class="treeview {{ route_starts_with('admin.reports') }}">
+                            <a href="#">
+                                <i class="fa fa-file-excel-o"></i> <span>@lang('Reports')</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                @permission('admin.reports.summary.index')
+                                    <li class="{{ route_starts_with('admin.reports.summary') }}">
+                                        <a href="{{ route('admin.reports.summary.index') }}">
+                                            <i class="fa fa-file-excel-o"></i> @lang('Summary Report')
+                                        </a>
+                                    </li>
+                                @endpermission
+                            </ul>
+                        </li>
+                    @endpermission --}}
+
                     @permission('admin.users.index')
                         <li class="{{ route_starts_with('admin.users') }}">
                             <a href="{{ route('admin.users.index') }}">
@@ -85,6 +105,15 @@
                             <a href="{{ route('admin.accounts.index') }}">
                                 <i class="fa fa-hospital-o"></i>
                                 <span>@lang('Accounts')</span>
+                            </a>
+                        </li>
+                    @endpermission
+
+                    @permission('admin.termedSites.index')
+                        <li class="{{ route_starts_with('admin.termedSites.index') }}">
+                            <a href="{{ route('admin.termedSites.index', ['termed' => '']) }}">
+                                <i class="fa fa-hospital-o"></i>
+                                <span>@lang('Termed Sites')</span>
                             </a>
                         </li>
                     @endpermission
