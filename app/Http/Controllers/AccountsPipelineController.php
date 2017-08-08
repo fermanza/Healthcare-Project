@@ -21,7 +21,6 @@ class AccountsPipelineController extends Controller
             'pipeline' => function ($query) {
                 $query->with([
                     'rostersBenchs', 'recruitings', 'locums',
-                    // 'rosterPhysicians', 'rosterApps', 'benchPhysicians', 'benchApps',
                 ]);
             },
             'recruiter.employee' => function ($query) {
@@ -36,6 +35,14 @@ class AccountsPipelineController extends Controller
         $practiceTimes = config('pipeline.practice_times');
         $recruitingTypes = config('pipeline.recruiting_types');
         $contractTypes = config('pipeline.contract_types');
+
+        if ($practice && $practice->isIPS() && $pipeline->practiceTime == 'hours') {
+            $pipeline->fullTimeHoursPhys = $pipeline->fullTimeHoursPhys == 0 ? 180 : $pipeline->fullTimeHoursPhys;
+            $pipeline->fullTimeHoursApps = $pipeline->fullTimeHoursApps == 0 ? 180 : $pipeline->fullTimeHoursApps;
+        } else {
+            $pipeline->fullTimeHoursPhys = $pipeline->fullTimeHoursPhys == 0 ? 120 : $pipeline->fullTimeHoursPhys;
+            $pipeline->fullTimeHoursApps = $pipeline->fullTimeHoursApps == 0 ? 120 : $pipeline->fullTimeHoursApps;
+        }
 
         $params = compact(
             'account', 'pipeline', 'region', 'practice', 'practiceTimes',
@@ -114,6 +121,14 @@ class AccountsPipelineController extends Controller
             'staffAppsNeeds' => 'integer',
             'staffPhysicianOpenings' => 'integer',
             'staffAppsOpenings' => 'integer',
+            'fullTimeHoursPhys' => 'integer',
+            'fullTimeHoursApps' => 'integer',
+            'staffPhysicianFTEHaves' => 'nullable|numeric',
+            'staffPhysicianFTENeeds' => 'nullable|numeric',
+            'staffPhysicianFTEOpenings' => 'nullable|numeric',
+            'staffAppsFTEHaves' => 'nullable|numeric',
+            'staffAppsFTENeeds' => 'nullable|numeric',
+            'staffAppsFTEOpenings' => 'nullable|numeric',
         ]);
 
         $pipeline = $account->pipeline;
@@ -128,6 +143,14 @@ class AccountsPipelineController extends Controller
         $pipeline->staffAppsNeeds = $request->staffAppsNeeds;
         $pipeline->staffPhysicianOpenings = $request->staffPhysicianOpenings;
         $pipeline->staffAppsOpenings = $request->staffAppsOpenings;
+        $pipeline->fullTimeHoursPhys = $request->fullTimeHoursPhys;
+        $pipeline->fullTimeHoursApps = $request->fullTimeHoursApps;
+        $pipeline->staffPhysicianFTEHaves = $request->staffPhysicianFTEHaves;
+        $pipeline->staffPhysicianFTENeeds = $request->staffPhysicianFTENeeds;
+        $pipeline->staffPhysicianFTEOpenings = $request->staffPhysicianFTEOpenings;
+        $pipeline->staffAppsFTEHaves = $request->staffAppsFTEHaves;
+        $pipeline->staffAppsFTENeeds = $request->staffAppsFTENeeds;
+        $pipeline->staffAppsFTEOpenings = $request->staffAppsFTEOpenings;
         $pipeline->save();
 
         flash(__('Pipeline Updated.'));

@@ -127,7 +127,7 @@
                         </div>
                         <div class="mb5 col-xs-5 col-sm-2">
                             <div class="form-group{{ $errors->has('practiceTime') ? ' has-error' : '' }}">
-                                <select class="form-control hidden-print" id="practiceTime" name="practiceTime" v-model="practiceTime">
+                                <select class="form-control hidden-print" id="practiceTime" name="practiceTime" v-model="pipeline.practiceTime">
                                     {{-- <option value="" disabled selected></option> --}}
                                     @foreach ($practiceTimes as $name => $practiceTime)
                                         <option value="{{ $practiceTime }}" {{ (old('practiceTime') == $practiceTime ?: ($pipeline->practiceTime == $practiceTime)) ? 'selected': '' }}>{{ $name }}</option>
@@ -163,24 +163,26 @@
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th colspan="2" class="text-center">@lang('Physician')</th>
-                                <th colspan="2" class="text-center">@lang('APPs')</th>
+                                <th colspan="3" class="text-center">@lang('Physician')</th>
+                                <th colspan="3" class="text-center">@lang('APPs')</th>
                                 <th class="text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="w20">@lang('Haves')</td>
-                                <td class="w20">
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianHaves" value="{{ old('staffPhysicianHaves') ?: $pipeline->staffPhysicianHaves }}" v-model="staffPhysicianHaves" readonly />
-                                    <span class="visible-print">@{{ staffPhysicianHaves }}</span>
+                                <td class="w15">@lang('Full Time Hours')</td>
+                                <td class="w15">&nbsp;</td>
+                                <td class="w15">
+                                    <input type="text" class="form-control hidden-print" name="fullTimeHoursPhys" value="{{ old('fullTimeHoursPhys') ?: $pipeline->fullTimeHoursPhys }}" v-model="fullTimeHoursPhys" />
+                                    <span class="visible-print">@{{ fullTimeHoursPhys }}</span>
                                 </td>
-                                <td class="w20">@lang('Haves')</td>
-                                <td class="w20">
-                                    <input type="text" class="form-control hidden-print" name="staffAppsHaves" value="{{ old('staffAppsHaves') ?: $pipeline->staffAppsHaves }}" v-model="staffAppsHaves" readonly />
-                                    <span class="visible-print">@{{ staffAppsHaves }}</span>
+                                <td class="w15">@lang('Full Time Hours')</td>
+                                <td class="w15">&nbsp;</td>
+                                <td class="w15">
+                                    <input type="text" class="form-control hidden-print" name="fullTimeHoursApps" value="{{ old('fullTimeHoursApps') ?: $pipeline->fullTimeHoursApps }}" v-model="fullTimeHoursApps" />
+                                    <span class="visible-print">@{{ fullTimeHoursApps }}</span>
                                 </td>
-                                <td rowspan="3" class="text-center hidden-print">
+                                <td rowspan="5" class="text-center hidden-print">
                                      @permission('admin.accounts.pipeline.update')
                                         <button type="submit" class="btn btn-info">
                                             Update
@@ -189,15 +191,51 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th>&nbsp;</th>
+                                <th class="text-center">@lang('Hours')</th>
+                                <th class="text-center">@lang('FTEs')</th>
+                                <th>&nbsp;</th>
+                                <th class="text-center">@lang('Hours')</th>
+                                <th class="text-center">@lang('FTEs')</th>
+                            </tr>
+                            <tr>
+                                <td>@lang('Haves')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="staffPhysicianHaves" value="{{ old('staffPhysicianHaves') ?: $pipeline->staffPhysicianHaves }}" v-model="staffPhysicianHaves" readonly />
+                                    <span class="visible-print">@{{ staffPhysicianHaves }}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="staffPhysicianFTEHaves" value="{{ old('staffPhysicianFTEHaves') ?: $pipeline->staffPhysicianFTEHaves }}" v-model="staffPhysicianFTEHaves" readonly />
+                                    <span class="visible-print">@{{ staffPhysicianFTEHaves }}</span>
+                                </td>
+                                <td>@lang('Haves')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="staffAppsHaves" value="{{ old('staffAppsHaves') ?: $pipeline->staffAppsHaves }}" v-model="staffAppsHaves" readonly />
+                                    <span class="visible-print">@{{ staffAppsHaves }}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="staffAppsFTEHaves" value="{{ old('staffAppsFTEHaves') ?: $pipeline->staffAppsFTEHaves }}" v-model="staffAppsFTEHaves" readonly />
+                                    <span class="visible-print">@{{ staffAppsFTEHaves }}</span>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>@lang('Needs')</td>
                                 <td>
                                     <input type="text" class="form-control hidden-print" name="staffPhysicianNeeds" value="{{ old('staffPhysicianNeeds') ?: $pipeline->staffPhysicianNeeds }}" v-model="staffPhysicianNeeds" />
                                     <span class="visible-print">@{{ pipeline.staffPhysicianNeeds }}</span>
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="staffPhysicianFTENeeds" value="{{ old('staffPhysicianFTENeeds') ?: $pipeline->staffPhysicianFTENeeds }}" v-model="staffPhysicianFTENeeds" readonly />
+                                    <span class="visible-print">@{{ staffPhysicianFTENeeds }}</span>
+                                </td>
                                 <td>@lang('Needs')</td>
                                 <td>
                                     <input type="text" class="form-control hidden-print" name="staffAppsNeeds" value="{{ old('staffAppsNeeds') ?: $pipeline->staffAppsNeeds }}" v-model="staffAppsNeeds" />
                                     <span class="visible-print">@{{ pipeline.staffAppsNeeds }}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="staffAppsFTENeeds" value="{{ old('staffAppsFTENeeds') ?: $pipeline->staffAppsFTENeeds }}" v-model="staffAppsFTENeeds" readonly />
+                                    <span class="visible-print">@{{ staffAppsFTENeeds }}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -206,10 +244,18 @@
                                     <input type="text" class="form-control hidden-print" name="staffPhysicianOpenings" value="{{ old('staffPhysicianOpenings') ?: $pipeline->staffPhysicianOpenings }}" v-model="staffPhysicianOpenings" readonly />
                                     <span class="visible-print">@{{ staffPhysicianOpenings }}</span>
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="staffPhysicianFTEOpenings" value="{{ old('staffPhysicianFTEOpenings') ?: $pipeline->staffPhysicianFTEOpenings }}" v-model="staffPhysicianFTEOpenings" readonly />
+                                    <span class="visible-print">@{{ staffPhysicianFTEOpenings }}</span>
+                                </td>
                                 <td>@lang('Openings')</td>
                                 <td>
                                     <input type="text" class="form-control hidden-print" name="staffAppsOpenings" value="{{ old('staffAppsOpenings') ?: $pipeline->staffAppsOpenings }}" v-model="staffAppsOpenings" readonly />
                                     <span class="visible-print">@{{ staffAppsOpenings }}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="staffAppsFTEOpenings" value="{{ old('staffAppsFTEOpenings') ?: $pipeline->staffAppsFTEOpenings }}" v-model="staffAppsFTEOpenings" readonly />
+                                    <span class="visible-print">@{{ staffAppsFTEOpenings }}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -1016,10 +1062,11 @@
                 account: BackendVars.account,
                 pipeline: BackendVars.pipeline,
 
-                practiceTime: BackendVars.pipeline.practiceTime,
-
                 staffPhysicianNeeds: BackendVars.pipeline.staffPhysicianNeeds,
                 staffAppsNeeds: BackendVars.pipeline.staffAppsNeeds,
+
+                fullTimeHoursPhys: BackendVars.pipeline.fullTimeHoursPhys,
+                fullTimeHoursApps: BackendVars.pipeline.fullTimeHoursApps,
 
                 rosterPhysician: {
                     name: '',
@@ -1111,11 +1158,11 @@
 
             computed: {
                 staffPhysicianHaves: function () {
-                    return this.practiceTime == 'hours' ? _(this.activeRosterPhysicians).sumBy('hours') : this.activeRosterPhysicians.length;
+                    return this.pipeline.practiceTime == 'hours' ? _(this.activeRosterPhysicians).sumBy('hours') : this.activeRosterPhysicians.length;
                 },
 
                 staffAppsHaves: function () {
-                    return this.practiceTime == 'hours' ? _(this.activeRosterApps).sumBy('hours') : this.activeRosterApps.length;
+                    return this.pipeline.practiceTime == 'hours' ? _(this.activeRosterApps).sumBy('hours') : this.activeRosterApps.length;
                 },
 
                 staffPhysicianOpenings: function () {
@@ -1124,6 +1171,54 @@
 
                 staffAppsOpenings: function () {
                     return this.staffAppsNeeds - this.staffAppsHaves;
+                },
+
+                staffPhysicianFTEHaves: function () {
+                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.fullTimeHoursPhys == 0) return 0;
+                    var result = this.staffPhysicianHaves / this.fullTimeHoursPhys;
+                    
+                    return this.roundStep(result, 0.5);
+                },
+
+                staffAppsFTEHaves: function () {
+                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.fullTimeHoursApps == 0) return 0;
+                    var result = this.staffAppsHaves / this.fullTimeHoursApps;
+                    
+                    return this.roundStep(result, 0.5);
+                },
+
+                staffPhysicianFTENeeds: function () {
+                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.fullTimeHoursPhys == 0) return 0;
+                    var result = this.staffPhysicianNeeds / this.fullTimeHoursPhys;
+                    
+                    return this.roundStep(result, 0.5);
+                },
+
+                staffAppsFTENeeds: function () {
+                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.fullTimeHoursApps == 0) return 0;
+                    var result = this.staffAppsNeeds / this.fullTimeHoursApps;
+                    
+                    return this.roundStep(result, 0.5);
+                },
+
+                staffPhysicianFTEOpenings: function () {
+                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.fullTimeHoursPhys == 0) return 0;
+                    var result = this.staffPhysicianOpenings / this.fullTimeHoursPhys;
+                    
+                    return this.roundStep(result, 0.5);
+                },
+
+                staffAppsFTEOpenings: function () {
+                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.fullTimeHoursApps == 0) return 0;
+                    var result = this.staffAppsOpenings / this.fullTimeHoursApps;
+                    
+                    return this.roundStep(result, 0.5);
                 },
 
                 activeRosterPhysicians: function () {
@@ -1317,6 +1412,14 @@
                             _.assignIn(this.toResign, resigned);
                             $('#resignModal').modal('hide');
                         }.bind(this));
+                },
+
+                roundStep: function (number, step) {
+                    if (step == 0) return 0;
+
+                    var factor = 1 / step;
+
+                    return Math.round(number * factor) / factor;
                 },
             }
         });
