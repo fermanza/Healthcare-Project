@@ -9,6 +9,7 @@
 /public/js/manifest*.js
 /storage/*.key
 /vendor
+.DS_Store
 /.idea
 Homestead.json
 Homestead.yaml

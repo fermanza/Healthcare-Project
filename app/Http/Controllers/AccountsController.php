@@ -22,15 +22,18 @@ class AccountsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
+        $termed = $request->exists('termed');
+
         $accounts = Account::with([
                 'rsc',
                 'region',
                 'recruiter.employee.person',
                 'manager.employee.person',
             ])
-            ->where('active', true)->get();
+            ->where('active', true)->termed($termed)->get();
 
         return view('admin.accounts.index', compact('accounts'));
     }

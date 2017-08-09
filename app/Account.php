@@ -65,6 +65,11 @@ class Account extends Model
                     $query->where('employeeId', $user->employeeId)
                         ->whereNotNull('employeeId');
                 });
+            } else if ($user->hasRoleId(config('instances.roles.director'))) {
+                $builder->whereHas('rsc', function($query) use ($user) {
+                    $query->where('directorId', $user->employeeId)
+                    ->whereNotNull('directorId');
+                });
             }
 
             // if ($user->hasRoleId(config('instances.roles.director'))) {
@@ -193,19 +198,34 @@ class Account extends Model
     }
 
     /**
-     * Determines if start date is less than 6 months ago.
+     * Determines if start date is less than 7 months ago.
      *
      * @return boolean
      */
     public function isRecentlyCreated()
     {
-        if (! $this->startDate) {
-            return false;
-        }
-        // Six months ago
-        $pastDate = Carbon::now()->subMonths(6);
+        $monthsToGetOld = 7;
+        $monthsSinceCreated = $this->getMonthsSinceCreated();
 
-        return $this->startDate->gte($pastDate);
+        return $monthsSinceCreated < $monthsToGetOld;
+    }
+
+    /**
+     * Returns the number of months since created.
+     *
+     * @return float
+     */
+    public function getMonthsSinceCreated()
+    {
+        if (! $this->startDate) {
+            return INF;
+        }
+        
+        $monthDays = 30;
+        $days = Carbon::now()->diffInDays($this->startDate);
+        $months = $days / $monthDays;
+
+        return number_format($months, 1);
     }
 
     /**
@@ -220,5 +240,20 @@ class Account extends Model
         }
 
         return Carbon::now()->gte($this->endDate);
+    }
+
+    /**
+     * Scope a query to check if account has ended or not.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTermed(Builder $query, $termed)
+    {
+        return $termed == true 
+            ? $query->whereNotNull('endDate')->whereDate('endDate', '<=', Carbon::now()) 
+            : $query->where(function($query){ 
+                $query->whereNull('endDate')->orWhere('endDate', '>', Carbon::now()); 
+            });
     }
 }
