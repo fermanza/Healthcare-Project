@@ -17,6 +17,7 @@ use App\ContractStatus;
 use App\AccountEmployee;
 use App\EmployementStatus;
 use App\ProviderDesignation;
+use App\Scopes\ContractLogScope;
 use Illuminate\Http\Request;
 use App\Filters\ContractLogsFilter;
 use App\Http\Requests\ContractLogRequest;
@@ -39,7 +40,7 @@ class ContractLogsController extends Controller
         $accounts = Account::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
-        $contractLogs = ContractLog::leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
+        $contractLogs = ContractLog::withGlobalScope('role', new ContractLogScope)->leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
             ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
             ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
             ->leftJoin('tAccount', 'tContractLogs.accountId', '=', 'tAccount.id')
@@ -158,7 +159,7 @@ class ContractLogsController extends Controller
     protected function form($contractLog, $action, $view)
     {
         $contractLog->load('account.division.group', 'account.practices', 'accounts');
-        $accounts = Account::withoutGlobalScope('role')->where('active', true)->orderBy('name')->get();
+        $accounts = Account::where('active', true)->orderBy('name')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $specialties = Specialty::orderBy('specialty')->get();
         $employees =  Employee::where('active', true)

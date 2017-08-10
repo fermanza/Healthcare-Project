@@ -27,7 +27,7 @@ class AccountsController extends Controller
 
         $termed = $request->exists('termed');
 
-        $accounts = Account::with([
+        $accounts = Account::withGlobalScope('role', new AccountScope)->with([
                 'rsc',
                 'region',
                 'recruiter.employee.person',

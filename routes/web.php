@@ -34,6 +34,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'acl']], function ($router) {
 
     $router->get('reports/summary', 'ReportsController@summary')->name('reports.summary.index');
+    $router->get('reports/summary/excel', 'ReportsController@exportToExcel')->name('reports.summary.excel');
 
     $router->post('accounts/image', 'AccountsController@image')->name('accounts.image');
     $router->patch('accounts/merge', 'AccountsController@merge')->name('accounts.merge');

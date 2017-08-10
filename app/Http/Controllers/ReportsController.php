@@ -35,21 +35,24 @@ class ReportsController extends Controller
         return view('admin.reports.index', $params);
     }
 
-    public function exportToExcel() {
-        Excel::create('Summary Report', function($excel) use ($dataToExport){
-            $excel->sheet('Summary', function($sheet) use ($dataToExport){
-                $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
-                    "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO/SVP", "RMD", "City", "Location",
-                    "Start Date", "# of Months Account Open"
-                ];
+    public function exportToExcel(SummaryFilter $filter) {
+        $dataToExport = $this->getSummaryData($filter);
+        $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
+            "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO/SVP", "RMD", "City", "Location",
+            "Start Date", "# of Months Account Open"
+        ];
 
-                $rowNumber = 1;
+
+        Excel::create('Summary Report', function($excel) use ($dataToExport, $headers){
+            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers){
+                
+                $rowNumber = 2;
 
                 $sheet->row($rowNumber, $headers);
                 $sheet->row($rowNumber, function($row) {
                     $row->setBackground('#d9d9d9');
                 });
-                $sheet->setHeight($rowNumber, 40);
+                $sheet->setHeight($rowNumber, 25);
 
                 foreach($dataToExport as $account) {
                     $rowNumber++;
@@ -70,7 +73,7 @@ class ReportsController extends Controller
                         $account->city,
                         $account->state,
                         $account->startDate ? $account->startDate->format('Y-m-d') : '',
-                        $account->getMonthsSinceCreated(),
+                        $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated(),
                     ];
 
                     $sheet->row($rowNumber, $row);
@@ -82,28 +85,44 @@ class ReportsController extends Controller
                     }
                 };
 
-                $sheet->setFreeze('C1');
-                $sheet->setAutoFilter();
-                
-                $sheet->cells('A1:P1', function($cells) {
+                $sheet->setFreeze('C3');
+                $sheet->setAutoFilter('A2:P2');
+                $sheet->mergeCells('A1:P1');
+
+                $sheet->cell('A1', function($cell) {
+                    $cell->setValue('WEST RSC RECRUITING SUMMARY');
+                    $cell->setFontColor('#000000');
+                    $cell->setFontFamily('Calibri (Body)');
+                    $cell->setFontSize(8);
+                    $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
+                });
+
+                $x = "A1:P".$rowNumber;
+
+                $sheet->cells("A1:P".$rowNumber, function($cells) {
+                    $cells->setBorder('medium', 'medium', 'medium', 'medium');
+                });
+
+                $sheet->cells('A2:P2', function($cells) {
                     $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Calibri');
-                    $cells->setFontSize(11);
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setFontSize(8);
                     $cells->setFontWeight('bold');
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
 
-                $sheet->cells('A2:P'.$rowNumber, function($cells) {
+                $sheet->cells('A3:P'.$rowNumber, function($cells) {
                     $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Calibri');
-                    $cells->setFontSize(11);
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setFontSize(8);
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
-                    $cells->setBorder('solid', 'none', 'none', 'solid');
                 });
 
-                $styleArray = array(
+                $tableStyle = array(
                     'borders' => array(
                         'outline' => array(
                             'style' => 'medium',
@@ -116,7 +135,21 @@ class ReportsController extends Controller
                     ),
                 );
 
-                $sheet->getStyle('A1:P'.$rowNumber)->applyFromArray($styleArray);
+                $headersStyle = array(
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                        'inside' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                    ),
+                );
+
+                $sheet->getStyle('A1:P'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A2:P2')->applyFromArray($headersStyle);
 
             });
         })->download('xlsx'); 
@@ -136,6 +169,6 @@ class ReportsController extends Controller
             ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
             ->select('tAccount.*')
             ->with('recruiter.employee.person', 'recruiters.employee.person', 'manager.employee.person', 'division.group', 'region', 'rsc', 'pipeline', 'practices')
-            ->where('tAccount.active', true)->filter($filter)->groupBy('tAccount.id')->get();
+            ->where('tAccount.active', true)->filter($filter)->get()->unique();
     }
 }

@@ -2,6 +2,13 @@
 
 @section('content-header', __('Summary Report'))
 
+@section('tools')
+    <a href="{{ route('admin.reports.summary.excel', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
+        <i class="fa fa-file-excel-o"></i>
+        @lang('Export to Excel')
+    </a>
+@endsection
+
 @section('content')
 	<form class="box-body">
         <div class="flexboxgrid">
@@ -80,19 +87,22 @@
 		<div class="table-responsive">
 	        <table id="datatable-summary" class="table table-hover table-bordered datatable">
 	            <thead>
+                    <tr>
+                        <th colspan="16" class="white-bg">WEST RSC RECRUITING SUMMARY</th>
+                    </tr>
 	                <tr>
 	                    <th class="mw50">#</th>
 	                    <th class="mw300 w100">@lang('Contract Name')</th>
 	                    <th class="mw150 w100">@lang('Service Line')</th>
 	                    <th class="mw200 w100">@lang('System Affiliation')</th>
 	                    <th class="mw50 w100">@lang('JV')</th>
-	                    <th class="mw150 w100">@lang('Operating Unit')</th>
+	                    <th class="mw200 w100">@lang('Operating Unit')</th>
 	                    <th class="mw50">@lang('RSC')</th>
 	                    <th class="mw150">@lang('Recruiter')</th>
-	                    <th class="mw200">@lang('Secondary Recruiter')</th>
+	                    <th class="mw250">@lang('Secondary Recruiter')</th>
 	                    <th class="mw150">@lang('Managers')</th>
-	                    <th class="mw100">@lang('DOO/SVP')</th>
-	                    <th class="mw100">@lang('RMD')</th>
+	                    <th class="mw150">@lang('DOO/SVP')</th>
+	                    <th class="mw150">@lang('RMD')</th>
 	                    <th class="mw100">@lang('City')</th>
 	                    <th class="mw100">@lang('Location')</th>
 	                    <th class="mw100">@lang('Start Date')</th>
@@ -121,7 +131,7 @@
 	                        <td>{{ $account->state }}</td>
 	                        <td>{{ $account->startDate ? $account->startDate->format('m/d/Y') : '' }}</td>
 	                        <td class="{{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-	                        	{{ $account->getMonthsSinceCreated() }}
+	                        	{{ $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated() }}
 	                        </td>
 	                    </tr>
 	                @endforeach
