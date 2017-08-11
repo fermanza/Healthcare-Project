@@ -22,6 +22,8 @@ class AccountSummary extends Model
         'Start Date',
     ];
 
+    protected $dateFormat = 'Y-m-d H:i:s+';
+
     /**
      * Determines if start date is less than 7 months ago.
      *
