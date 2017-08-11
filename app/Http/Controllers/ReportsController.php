@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\AccountSummary;
 use App\RSC;
 use App\Region;
 use App\Division;
@@ -72,7 +73,7 @@ class ReportsController extends Controller
                         $account->pipeline->rmd,
                         $account->city,
                         $account->state,
-                        $account->startDate ? $account->startDate->format('Y-m-d') : '',
+                        $account->startDate ? $account->startDate->format('d/m/y') : '',
                         $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated(),
                     ];
 
@@ -156,19 +157,23 @@ class ReportsController extends Controller
     }
 
     private function getSummaryData(SummaryFilter $filter) {
-        return Account::leftJoin('tAccountToEmployee as tRecruiter', function($join) {
-                $join->on('tRecruiter.accountId', '=', 'tAccount.id')
-                ->on('tRecruiter.positionTypeId', '=', DB::raw(config('instances.position_types.recruiter')));
-            }) 
-            ->leftJoin('tAccountToEmployee as tManager', function($join) {
-                $join->on('tManager.accountId', '=', 'tAccount.id')
-                ->on('tManager.positionTypeId', '=', DB::raw(config('instances.position_types.manager')));
-            }) 
-            ->leftJoin('tAccountToPractice', 'tAccount.id', '=', 'tAccountToPractice.accountId')
-            ->leftJoin('tDivision', 'tAccount.divisionId', '=', 'tDivision.id')
-            ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
-            ->select('tAccount.*')
-            ->with('recruiter.employee.person', 'recruiters.employee.person', 'manager.employee.person', 'division.group', 'region', 'rsc', 'pipeline', 'practices')
-            ->where('tAccount.active', true)->filter($filter)->get()->unique();
+        // return Account::leftJoin('tAccountToEmployee as tRecruiter', function($join) {
+        //         $join->on('tRecruiter.accountId', '=', 'tAccount.id')
+        //         ->on('tRecruiter.positionTypeId', '=', DB::raw(config('instances.position_types.recruiter')));
+        //     }) 
+        //     ->leftJoin('tAccountToEmployee as tManager', function($join) {
+        //         $join->on('tManager.accountId', '=', 'tAccount.id')
+        //         ->on('tManager.positionTypeId', '=', DB::raw(config('instances.position_types.manager')));
+        //     }) 
+        //     ->leftJoin('tAccountToPractice', 'tAccount.id', '=', 'tAccountToPractice.accountId')
+        //     ->leftJoin('tDivision', 'tAccount.divisionId', '=', 'tDivision.id')
+        //     ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
+        //     ->select('tAccount.*')
+        //     ->with('recruiter.employee.person', 'recruiters.employee.person', 'manager.employee.person', 'division.group', 'region', 'rsc', 'pipeline', 'practices')
+        //     ->where('tAccount.active', true)->filter($filter)->get()->unique();
+
+        return AccountSummary::leftJoin('tAccount', 'vAccountSummary.siteCode', 'tAccount.siteCode')
+            ->select('vAccountSummary.*', 'tAccount.divisionId', 'tAccount.RSCId')
+            ->filter($filter)->get()->unique('siteCode');
     }
 }

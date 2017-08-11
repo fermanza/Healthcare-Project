@@ -9,12 +9,12 @@ class SummaryFilter extends Filter
     /**
      * Apply practices filter.
      *
-     * @param  array  $ids
+     * @param  array  $names
      * @return void
      */
-    public function practices($ids)
+    public function practices($names)
     {
-        $this->query->whereIn('tAccountToPractice.practiceId', $ids);
+        $this->query->whereIn('vAccountSummary.practice', $names);
     }
 
     /**
@@ -31,12 +31,12 @@ class SummaryFilter extends Filter
     /**
      * Apply recruiters filter.
      *
-     * @param  array  $ids
+     * @param  array  $names
      * @return void
      */
-    public function recruiters($ids)
+    public function recruiters($names)
     {
-        $this->query->whereIn('tRecruiter.employeeId', $ids);
+        $this->query->whereIn('vAccountSummary.RSC Recruiter', $names);
     }
 
     /**
@@ -53,12 +53,12 @@ class SummaryFilter extends Filter
     /**
      * Apply regions filter.
      *
-     * @param  array  $ids
+     * @param  array  $names
      * @return void
      */
-    public function regions($ids)
+    public function regions($names)
     {
-        $this->query->whereIn('tGroup.regionId', $ids);
+        $this->query->whereIn('vAccountSummary.Operating Unit', $names);
     }
     
     /**
@@ -85,7 +85,7 @@ class SummaryFilter extends Filter
         $firstDayOfMonth = new Carbon('first day of ' . $dt->format('F') . ' ' . $dt->format('Y'));
         $lastDayOfMonth = new Carbon('last day of ' . $dt->format('F') . ' ' . $dt->format('Y'));
 
-        $this->query->whereBetween('tAccount.startDate', [$firstDayOfMonth, $lastDayOfMonth]);
+        $this->query->whereBetween('vAccountSummary.Start Date', [$firstDayOfMonth, $lastDayOfMonth]);
     }
 
     // /**

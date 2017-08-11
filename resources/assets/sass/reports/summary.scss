@@ -17,6 +17,50 @@
 			vertical-align: middle;
 		}
 
+		td {
+			text-overflow:ellipsis;
+		    white-space: nowrap;
+		    overflow: hidden; 
+		    word-wrap: break-word;
+		}
+
+		td:hover{
+		    text-overflow: clip;
+		    white-space: inherit;
+		}
+
+		.wd10 { max-width: 10px !important; }
+		.wd20 { max-width: 20px !important; }
+		.wd30 { max-width: 30px !important; }
+		.wd40 { max-width: 40px !important; }
+		.wd50 { max-width: 50px !important; }
+		.wd60 { max-width: 60px !important; }
+		.wd70 { max-width: 70px !important; }
+		.wd80 { max-width: 80px !important; }
+		.wd90 { max-width: 90px !important; }
+		.wd100 { max-width: 100px !important; }
+		.wd110 { max-width: 110px !important; }
+		.wd120 { max-width: 120px !important; }
+		.wd130 { max-width: 130px !important; }
+		.wd140 { max-width: 140px !important; }
+		.wd150 { max-width: 150px !important; }
+		.wd160 { max-width: 160px !important; }
+		.wd170 { max-width: 170px !important; }
+		.wd180 { max-width: 180px !important; }
+		.wd190 { max-width: 190px !important; }
+		.wd200 { max-width: 200px !important; }
+		.wd210 { max-width: 210px !important; }
+		.wd220 { max-width: 220px !important; }
+		.wd230 { max-width: 230px !important; }
+		.wd240 { max-width: 240px !important; }
+		.wd250 { max-width: 250px !important; }
+		.wd260 { max-width: 260px !important; }
+		.wd270 { max-width: 270px !important; }
+		.wd280 { max-width: 280px !important; }
+		.wd290 { max-width: 290px !important; }
+		.wd300 { max-width: 300px !important; }
+		
+
 		td.recently-created {
 			background-color: #1aaf54;
 			border-top: 1px solid #1aaf54;
