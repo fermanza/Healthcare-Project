@@ -31,6 +31,8 @@ class ReportsController extends Controller
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
 
+        dd($accounts);
+
         $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'action');
 
         return view('admin.reports.index', $params);

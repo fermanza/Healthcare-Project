@@ -10,6 +10,27 @@
 
 		th.white-bg {
 			background-color: #ffffff;
+			border-bottom: 1px solid #ffffff;
+		}
+		th.complete-staff-bg {
+			background-color: #dce6f1;
+			border-bottom: 1px solid #dce6f1;
+		}
+		th.current-staff-bg {
+			background-color: #ebf1df;
+			border-bottom: 1px solid #ebf1df;
+		}
+		th.current-openings-bg {
+			background-color: #fffd38;
+			border-bottom: 1px solid #fffd38;
+		}
+		th.percent-bg {
+			background-color: #e4dfec;
+			border-bottom: 1px solid #e4dfec;
+		}
+		th.comp-shifts-bg {
+			background-color: #dbeef3;
+			border-bottom: 1px solid #dbeef3;
 		}
 
 		th, td {

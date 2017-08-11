@@ -91,9 +91,9 @@
                         <th colspan="16" class="white-bg">WEST RSC RECRUITING SUMMARY</th>
                         <th colspan="3" class="complete-staff-bg">COMPLETE STAFF</th>
                         <th colspan="3" class="current-staff-bg">CURRENT STAFF</th>
-                        <th colspan="5" class="current-staff-bg">CURRENT OPENINGS</th>
-                        <th colspan="3" class="current-staff-bg">PERCENT RECRUITED</th>
-                        <th colspan="7" class="current-staff-bg">PHYSICIAN INCREASE COMP & SHIFTS BY RESOURCE TYPE</th>
+                        <th colspan="5" class="current-openings-bg">CURRENT OPENINGS</th>
+                        <th colspan="3" class="percent-bg">PERCENT RECRUITED</th>
+                        <th colspan="7" class="comp-shifts-bg">PHYSICIAN INCREASE COMP & SHIFTS BY RESOURCE TYPE</th>
                     </tr>
 	                <tr>
 	                    <th class="mw50">#</th>
@@ -143,9 +143,9 @@
 	                        <td class="wd300">{{ $account->{'Hospital Name'} }}</td>
 	                        <td class="wd150">{{ $account->Practice }}</td>
 	                        <td class="wd200">{{ $account->{'System Affiliation'} }}</td>
-	                        <td class="wd50">{{-- {{ ($account->division && $account->division->isJV) ? __('Yes') : __('No') }} --}}</td>
+	                        <td class="wd50">{{ ($account->division && $account->division->isJV) ? __('Yes') : __('No') }}</td>
 	                        <td class="wd200">{{ $account->{'Operating Unit'} }}</td>
-	                        <td class="wd50">{{-- {{ $account->rsc ? $account->rsc->name : '' }} --}}</td>
+	                        <td class="wd50">{{ $account->rsc ? $account->rsc->name : '' }}</td>
 	                        <td class="wd150">{{ $account->{'RSC Recruiter'} }}</td>
 	                        <td class="wd250">
 	                        	{{ $account->{'Secondary Recruiter'} }}
