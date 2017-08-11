@@ -53,7 +53,7 @@
                         </a>
                     </li>
 
-                    {{-- @permission(['admin.reports.summary.index'])
+                    @permission(['admin.reports.summary.index'])
                         <li class="treeview {{ route_starts_with('admin.reports') }}">
                             <a href="#">
                                 <i class="fa fa-file-excel-o"></i> <span>@lang('Reports')</span>
@@ -71,7 +71,7 @@
                                 @endpermission
                             </ul>
                         </li>
-                    @endpermission --}}
+                    @endpermission
 
                     @permission('admin.users.index')
                         <li class="{{ route_starts_with('admin.users') }}">

@@ -150,7 +150,7 @@
 	                        <td class="wd250">
 	                        	{{ $account->{'Secondary Recruiter'} }}
 	                        </td>
-	                        <td class="wd150">{{ $account->managers }}</td>
+	                        <td class="wd150">{{ $account->Managers }}</td>
 	                        <td class="wd150">{{ $account->{'DOO/SVP'} }}</td>
 	                        <td class="wd150">{{ $account->RMD }}</td>
 	                        <td class="wd100">{{ $account->City }}</td>
