@@ -176,7 +176,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AG1', function($cell) {
+                $sheet->cell('AE1', function($cell) {
                     $cell->setValue('PHYSICIAN INCREASE COMP & SHIFTS BY RESOURCE TYPE');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#dbeef3');
@@ -298,11 +298,12 @@ class ReportsController extends Controller
                 $sheet->getStyle('A2:AK2')->applyFromArray($headersStyle);
 
                 $sheet->getStyle('P2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AF2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AG2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AI2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AH2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AJ2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AK2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AL2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AM2')->getAlignment()->setWrapText(true);
             });
         })->download('xlsx'); 
     }
