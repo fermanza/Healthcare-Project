@@ -42,12 +42,12 @@ class SummaryFilter extends Filter
     /**
      * Apply managers filter.
      *
-     * @param  array  $ids
+     * @param  array  $names
      * @return void
      */
-    public function managers($ids)
+    public function managers($names)
     {
-        $this->query->whereIn('tManager.employeeId', $ids);
+        $this->query->whereIn('vAccountSummary.Managers', $names);
     }
 
     /**
