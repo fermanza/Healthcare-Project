@@ -31,7 +31,7 @@ class ReportsController extends Controller
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         
-        $dates = AccountSummary::select('MonthEndDate')->get()->unique();
+        $dates = AccountSummary::select('MonthEndDate')->get()->unique('MonthEndDate');
 
         $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'action');
 
