@@ -45,11 +45,19 @@
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                {{-- <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
                     <div class="input-group date datepicker">
 	                    <input type="text" class="form-control" id="startDate" name="startDate" value="{{ Request::input('startDate') ? Request::input('startDate') : ''}}" />
 	                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 	</div>
+                </div> --}}
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="startDate" data-placeholder="@lang('Start Date')">
+                        @foreach ($dates as $date)
+                            <option value="{{ $date }}" {{ $date == Request::input('startDate') ? 'selected' : '' }}>{{ $date }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
@@ -170,9 +178,9 @@
                             <td class="wd50">{{ $account->{'Current Openings - Phys'} }}</td>
                             <td class="wd50">{{ $account->{'Current Openings - APP'} }}</td>
                             <td class="wd50">{{ $account->{'Current Openings - Total'} }}</td>
-                            <td class="wd100">{{ $account->{'Percent Recruited - Phys'} }}</td>
-                            <td class="wd150">{{ $account->{'Percent Recruited - APP'} }}</td>
-                            <td class="wd150">{{ $account->{'Percent Recruited - Total'} }}</td>
+                            <td class="wd100">{{ $account->{'Percent Recruited - Phys'} * 100 }}%</td>
+                            <td class="wd150">{{ $account->{'Percent Recruited - APP'} * 100 }}%</td>
+                            <td class="wd150">{{ $account->{'Percent Recruited - Total'} * 100 }}%</td>
                             <td class="wd150">{{ $account->{'Hours - Phys'} }}</td>
                             <td class="wd100"></td>
                             <td class="wd100"></td>

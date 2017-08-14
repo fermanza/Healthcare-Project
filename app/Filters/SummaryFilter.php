@@ -80,43 +80,11 @@ class SummaryFilter extends Filter
      */
     public function startDate($date)
     {
-        $dt = Carbon::parse($date);
+        $monthYear = explode('-', $date);
+        $month = $monthYear[0];
+        $year = $monthYear[1];
 
-        $firstDayOfMonth = new Carbon('first day of ' . $dt->format('F') . ' ' . $dt->format('Y'));
-        $lastDayOfMonth = new Carbon('last day of ' . $dt->format('F') . ' ' . $dt->format('Y'));
-
-        $this->query->whereBetween('vAccountSummary.Start Date', [$firstDayOfMonth, $lastDayOfMonth]);
+        $this->query->whereYear('vAccountSummary.MonthEndDate', $year)
+            ->whereMonth('vAccountSummary.MonthEndDate', $month);
     }
-
-    // /**
-    //  * Apply sort filter.
-    //  *
-    //  * @param  string  $key
-    //  * @return void
-    //  */
-    // public function sort($key)
-    // {
-    //     $sorts = [
-    //         'value' => 'tContractLogs.value',
-    //         'status' => 'tContractStatus.contractStatus',
-    //         'provider_first_name' => 'tContractLogs.providerFirstName',
-    //         'provider_last_name' => 'tContractLogs.providerLastName',
-    //         'position' => 'tPosition.position',
-    //         'hours' => 'tContractLogs.numOfHours',
-    //         'practice' => 'tPractice.name',
-    //         'hospital_name' => 'tAccount.name',
-    //         'site_code' => 'tAccount.siteCode',
-    //         'group' => 'tGroup.name',
-    //         'division' => 'tDivision.name',
-    //         'contract_out' => 'tContractLogs.contractOutDate',
-    //         'contract_in' => 'tContractLogs.contractInDate',
-    //         'projected_start_date' => 'tContractLogs.projectedStartDate',
-    //         'reason' => 'tContractNote.contractNote',
-    //     ];
-
-    //     $order = $this->request->input('order', 'asc');
-    //     $column = array_get($sorts, $key, 'tContractLogs.id');
-
-    //     $this->query->orderBy($column, $order);
-    // }
 }

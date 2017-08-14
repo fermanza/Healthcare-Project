@@ -20,6 +20,7 @@ class AccountSummary extends Model
      */
     protected $dates = [
         'Start Date',
+        'MonthEndDate',
     ];
 
     protected $dateFormat = 'Y-m-d H:i:s+';

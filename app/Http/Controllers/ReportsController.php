@@ -30,8 +30,11 @@ class ReportsController extends Controller
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
+        $dates = $accounts->map(function($account){ 
+            return $account->{'MonthEndDate'}->format('m-Y'); 
+        })->unique();
 
-        $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'action');
+        $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'action');
 
         return view('admin.reports.index', $params);
     }
@@ -42,9 +45,16 @@ class ReportsController extends Controller
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO/SVP", "RMD", "City", "Location",
             "Start Date", "# of Months Account Open", "Phys", "APP", "Total", "Phys", "APP", "Total",
             "SMD", "AMD", "Phys", "APP", "Total", "% Recruited", "% Recruited - Phys", "% Recruited - APP",
-            "Total Physician Shifts", "Phys Increase Comp - $", "INC per Phys Shift - $", 
-            "Fulltime/Cross Cred Utilization - %", "Phys Embassador Utilization - %",
-            "Phys Qualitas/Tiva Utilization - %", "Phys External Locum Utilization - %"
+            "Physician Daily Hours", "APP Daily Hours", "Total Physician Shifts", "Phys Increase Comp - $",
+            "INC per Phys Shift - $", "Fulltime/Cross Cred Utilization - %", "Phys Embassador Utilization - %",
+            "Phys Qualitas/Tiva Utilization - %", "Phys External Locum Utilization - %", "Director INC - $",
+            "Fulltime INC - $", "Cross Credential INC - $", "Embassador INC - $", "Internal Locum INC - $",
+            "External Locum INC - $", "Director Shifts", "Fulltime Shifts", "Cross Credential Shifts",
+            "Embassador Shifts", "Internal Locum Shifts", "External Locum Shifts", "Total APP Shifts",
+            "APP Increase Comp - $", "INC per Shift - $", "APP Qualitas/Tiva Utilization - %",
+            "APP External Locum Utilization - %", "Fulltime INC - $", "Cross Credential INC - $",
+            "Embassador INC - $", "Internal Locum INC - $", "External Locum INC - $", "Fulltime Shifts",
+            "Cross Credential Shifts", "Internal Locum Shifts", "External Locum Shifts"
         ];
 
 
@@ -90,16 +100,45 @@ class ReportsController extends Controller
                         $account->{'Current Openings - Phys'},
                         $account->{'Current Openings - APP'},
                         $account->{'Current Openings - Total'},
+                        $account->{'Percent Recruited - Total'},
                         $account->{'Percent Recruited - Phys'},
                         $account->{'Percent Recruited - APP'},
-                        $account->{'Percent Recruited - Total'},
                         $account->{'Hours - Phys'},
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        ''
+                        $account->{'Hours - APP'},
+                        $account->{'Total Shifts - Phys'},
+                        $account->{'Increased Comp - Phys'},
+                        $account->{'Increased Comp Per Shift - Phys'},
+                        $account->{'Fulltime/Cross Cred Utlization - Phys'},
+                        $account->{'Embassador Utilization - Phys'},
+                        $account->{'Qualitas/Tiva Utilization - Phys'},
+                        $account->{'External Locum Utilization - Phys'},
+                        $account->{'Director Increased Comp - Phys'},
+                        $account->{'Full Time Increased Comp - Phys'},
+                        $account->{'Cross Credential Increased Comp - Phys'},
+                        $account->{'Embassador Increased Comp - Phys'},
+                        $account->{'Internal Locum Increased Comp - Phys'},
+                        $account->{'External Locum Increased Comp - Phys'},
+                        $account->{'Director Shifts - Phys'},
+                        $account->{'Fulltime Shifts - Phys'},
+                        $account->{'Cross Credential Shifts - Phys'},
+                        $account->{'Embassador Shifts - Phys'},
+                        $account->{'Internal Locum Shifts - Phys'},
+                        $account->{'External Locum Shifts - Phys'},
+                        $account->{'Total Shifts - APP'},
+                        $account->{'Increased Comp - APP'},
+                        $account->{'Increased Comp Per Shift - APP'},
+                        $account->{'Qualitas/Tiva Utilization - APP'},
+                        $account->{'External Locum Utilization - APP'},
+                        $account->{'Full Time Increased Comp - APP'},
+                        $account->{'Cross Credential Increased Comp - APP'},
+                        $account->{'Embassador Increased Comp - APP'},
+                        $account->{'Internal Locum Increased Comp - APP'},
+                        $account->{'External Locum Increased Comp - APP'},
+                        $account->{'Fulltime Shifts - APP'},
+                        $account->{'Cross Credential Shifts - APP'},
+                        $account->{'Internal Locum Shifts - APP'},
+                        $account->{'External Locum Shifts - APP'},
+                        $account->{'MonthEndDate'}
                     ];
 
                     $sheet->row($rowNumber, $row);
@@ -119,8 +158,9 @@ class ReportsController extends Controller
                 $sheet->mergeCells('T1:V1');
                 $sheet->mergeCells('W1:AA1');
                 $sheet->mergeCells('AB1:AD1');
-                $sheet->mergeCells('AE1:AK1');
-
+                $sheet->mergeCells('AE1:AF1');
+                $sheet->mergeCells('AG1:AY1');
+                $sheet->mergeCells('AZ1:BM1');
 
                 $sheet->cell('A1', function($cell) {
                     $cell->setValue('WEST RSC RECRUITING SUMMARY');
@@ -177,9 +217,30 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AE1', function($cell) {
+                    $cell->setValue('DAILY STAFFING HOURS');
+                    $cell->setFontColor('#000000');
+                    $cell->setFontFamily('Calibri (Body)');
+                    $cell->setFontSize(8);
+                    $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
+                });
+
+                $sheet->cell('AG1', function($cell) {
                     $cell->setValue('PHYSICIAN INCREASE COMP & SHIFTS BY RESOURCE TYPE');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#dbeef3');
+                    $cell->setFontFamily('Calibri (Body)');
+                    $cell->setFontSize(8);
+                    $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
+                });
+
+                $sheet->cell('AZ1', function($cell) {
+                    $cell->setValue('APP INCREASE COMP & SHIFTS BY RESOURCE TYPE');
+                    $cell->setFontColor('#000000');
+                    $cell->setBackground('#fce9da');
                     $cell->setFontFamily('Calibri (Body)');
                     $cell->setFontSize(8);
                     $cell->setFontWeight('bold');
@@ -211,7 +272,7 @@ class ReportsController extends Controller
                     $cells->setValignment('center');
                 });
 
-                $sheet->cells('Q3:AK'.$rowNumber, function($cells) {
+                $sheet->cells('Q3:BM'.$rowNumber, function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(8);
@@ -220,7 +281,11 @@ class ReportsController extends Controller
                 });
 
                 $sheet->setColumnFormat(array(
-                    'O' => 'mm-dd-yy',
+                    'O3:O'.$rowNumber      => 'dd/mm/yy',
+                    'P3:AA'.$rowNumber     => '0.0',
+                    'AB3:AD'.$rowNumber    => '0%',
+                    'AE3:AG'.$rowNumber    => '0.0',
+                    'AH3:AI'.$rowNumber    => '"$"#,##0.00_-'
                 ));
 
                 $sheet->setWidth(array(
@@ -289,13 +354,15 @@ class ReportsController extends Controller
                     ),
                 );
 
-                $sheet->getStyle('A1:AK'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A1:BM'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('A1:P'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('Q1:S'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('T1:V'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('W1:AA'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('AB1:AD'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A2:AK2')->applyFromArray($headersStyle);
+                $sheet->getStyle('AE1:AF'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('AG1:AM'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A2:BM2')->applyFromArray($headersStyle);
 
                 $sheet->getStyle('P2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AF2')->getAlignment()->setWrapText(true);
@@ -304,6 +371,8 @@ class ReportsController extends Controller
                 $sheet->getStyle('AH2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AJ2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AK2')->getAlignment()->setWrapText(true);
+
+                //$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setVisible(false);
             });
         })->download('xlsx'); 
     }
