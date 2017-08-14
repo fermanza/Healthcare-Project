@@ -32,6 +32,10 @@
 			background-color: #dbeef3;
 			border-bottom: 1px solid #dbeef3;
 		}
+		th.app-increase-bg {
+			background-color: #fce9da;
+			border-bottom: 1px solid #fce9da;
+		}
 
 		th, td {
 			text-align: center;
@@ -49,6 +53,24 @@
 		    text-overflow: clip;
 		    white-space: inherit;
 		}
+
+		.thwd10 { min-width: 10px !important; }
+		.thwd20 { min-width: 20px !important; }
+		.thwd30 { min-width: 30px !important; }
+		.thwd40 { min-width: 40px !important; }
+		.thwd50 { min-width: 50px !important; }
+		.thwd60 { min-width: 60px !important; }
+		.thwd70 { min-width: 70px !important; }
+		.thwd80 { min-width: 80px !important; }
+		.thwd90 { min-width: 90px !important; }
+		.thwd100 { min-width: 100px !important; }
+		.thwd110 { min-width: 110px !important; }
+		.thwd120 { min-width: 120px !important; }
+		.thwd130 { min-width: 130px !important; }
+		.thwd140 { min-width: 140px !important; }
+		.thwd150 { min-width: 150px !important; }
+		.thwd230 { min-width: 230px !important; }
+		
 
 		.wd10 { max-width: 10px !important; }
 		.wd20 { max-width: 20px !important; }

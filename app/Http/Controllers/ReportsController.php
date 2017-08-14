@@ -137,8 +137,7 @@ class ReportsController extends Controller
                         $account->{'Fulltime Shifts - APP'},
                         $account->{'Cross Credential Shifts - APP'},
                         $account->{'Internal Locum Shifts - APP'},
-                        $account->{'External Locum Shifts - APP'},
-                        $account->{'MonthEndDate'}
+                        $account->{'External Locum Shifts - APP'}
                     ];
 
                     $sheet->row($rowNumber, $row);
@@ -248,7 +247,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cells('A2:AK2', function($cells) {
+                $sheet->cells('A2:BM2', function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(8);
@@ -283,9 +282,15 @@ class ReportsController extends Controller
                 $sheet->setColumnFormat(array(
                     'O3:O'.$rowNumber      => 'dd/mm/yy',
                     'P3:AA'.$rowNumber     => '0.0',
-                    'AB3:AD'.$rowNumber    => '0%',
+                    'AB3:AD'.$rowNumber    => '0.0%',
                     'AE3:AG'.$rowNumber    => '0.0',
-                    'AH3:AI'.$rowNumber    => '"$"#,##0.00_-'
+                    'AH3:AI'.$rowNumber    => '"$"#,##0.00_-',
+                    'AJ3:AM'.$rowNumber    => '0.0%',
+                    'AN3:AS'.$rowNumber    => '"$"#,##0.00_-',
+                    'AZ1:AZ'.$rowNumber    => '0.0',
+                    'BA3:BB'.$rowNumber    => '"$"#,##0.00_-',
+                    'BC3:BD'.$rowNumber    => '0.0%',
+                    'BE3:BI'.$rowNumber    => '"$"#,##0.00_-',
                 ));
 
                 $sheet->setWidth(array(
@@ -319,13 +324,41 @@ class ReportsController extends Controller
                     'AB'    => 12,
                     'AC'    => 15,
                     'AD'    => 15,
-                    'AE'    => 13,
-                    'AF'    => 13,
-                    'AG'    => 12,
-                    'AH'    => 17,
-                    'AI'    => 15,
-                    'AJ'    => 15,
-                    'AK'    => 17
+                    'AE'    => 12,
+                    'AF'    => 12,
+                    'AG'    => 13,
+                    'AH'    => 13,
+                    'AI'    => 12,
+                    'AJ'    => 17,
+                    'AK'    => 15,
+                    'AL'    => 15,
+                    'AM'    => 17,
+                    'AN'    => 14,
+                    'AO'    => 14,
+                    'AP'    => 19,
+                    'AQ'    => 16,
+                    'AR'    => 18,
+                    'AS'    => 18,
+                    'AT'    => 13,
+                    'AU'    => 13,
+                    'AV'    => 18,
+                    'AW'    => 15,
+                    'AX'    => 17,
+                    'AY'    => 17,
+                    'AZ'    => 14,
+                    'BA'    => 18,
+                    'BB'    => 14,
+                    'BC'    => 15,
+                    'BD'    => 17,
+                    'BE'    => 14,
+                    'BF'    => 19,
+                    'BG'    => 16,
+                    'BH'    => 18,
+                    'BI'    => 18,
+                    'BJ'    => 13,
+                    'BK'    => 18,
+                    'BL'    => 17,
+                    'BM'    => 17
                 ));
 
                 $tableStyle = array(
@@ -365,12 +398,13 @@ class ReportsController extends Controller
                 $sheet->getStyle('A2:BM2')->applyFromArray($headersStyle);
 
                 $sheet->getStyle('P2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AF2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AG2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AI2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AH2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AJ2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AK2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AL2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AM2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('BC2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('BD2')->getAlignment()->setWrapText(true);
 
                 //$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setVisible(false);
             });

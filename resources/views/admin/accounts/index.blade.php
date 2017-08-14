@@ -42,7 +42,7 @@
             </div>
         </div>
     </form>
-    <div class="table-responsive">
+    <div class="table-responsive mh400">
         <table id="datatable-accounts" class="table table-hover table-bordered">
             <thead>
                 <tr>
