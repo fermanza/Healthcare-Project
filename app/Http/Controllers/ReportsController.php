@@ -428,8 +428,6 @@ class ReportsController extends Controller
 
         return AccountSummary::leftJoin('tAccount', 'vAccountSummary.siteCode', 'tAccount.siteCode')
             ->select('vAccountSummary.*', 'tAccount.divisionId', 'tAccount.RSCId')
-            ->whereYear('vAccountSummary.MonthEndDate', DB::raw('(select max(year([vAccountSummary].[MonthEndDate])) from [vAccountSummary])'))
-            ->whereMonth('vAccountSummary.MonthEndDate', DB::raw('(select max(month([vAccountSummary].[MonthEndDate])) from [vAccountSummary])'))
             ->filter($filter)->get()->unique('siteCode');
     }
 }
