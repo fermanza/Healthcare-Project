@@ -45,17 +45,10 @@
                     </select>
                 </div>
 
-                {{-- <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <div class="input-group date datepicker">
-	                    <input type="text" class="form-control" id="startDate" name="startDate" value="{{ Request::input('startDate') ? Request::input('startDate') : ''}}" />
-	                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                	</div>
-                </div> --}}
-
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="startDate" data-placeholder="@lang('Start Date')">
+                    <select class="form-control select2" name="monthEndDate" data-placeholder="@lang('Month End Date')">
                         @foreach ($dates as $date)
-                            <option value="{{ $date }}" {{ $date == Request::input('startDate') ? 'selected' : '' }}>{{ $date }}</option>
+                            <option value="{{ $date->MonthEndDate->format('m-Y') }}" {{ $date == Request::input('monthEndDate') ? 'selected' : '' }}>{{ $date->MonthEndDate->format('m-Y') }}</option>
                         @endforeach
                     </select>
                 </div>

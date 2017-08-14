@@ -30,9 +30,8 @@ class ReportsController extends Controller
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
-        $dates = $accounts->map(function($account){ 
-            return $account->{'MonthEndDate'}->format('m-Y'); 
-        })->unique();
+        
+        $dates = AccountSummary::select('MonthEndDate')->get()->unique();
 
         $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'action');
 
@@ -429,6 +428,8 @@ class ReportsController extends Controller
 
         return AccountSummary::leftJoin('tAccount', 'vAccountSummary.siteCode', 'tAccount.siteCode')
             ->select('vAccountSummary.*', 'tAccount.divisionId', 'tAccount.RSCId')
+            ->whereYear('vAccountSummary.MonthEndDate', DB::raw('(select max(year(`vAccountSummary`.`MonthEndDate`)) from `vAccountSummary`)'))
+            ->whereMonth('vAccountSummary.MonthEndDate', DB::raw('(select max(month(`vAccountSummary`.`MonthEndDate`)) from `vAccountSummary`)'))
             ->filter($filter)->get()->unique('siteCode');
     }
 }

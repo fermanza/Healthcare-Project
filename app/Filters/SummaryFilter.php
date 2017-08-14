@@ -78,7 +78,7 @@ class SummaryFilter extends Filter
      * @param  string  $date
      * @return void
      */
-    public function startDate($date)
+    public function monthEndDate($date)
     {
         $monthYear = explode('-', $date);
         $month = $monthYear[0];
