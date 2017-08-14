@@ -49,7 +49,7 @@
                     <select class="form-control select2" name="monthEndDate" data-placeholder="@lang('Month End Date')">
                         <option value=""></option>
                         @foreach ($dates as $date)
-                            <option value="{{ $date->MonthEndDate->format('m-Y') }}" {{ $date == Request::input('monthEndDate') ? 'selected' : '' }}>{{ $date->MonthEndDate->format('m-Y') }}</option>
+                            <option value="{{ $date->MonthEndDate->format('m-Y') }}" {{ $date->MonthEndDate->format('m-Y') == Request::input('monthEndDate') ? 'selected' : '' }}>{{ $date->MonthEndDate->format('m-Y') }}</option>
                         @endforeach
                     </select>
                 </div>
