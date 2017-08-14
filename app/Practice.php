@@ -28,7 +28,7 @@ class Practice extends Model
      */
     public function isIPS()
     {
-        return starts_with($this->name, 'HM');
+        return !starts_with($this->name, 'ED');
     }
 
     /**
