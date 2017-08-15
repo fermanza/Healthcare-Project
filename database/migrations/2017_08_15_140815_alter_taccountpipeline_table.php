@@ -14,14 +14,14 @@ class AlterTaccountpipelineTable extends Migration
     public function up()
     {
         Schema::table('tAccountPipeline', function (Blueprint $table) {
-            $table->float('fullTimeHoursPhys')->nullable()->change();
-            $table->float('fullTimeHoursApps')->nullable()->change();
-            $table->float('staffPhysicianFTEHaves')->nullable()->change();
-            $table->float('staffPhysicianFTENeeds')->nullable()->change();
-            $table->float('staffPhysicianFTEOpenings')->nullable()->change();
-            $table->float('staffAppsFTEHaves')->nullable()->change();
-            $table->float('staffAppsFTENeeds')->nullable()->change();
-            $table->float('staffAppsFTEOpenings')->nullable()->change();
+            // $table->float('fullTimeHoursPhys')->nullable()->change();
+            // $table->float('fullTimeHoursApps')->nullable()->change();
+            // $table->float('staffPhysicianFTEHaves')->nullable()->change();
+            // $table->float('staffPhysicianFTENeeds')->nullable()->change();
+            // $table->float('staffPhysicianFTEOpenings')->nullable()->change();
+            // $table->float('staffAppsFTEHaves')->nullable()->change();
+            // $table->float('staffAppsFTENeeds')->nullable()->change();
+            // $table->float('staffAppsFTEOpenings')->nullable()->change();
         });
     }
 
