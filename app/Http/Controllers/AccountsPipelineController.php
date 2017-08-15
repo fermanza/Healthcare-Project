@@ -139,10 +139,10 @@ class AccountsPipelineController extends Controller
         $pipeline->practiceTime = $request->practiceTime;
         $pipeline->staffPhysicianHaves = $request->staffPhysicianHaves;
         $pipeline->staffAppsHaves = $request->staffAppsHaves;
-        $pipeline->staffPhysicianNeeds = $request->staffPhysicianNeeds;
-        $pipeline->staffAppsNeeds = $request->staffAppsNeeds;
-        $pipeline->staffPhysicianOpenings = $request->staffPhysicianOpenings;
-        $pipeline->staffAppsOpenings = $request->staffAppsOpenings;
+        $pipeline->staffPhysicianNeeds = (float) $request->staffPhysicianNeeds;
+        $pipeline->staffAppsNeeds = (float) $request->staffAppsNeeds;
+        $pipeline->staffPhysicianOpenings = (float) $request->staffPhysicianOpenings;
+        $pipeline->staffAppsOpenings = (float) $request->staffAppsOpenings;
         $pipeline->fullTimeHoursPhys = $request->fullTimeHoursPhys;
         $pipeline->fullTimeHoursApps = $request->fullTimeHoursApps;
         $pipeline->staffPhysicianFTEHaves = $request->staffPhysicianFTEHaves;
