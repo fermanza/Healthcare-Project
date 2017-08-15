@@ -275,7 +275,7 @@
                 var action = $(this).data('action');
                 var message = "@lang('Are you sure you want to unset Parent Site Code for')";
                 var name = $(this).data('name');
-                if (confirm(`${message} ${name}?`)) {
+                if (confirm(message + ' ' + name)) {
                     $removeParentForm.attr('action', action);
                     $removeParentForm.submit();
                 }

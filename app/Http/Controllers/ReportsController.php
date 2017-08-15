@@ -426,8 +426,7 @@ class ReportsController extends Controller
         //     ->with('recruiter.employee.person', 'recruiters.employee.person', 'manager.employee.person', 'division.group', 'region', 'rsc', 'pipeline', 'practices')
         //     ->where('tAccount.active', true)->filter($filter)->get()->unique();
 
-        return AccountSummary::leftJoin('tAccount', 'vAccountSummary.siteCode', 'tAccount.siteCode')
-            ->select('vAccountSummary.*', 'tAccount.divisionId', 'tAccount.RSCId')
+        return AccountSummary::with('account')
             ->filter($filter)->get()->unique('siteCode');
     }
 }
