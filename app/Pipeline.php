@@ -11,13 +11,6 @@ class Pipeline extends Model
      */
     protected $table = 'tAccountPipeline';
 
-    protected $casts = [
-        'staffPhysicianHaves' => 'float',
-        'staffAppsHaves' => 'float',
-        'staffPhysicianNeeds' => 'float',
-        'staffAppsNeeds' => 'float'
-    ];
-
     /**
      * Get the Roster Physicians for the Pipeline.
      *

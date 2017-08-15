@@ -21,12 +21,12 @@ class CreatePipelinesTable extends Migration
             $table->string('svp')->nullable();
             $table->string('dca')->nullable();
             $table->enum('practiceTime', config('pipeline.practice_times'))->default('hours');
-            $table->integer('staffPhysicianHaves')->default(0);
-            $table->integer('staffPhysicianNeeds')->default(0);
-            $table->integer('staffPhysicianOpenings')->default(0);
-            $table->integer('staffAppsHaves')->default(0);
-            $table->integer('staffAppsNeeds')->default(0);
-            $table->integer('staffAppsOpenings')->default(0);
+            $table->float('staffPhysicianHaves')->default(0);
+            $table->float('staffPhysicianNeeds')->default(0);
+            $table->float('staffPhysicianOpenings')->default(0);
+            $table->float('staffAppsHaves')->default(0);
+            $table->float('staffAppsNeeds')->default(0);
+            $table->float('staffAppsOpenings')->default(0);
 
             $table->foreign('accountId')->references('id')->on('tAccount');
         });
