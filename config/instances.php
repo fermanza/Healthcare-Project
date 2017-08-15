@@ -29,6 +29,9 @@ return [
         'director' => 5,
         'dca' => 6,
         'contract_coordinator' => 7,
+        'svp' => 8,
+        'rmd' => 9,
+        'other' => 10
     ],
 
 ];

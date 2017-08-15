@@ -42,6 +42,26 @@ class AccountScope implements Scope
                 $query->where('directorId', $user->employeeId)
                 ->whereNotNull('directorId');
             });
+        } else if ($user->hasRoleId(config('instances.roles.dca'))) {
+            $builder->whereHas('dca', function($query) use ($user) {
+                $query->where('employeeId', $user->employeeId)
+                ->whereNotNull('employeeId');
+            });
+        } else if ($user->hasRoleId(config('instances.roles.svp'))) {
+            $builder->whereHas('svp', function($query) use ($user) {
+                $query->where('employeeId', $user->employeeId)
+                ->whereNotNull('employeeId');
+            });
+        } else if ($user->hasRoleId(config('instances.roles.rmd'))) {
+            $builder->whereHas('rmd', function($query) use ($user) {
+                $query->where('employeeId', $user->employeeId)
+                ->whereNotNull('employeeId');
+            });
+        } else if ($user->hasRoleId(config('instances.roles.other'))) {
+            $builder->whereHas('other', function($query) use ($user) {
+                $query->where('employeeId', $user->employeeId)
+                ->whereNotNull('employeeId');
+            });
         }
 
         // if ($user->hasRoleId(config('instances.roles.director'))) {

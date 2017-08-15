@@ -71,6 +71,50 @@ class Account extends Model
     }
 
     /**
+     * Get the DCA role ((AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function dca()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.dca'));
+    }
+
+    /**
+     * Get the SVP role (AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function svp()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.svp'));
+    }
+
+    /**
+     * Get the RMD role ((AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function rmd()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.rmd'));
+    }
+
+    /**
+     * Get the Other role (AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function other()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.other'));
+    }
+
+    /**
      * Get the Contract Coordinator (AccountEmployee) for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
