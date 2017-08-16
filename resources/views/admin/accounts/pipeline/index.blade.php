@@ -23,7 +23,7 @@
                         {{ $account->googleAddress }}
                         <br />
                         {{ $account->recruiter ? ($account->recruiter->fullName().', ') : '' }}
-                        {{ ($account->recruiter && $account->recruiter->manager) ? $account->recruiter->manager->fullName() : '' }}
+                        {{ $account->manager ? $account->manager->fullName() : '' }}
                     </div>
                 </div>
             </div>
@@ -269,13 +269,15 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Current Roster')</h4>
+            <h4 class="roster-title">@lang('Current Roster')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysician')">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
+                                <th class="mw50">@lang('SMD')</th>
+                                <th class="mw50">@lang('AMD')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
                                 <th class="mw100">@lang('Interview')</th>
@@ -288,6 +290,12 @@
                         </thead>
                         <tbody>
                             <tr v-for="roster in activeRosterPhysicians">
+                                <td>
+                                    <input id="rosterSMD" type="radio" name="SMD" :value="roster.name" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
+                                </td>
+                                <td>
+                                    <input id="rosterAMD" type="radio" name="AMD" :value="roster.name" :checked='roster.isAMD' @change="updateRosterBench(roster, 'AMD')">
+                                </td>
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
                                 <td>@{{ roster.interview }}</td>
@@ -468,7 +476,7 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Current Bench')</h4>
+            <h4 class="roster-title">@lang('Current Bench')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
                 <div class="table-responsive">
@@ -1034,6 +1042,10 @@
                                 <label for="resigningreason">@lang('Reason')</label>
                                 <input id="resigningreason" type="text" class="form-control" v-model="resigning.resignedReason" required />
                             </div>
+                            <div class="form-group">
+                                <label for="resigninglastshift">@lang('Last Shift')</label>
+                                <input id="resigninglastshift" type="text" class="form-control datepicker" v-model="resigning.lastShift" required />
+                            </div>
                             <div class="row mt5">
                                 <div class="col-xs-6">
                                     <button type="submit" class="btn btn-warning">
@@ -1067,6 +1079,9 @@
 
                 fullTimeHoursPhys: BackendVars.pipeline.fullTimeHoursPhys,
                 fullTimeHoursApps: BackendVars.pipeline.fullTimeHoursApps,
+
+                oldSMD: BackendVars.pipeline.rostersBenchs.filter( roster => roster.isSMD == 1 ),
+                oldAMD: BackendVars.pipeline.rostersBenchs.filter( roster => roster.isAMD == 1 ),
 
                 rosterPhysician: {
                     name: '',
@@ -1421,6 +1436,23 @@
 
                     return Math.round(number * factor) / factor;
                 },
+
+                updateRosterBench: function(roster, type) {
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+
+                    roster.type = type;
+                    roster.oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
+                    roster.oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
+
+                    axios.patch(endpoint, roster)
+                        .then(function (response) {
+                            if(type == 'SMD') {
+                                this.oldSMD = response.data;
+                            } else {
+                                this.oldAMD = response.data;
+                            }
+                        }.bind(this));
+                }
             }
         });
     </script>
