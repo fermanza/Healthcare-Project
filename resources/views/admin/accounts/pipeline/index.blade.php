@@ -340,6 +340,12 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
+                                    <input type="checkbox" v-model="rosterPhysician.isSMD">
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterPhysician.isAMD">
+                                </td>
+                                <td>
                                     <input type="text" class="form-control" v-model="rosterPhysician.name" required />
                                 </td>
                                 <td>
@@ -1080,8 +1086,8 @@
                 fullTimeHoursPhys: BackendVars.pipeline.fullTimeHoursPhys,
                 fullTimeHoursApps: BackendVars.pipeline.fullTimeHoursApps,
 
-                oldSMD: BackendVars.pipeline.rostersBenchs.filter( roster => roster.isSMD == 1 ),
-                oldAMD: BackendVars.pipeline.rostersBenchs.filter( roster => roster.isAMD == 1 ),
+                oldSMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isSMD == 1 } ),
+                oldAMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isAMD == 1 } ),
 
                 rosterPhysician: {
                     name: '',
@@ -1291,6 +1297,11 @@
 
             methods: {
                 addRosterBench: function (place, activity, entity) {
+                    if(entity == 'rosterPhysician') {
+                        this[entity].oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
+                        this[entity].oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
+                    }
+
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
                         place: place,
                         activity: activity
@@ -1299,6 +1310,16 @@
                             var rosterBench = response.data;
                             this.pipeline.rostersBenchs.push(rosterBench);
                             this[entity] = {};
+
+                            if(response.data.isSMD) {
+                                this.oldSMD = [];
+                                this.oldSMD.push(response.data);
+                            }
+
+                            if(response.data.isAMD) {
+                                this.oldAMD = [];
+                                this.oldAMD.push(response.data);
+                            }
                         }.bind(this));
                 },
 
@@ -1447,9 +1468,11 @@
                     axios.patch(endpoint, roster)
                         .then(function (response) {
                             if(type == 'SMD') {
-                                this.oldSMD = response.data;
+                                this.oldSMD = [];
+                                this.oldSMD.push(response.data);
                             } else {
-                                this.oldAMD = response.data;
+                                this.oldAMD = [];
+                                this.oldAMD.push(response.data);
                             }
                         }.bind(this));
                 }

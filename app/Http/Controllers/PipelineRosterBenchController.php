@@ -66,8 +66,23 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contractOut = $request->contractOut;
         $rosterBench->contractIn = $request->contractIn;
         $rosterBench->firstShift = $request->firstShift;
+        $rosterBench->isSMD = $request->isSMD ? 1 : 0;
+        $rosterBench->isAMD = $request->isAMD ? 1 : 0;
         $rosterBench->notes = $request->notes;
-        $rosterBench->save();
+
+        if($rosterBench->save()) {
+            if($request->isSMD && $request->oldSMD != '') {
+                $oldRoster = PipelineRosterBench::find($request->oldSMD);
+                $oldRoster->isSMD = 0;
+                $oldRoster->save();
+            }
+
+            if($request->isAMD && $request->oldAMD != '') {
+                $oldRoster = PipelineRosterBench::find($request->oldAMD);
+                $oldRoster->isAMD = 0;
+                $oldRoster->save();
+            }
+        }
 
         return $rosterBench->fresh();
     }
