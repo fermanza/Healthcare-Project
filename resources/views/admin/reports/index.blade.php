@@ -90,14 +90,14 @@
 	        <table id="datatable-summary" class="table table-hover table-bordered datatable">
 	            <thead>
                     <tr>
-                        <th colspan="16" class="white-bg">WEST RSC RECRUITING SUMMARY</th>
+                        <th colspan="17" class="white-bg">RECRUITING SUMMARY</th>
                         <th colspan="3" class="complete-staff-bg">COMPLETE STAFF</th>
                         <th colspan="3" class="current-staff-bg">CURRENT STAFF</th>
                         <th colspan="5" class="current-openings-bg">CURRENT OPENINGS</th>
                         <th colspan="3" class="percent-bg">PERCENT RECRUITED</th>
-                        <th colspan="2" class="white-bg">DAILY STAFFING HOURS</th>
-                        <th colspan="19" class="comp-shifts-bg">PHYSICIAN INCREASE COMP & SHIFTS BY RESOURCE TYPE</th>
-                        <th colspan="14" class="app-increase-bg">APP INCREASE COMP & SHIFTS BY RESOURCE TYPE</th>
+                        <th colspan="5" class="prev-month-bg">PREV MONTH</th>
+                        <th colspan="5" class="mtd-bg">MTD</th>
+                        <th colspan="6" class="ytd-bg">YTD</th>
                     </tr>
 	                <tr>
 	                    <th class="thwd40">#</th>
@@ -110,7 +110,8 @@
 	                    <th class="thwd70">@lang('Recruiter')</th>
 	                    <th class="thwd110">@lang('Secondary Recruiter')</th>
 	                    <th class="thwd70">@lang('Managers')</th>
-	                    <th class="thwd70">@lang('DOO/SVP')</th>
+	                    <th class="thwd70">@lang('DOO')</th>
+                        <th class="thwd70">@lang('SVP')</th>
 	                    <th class="thwd70">@lang('RMD')</th>
 	                    <th class="thwd60">@lang('City')</th>
 	                    <th class="thwd60">@lang('Location')</th>
@@ -130,48 +131,39 @@
                         <th class="thwd80">@lang('% Recruited')</th>
                         <th class="thwd100">@lang('% Recruited - Phys')</th>
                         <th class="thwd100">@lang('% Recruited - APP')</th>
-                        <th class="thwd110">@lang('Physician Daily Hours')</th>
-                        <th class="thwd90">@lang('APP Daily Hours')</th>
-                        <th class="thwd90">@lang('Total Physician Shifts')</th>
-                        <th class="thwd80">@lang('Phys Increase Comp - $')</th>
-                        <th class="thwd80">@lang('INC per Phys Shift - $')</th>
-                        <th class="thwd100">@lang('Fulltime/Cross Cred Utilization - %')</th>
-                        <th class="thwd90">@lang('Phys Embassador Utilization - %')</th>
-                        <th class="thwd100">@lang('Phys Qualitas/Tiva Utilization - %')</th>
-                        <th class="thwd110">@lang('Phys External Locum Utilization - %')</th>
-                        <th class="thwd90">@lang('Director INC - $')</th>
-                        <th class="thwd90">@lang('Fulltime INC - $')</th>
-                        <th class="thwd120">@lang('Cross Credential INC - $')</th>
-                        <th class="thwd100">@lang('Embassador INC - $')</th>
-                        <th class="thwd110">@lang('Internal Locum INC - $')</th>
-                        <th class="thwd110">@lang('External Locum INC - $')</th>
-                        <th class="thwd80">@lang('Director Shifts')</th>
-                        <th class="thwd80">@lang('Fulltime Shifts')</th>
-                        <th class="thwd110">@lang('Cross Credential Shifts')</th>
-                        <th class="thwd100">@lang('Embassador Shifts')</th>
-                        <th class="thwd110">@lang('Internal Locum Shifts')</th>
-                        <th class="thwd110">@lang('External Locum Shifts')</th>
-                        <th class="thwd90">@lang('Total APP Shifts')</th>
-                        <th class="thwd110">@lang('APP Increase Comp - $')</th>
-                        <th class="thwd90">@lang('INC per Shift - $')</th>
-                        <th class="thwd100">@lang('APP Qualitas/Tiva Utilization - %')</th>
-                        <th class="thwd110">@lang('APP External Locum Utilization - %')</th>
-                        <th class="thwd90">@lang('Fulltime INC - $')</th>
-                        <th class="thwd120">@lang('Cross Credential INC - $')</th>
-                        <th class="thwd100">@lang('Embassador INC - $')</th>
-                        <th class="thwd110">@lang('Internal Locum INC - $')</th>
-                        <th class="thwd110">@lang('External Locum INC - $')</th>
-                        <th class="thwd80">@lang('Fulltime Shifts')</th>
-                        <th class="thwd110">@lang('Cross Credential Shifts')</th>
-                        <th class="thwd110">@lang('Internal Locum Shifts')</th>
-                        <th class="thwd110">@lang('External Locum Shifts')</th>
+                        <th class="thwd50">@lang('Inc Comp')</th>
+                        <th class="thwd100">@lang('FT Utilization - %')</th>
+                        <th class="thwd100">@lang('Embassador Utilization - %')</th>
+                        <th class="thwd100">@lang('Internal Locum Utilization - %')</th>
+                        <th class="thwd100">@lang('External Locum Utilization - %')</th>
+                        <th class="thwd80">@lang('Applications')</th>
+                        <th class="thwd80">@lang('Interviews')</th>
+                        <th class="thwd80">@lang('Contracts Out')</th>
+                        <th class="thwd80">@lang('Contracts in')</th>
+                        <th class="thwd100">@lang('Signed Not Yet Started')</th>
+                        <th class="thwd80">@lang('Applications')</th>
+                        <th class="thwd80">@lang('Interviews')</th>
+                        <th class="thwd80">@lang('Pending Contracts')</th>
+                        <th class="thwd80">@lang('Contracts In ')</th>
+                        <th class="thwd100">@lang('Signed Not Yet Started')</th>
+                        <th class="thwd50">@lang('Inc Comp')</th>
 	                </tr>
 	            </thead>
 	            <tbody>
 	                @foreach($accounts as $account)
 	                    <tr data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
 	                    >
-	                        <td class="wd50">{{ $account->siteCode }}</td>
+	                        <td class="wd50">
+                                @if($account->account)
+                                    <a href="{{ route('admin.accounts.pipeline.index', [$account->account]) }}">
+                                        {{ $account->siteCode }}
+                                    </a>
+                                @else
+                                    <a href="#">
+                                        {{ $account->siteCode }}
+                                    </a>
+                                @endif
+                            </td>
 	                        <td class="wd230">{{ $account->{'Hospital Name'} }}</td>
 	                        <td class="wd80">{{ $account->Practice }}</td>
 	                        <td class="wd110">{{ $account->{'System Affiliation'} }}</td>
@@ -183,7 +175,8 @@
 	                        	{{ $account->{'Secondary Recruiter'} }}
 	                        </td>
 	                        <td class="wd70">{{ $account->Managers }}</td>
-	                        <td class="wd70">{{ $account->{'DOO/SVP'} }}</td>
+	                        <td class="wd70">{{ $account->DOO }}</td>
+                            <td class="wd70">{{ $account->SVP }}</td>
 	                        <td class="wd70">{{ $account->RMD }}</td>
 	                        <td class="wd60">{{ $account->City }}</td>
 	                        <td class="wd100">{{ $account->Location }}</td>
@@ -202,72 +195,63 @@
                             <td class="wd50">{{ number_format($account->{'Current Openings - Phys'}, 1) }}</td>
                             <td class="wd50">{{ number_format($account->{'Current Openings - APP'}, 1) }}</td>
                             <td class="wd50">{{ number_format($account->{'Current Openings - Total'}, 1) }}</td>
-                            <td class="wd100">{{ $account->{'Percent Recruited - Total'} * 100 }}%</td>
-                            <td class="wd150">{{ $account->{'Percent Recruited - Phys'} * 100 }}%</td>
-                            <td class="wd150">{{ $account->{'Percent Recruited - APP'} * 100 }}%</td>
-                            <td class="wd150">{{ $account->{'Hours - Phys'} }}</td>
-                            <td class="wd150">{{ $account->{'Hours - APP'} }}</td>
-                            <td class="wd150">{{ number_format($account->{'Total Shifts - Phys'}, 1) }}</td>
-                            <td class="wd100">${{ number_format($account->{'Increased Comp - Phys'}, 2) }}</td>
-                            <td class="wd100">${{ number_format($account->{'Increased Comp Per Shift - Phys'}, 2) }}</td>
-                            <td class="wd150">{{ $account->{'Fulltime/Cross Cred Utlization - Phys'} * 100 }}%</td>
-                            <td class="wd100">{{ $account->{'Embassador Utilization - Phys'} * 100 }}%</td>
-                            <td class="wd100">{{ $account->{'Qualitas/Tiva Utilization - Phys'} * 100 }}%</td>
-                            <td class="wd100">{{ $account->{'External Locum Utilization - Phys'} * 100 }}%</td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Director Increased Comp - Phys'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'Percent Recruited - Total'} * 100, 1) }}%
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Full Time Increased Comp - Phys'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'Percent Recruited - Phys'} * 100, 1) }}%
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Cross Credential Increased Comp - Phys'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'Percent Recruited - APP'} * 100, 1) }}%
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Embassador Increased Comp - Phys'}, 2) }}
+                            <td class="wd50">
+                                ${{ number_format($account->{'Prev Month - Inc Comp'}, 2) }}
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Internal Locum Increased Comp - Phys'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'Prev Month - FT Utilization - %'} * 100, 1) }}%
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'External Locum Increased Comp - Phys'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'Prev Month - Embassador Utilization - %'} * 100, 1) }}%
                             </td>
-                            <td class="wd100">{{ $account->{'Director Shifts - Phys'} }}</td>
-                            <td class="wd100">{{ $account->{'Fulltime Shifts - Phys'} }}</td>
-                            <td class="wd100">{{ $account->{'Cross Credential Shifts - Phys'} }}</td>
-                            <td class="wd100">{{ $account->{'Embassador Shifts - Phys'} }}</td>
-                            <td class="wd100">{{ $account->{'Internal Locum Shifts - Phys'} }}</td>
-                            <td class="wd100">{{ $account->{'External Locum Shifts - Phys'} }}</td>
-                            <td class="wd100">
-                                {{ number_format($account->{'Total Shifts - APP'}, 1) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'Prev Month - Internal Locum Utilization - %'} * 100, 1) }}%
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Increased Comp - APP'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'Prev Month - External Locum Utilization - %'} * 100, 1) }}%
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Increased Comp Per Shift - APP'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'MTD - Applications'}, 1) }}
                             </td>
-                            <td class="wd100">{{ $account->{'Qualitas/Tiva Utilization - APP'} * 100 }}%</td>
-                            <td class="wd100">{{ $account->{'External Locum Utilization - APP'} * 100 }}%</td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Full Time Increased Comp - APP'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'MTD - Interviews'}, 1) }}
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Cross Credential Increased Comp - APP'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'MTD - Contracts Out'}, 1) }}
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Embassador Increased Comp - APP'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'MTD - Contracts In'}, 1) }}
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'Internal Locum Increased Comp - APP'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'MTD - Signed Not Yet Started'}, 1) }}
                             </td>
-                            <td class="wd100">
-                                ${{ number_format($account->{'External Locum Increased Comp - APP'}, 2) }}
+                            <td class="wd50">
+                                {{ number_format($account->{'YTD - Applications'}, 1) }}
                             </td>
-                            <td class="wd100">{{ $account->{'Fulltime Shifts - APP'} }}</td>
-                            <td class="wd100">{{ $account->{'Cross Credential Shifts - APP'} }}</td>
-                            <td class="wd100">{{ $account->{'Internal Locum Shifts - APP'} }}</td>
-                            <td class="wd100">{{ $account->{'External Locum Shifts - APP'} }}</td>
+                            <td class="wd50">
+                                {{ number_format($account->{'YTD - Interviews'}, 1) }}
+                            </td>
+                            <td class="wd50">
+                                {{ number_format($account->{'YTD - Pending Contracts'}, 1) }}
+                            </td>
+                            <td class="wd50">
+                                {{ number_format($account->{'YTD - Contracts In'}, 1) }}
+                            </td>
+                            <td class="wd50">
+                                {{ number_format($account->{'YTD - Signed Not Yet Started'}, 1) }}
+                            </td>
+                            <td class="wd50">
+                                ${{ number_format($account->{'YTD - Inc Comp'}, 2) }}
+                            </td>
 	                    </tr>
 	                @endforeach
 	            </tbody>

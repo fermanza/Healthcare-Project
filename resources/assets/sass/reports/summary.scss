@@ -36,6 +36,18 @@
 			background-color: #fce9da;
 			border-bottom: 1px solid #fce9da;
 		}
+		th.prev-month-bg {
+			background-color: #c7eecf;
+			border-bottom: 1px solid #c7eecf;
+		}
+		th.mtd-bg {
+			background-color: #fec7ce;
+			border-bottom: 1px solid #fec7ce;
+		}
+		th.ytd-bg {
+			background-color: #feeaa0;
+			border-bottom: 1px solid #feeaa0;
+		}
 
 		th, td {
 			text-align: center;
@@ -148,5 +160,14 @@
 		> th:last-child {
 			border-right: 2px solid #000000;
 		}
+	}
+
+	.table > thead > tr > th, 
+	.table > thead > tr > td, 
+	.table > tbody > tr > th, 
+	.table > tbody > tr > td, 
+	.table > tfoot > tr > th, 
+	.table > tfoot > tr > td {
+		padding: 3px;
 	}
 }

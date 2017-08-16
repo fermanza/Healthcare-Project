@@ -88,7 +88,7 @@
                     </div>
                     <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
                         <div class="form-group{{ $errors->has('dca') ? ' has-error' : '' }}">
-                            <label for="dca">@lang('DCA'):</label>
+                            <label for="dca">@lang('DOO'):</label>
                         </div>
                     </div>
                     <div class="mb5 col-xs-5 col-sm-2">
