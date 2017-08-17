@@ -97,7 +97,7 @@
                         <th colspan="3" class="percent-bg">PERCENT RECRUITED</th>
                         <th colspan="5" class="prev-month-bg">PREV MONTH</th>
                         <th colspan="5" class="mtd-bg">MTD</th>
-                        <th colspan="6" class="ytd-bg">YTD</th>
+                        <th colspan="7" class="ytd-bg">YTD</th>
                     </tr>
 	                <tr>
 	                    <th class="thwd40">#</th>
@@ -147,6 +147,7 @@
                         <th class="thwd80">@lang('Contracts In ')</th>
                         <th class="thwd100">@lang('Signed Not Yet Started')</th>
                         <th class="thwd50">@lang('Inc Comp')</th>
+                        <th class="thwd50">@lang('Attrition')</th>
 	                </tr>
 	            </thead>
 	            <tbody>
@@ -251,6 +252,9 @@
                             </td>
                             <td class="wd50">
                                 ${{ number_format($account->{'YTD - Inc Comp'}, 2) }}
+                            </td>
+                            <td>
+                                {{ number_format($account->{'YTD - Attrition'}, 1) }}
                             </td>
 	                    </tr>
 	                @endforeach

@@ -47,7 +47,7 @@ class ReportsController extends Controller
             "Inc Comp", "FT Utilization - %", "Embassador Utilization - %", "Internal Locum Utilization - %",
             "External Locum Utilization - %", "Applications", "Interviews", "Contracts Out", "Contracts in",
             "Signed Not Yet Started", "Applications", "Interviews", "Pending Contracts", "Contracts In",
-            "Signed Not Yet Started", "Inc Comp"
+            "Signed Not Yet Started", "Inc Comp", 'Attrition'
         ];
 
 
@@ -112,7 +112,8 @@ class ReportsController extends Controller
                         $account->{'YTD - Pending Contracts'},
                         $account->{'YTD - Contracts In'},
                         $account->{'YTD - Signed Not Yet Started'},
-                        $account->{'YTD - Inc Comp'}
+                        $account->{'YTD - Inc Comp'},
+                        $account->{'YTD - Attrition'},
                     ];
 
                     $sheet->row($rowNumber, $row);
@@ -126,7 +127,7 @@ class ReportsController extends Controller
                 };
 
                 $sheet->setFreeze('C3');
-                $sheet->setAutoFilter('A2:AU2');
+                $sheet->setAutoFilter('A2:AV2');
                 $sheet->mergeCells('A1:Q1');
                 $sheet->mergeCells('R1:T1');
                 $sheet->mergeCells('U1:W1');
@@ -134,7 +135,7 @@ class ReportsController extends Controller
                 $sheet->mergeCells('AC1:AE1');
                 $sheet->mergeCells('AF1:AJ1');
                 $sheet->mergeCells('AK1:AO1');
-                $sheet->mergeCells('AP1:AU1');
+                $sheet->mergeCells('AP1:AV1');
 
                 $sheet->cell('A1', function($cell) {
                     $cell->setValue('RECRUITING SUMMARY');
@@ -223,7 +224,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cells('A2:AU2', function($cells) {
+                $sheet->cells('A2:AV2', function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(8);
@@ -247,7 +248,7 @@ class ReportsController extends Controller
                     $cells->setValignment('center');
                 });
 
-                $sheet->cells('R3:AU'.$rowNumber, function($cells) {
+                $sheet->cells('R3:AV'.$rowNumber, function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(8);
@@ -261,7 +262,8 @@ class ReportsController extends Controller
                     'AC3:AE'.$rowNumber    => '0.0%',
                     'AF3:AF'.$rowNumber    => '"$"#,##0.00_-',
                     'AG3:AJ'.$rowNumber    => '0.0%',
-                    'AU3:AU'.$rowNumber    => '"$"#,##0.00_-'
+                    'AU3:AU'.$rowNumber    => '"$"#,##0.00_-',
+                    'AV3:AV'.$rowNumber     => '0.0',
                 ));
 
                 $sheet->setWidth(array(
@@ -311,7 +313,8 @@ class ReportsController extends Controller
                     'AR'    => 12,
                     'AS'    => 12,
                     'AT'    => 12,
-                    'AU'    => 12
+                    'AU'    => 12,
+                    'AV'    => 12
                 ));
 
                 $tableStyle = array(
@@ -340,7 +343,7 @@ class ReportsController extends Controller
                     ),
                 );
 
-                $sheet->getStyle('A1:AU'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A1:AV'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('A1:Q'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('R1:T'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('U1:W'.$rowNumber)->applyFromArray($tableStyle);
@@ -348,7 +351,7 @@ class ReportsController extends Controller
                 $sheet->getStyle('AC1:AE'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('AF1:AJ'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('AK1:AO'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A2:AU2')->applyFromArray($headersStyle);
+                $sheet->getStyle('A2:AV2')->applyFromArray($headersStyle);
 
                 $sheet->getStyle('Q2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AH2')->getAlignment()->setWrapText(true);
