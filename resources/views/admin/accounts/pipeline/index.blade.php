@@ -284,17 +284,17 @@
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="roster in activeRosterPhysicians">
                                 <td>
-                                    <input id="rosterSMD" type="radio" name="SMD" :value="roster.name" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
+                                    <input class="roster-radio" type="checkbox" name="SMD" :value="roster.name" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
                                 </td>
                                 <td>
-                                    <input id="rosterAMD" type="radio" name="AMD" :value="roster.name" :checked='roster.isAMD' @change="updateRosterBench(roster, 'AMD')">
+                                    <input class="roster-radio" type="checkbox" name="AMD" :value="roster.name" :checked='roster.isAMD' @change="updateRosterBench(roster, 'AMD')">
                                 </td>
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
@@ -393,7 +393,7 @@
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -495,7 +495,7 @@
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -592,7 +592,7 @@
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -694,7 +694,7 @@
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw120 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -1246,6 +1246,7 @@
                     return _.chain(this.pipeline.rostersBenchs)
                         .filter({ place: 'roster', activity: 'physician' })
                         .reject('resigned')
+                        .orderBy(['isSMD', 'isAMD', 'name'], ['desc', 'desc', 'asc'])
                         .value();
                 },
 
@@ -1300,6 +1301,14 @@
                     if(entity == 'rosterPhysician') {
                         this[entity].oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
                         this[entity].oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
+
+                        if( this.oldSMD.length && this[entity].isSMD) {
+                            this.oldSMD[0].isSMD = 0;
+                        }
+                        
+                        if( this.oldAMD.length && this[entity].isAMD) {
+                            this.oldAMD[0].isAMD = 0;
+                        }
                     }
 
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
@@ -1462,17 +1471,30 @@
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
                     roster.type = type;
+
+                    if( this.oldSMD.length && type == 'SMD') {
+                        this.oldSMD[0].isSMD = 0;
+                    }
+                    
+                    if( this.oldAMD.length && type == 'AMD') {
+                        this.oldAMD[0].isAMD = 0;
+                    }
+
                     roster.oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
                     roster.oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
+
+
 
                     axios.patch(endpoint, roster)
                         .then(function (response) {
                             if(type == 'SMD') {
                                 this.oldSMD = [];
-                                this.oldSMD.push(response.data);
+                                roster.isSMD = true;
+                                this.oldSMD.push(roster);
                             } else {
                                 this.oldAMD = [];
-                                this.oldAMD.push(response.data);
+                                roster.isAMD = true;
+                                this.oldAMD.push(roster);
                             }
                         }.bind(this));
                 }
