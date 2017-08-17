@@ -257,7 +257,7 @@
                     <select class="form-control select2" id="contractNoteId" name="contractNoteId">
                         <option value="" disabled selected></option>
                         @foreach ($notes as $note)
-                            <option value="{{ $note->id }}" {{ (old('contractNoteId') == $note->id ?: $note->id == $contractLog->contractNoteId) ? 'selected': '' }}>{{ (string) $note->contractNote }}</option>
+                            <option value="{{ $note->id }}" {{ (old('contractNoteId') == $note->id ?: $note->id == $contractLog->contractNoteId) ? 'selected': '' }}>{{ $note->contractNote }}</option>
                         @endforeach
                     </select>
                     @if ($errors->has('contractNoteId'))
