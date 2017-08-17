@@ -14,7 +14,7 @@ class SummaryFilter extends Filter
      */
     public function practices($names)
     {
-        $this->query->whereIn('vAccountSummary.practice', $names);
+        $this->query->whereIn('practice', $names);
     }
 
     /**
@@ -25,7 +25,9 @@ class SummaryFilter extends Filter
      */
     public function divisions($ids)
     {
-        $this->query->whereIn('tAccount.divisionId', $ids);
+        $this->query->whereHas('account', function($query) use ($ids) {
+            $query->whereIn('divisionId', $ids);
+        });
     }
 
     /**
@@ -36,7 +38,7 @@ class SummaryFilter extends Filter
      */
     public function recruiters($names)
     {
-        $this->query->whereIn('vAccountSummary.RSC Recruiter', $names);
+        $this->query->whereIn('RSC Recruiter', $names);
     }
 
     /**
@@ -47,7 +49,7 @@ class SummaryFilter extends Filter
      */
     public function managers($names)
     {
-        $this->query->whereIn('vAccountSummary.Managers', $names);
+        $this->query->whereIn('Managers', $names);
     }
 
     /**
@@ -69,7 +71,9 @@ class SummaryFilter extends Filter
      */
     public function RSCs($ids)
     {
-        $this->query->whereIn('tAccount.RSCId', $ids);
+        $this->query->whereHas('account', function($query) use ($ids) {
+            $query->whereIn('RSCId', $ids);
+        });
     }
 
     /**
@@ -84,7 +88,7 @@ class SummaryFilter extends Filter
         $month = $monthYear[0];
         $year = $monthYear[1];
 
-        $this->query->whereYear('vAccountSummary.MonthEndDate', $year)
-            ->whereMonth('vAccountSummary.MonthEndDate', $month);
+        $this->query->whereYear('MonthEndDate', $year)
+            ->whereMonth('MonthEndDate', $month);
     }
 }

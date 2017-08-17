@@ -378,7 +378,7 @@ class ReportsController extends Controller
         //     ->with('recruiter.employee.person', 'recruiters.employee.person', 'manager.employee.person', 'division.group', 'region', 'rsc', 'pipeline', 'practices')
         //     ->where('tAccount.active', true)->filter($filter)->get()->unique();
 
-        return AccountSummary::with('account')
+        return AccountSummary::with('account.rsc', 'account.division')
             ->filter($filter)->get()->unique('siteCode');
     }
 }
