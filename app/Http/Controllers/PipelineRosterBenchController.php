@@ -128,9 +128,9 @@ class PipelineRosterBenchController extends Controller
 
         $rosterBench->place = $request->place;
         if($request->type == 'SMD') {
-            $rosterBench->isSMD = 1;
+            $rosterBench->isSMD = $request->isSMD;
         } else {
-            $rosterBench->isAMD = 1;
+            $rosterBench->isAMD = $request->isAMD;
         }
 
         if($rosterBench->save()) {

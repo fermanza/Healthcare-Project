@@ -1470,13 +1470,19 @@
                 updateRosterBench: function(roster, type) {
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
+                    if (type == 'SMD') {
+                        roster.isSMD = !roster.isSMD;
+                    } else {
+                        roster.isAMD = !roster.isAMD;
+                    }
+
                     roster.type = type;
 
-                    if( this.oldSMD.length && type == 'SMD') {
+                    if ( this.oldSMD.length && type == 'SMD') {
                         this.oldSMD[0].isSMD = 0;
                     }
                     
-                    if( this.oldAMD.length && type == 'AMD') {
+                    if ( this.oldAMD.length && type == 'AMD') {
                         this.oldAMD[0].isAMD = 0;
                     }
 
@@ -1489,11 +1495,11 @@
                         .then(function (response) {
                             if(type == 'SMD') {
                                 this.oldSMD = [];
-                                roster.isSMD = true;
+                                roster.isSMD = response.data.isSMD;
                                 this.oldSMD.push(roster);
                             } else {
                                 this.oldAMD = [];
-                                roster.isAMD = true;
+                                roster.isAMD = response.data.isAMD;
                                 this.oldAMD.push(roster);
                             }
                         }.bind(this));
