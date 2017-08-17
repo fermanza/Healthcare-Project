@@ -1496,11 +1496,17 @@
                             if(type == 'SMD') {
                                 this.oldSMD = [];
                                 roster.isSMD = response.data.isSMD;
-                                this.oldSMD.push(roster);
+                                
+                                if(roster.isSMD) {
+                                    this.oldSMD.push(roster);
+                                }
                             } else {
                                 this.oldAMD = [];
                                 roster.isAMD = response.data.isAMD;
-                                this.oldAMD.push(roster);
+                                
+                                if(roster.isAMD){
+                                    this.oldAMD.push(roster);
+                                }
                             }
                         }.bind(this));
                 }
