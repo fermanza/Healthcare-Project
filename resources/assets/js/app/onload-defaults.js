@@ -78,6 +78,13 @@ $(() => {
         this.dispatchEvent(event);
     });
 
+    // DateRangePicker
+    $('.rangedatepicker').daterangepicker({
+        locale: {
+          format: 'YYYY-MM-DD'
+        }
+    });
+
 
     // Image Upload
     require('./image-upload')

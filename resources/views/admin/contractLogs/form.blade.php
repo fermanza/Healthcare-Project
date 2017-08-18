@@ -1,6 +1,15 @@
 @include('common/errors')
 
-<form style="font-size: 1.1em;" action="{{ $action == 'create' ? route('admin.contractLogs.store') : route('admin.contractLogs.update', [$contractLog]) }}" method="POST">
+@push('styles')
+    <style>
+        .select2-results__option,
+        .select2-selection__rendered {
+            font-weight: bold;
+        }
+    </style>
+@endpush
+
+<form id="contractLogsForm" style="font-size: 1.1em;" action="{{ $action == 'create' ? route('admin.contractLogs.store') : route('admin.contractLogs.update', [$contractLog]) }}" method="POST">
     {{ csrf_field() }}
     {{ $action == 'edit' ? method_field('PATCH') : '' }}
 
@@ -299,9 +308,19 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group{{ $errors->has('numOfHours') ? ' has-error' : '' }}">
                     <label for="numOfHours">@lang('No. of Hours')</label>
-                    <input type="number" class="form-control" id="numOfHours" name="numOfHours" min="0" value="{{ old('numOfHours') ?: $contractLog->numOfHours }}" required />
+                    <input type="number" class="form-control" id="numOfHours" name="numOfHours" min="0" value="{{ old('numOfHours') ?: $contractLog->numOfHours }}" />
                     @if ($errors->has('numOfHours'))
                         <span class="help-block"><strong>{{ $errors->first('numOfHours') }}</strong></span>
+                    @endif
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group{{ $errors->has('numOfShifts') ? ' has-error' : '' }}">
+                    <label for="numOfShifts">@lang('No. of Shifts')</label>
+                    <input type="number" class="form-control" id="numOfShifts" name="numOfShifts" min="0" value="{{ old('numOfShifts') ?: $contractLog->numOfShifts }}" />
+                    @if ($errors->has('numOfShifts'))
+                        <span class="help-block"><strong>{{ $errors->first('numOfShifts') }}</strong></span>
                     @endif
                 </div>
             </div>
@@ -376,6 +395,20 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
+
+            $('#contractLogsForm').on('submit', function(evt) {
+                evt.preventDefault();
+
+                var numOfHours = $('#numOfHours').val();
+                var numOfShifts = $('#numOfShifts').val();
+
+                if(numOfHours == '' && numOfShifts == '') {
+                    alert('Please fill at least one of the following: No. of Hours, No. of Shifts.')
+                } else {
+                    $(this).unbind("submit").submit();
+                }
+            });
+
             $('#accountId').each(setAccountRelatedInput);
             $('#accountId').on('change', setAccountRelatedInput);
 

@@ -7,6 +7,10 @@
         <i class="fa fa-print"></i>
         @lang('Print')
     </a>
+    <a href="javascript:print();" class="btn btn-default btn-sm hidden-print">
+        <i class="fa fa-file-word-o"></i>
+        @lang('Export')
+    </a>
 @endsection
 
 @section('content')

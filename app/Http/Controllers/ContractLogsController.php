@@ -34,6 +34,7 @@ class ContractLogsController extends Controller
     {
         $user = auth()->user();
         $divisions = Division::where('active', true)->orderBy('name')->get();
+        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
         $practiceTypes = ['ED', 'IPS'];
         $positions = Position::orderBy('position')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
@@ -49,12 +50,12 @@ class ContractLogsController extends Controller
             ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
             ->select('tContractLogs.*')
             ->with('status', 'position', 'practice', 'division.group', 'note', 'account')
-            ->where('tContractLogs.active', true)->filter($filter)->paginate();
+            ->where('tContractLogs.active', true)->filter($filter)->paginate(100);
 
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
             'positions', 'statuses', 'accounts', 'regions',
-            'RSCs'
+            'RSCs', 'employees'
         );
 
         return view('admin.contractLogs.index', $params);

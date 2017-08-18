@@ -42,6 +42,17 @@ class ContractLogsFilter extends Filter
     }
 
     /**
+     * Apply recruiters filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function recruiters($ids)
+    {
+        $this->query->whereIn('tContractLogs.recruiterId', $ids);
+    }
+
+    /**
      * Apply positions filter.
      *
      * @param  array  $ids
@@ -107,7 +118,11 @@ class ContractLogsFilter extends Filter
      */
     public function contractOutDate($date)
     {
-        $this->query->where('tContractLogs.contractOutDate', $date);
+        $dates = explode("-", $date);
+        $startDate = $dates[0];
+        $endDate = $dates[1];
+
+        $this->query->whereBetween('tContractLogs.contractOutDate', array($startDate, $endDate));
     }
 
     /**
@@ -118,7 +133,11 @@ class ContractLogsFilter extends Filter
      */
     public function contractInDate($date)
     {
-        $this->query->where('tContractLogs.contractInDate', $date);
+        $dates = explode("-", $date);
+        $startDate = $dates[0];
+        $endDate = $dates[1];
+
+        $this->query->whereBetween('tContractLogs.contractInDate', array($startDate, $endDate));
     }
 
     /**

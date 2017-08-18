@@ -61,5 +61,18 @@ FastClick.attach(document.body);
 // Moment
 window.moment = require('moment');
 
+// DateRangePicker
+const daterangepicker = require('bootstrap-daterangepicker');
+
+window.$.fn.daterangepicker = function(options, callback) {
+    this.each(function() {
+        var el = $(this);
+        if (el.data('daterangepicker'))
+            el.data('daterangepicker').remove();
+        el.data('daterangepicker', new daterangepicker(el, options, callback));
+    });
+    return this;
+};
+
 // Onload Defaults
 require('./app/onload-defaults');
