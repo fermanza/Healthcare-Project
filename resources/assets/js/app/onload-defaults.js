@@ -1,5 +1,11 @@
 $(() => {
 
+    $(document).on('focus', '.select2', function() {
+        if(! $(this).siblings('select').is("[multiple]")) {
+            $(this).siblings('select').select2('open');
+        }
+    });
+
     // Sidebar status
     $('body').on('expanded.pushMenu', () => {
         $.get('/admin/sidebar-expand');
@@ -52,7 +58,12 @@ $(() => {
                 options.dropdownParent = $(parent);
             }
             options = $.extend({}, defaultSelect2Options, options);
-            $(this).select2(options);
+            $(this).select2(options).on('select2:close', function(){
+                var selectEl = $(this).parent().parent().next().find('.form-control');
+                if(selectEl.length) {
+                    selectEl.focus();
+                }
+            });
         });
     })();
         
@@ -79,10 +90,17 @@ $(() => {
     });
 
     // DateRangePicker
-    $('.rangedatepicker').daterangepicker({
-        locale: {
-          format: 'YYYY-MM-DD'
-        }
+    $('.rangedatepicker').each(function() {
+        var el = $(this);
+        $(this).daterangepicker({
+            autoUpdateInput: false,
+            autoApply: true,
+            locale: {
+              format: 'YYYY-MM-DD',
+            }
+        }, function (startDate, endDate) {
+            el.val(startDate.format('YYYY-MM-DD') + ' - ' + endDate.format('YYYY-MM-DD'));
+        });
     });
 
 

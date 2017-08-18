@@ -118,7 +118,7 @@ class ContractLogsFilter extends Filter
      */
     public function contractOutDate($date)
     {
-        $dates = explode("-", $date);
+        $dates = explode(" - ", $date);
         $startDate = $dates[0];
         $endDate = $dates[1];
 
@@ -133,7 +133,7 @@ class ContractLogsFilter extends Filter
      */
     public function contractInDate($date)
     {
-        $dates = explode("-", $date);
+        $dates = explode(" - ", $date);
         $startDate = $dates[0];
         $endDate = $dates[1];
 
