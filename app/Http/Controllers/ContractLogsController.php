@@ -220,13 +220,14 @@ class ContractLogsController extends Controller
                 $sheet->row($rowNumber, function($row) {
                     $row->setBackground('#ffff38');
                 });
+                $sheet->setHeight($rowNumber, 40);
 
                 foreach($dataToExport as $contractLog) {
-                    $sheet->setHeight($rowNumber, 40);
                     $rowNumber++;
+                    $sheet->setHeight($rowNumber, 40);
                     $contractStatus = $contractLog->status ? $contractLog->status->contractStatus : '';
                     $numOfHours = $contractLog->numOfHours;
-                    $val = 0;
+                    $val = 1;
 
                     $FTContractsOut = $contractLog->contractOutDate ? ($contractStatus == "Guaranteed Shifts" ? $val+0.5 : ($contractStatus == "PT to FT" ? ($numOfHours>=150 ? $val+0.5 : $val) : ($contractStatus == "New-Full Time" ? ($numOfHours>=150 ? $val+0.5 : $val) : 0))) : '';
                     $FTContractsIn = $contractLog->contractInDate == "Inactive" ? "Inactive" : (!$contractLog->contractInDate ? 0 : ($contractStatus == "Guaranteed Shifts" ? $val+0.5 : ($contractStatus == "PT to FT" ? ($numOfHours>=150 ? $val+0.5 : $val) : ($contractStatus == "New-Full Time" ? ($numOfHours>=150 ? $val+0.5 : $val) : 0))));
