@@ -335,6 +335,16 @@
                 </div>
             </div>
 
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group{{ $errors->has('inactive') ? ' has-error' : '' }}">
+                    <label for="inactive">@lang('Inactive')</label><br>
+                    <input type="checkbox" id="inactive" value="1" name="inactive" {{ $contractLog->inactive ? 'checked' : '' }}>
+                    @if ($errors->has('inactive'))
+                        <span class="help-block"><strong>{{ $errors->first('inactive') }}</strong></span>
+                    @endif
+                </div>
+            </div>
+
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
                     <label for="comments">@lang('Comments')</label>

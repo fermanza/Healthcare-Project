@@ -18,6 +18,7 @@ use App\AccountEmployee;
 use App\EmployementStatus;
 use App\ProviderDesignation;
 use App\Scopes\ContractLogScope;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Filters\ContractLogsFilter;
 use App\Http\Requests\ContractLogRequest;
@@ -41,16 +42,7 @@ class ContractLogsController extends Controller
         $accounts = Account::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
-        $contractLogs = ContractLog::withGlobalScope('role', new ContractLogScope)->leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
-            ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
-            ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
-            ->leftJoin('tAccount', 'tContractLogs.accountId', '=', 'tAccount.id')
-            ->leftJoin('tContractNote', 'tContractLogs.contractNoteId', '=', 'tContractNote.id')
-            ->leftJoin('tDivision', 'tContractLogs.divisionId', '=', 'tDivision.id')
-            ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
-            ->select('tContractLogs.*')
-            ->with('status', 'position', 'practice', 'division.group', 'note', 'account')
-            ->where('tContractLogs.active', true)->filter($filter)->paginate(100);
+        $contractLogs = $this->getContractLogsData($filter);
 
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
@@ -203,5 +195,176 @@ class ContractLogsController extends Controller
         session(['ignore-contract-log-role-scope' => ! $ignore]);
 
         return back();
+    }
+
+    public function exportToExcel(ContractLogsFilter $filter) {
+        $dataToExport = $this->getContractLogsData($filter);
+        
+        $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "Division", "Group",
+            "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
+            "Sent to Q/A Date", "Counter Sig Date", "Sent To Payroll Date", "# of Days (Contract Out to Payroll)",
+            "Provider Start Date", "# of Hours", "Recruiter", "Manager", "Contract Coordinator", "Contract",
+            "(# of times) Revised/Resent", "Comments", "# of Total Files", "# of FT Contracts Out",
+            "# of FT Contracts In", "Pending", "# of FT to PT", "# of Attrition", "# of Contracts w/ Site Termed",
+            "Phys/MLP", "Contract Out Month", "Contract In Month", "PROJECT START Month", "# of Amendments In",
+            "RSC", "Operating Unit"
+        ];
+
+
+        Excel::create('ContractLogs', function($excel) use ($dataToExport, $headers){
+            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers){
+                
+                $rowNumber = 1;
+
+                $sheet->row($rowNumber, $headers);
+                $sheet->row($rowNumber, function($row) {
+                    $row->setBackground('#ffff38');
+                });
+
+                foreach($dataToExport as $contractLog) {
+                    $sheet->setHeight($rowNumber, 40);
+                    $rowNumber++;
+                    $contractStatus = $contractLog->status ? $contractLog->status->contractStatus : '';
+                    $numOfHours = $contractLog->numOfHours;
+                    $val = 0;
+
+                    $FTContractsOut = $contractLog->contractOutDate ? ($contractStatus == "Guaranteed Shifts" ? $val+0.5 : ($contractStatus == "PT to FT" ? ($numOfHours>=150 ? $val+0.5 : $val) : ($contractStatus == "New-Full Time" ? ($numOfHours>=150 ? $val+0.5 : $val) : 0))) : '';
+                    $FTContractsIn = $contractLog->contractInDate == "Inactive" ? "Inactive" : (!$contractLog->contractInDate ? 0 : ($contractStatus == "Guaranteed Shifts" ? $val+0.5 : ($contractStatus == "PT to FT" ? ($numOfHours>=150 ? $val+0.5 : $val) : ($contractStatus == "New-Full Time" ? ($numOfHours>=150 ? $val+0.5 : $val) : 0))));
+
+                    $row = [
+                        $contractLog->status ? $contractLog->status->contractStatus : '',
+                        $contractLog->account ? $contractLog->account->siteCode : '',
+                        $contractLog->providerLastName.', '.$contractLog->providerFirstName.', '.($contractLog->designation ? $contractLog->designation->name : ''),
+                        $contractLog->specialty ? $contractLog->specialty->specialty : '',
+                        $contractLog->account ? $contractLog->account->name : '',
+                        ($contractLog->account && $contractLog->account->division) ? $contractLog->account->division->name : '',
+                        ($contractLog->division && $contractLog->division->group) ? $contractLog->division->group->name : '',
+                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('n/j/y') : '',
+                        $contractLog->contractInDate ? $contractLog->contractInDate->format('n/j/y') : '',
+                        $contractLog->contractInDate ? $contractLog->contractInDate->diffInDays($contractLog->contractOutDate) : 'Contract Pending',
+                        $contractLog->sentToQADate ? $contractLog->sentToQADate->format('n/j/y'): '',
+                        $contractLog->countersigDate ? $contractLog->countersigDate->format('n/j/y') : '',
+                        $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->format('n/j/y') : '',
+                        $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->diffInDays($contractLog->contractOutDate) : 'Payroll Pending',
+                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('n/j/y') : '',
+                        $contractLog->numOfHours,
+                        $contractLog->recruiter ? $contractLog->recruiter->fullName() : '',
+                        $contractLog->manager ? $contractLog->manager->fullName() : '',
+                        $contractLog->coordinator ? $contractLog->coordinator->fullName() : '',
+                        $contractLog->type ? $contractLog->type->contractType : '',
+                        '',
+                        $contractLog->comments,
+                        1,
+                        $FTContractsOut,
+                        $FTContractsIn,
+                        $FTContractsOut == 0 ? '' : ($FTContractsOut-$FTContractsIn),
+                        $contractStatus == "FT to PT" ? 1 : '',
+                        $contractStatus == "Attrition - FT" ? 1 : '',
+                        '',
+                        $contractLog->position ? $contractLog->position->position : '',
+                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('01/n/y') : '',
+                        $contractLog->contractInDate ? $contractLog->contractInDate->format('01/n/y') : '',
+                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('01/n/y') : '',
+                        '',
+                        ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '',
+                        ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : ''
+
+                    ];
+
+                    $sheet->row($rowNumber, $row);
+                };
+
+                $sheet->setFreeze('A2');
+                $sheet->setAutoFilter('A1:AH1');
+
+                $sheet->cell('A2:A'.$rowNumber, function($cell) {
+                    $cell->setBackground('#f5964f');
+                });
+
+                $sheet->cells('A1:AJ1', function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Tahoma');
+                    $cells->setFontSize(9.5);
+                    $cells->setFontWeight('bold');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('bottom');
+                });
+
+                $sheet->cells('A2:AJ'.$rowNumber, function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Tahoma');
+                    $cells->setFontSize(9.5);
+                    $cells->setFontWeight('bold');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('bottom');
+                });
+
+                $sheet->setWidth(array(
+                    'A'     => 18,
+                    'B'     => 9,
+                    'C'     => 14,
+                    'D'     => 11,
+                    'E'     => 22,
+                    'F'     => 8,
+                    'G'     => 9,
+                    'H'     => 10,
+                    'I'     => 12,
+                    'J'     => 15,
+                    'K'     => 10,
+                    'L'     => 8,
+                    'M'     => 11,
+                    'N'     => 9,
+                    'O'     => 9,
+                    'P'     => 8,
+                    'Q'     => 11,
+                    'R'     => 8,
+                    'S'     => 16,
+                    'T'     => 12,
+                    'U'     => 8,
+                    'V'     => 17,
+                    'W'     => 8,
+                    'X'     => 8,
+                    'Y'     => 8,
+                    'Z'     => 8,
+                    'AA'    => 7,
+                    'AB'    => 8,
+                    'AC'    => 8,
+                    'AD'    => 9,
+                    'AE'    => 8,
+                    'AF'    => 8,
+                    'AG'    => 11,
+                    'AH'    => 13,
+                    'AI'    => 8,
+                    'AJ'    => 8,
+                ));
+
+                $tableStyle = array(
+                    'borders' => array(
+                        'inside' => array(
+                            'style' => 'thin',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                    ),
+                );
+
+                $sheet->getStyle('A1:AH'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A1:AJ1')->getAlignment()->setWrapText(true);
+            });
+        })->download('xlsx'); 
+    }
+
+    private function getContractLogsData(ContractLogsFilter $filter) {
+        return ContractLog::withGlobalScope('role', new ContractLogScope)->leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
+            ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
+            ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
+            ->leftJoin('tAccount', 'tContractLogs.accountId', '=', 'tAccount.id')
+            ->leftJoin('tContractNote', 'tContractLogs.contractNoteId', '=', 'tContractNote.id')
+            ->leftJoin('tDivision', 'tContractLogs.divisionId', '=', 'tDivision.id')
+            ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
+            ->leftJoin('tProviderDesignation', 'tContractLogs.providerDesignationId', '=', 'tProviderDesignation.id')
+            ->select('tContractLogs.*')
+            ->with('status', 'position', 'practice', 'division.group', 'note', 'account', 'designation',
+                'specialty', 'recruiter', 'manager', 'coordinator', 'type', 'status')
+            ->where('tContractLogs.active', true)->filter($filter)->paginate(100);
     }
 }

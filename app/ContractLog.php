@@ -149,4 +149,24 @@ class ContractLog extends Model
     {
         return $this->belongsTo(Employee::class, 'contractCoordinatorId');
     }
+
+    /**
+     * Get the Speciality for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function specialty()
+    {
+        return $this->belongsTo(Specialty::class, 'specialtyId');
+    }
+
+    /**
+     * Get the Contract Type for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function type()
+    {
+        return $this->belongsTo(ContractType::class, 'contractTypeId');
+    }
 }

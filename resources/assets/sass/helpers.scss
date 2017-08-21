@@ -102,3 +102,11 @@
 .nowrap {
 	white-space: nowrap;
 }
+
+.calendar.left::before {
+	content: "From";
+}
+
+.calendar.right::before {
+	content: "To";
+}

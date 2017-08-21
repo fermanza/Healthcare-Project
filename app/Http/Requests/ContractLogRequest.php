@@ -92,6 +92,7 @@ class ContractLogRequest extends FormRequest
         $contractLog->contractCoordinatorId = $this->contractCoordinatorId;
         $contractLog->positionId = $this->positionId;
         $contractLog->value = $status->value;
+        $contractLog->inactive = $this->inactive ? $this->inactive : 0;
         $contractLog->save();
 
         $contractLog->accounts()->sync(array_merge(

@@ -47,7 +47,7 @@ class ReportsController extends Controller
             "Inc Comp", "FT Utilization - %", "Embassador Utilization - %", "Internal Locum Utilization - %",
             "External Locum Utilization - %", "Applications", "Interviews", "Contracts Out", "Contracts in",
             "Signed Not Yet Started", "Applications", "Interviews", "Pending Contracts", "Contracts In",
-            "Signed Not Yet Started", "Inc Comp", 'Attrition'
+            "Signed Not Yet Started", "Inc Comp", "Attrition"
         ];
 
 
@@ -366,21 +366,6 @@ class ReportsController extends Controller
     }
 
     private function getSummaryData(SummaryFilter $filter) {
-        // return Account::leftJoin('tAccountToEmployee as tRecruiter', function($join) {
-        //         $join->on('tRecruiter.accountId', '=', 'tAccount.id')
-        //         ->on('tRecruiter.positionTypeId', '=', DB::raw(config('instances.position_types.recruiter')));
-        //     }) 
-        //     ->leftJoin('tAccountToEmployee as tManager', function($join) {
-        //         $join->on('tManager.accountId', '=', 'tAccount.id')
-        //         ->on('tManager.positionTypeId', '=', DB::raw(config('instances.position_types.manager')));
-        //     }) 
-        //     ->leftJoin('tAccountToPractice', 'tAccount.id', '=', 'tAccountToPractice.accountId')
-        //     ->leftJoin('tDivision', 'tAccount.divisionId', '=', 'tDivision.id')
-        //     ->leftJoin('tGroup', 'tDivision.groupId', '=', 'tGroup.id')
-        //     ->select('tAccount.*')
-        //     ->with('recruiter.employee.person', 'recruiters.employee.person', 'manager.employee.person', 'division.group', 'region', 'rsc', 'pipeline', 'practices')
-        //     ->where('tAccount.active', true)->filter($filter)->get()->unique();
-
         return AccountSummary::with('account.rsc', 'account.division')
             ->filter($filter)->get()->unique('siteCode');
     }
