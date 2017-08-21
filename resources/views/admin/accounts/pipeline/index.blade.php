@@ -11,6 +11,12 @@
         <i class="fa fa-file-word-o"></i>
         @lang('Export')
     </a>
+    <select id="accountId" name="accountId" required>
+        <option value="" disabled selected></option>
+        @foreach ($accounts as $account)
+            <option value="{{ $account->id }}"}>{{ $account->siteCode }} - {{ $account->name }}</option>
+        @endforeach
+    </select>
 @endsection
 
 @section('content')
@@ -273,7 +279,7 @@
 
 
         <div class="no-break-inside">
-            <h4 class="roster-title">@lang('Current Roster')</h4>
+            <h4 class="pipeline-blue-title">@lang('Current Roster')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysician')">
                 <div class="table-responsive">
@@ -289,11 +295,12 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw50"></th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterPhysicians">
+                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': roster.highlight}">
                                 <td>
                                     <input class="roster-radio" type="checkbox" name="SMD" :value="roster.name" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
                                 </td>
@@ -307,6 +314,7 @@
                                 <td>@{{ roster.contractIn }}</td>
                                 <td>@{{ roster.firstShift }}</td>
                                 <td>@{{ roster.notes }}</td>
+                                <td><input type="checkbox" v-model="roster.highlight" @change="updateHighLight(roster)"></td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -369,6 +377,9 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="rosterPhysician.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterPhysician.highlight">
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -486,7 +497,7 @@
 
 
         <div class="no-break-inside">
-            <h4 class="roster-title">@lang('Current Bench')</h4>
+            <h4 class="pipeline-blue-title">@lang('Current Bench')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
                 <div class="table-responsive">
@@ -685,7 +696,7 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Recruiting Pipeline')</h4>
+            <h4 class="pipeline-green-title">@lang('Recruiting Pipeline')</h4>
             <form @submit.prevent="addRecruiting">
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -790,7 +801,7 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Locums Pipeline')</h4>
+            <h4 class="pipeline-green-title">@lang('Locums Pipeline')</h4>
             <form @submit.prevent="addLocum">
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -893,7 +904,7 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Declined List')</h4>
+            <h4 class="pipeline-orange-title">@lang('Declined List')</h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="bg-gray">
@@ -990,7 +1001,7 @@
         </div>
 
         <div class="no-break-inside">
-            <h4>@lang('Resigned List')</h4>
+            <h4 class="pipeline-orange-title">@lang('Resigned List')</h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="bg-gray">
@@ -1077,6 +1088,12 @@
 
 @push('scripts')
     <script>
+        $('#accountId').on('change', function() {
+            var accountId = $(this).val();
+
+            window.location.href = '/admin/accounts/'+accountId+'/pipeline';
+        });
+
         window.app = new Vue({
             el: '#app',
 
@@ -1512,6 +1529,15 @@
                                     this.oldAMD.push(roster);
                                 }
                             }
+                        }.bind(this));
+                },
+
+                updateHighLight: function(roster) {
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+
+                    axios.patch(endpoint, roster)
+                        .then(function (response) {
+                            
                         }.bind(this));
                 }
             }

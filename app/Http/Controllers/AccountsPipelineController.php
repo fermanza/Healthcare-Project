@@ -35,6 +35,7 @@ class AccountsPipelineController extends Controller
         $practiceTimes = config('pipeline.practice_times');
         $recruitingTypes = config('pipeline.recruiting_types');
         $contractTypes = config('pipeline.contract_types');
+        $accounts = Account::where('active', true)->orderBy('name')->get();
 
         if ($practice && $practice->isIPS() && $pipeline->practiceTime == 'hours') {
             $pipeline->fullTimeHoursPhys = $pipeline->fullTimeHoursPhys == 0 ? 180 : $pipeline->fullTimeHoursPhys;
@@ -46,7 +47,7 @@ class AccountsPipelineController extends Controller
 
         $params = compact(
             'account', 'pipeline', 'region', 'practice', 'practiceTimes',
-            'recruitingTypes', 'contractTypes'
+            'recruitingTypes', 'contractTypes', 'accounts'
         );
 
         JavaScript::put($params);

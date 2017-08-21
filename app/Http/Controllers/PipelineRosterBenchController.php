@@ -68,6 +68,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->firstShift = $request->firstShift;
         $rosterBench->isSMD = $request->isSMD ? 1 : 0;
         $rosterBench->isAMD = $request->isAMD ? 1 : 0;
+        $rosterBench->highlight = $request->highlight;
         $rosterBench->notes = $request->notes;
 
         if($rosterBench->save()) {
@@ -125,6 +126,8 @@ class PipelineRosterBenchController extends Controller
                 Rule::in(config('pipeline.places')),
             ],
         ]);
+
+        $rosterBench->highlight = $request->highlight;
 
         $rosterBench->place = $request->place;
         if($request->type == 'SMD') {
