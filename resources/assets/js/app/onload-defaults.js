@@ -1,8 +1,8 @@
 $(() => {
 
     $(document).on('focus', '.select2', function() {
-        if(! $(this).siblings('select').is("[multiple]")) {
-            $(this).siblings('select').select2('open');
+        if(! $(this).siblings('select.select2').is("[multiple]")) {
+            $(this).siblings('select.select2').select2('open');
         }
     });
 
@@ -59,7 +59,7 @@ $(() => {
             }
             options = $.extend({}, defaultSelect2Options, options);
             $(this).select2(options).on('select2:close', function(){
-                var selectEl = $(this).parent().parent().next().find('.form-control');
+                var selectEl = $(this).parent().parent().next().find('.form-control').first();
                 if(selectEl.length) {
                     selectEl.focus();
                 }

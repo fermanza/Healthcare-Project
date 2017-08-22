@@ -3,6 +3,17 @@
 @section('content-header', __('Summary'))
 
 @section('tools')
+    <div class="row">
+        <div class="col-xs-6"></div>
+        <div class="mb10 col-xs-6">
+            <select class="form-control select2" id="accountId" name="accountId" required>
+                <option value="" disabled selected></option>
+                @foreach ($accounts as $accountItem)
+                    <option value="{{ $accountItem->id }}"}>{{ $accountItem->siteCode }} - {{ $accountItem->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
     <a href="javascript:print();" class="btn btn-default btn-sm hidden-print">
         <i class="fa fa-print"></i>
         @lang('Print')
@@ -11,12 +22,6 @@
         <i class="fa fa-file-word-o"></i>
         @lang('Export')
     </a>
-    <select id="accountId" name="accountId" required>
-        <option value="" disabled selected></option>
-        @foreach ($accounts as $account)
-            <option value="{{ $account->id }}"}>{{ $account->siteCode }} - {{ $account->name }}</option>
-        @endforeach
-    </select>
 @endsection
 
 @section('content')

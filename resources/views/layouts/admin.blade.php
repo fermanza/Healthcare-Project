@@ -207,16 +207,21 @@
             <section class="content">
                 <div class="box">
                     <div class="box-header with-border @yield('content-header-class')">
-                        <h1 class="box-title">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h1 class="box-title">
 
-                            @yield('content-header')
+                                    @yield('content-header')
 
-                        </h1>
+                                </h1>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="box-tools text-right">
 
-                        <div class="box-tools pull-right">
+                                    @yield('tools')
 
-                            @yield('tools')
-
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="box-body">
