@@ -53,6 +53,17 @@ class ContractLogsFilter extends Filter
     }
 
     /**
+     * Apply owners filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function owners($ids)
+    {
+        $this->query->whereIn('tContractLogs.logOwnerId', $ids);
+    }
+
+    /**
      * Apply positions filter.
      *
      * @param  array  $ids

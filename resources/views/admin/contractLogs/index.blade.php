@@ -106,6 +106,14 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="owners[]" data-placeholder="@lang('Contract Owner')" multiple>
+                        @foreach ($employees as $owner)
+                            <option value="{{ $owner->id }}" {{ in_array($owner->id, Request::input('owners') ?: []) ? 'selected' : '' }}>{{ $owner->fullName() }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         
             <div class="row">

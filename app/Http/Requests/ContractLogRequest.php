@@ -41,6 +41,7 @@ class ContractLogRequest extends FormRequest
             'contractNoteId' => 'nullable|exists:tContractNote,id',
             'comments' => '',
             'contractCoordinatorId' => 'required|exists:tEmployee,id',
+            'logOwnerId' => 'required|exists:tEmployee,id',
             'positionId' => 'required|exists:tPosition,id',
         ];
 
@@ -90,6 +91,7 @@ class ContractLogRequest extends FormRequest
         $contractLog->contractNoteId = $this->contractNoteId;
         $contractLog->comments = $this->comments;
         $contractLog->contractCoordinatorId = $this->contractCoordinatorId;
+        $contractLog->logOwnerId = $this->logOwnerId;
         $contractLog->positionId = $this->positionId;
         $contractLog->value = $status->value;
         $contractLog->inactive = $this->inactive ? $this->inactive : 0;

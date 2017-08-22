@@ -169,4 +169,14 @@ class ContractLog extends Model
     {
         return $this->belongsTo(ContractType::class, 'contractTypeId');
     }
+
+    /**
+     * Get the Owner for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner()
+    {
+        return $this->belongsTo(Employee::class, 'logOwnerId');
+    }
 }

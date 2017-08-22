@@ -386,6 +386,21 @@
                     @endif
                 </div>
             </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group{{ $errors->has('contractCoordinatorId') ? ' has-error' : '' }}">
+                    <label for="logOwnerId">@lang('Contract Owner')</label>
+                    <select class="form-control select2" id="logOwnerId" name="logOwnerId" required>
+                        <option value="" disabled selected></option>
+                        @foreach ($coordinators as $coordinator)
+                            <option value="{{ $coordinator->id }}" {{ (old('logOwnerId') == $coordinator->id ?: $coordinator->id == $contractLog->logOwnerId) ? 'selected': '' }}>{{ $coordinator->fullName() }}</option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('logOwnerId'))
+                        <span class="help-block"><strong>{{ $errors->first('logOwnerId') }}</strong></span>
+                    @endif
+                </div>
+            </div>
         </div>
 
         <hr />
