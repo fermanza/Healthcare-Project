@@ -42,7 +42,7 @@ class ContractLogsController extends Controller
         $accounts = Account::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
-        $contractLogs = $this->getContractLogsData($filter);
+        $contractLogs = $this->getContractLogsData($filter, 100);
 
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
@@ -198,7 +198,7 @@ class ContractLogsController extends Controller
     }
 
     public function exportToExcel(ContractLogsFilter $filter) {
-        $dataToExport = $this->getContractLogsData($filter);
+        $dataToExport = $this->getContractLogsData($filter, 10000);
         
         $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "Division", "Group",
             "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
@@ -354,7 +354,7 @@ class ContractLogsController extends Controller
         })->download('xlsx'); 
     }
 
-    private function getContractLogsData(ContractLogsFilter $filter) {
+    private function getContractLogsData(ContractLogsFilter $filter, $results) {
         return ContractLog::withGlobalScope('role', new ContractLogScope)->leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
             ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
             ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
@@ -366,6 +366,6 @@ class ContractLogsController extends Controller
             ->select('tContractLogs.*')
             ->with('status', 'position', 'practice', 'division.group', 'note', 'account', 'designation',
                 'specialty', 'recruiter', 'manager', 'coordinator', 'type', 'status')
-            ->where('tContractLogs.active', true)->filter($filter)->paginate(100);
+            ->where('tContractLogs.active', true)->filter($filter)->paginate($results);
     }
 }
