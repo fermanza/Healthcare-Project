@@ -14,7 +14,7 @@ class AddContractTypeToPipelineRosterBenchTable extends Migration
     public function up()
     {
         Schema::table('tAccountPipelineRosterBench', function (Blueprint $table) {
-            $table->enum('contract', config('pipeline.contract_types'));
+            $table->enum('contract', config('pipeline.contract_types'))->default('ft');
         });
     }
 
