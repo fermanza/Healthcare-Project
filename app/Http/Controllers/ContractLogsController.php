@@ -198,7 +198,7 @@ class ContractLogsController extends Controller
     }
 
     public function exportToExcel(ContractLogsFilter $filter) {
-        $dataToExport = $this->getContractLogsData($filter, 10000);
+        $dataToExport = $this->getContractLogsData($filter, 5000);
         
         $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "Division", "Group",
             "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
