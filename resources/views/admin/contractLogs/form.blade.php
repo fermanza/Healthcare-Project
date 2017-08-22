@@ -392,8 +392,8 @@
                     <label for="logOwnerId">@lang('Contract Owner')</label>
                     <select class="form-control select2" id="logOwnerId" name="logOwnerId" required>
                         <option value="" disabled selected></option>
-                        @foreach ($coordinators as $coordinator)
-                            <option value="{{ $coordinator->id }}" {{ (old('logOwnerId') == $coordinator->id ?: $coordinator->id == $contractLog->logOwnerId) ? 'selected': '' }}>{{ $coordinator->fullName() }}</option>
+                        @foreach ($owners as $owner)
+                            <option value="{{ $owner->id }}" {{ (old('logOwnerId') == $owner->id ?: $owner->id == $contractLog->logOwnerId) ? 'selected': '' }}>{{ $owner->fullName() }}</option>
                         @endforeach
                     </select>
                     @if ($errors->has('logOwnerId'))

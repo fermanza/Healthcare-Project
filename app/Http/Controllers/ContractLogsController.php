@@ -36,6 +36,7 @@ class ContractLogsController extends Controller
         $user = auth()->user();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+        $owners =  $employees->filter->hasPosition(config('instances.position_types.contract_coordinator'));
         $practiceTypes = ['ED', 'IPS'];
         $positions = Position::orderBy('position')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
@@ -47,7 +48,7 @@ class ContractLogsController extends Controller
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
             'positions', 'statuses', 'accounts', 'regions',
-            'RSCs', 'employees'
+            'RSCs', 'employees', 'owners'
         );
 
         return view('admin.contractLogs.index', $params);
@@ -161,6 +162,7 @@ class ContractLogsController extends Controller
         $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
         $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         $coordinators = $employees;
+        $owners =  $employees->filter->hasPosition(config('instances.position_types.contract_coordinator'));
         $types = ContractType::orderBy('contractType')->get();
         $notes = ContractNote::orderBy('contractNote')->get();
         $positions = Position::orderBy('position')->get();
@@ -177,7 +179,8 @@ class ContractLogsController extends Controller
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',
             'managers', 'coordinators', 'types', 'notes', 'positions',
-            'designations', 'additionalAccounts', 'additionalRecruiters', 'action'
+            'designations', 'additionalAccounts', 'additionalRecruiters', 'action',
+            'owners'
         );
 
         return view($view, $params);
