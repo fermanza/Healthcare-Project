@@ -15,7 +15,6 @@ class RenameHighlightPipelineRosterBenchTable extends Migration
     {
         Schema::table('tAccountPipelineRosterBench', function (Blueprint $table) {
             $table->dropColumn('highlight');
-            $table->boolean('signedNotStarted')->default(0)->nullable();
         });
     }
 
