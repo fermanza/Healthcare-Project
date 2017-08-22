@@ -295,6 +295,7 @@
                                 <th class="mw50">@lang('AMD')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
+                                <th class="mw60">@lang('FT/PT/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -314,6 +315,7 @@
                                 </td>
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
+                                <td class="text-uppercase">@{{ roster.contract }}</td>
                                 <td>@{{ roster.interview }}</td>
                                 <td>@{{ roster.contractOut }}</td>
                                 <td>@{{ roster.contractIn }}</td>
@@ -369,6 +371,14 @@
                                     <input type="number" class="form-control" v-model="rosterPhysician.hours" min="0" required />
                                 </td>
                                 <td>
+                                    <select class="form-control" v-model="rosterPhysician.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($contractTypes as $name => $contractType)
+                                            <option value="{{ $contractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
                                     <input type="text" class="form-control datepicker" v-model="rosterPhysician.interview" />
                                 </td>
                                 <td>
@@ -409,6 +419,7 @@
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
+                                <th class="mw60">@lang('FT/PT/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -422,6 +433,7 @@
                             <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted}">
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
+                                <td class="text-uppercase">@{{ roster.contract }}</td>
                                 <td>@{{ roster.interview }}</td>
                                 <td>@{{ roster.contractOut }}</td>
                                 <td>@{{ roster.contractIn }}</td>
@@ -469,6 +481,14 @@
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="rosterApps.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <select class="form-control" v-model="rosterApps.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($contractTypes as $name => $contractType)
+                                            <option value="{{ $contractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="rosterApps.interview" />
@@ -714,7 +734,7 @@
                             <tr>
                                 <th class="mw60">@lang('MD/APP')</th>
                                 <th class="mw200">@lang('Name')</th>
-                                <th class="mw60">@lang('FT/PT')</th>
+                                <th class="mw60">@lang('FT/PT/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -920,7 +940,7 @@
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw200">@lang('Name')</th>
-                            <th class="mw60">@lang('FT/PT')</th>
+                            <th class="mw60">@lang('FT/PT/EMB')</th>
                             <th class="mw100">@lang('Interview')</th>
                             <th class="mw100">@lang('Application')</th>
                             <th class="mw100">@lang('Contract Out')</th>

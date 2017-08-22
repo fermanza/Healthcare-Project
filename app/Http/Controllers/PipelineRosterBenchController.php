@@ -70,6 +70,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->isAMD = $request->isAMD ? 1 : 0;
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->notes = $request->notes;
+        $rosterBench->contract = $request->contract;
 
         if($rosterBench->save()) {
             if($request->isSMD && $request->oldSMD != '') {
@@ -128,6 +129,7 @@ class PipelineRosterBenchController extends Controller
         ]);
 
         $rosterBench->signedNotStarted = $request->signedNotStarted;
+        $rosterBench->contract = $request->contract;
 
         $rosterBench->place = $request->place;
         if($request->type == 'SMD') {
