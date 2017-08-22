@@ -300,12 +300,12 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
-                                <th class="mw50"></th>
+                                <th class="mw100">@lang('Signed Not Started')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': roster.highlight}">
+                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': roster.signedNotStarted}">
                                 <td>
                                     <input class="roster-radio" type="checkbox" name="SMD" :value="roster.name" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
                                 </td>
@@ -319,7 +319,7 @@
                                 <td>@{{ roster.contractIn }}</td>
                                 <td>@{{ roster.firstShift }}</td>
                                 <td>@{{ roster.notes }}</td>
-                                <td><input type="checkbox" v-model="roster.highlight" @change="updateHighLight(roster)"></td>
+                                <td><input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)"></td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -414,11 +414,12 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw100">@lang('Signed Not Started')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterApps">
+                            <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted}">
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
                                 <td>@{{ roster.interview }}</td>
@@ -426,6 +427,7 @@
                                 <td>@{{ roster.contractIn }}</td>
                                 <td>@{{ roster.firstShift }}</td>
                                 <td>@{{ roster.notes }}</td>
+                                <td><input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)"></td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -482,6 +484,9 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="rosterApps.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterApps.highlight">
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')

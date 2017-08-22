@@ -115,10 +115,7 @@ class ContractLogsFilter extends Filter
      */
     public function provider($text)
     {
-        $this->query->where(function ($query) use ($text) {
-            $query->where('tContractLogs.providerFirstName', 'like', "%{$text}%")
-                ->orWhere('tContractLogs.providerLastName', 'like', "%{$text}%");
-        });
+        $this->query->whereRaw("concat(tContractLogs.providerFirstName, ' ', tContractLogs.providerLastName) like ?", array('%'.$text.'%'));
     }
 
     /**
