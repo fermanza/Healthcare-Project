@@ -83,37 +83,37 @@ class ReportsController extends Controller
                         $account->Location,
                         $account->{'Start Date'} ? $account->{'Start Date'}->format('d/m/y') : '',
                         $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated(),
-                        $account->{'Complete Staff - Phys'},
-                        $account->{'Complete Staff - APP'},
-                        $account->{'Complete Staff - Total'},
-                        $account->{'Current Staff - Phys'},
-                        $account->{'Current Staff - APP'},
-                        $account->{'Current Staff - Total'},
-                        $account->{'Current Openings - SMD'},
-                        $account->{'Current Openings - AMD'},
-                        $account->{'Current Openings - Phys'},
-                        $account->{'Current Openings - APP'},
-                        $account->{'Current Openings - Total'},
-                        $account->{'Percent Recruited - Total'},
-                        $account->{'Percent Recruited - Phys'},
-                        $account->{'Percent Recruited - APP'},
-                        $account->{'Prev Month - Inc Comp'},
-                        $account->{'Prev Month - FT Utilization - %'},
-                        $account->{'Prev Month - Embassador Utilization - %'},
-                        $account->{'Prev Month - Internal Locum Utilization - %'},
-                        $account->{'Prev Month - External Locum Utilization - %'},
-                        $account->{'MTD - Applications'},
-                        $account->{'MTD - Interviews'},
-                        $account->{'MTD - Contracts Out'},
-                        $account->{'MTD - Contracts In'},
-                        $account->{'MTD - Signed Not Yet Started'},
-                        $account->{'YTD - Applications'},
-                        $account->{'YTD - Interviews'},
-                        $account->{'YTD - Pending Contracts'},
-                        $account->{'YTD - Contracts In'},
-                        $account->{'YTD - Signed Not Yet Started'},
-                        $account->{'YTD - Inc Comp'},
-                        $account->{'YTD - Attrition'},
+                        $account->present()->excel('Complete Staff - Phys'),
+                        $account->present()->excel('Complete Staff - APP'),
+                        $account->present()->excel('Complete Staff - Total'),
+                        $account->present()->excel('Current Staff - Phys'),
+                        $account->present()->excel('Current Staff - APP'),
+                        $account->present()->excel('Current Staff - Total'),
+                        $account->present()->excel('Current Openings - SMD'),
+                        $account->present()->excel('Current Openings - AMD'),
+                        $account->present()->excel('Current Openings - Phys'),
+                        $account->present()->excel('Current Openings - APP'),
+                        $account->present()->excel('Current Openings - Total'),
+                        $account->present()->excel('Percent Recruited - Total'),
+                        $account->present()->excel('Percent Recruited - Phys'),
+                        $account->present()->excel('Percent Recruited - APP'),
+                        $account->present()->excel('Prev Month - Inc Comp'),
+                        $account->present()->excel('Prev Month - FT Utilization - %'),
+                        $account->present()->excel('Prev Month - Embassador Utilization - %'),
+                        $account->present()->excel('Prev Month - Internal Locum Utilization - %'),
+                        $account->present()->excel('Prev Month - External Locum Utilization - %'),
+                        $account->present()->excel('MTD - Applications'),
+                        $account->present()->excel('MTD - Interviews'),
+                        $account->present()->excel('MTD - Contracts Out'),
+                        $account->present()->excel('MTD - Contracts In'),
+                        $account->present()->excel('MTD - Signed Not Yet Started'),
+                        $account->present()->excel('YTD - Applications'),
+                        $account->present()->excel('YTD - Interviews'),
+                        $account->present()->excel('YTD - Pending Contracts'),
+                        $account->present()->excel('YTD - Contracts In'),
+                        $account->present()->excel('YTD - Signed Not Yet Started'),
+                        $account->present()->excel('YTD - Inc Comp'),
+                        $account->present()->excel('YTD - Attrition'),
                     ];
 
                     $sheet->row($rowNumber, $row);
@@ -125,6 +125,114 @@ class ReportsController extends Controller
                         });
                     }
                 };
+
+                $sheet->cell('R'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(R3:R'.$rowNumber.')');
+                });
+
+                $sheet->cell('S'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(S3:S'.$rowNumber.')');
+                });
+
+                $sheet->cell('T'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(T3:T'.$rowNumber.')');
+                });
+
+                $sheet->cell('U'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(U3:U'.$rowNumber.')');
+                });
+
+                $sheet->cell('V'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(V3:V'.$rowNumber.')');
+                });
+
+                $sheet->cell('W'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(W3:W'.$rowNumber.')');
+                });
+
+                $sheet->cell('X'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(X3:X'.$rowNumber.')');
+                });
+
+                $sheet->cell('Y'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(Y3:Y'.$rowNumber.')');
+                });
+
+                $sheet->cell('Z'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(Z3:Z'.$rowNumber.')');
+                });
+
+                $sheet->cell('AA'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AA3:AA'.$rowNumber.')');
+                });
+
+                $sheet->cell('AB'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AB3:AB'.$rowNumber.')');
+                });
+
+                $sheet->cell('AC'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=W'.($rowNumber+2).'/T'.($rowNumber+2));
+                });
+
+                $sheet->cell('AD'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=U'.($rowNumber+2).'/R'.($rowNumber+2));
+                });
+
+                $sheet->cell('AE'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=V'.($rowNumber+2).'/S'.($rowNumber+2));
+                });
+
+                $sheet->cell('AF'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AF3:AF'.$rowNumber.')');
+                });
+
+                $sheet->cell('AK'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AK3:AK'.$rowNumber.')');
+                });
+
+                $sheet->cell('AL'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AL3:AL'.$rowNumber.')');
+                });
+
+                $sheet->cell('AM'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AM3:AM'.$rowNumber.')');
+                });
+
+                $sheet->cell('AN'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AN3:AN'.$rowNumber.')');
+                });
+
+                $sheet->cell('AO'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AO3:AO'.$rowNumber.')');
+                });
+
+                $sheet->cell('AP'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AP3:AP'.$rowNumber.')');
+                });
+
+                $sheet->cell('AQ'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AQ3:AQ'.$rowNumber.')');
+                });
+
+                $sheet->cell('AR'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AR3:AR'.$rowNumber.')');
+                });
+
+                $sheet->cell('AS'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AS3:AS'.$rowNumber.')');
+                });
+
+                $sheet->cell('AT'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AT3:AT'.$rowNumber.')');
+                });
+
+                $sheet->cell('AU'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AU3:AU'.$rowNumber.')');
+                });
+
+                $sheet->cell('AV'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AV3:AV'.$rowNumber.')');
+                });
 
                 $sheet->setFreeze('C3');
                 $sheet->setAutoFilter('A2:AV2');
@@ -263,7 +371,10 @@ class ReportsController extends Controller
                     'AF3:AF'.$rowNumber    => '"$"#,##0.00_-',
                     'AG3:AJ'.$rowNumber    => '0.0%',
                     'AU3:AU'.$rowNumber    => '"$"#,##0.00_-',
-                    'AV3:AV'.$rowNumber     => '0.0',
+                    'AV3:AV'.$rowNumber    => '0.0',
+                    'AC'.($rowNumber+2 )   => '0.0%',
+                    'AD'.($rowNumber+2 )   => '0.0%',
+                    'AE'.($rowNumber+2 )   => '0.0%',
                 ));
 
                 $sheet->setWidth(array(

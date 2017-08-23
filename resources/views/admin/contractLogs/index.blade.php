@@ -7,10 +7,10 @@
         @lang('View All')
     </a>
     @permission('admin.contractLogs.excel')
-    <a href="{{ route('admin.contractLogs.excel', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
-        <i class="fa fa-file-excel-o"></i>
-        @lang('Export to Excel')
-    </a>
+        <a href="{{ route('admin.contractLogs.excel', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
+            <i class="fa fa-file-excel-o"></i>
+            @lang('Export to Excel')
+        </a>
     @endpermission
     @permission('admin.contractLogs.create')
         <a href="{{ route('admin.contractLogs.create') }}" class="btn btn-sm btn-success">

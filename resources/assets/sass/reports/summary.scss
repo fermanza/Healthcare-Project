@@ -59,6 +59,7 @@
 		    white-space: nowrap;
 		    overflow: hidden; 
 		    word-wrap: break-word;
+		    background-color: #ffffff;
 		}
 
 		td:hover{
@@ -169,5 +170,14 @@
 	.table > tfoot > tr > th, 
 	.table > tfoot > tr > td {
 		padding: 3px;
+	}
+
+	.DTFC_LeftBodyLiner {
+		overflow-y: hidden !important;
+
+		thead th.sorting_desc:after,
+		thead th.sorting_asc:after {
+			content: none;
+		}
 	}
 }

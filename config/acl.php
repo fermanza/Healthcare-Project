@@ -61,6 +61,7 @@ return [
         'admin.accounts.pipeline.locum.store' => 'Account Summary Locum Create Action',
         'admin.accounts.pipeline.locum.decline' => 'Account Summary Locum Decline Action',
         'admin.accounts.pipeline.locum.destroy' => 'Account Summary Delete Locum',
+        'admin.accounts.pipeline.export' => 'Export Account Summary',
     ],
 
     'Files' => [

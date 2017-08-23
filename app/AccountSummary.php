@@ -3,15 +3,21 @@
 namespace App;
 
 use Carbon\Carbon;
+use Laracasts\Presenter\PresentableTrait;
+use App\Presenters\SummaryPresenter;
 
 class AccountSummary extends Model
 {
+
+    use PresentableTrait;
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'vAccountSummary';
+    protected $presenter = SummaryPresenter::class;
 
     /**
      * The attributes that should be mutated to dates.
@@ -58,5 +64,10 @@ class AccountSummary extends Model
 
     public function account(){
         return $this->belongsTo(Account::class, 'siteCode', 'siteCode');
+    }
+
+    public function getFirstNameAttribute($value)
+    {
+        return ucfirst($value);
     }
 }

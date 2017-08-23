@@ -10,7 +10,10 @@
 @endsection
 
 @section('content')
-	<form class="box-body">
+    <button class="btn btn-primary mb10" data-toggle="collapse" data-target="#reportFilters">
+        Show Filters
+    </button>
+	<form class="box-body collapse" id="reportFilters">
         <div class="flexboxgrid">
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
@@ -87,7 +90,7 @@
     </form>
 	<div class="reports-summary">
 		<div class="table-responsive mh400">
-	        <table id="datatable-summary" class="table table-hover table-bordered datatable">
+	        <table id="datatableSummary" class="table table-hover table-bordered">
 	            <thead>
                     <tr>
                         <th colspan="17" class="white-bg">RECRUITING SUMMARY</th>
@@ -185,76 +188,76 @@
 	                        <td class="wd150 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
 	                        	{{ $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated() }}
 	                        </td>
-                            <td class="wd50">{{ number_format($account->{'Complete Staff - Phys'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Complete Staff - APP'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Complete Staff - Total'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Current Staff - Phys'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Current Staff - APP'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Current Staff - Total'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Current Openings - SMD'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Current Openings - AMD'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Current Openings - Phys'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Current Openings - APP'}, 1) }}</td>
-                            <td class="wd50">{{ number_format($account->{'Current Openings - Total'}, 1) }}</td>
+                            <td class="wd50">{{ $account->present()->{'Complete Staff - Phys'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Complete Staff - APP'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Complete Staff - Total'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Current Staff - Phys'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Current Staff - APP'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Current Staff - Total'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Current Openings - SMD'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Current Openings - AMD'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Current Openings - Phys'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Current Openings - APP'} }}</td>
+                            <td class="wd50">{{ $account->present()->{'Current Openings - Total'} }}</td>
                             <td class="wd50">
-                                {{ number_format($account->{'Percent Recruited - Total'} * 100, 1) }}%
+                                {{ $account->present()->{'Percent Recruited - Total'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'Percent Recruited - Phys'} * 100, 1) }}%
+                                {{ $account->present()->{'Percent Recruited - Phys'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'Percent Recruited - APP'} * 100, 1) }}%
+                                {{ $account->present()->{'Percent Recruited - APP'} }}
                             </td>
                             <td class="wd50">
-                                ${{ number_format($account->{'Prev Month - Inc Comp'}, 2) }}
+                                {{ $account->present()->{'Prev Month - Inc Comp'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'Prev Month - FT Utilization - %'} * 100, 1) }}%
+                                {{ $account->present()->{'Prev Month - FT Utilization - %'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'Prev Month - Embassador Utilization - %'} * 100, 1) }}%
+                                {{ $account->present()->{'Prev Month - Embassador Utilization - %'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'Prev Month - Internal Locum Utilization - %'} * 100, 1) }}%
+                                {{ $account->present()->{'Prev Month - Internal Locum Utilization - %'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'Prev Month - External Locum Utilization - %'} * 100, 1) }}%
+                                {{ $account->present()->{'Prev Month - External Locum Utilization - %'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'MTD - Applications'}, 1) }}
+                                {{ $account->present()->{'MTD - Applications'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'MTD - Interviews'}, 1) }}
+                                {{ $account->present()->{'MTD - Interviews'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'MTD - Contracts Out'}, 1) }}
+                                {{ $account->present()->{'MTD - Contracts Out'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'MTD - Contracts In'}, 1) }}
+                                {{ $account->present()->{'MTD - Contracts In'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'MTD - Signed Not Yet Started'}, 1) }}
+                                {{ $account->present()->{'MTD - Signed Not Yet Started'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'YTD - Applications'}, 1) }}
+                                {{ $account->present()->{'YTD - Applications'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'YTD - Interviews'}, 1) }}
+                                {{ $account->present()->{'YTD - Interviews'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'YTD - Pending Contracts'}, 1) }}
+                                {{ $account->present()->{'YTD - Pending Contracts'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'YTD - Contracts In'}, 1) }}
+                                {{ $account->present()->{'YTD - Contracts In'} }}
                             </td>
                             <td class="wd50">
-                                {{ number_format($account->{'YTD - Signed Not Yet Started'}, 1) }}
+                                {{ $account->present()->{'YTD - Signed Not Yet Started'} }}
                             </td>
                             <td class="wd50">
-                                ${{ number_format($account->{'YTD - Inc Comp'}, 2) }}
+                                {{ $account->present()->{'YTD - Inc Comp'} }}
                             </td>
                             <td>
-                                {{ number_format($account->{'YTD - Attrition'}, 1) }}
+                                {{ $account->present()->{'YTD - Attrition'} }}
                             </td>
 	                    </tr>
 	                @endforeach
@@ -264,3 +267,18 @@
 	</div>
 @endsection
 
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            var summary = $('#datatableSummary').DataTable($.extend({}, defaultDTOptions, {
+                scrollY:        "380px",
+                scrollX:        true,
+                scrollCollapse: true,
+                paging:         false,
+                fixedColumns:   {
+                    leftColumns: 2
+                }
+            }));
+        } );
+    </script>
+@endpush
