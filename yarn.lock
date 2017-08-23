@@ -1384,6 +1384,19 @@ datatables-select@^1.1.0:
     datatables ">=1.10.8"
     jquery ">=1.7.0"
 
+datatables.net-bs@^1.10.15:
+  version "1.10.15"
+  resolved "https://registry.yarnpkg.com/datatables.net-bs/-/datatables.net-bs-1.10.15.tgz#b2c2261007d84ca5b5abf56c18edc227e0da1a4d"
+  dependencies:
+    datatables.net ">=1.10.9"
+    jquery ">=1.7"
+
+datatables.net@>=1.10.9:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-2.1.1.tgz#6f1103ef08054642aecf85e7e25efd592822ee78"
+  dependencies:
+    jquery ">=1.7"
+
 datatables.net@^1.10.15:
   version "1.10.15"
   resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.15.tgz#c789077bbfe385e75ff5a233fa5f23251a72df68"

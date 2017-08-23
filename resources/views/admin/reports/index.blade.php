@@ -274,7 +274,6 @@
                 scrollY:        "380px",
                 scrollX:        true,
                 scrollCollapse: true,
-                paging:         false,
                 fixedColumns:   {
                     leftColumns: 2
                 }

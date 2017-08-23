@@ -27,9 +27,10 @@ require('icheck');
 
 // DataTables
 require('datatables');
-require('datatables-bootstrap3-plugin');
 require('datatables-select');
 require('datatables-fixedcolumns');
+require('datatables-bootstrap3-plugin');
+require('datatables.net-bs');
 
 // Select2
 require('select2');
