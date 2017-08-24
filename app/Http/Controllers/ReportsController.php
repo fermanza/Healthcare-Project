@@ -310,7 +310,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AD1', function($cell) {
+                $sheet->cell('AF1', function($cell) {
                     $cell->setValue('PREV MONTH');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#c7eecf');
@@ -488,7 +488,6 @@ class ReportsController extends Controller
     }
 
     private function getSummaryData(SummaryFilter $filter, $pages) {
-        return AccountSummary::with('account.rsc', 'account.division')
-            ->filter($filter)->paginate($pages)->unique('siteCode');
+        return AccountSummary::filter($filter)->paginate($pages);
     }
 }

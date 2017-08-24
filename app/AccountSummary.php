@@ -62,10 +62,6 @@ class AccountSummary extends Model
         return number_format($months, 1);
     }
 
-    public function account(){
-        return $this->belongsTo(Account::class, 'siteCode', 'siteCode');
-    }
-
     public function getFirstNameAttribute($value)
     {
         return ucfirst($value);

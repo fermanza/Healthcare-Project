@@ -171,9 +171,9 @@
 	                        <td class="wd230"><span>{{ $account->{'Hospital Name'} }}</span></td>
 	                        <td class="wd80">{{ $account->Practice }}</td>
 	                        <td class="wd110">{{ $account->{'System Affiliation'} }}</td>
-	                        <td class="wd50">{{ ($account->account && $account->account->division && $account->account->division->isJV) ? __('Yes') : __('No') }}</td>
+	                        <td class="wd50">{{ $account->JV }}</td>
 	                        <td class="wd200">{{ $account->{'Operating Unit'} }}</td>
-	                        <td class="wd50">{{ ($account->account && $account->account->rsc) ? $account->account->rsc->name : '' }}</td>
+	                        <td class="wd50">{{ $account->RSC }}</td>
 	                        <td class="wd70">{{ $account->{'RSC Recruiter'} }}</td>
 	                        <td class="wd110">
 	                        	{{ $account->{'Secondary Recruiter'} }}
