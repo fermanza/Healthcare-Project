@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Carbon\Carbon;
+
 class PipelineRosterBench extends Model
 {
     /**
@@ -14,4 +16,14 @@ class PipelineRosterBench extends Model
     protected $dates = [
         'firstShift',
     ];
+
+    public function getFirstShiftAttribute($value){
+    	if($value) {
+    		$formattedDate = Carbon::parse($value)->format('Y-m-d');
+
+    		return $formattedDate;
+    	}
+
+    	return $value;
+    }
 }
