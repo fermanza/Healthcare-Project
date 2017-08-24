@@ -24,7 +24,7 @@ class ReportsController extends Controller
      */
     public function summary(SummaryFilter $filter)
     {
-        $accounts = $this->getSummaryData($filter);
+        $accounts = $this->getSummaryData($filter, 100);
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
@@ -39,7 +39,7 @@ class ReportsController extends Controller
     }
 
     public function exportToExcel(SummaryFilter $filter) {
-        $dataToExport = $this->getSummaryData($filter);
+        $dataToExport = $this->getSummaryData($filter, 5000);
         $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO", "SVP", "RMD", "City", "Location",
             "Start Date", "# of Months Account Open", "Phys", "APP", "Total", "Phys", "APP", "Total",
@@ -476,8 +476,8 @@ class ReportsController extends Controller
         })->download('xlsx'); 
     }
 
-    private function getSummaryData(SummaryFilter $filter) {
+    private function getSummaryData(SummaryFilter $filter, $pages) {
         return AccountSummary::with('account.rsc', 'account.division')
-            ->filter($filter)->get()->unique('siteCode');
+            ->filter($filter)->paginate($pages)->unique('siteCode');
     }
 }
