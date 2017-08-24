@@ -59,7 +59,7 @@ class AccountSummary extends Model
         $days = Carbon::now()->diffInDays($this->{'Start Date'});
         $months = $days / $monthDays;
 
-        return number_format($months, 1);
+        return $months;
     }
 
     public function getFirstNameAttribute($value)

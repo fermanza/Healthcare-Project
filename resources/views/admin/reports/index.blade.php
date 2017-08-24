@@ -186,7 +186,7 @@
 	                        <td class="wd100">{{ $account->Location }}</td>
 	                        <td class="wd100">{{ $account->{'Start Date'} ? $account->{'Start Date'}->format('m/d/y') : '' }}</td>
 	                        <td class="wd150 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-	                        	{{ $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated() }}
+	                        	{{ $account->getMonthsSinceCreated() === INF ? '' : number_format($account->getMonthsSinceCreated(), 1) }}
 	                        </td>
                             <td class="wd50">{{ $account->present()->{'Complete Staff - Phys'} }}</td>
                             <td class="wd50">{{ $account->present()->{'Complete Staff - APP'} }}</td>
