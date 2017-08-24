@@ -194,21 +194,35 @@ class AccountsPipelineController extends Controller
             'practices',
         ]);
 
+        $today = Carbon::today();
+
         // Creating the new document...
         $word = new \PhpOffice\PhpWord\PhpWord();
         $documentName = 'Short Form.docx';
 
         $boldFontStyle = array('name' => 'Cambria(Body)', 'size' => 9, 'bold' => true);
+        $boldUnderlinedFontStyle = array('name' => 'Cambria(Body)', 'size' => 9, 'bold' => true, 'underline' => 'single');
         $normalFontStyle = array('name' => 'Cambria(Body)', 'size' => 9);
         $paragraphCenterStyle = array('align' => 'center');
-
+        $footerStyle = array('name' => 'ArialMT', 'size' => 8);
 
         $section = $word->addSection();
 
+        $section->addImage(
+            'envision.png',
+            array(
+                'width' => 180,
+                'height' => 40,
+                // 'marginTop'     => -1,
+                // 'marginLeft'    => -1,
+                // 'wrappingStyle' => 'behind'
+            )
+        );
+
         $section->addText(
-            $account->name.' '.($account->practices ? $account->practices->first()->name : '').'<w:br/>'.
+            $account->name.' '.($account->practices->count() ? $account->practices->first()->name : '').'<w:br/>'.
             $account->city.','.$account->state.'<w:br/>'.
-            Carbon::today()->format('F d, Y'),
+            Carbon::today()->format('F d, Y').'<w:br/>',
             $boldFontStyle,
             $paragraphCenterStyle
         );
@@ -254,6 +268,14 @@ class AccountsPipelineController extends Controller
         })->reject(function($locum){
             return $locum->declined;
         })->sortBy('name');
+
+        $futureRosters = $account->pipeline->rostersBenchs->filter(function($rosterBench) use ($today) {
+            return $rosterBench->firstShift && ($rosterBench->firstShift->gte($today));
+        });
+
+        $futureLocums = $account->pipeline->locums->filter(function($locum) use ($today) {
+            return $locum->startDate && ($locum->startDate->gte($today));
+        });
         /////// End of Elements for lists /////////
 
 
@@ -290,6 +312,21 @@ class AccountsPipelineController extends Controller
         $locumsAPPList = '';
         foreach ($locumsAPP as $locumAPP) {
             $locumsAPPList.= $locumAPP->name.' MD '.'('.$locumAPP->agency.')<w:br/>';
+        }
+
+        $futureRostersList = '';
+        foreach ($futureRosters as $futureRoster) {
+            $futureRostersList .= $futureRoster->name.' - '.$futureRoster->notes.'<w:br/>';
+        }
+
+        $futureLocumsList = '';
+        foreach ($futureLocums as $futureLocum) {
+            $futureLocumsList .= $futureLocum->name.' - '.$futureLocum->notes.'<w:br/>';
+        }
+
+        $recruitingsList = '';
+        foreach ($account->pipeline->recruitings as $recruiting) {
+            $recruitingsList .= $recruiting->name.' - '.$recruiting->notes.'<w:br/>';
         }
         /////// End of Lists ///////////
 
@@ -332,15 +369,36 @@ class AccountsPipelineController extends Controller
         $table->addCell(2000, $styleCell)->addText($currentBenchAPPList, $normalFontStyle);
         $table->addCell(2000, $styleCell)->addText($locumsAPPList, $normalFontStyle);
 
-        $section->addText('FTE Physicians required: '.$account->pipeline->staffPhysicianFTEOpenings.'<w:br>'.
-            'Current need: '.$account->pipeline->staffPhysicianFTENeeds,
+        $section->addText('<w:br/>FTE Physicians required: '.$account->pipeline->staffPhysicianFTEOpenings.'<w:br/>'.
+            'Current need: '.$account->pipeline->staffPhysicianFTENeeds.'<w:br/><w:br/>',
             $normalFontStyle
         );
 
-        $section->addText('FTE Apps required: '.$account->pipeline->staffAppsFTEOpenings.'<w:br>'.
+        $section->addText('FTE Apps required: '.$account->pipeline->staffAppsFTEOpenings.'<w:br/>'.
             'Current need: '.$account->pipeline->staffAppsFTENeeds,
             $normalFontStyle
         );
+
+        $footer = $section->addFooter();
+        $footer->addText('3916 State Street | Suite 200 | Santa Barbara, CA 93105', $normalFontStyle, array('align' => 'right'));
+
+        $section->addPageBreak();
+
+        $section2 = $word->addSection();
+
+        $header = $section2->addHeader();
+        $header->addText('ENVISION PHYSICIAN SERVICES', $normalFontStyle, array('align' => 'right'));
+
+        $section2->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
+        $section2->addText($futureRostersList, $normalFontStyle);
+
+        $section2->addText('Locums who have not started', $boldUnderlinedFontStyle);
+        $section2->addText($futureLocumsList, $normalFontStyle);
+
+        $section2->addText('Pipeline/candidate update', $boldUnderlinedFontStyle);
+        $section2->addText($recruitingsList, $normalFontStyle);
+
+        $footer2 = $section2->addFooter();
 
         // Saving the document...
         $objWriter = IOFactory::createWriter($word, 'Word2007');

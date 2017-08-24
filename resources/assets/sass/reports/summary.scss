@@ -179,5 +179,10 @@
 		thead th.sorting_asc:after {
 			content: none;
 		}
+
+		tr:not(.odd):not(.even) > td > a,
+		tr:not(.odd):not(.even) > td > span {
+			display: none;
+		}
 	}
 }

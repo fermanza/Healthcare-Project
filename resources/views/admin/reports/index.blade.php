@@ -168,7 +168,7 @@
                                     </a>
                                 @endif
                             </td>
-	                        <td class="wd230">{{ $account->{'Hospital Name'} }}</td>
+	                        <td class="wd230"><span>{{ $account->{'Hospital Name'} }}</span></td>
 	                        <td class="wd80">{{ $account->Practice }}</td>
 	                        <td class="wd110">{{ $account->{'System Affiliation'} }}</td>
 	                        <td class="wd50">{{ ($account->account && $account->account->division && $account->account->division->isJV) ? __('Yes') : __('No') }}</td>
@@ -262,6 +262,9 @@
 	                    </tr>
 	                @endforeach
 	            </tbody>
+                <tfoot>
+                    
+                </tfoot>
 	        </table>
 	    </div>
 	</div>
@@ -271,11 +274,17 @@
     <script>
         $(document).ready(function() {
             var summary = $('#datatableSummary').DataTable($.extend({}, defaultDTOptions, {
-                scrollY:        "380px",
+                scrollY:        300,
                 scrollX:        true,
                 scrollCollapse: true,
                 fixedColumns:   {
                     leftColumns: 2
+                },
+                drawCallback: function () {
+                  var api = this.api();
+                  $( api.table().body() ).append(
+                    '<tr><td colspan="17">Total</td>Total<td>'+api.column( 17, {page:'current'} ).data().sum()+'</td><td>'+api.column( 18, {page:'current'} ).data().sum()+'</td><td>'+api.column( 19, {page:'current'} ).data().sum()+'</td><td>'+api.column( 20, {page:'current'} ).data().sum()+'</td><td>'+api.column( 21, {page:'current'} ).data().sum()+'</td><td>'+api.column( 22, {page:'current'} ).data().sum()+'</td><td>'+api.column( 23, {page:'current'} ).data().sum()+'</td><td>'+api.column( 24, {page:'current'} ).data().sum()+'</td><td>'+api.column( 25, {page:'current'} ).data().sum()+'</td><td>'+api.column( 26, {page:'current'} ).data().sum()+'</td><td>'+api.column( 27, {page:'current'} ).data().sum()+'</td><td>'+(api.column( 22, {page:'current'} ).data().sum()/api.column( 19, {page:'current'} ).data().sum()).toFixed(2)+'</td></td><td>'+(api.column( 20, {page:'current'} ).data().sum()/api.column( 17, {page:'current'} ).data().sum()).toFixed(2)+'</td><td>'+(api.column( 21, {page:'current'} ).data().sum()/api.column( 18, {page:'current'} ).data().sum()).toFixed(2)+'</td><td>'+api.column( 31, {page:'current'} ).data().sum()+'</td><td></td><td></td><td></td><td></td><td>'+api.column( 36, {page:'current'} ).data().sum()+'</td><td>'+api.column( 37, {page:'current'} ).data().sum()+'</td><td>'+api.column( 38, {page:'current'} ).data().sum()+'</td><td>'+api.column( 39, {page:'current'} ).data().sum()+'</td><td>'+api.column( 40, {page:'current'} ).data().sum()+'</td><td>'+api.column( 41, {page:'current'} ).data().sum()+'</td><td>'+api.column( 42, {page:'current'} ).data().sum()+'</td><td>'+api.column( 43, {page:'current'} ).data().sum()+'</td><td>'+api.column( 44, {page:'current'} ).data().sum()+'</td><td>'+api.column( 45, {page:'current'} ).data().sum()+'</td><td>'+api.column( 46, {page:'current'} ).data().sum()+'</td><td>'+api.column( 47, {page:'current'} ).data().sum()+'</td></tr>'
+                  );
                 }
             }));
         } );
