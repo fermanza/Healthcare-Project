@@ -731,6 +731,13 @@ bootstrap-datepicker@^1.6.4:
   dependencies:
     jquery ">=1.7.1"
 
+bootstrap-daterangepicker@^2.1.25:
+  version "2.1.25"
+  resolved "https://registry.yarnpkg.com/bootstrap-daterangepicker/-/bootstrap-daterangepicker-2.1.25.tgz#fcd8ba0b755a054d330d7a3b7c4dd8bb855cffb7"
+  dependencies:
+    jquery ">=1.10"
+    moment "^2.9.0"
+
 bootstrap-datetime-picker@^2.4.4:
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/bootstrap-datetime-picker/-/bootstrap-datetime-picker-2.4.4.tgz#b7cfe843a3c6d221c03293c9a464a4cc35d73968"
@@ -1363,6 +1370,13 @@ datatables-bootstrap3-plugin@^0.5.0:
     font-awesome "^4.3"
     jquery "~1.11"
 
+datatables-fixedcolumns@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/datatables-fixedcolumns/-/datatables-fixedcolumns-3.1.0.tgz#16cbf46582f468586259066398c279524322bd10"
+  dependencies:
+    datatables ">=1.8.0"
+    jquery ">=1.7.0"
+
 datatables-select@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/datatables-select/-/datatables-select-1.1.0.tgz#97d613c9794f7d107995ad4b358f24e04f5098f1"
@@ -1370,7 +1384,26 @@ datatables-select@^1.1.0:
     datatables ">=1.10.8"
     jquery ">=1.7.0"
 
-datatables@>=1.10.8, datatables@^1.10, datatables@^1.10.13:
+datatables.net-bs@^1.10.15:
+  version "1.10.15"
+  resolved "https://registry.yarnpkg.com/datatables.net-bs/-/datatables.net-bs-1.10.15.tgz#b2c2261007d84ca5b5abf56c18edc227e0da1a4d"
+  dependencies:
+    datatables.net ">=1.10.9"
+    jquery ">=1.7"
+
+datatables.net@>=1.10.9:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-2.1.1.tgz#6f1103ef08054642aecf85e7e25efd592822ee78"
+  dependencies:
+    jquery ">=1.7"
+
+datatables.net@^1.10.15:
+  version "1.10.15"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.15.tgz#c789077bbfe385e75ff5a233fa5f23251a72df68"
+  dependencies:
+    jquery ">=1.7"
+
+datatables@>=1.10.8, datatables@>=1.8.0, datatables@^1.10, datatables@^1.10.13:
   version "1.10.13"
   resolved "https://registry.yarnpkg.com/datatables/-/datatables-1.10.13.tgz#9bb2dec6f7dcf02049a00e4f0e7d3fe009c39346"
   dependencies:
@@ -2441,6 +2474,10 @@ jquery-mousewheel@~3.1.13:
   version "3.1.13"
   resolved "https://registry.yarnpkg.com/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz#06f0335f16e353a695e7206bf50503cb523a6ee5"
 
+jquery@>=1.10:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+
 jquery@>=1.7, jquery@>=1.7.0, jquery@>=1.7.1, jquery@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.1.1.tgz#347c1c21c7e004115e0a4da32cece041fad3c8a3"
@@ -2986,7 +3023,7 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
-moment@^2.18.1:
+moment@^2.18.1, moment@^2.9.0:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 

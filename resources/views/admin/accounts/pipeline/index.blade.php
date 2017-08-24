@@ -3,10 +3,27 @@
 @section('content-header', __('Summary'))
 
 @section('tools')
+    <div class="row">
+        <div class="col-xs-6"></div>
+        <div class="mb10 col-xs-6">
+            <select class="form-control select2" id="accountId" name="accountId" required>
+                <option value="" disabled selected></option>
+                @foreach ($accounts as $accountItem)
+                    <option value="{{ $accountItem->id }}"}>{{ $accountItem->siteCode }} - {{ $accountItem->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
     <a href="javascript:print();" class="btn btn-default btn-sm hidden-print">
         <i class="fa fa-print"></i>
         @lang('Print')
     </a>
+    @permission('admin.accounts.pipeline.export')
+        <a href="{{ route('admin.accounts.pipeline.export', [$account]) }}" type="submit" class="btn btn-sm btn-info">
+            <i class="fa fa-file-word-o"></i>
+            @lang('Export')
+        </a>
+    @endpermission
 @endsection
 
 @section('content')
@@ -23,7 +40,7 @@
                         {{ $account->googleAddress }}
                         <br />
                         {{ $account->recruiter ? ($account->recruiter->fullName().', ') : '' }}
-                        {{ ($account->recruiter && $account->recruiter->manager) ? $account->recruiter->manager->fullName() : '' }}
+                        {{ $account->manager ? $account->manager->fullName() : '' }}
                     </div>
                 </div>
             </div>
@@ -88,7 +105,7 @@
                     </div>
                     <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
                         <div class="form-group{{ $errors->has('dca') ? ' has-error' : '' }}">
-                            <label for="dca">@lang('DCA'):</label>
+                            <label for="dca">@lang('DOO'):</label>
                         </div>
                     </div>
                     <div class="mb5 col-xs-5 col-sm-2">
@@ -269,32 +286,44 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Current Roster')</h4>
+            <h4 class="pipeline-blue-title">@lang('Current Roster')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysician')">
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
+                                <th class="mw50">@lang('SMD')</th>
+                                <th class="mw50">@lang('AMD')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
+                                <th class="mw60">@lang('FT/PT/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw100">@lang('Signed Not Started')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterPhysicians">
+                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': roster.signedNotStarted}">
+                                <td>
+                                    <input class="roster-radio" type="checkbox" name="SMD" :value="roster.name" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
+                                </td>
+                                <td>
+                                    <input class="roster-radio" type="checkbox" name="AMD" :value="roster.name" :checked='roster.isAMD' @change="updateRosterBench(roster, 'AMD')">
+                                </td>
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
+                                <td class="text-uppercase">@{{ roster.contract }}</td>
                                 <td>@{{ roster.interview }}</td>
                                 <td>@{{ roster.contractOut }}</td>
                                 <td>@{{ roster.contractIn }}</td>
                                 <td>@{{ roster.firstShift }}</td>
                                 <td>@{{ roster.notes }}</td>
+                                <td><input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)"></td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -332,10 +361,24 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
+                                    <input type="checkbox" v-model="rosterPhysician.isSMD">
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterPhysician.isAMD">
+                                </td>
+                                <td>
                                     <input type="text" class="form-control" v-model="rosterPhysician.name" required />
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="rosterPhysician.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <select class="form-control" v-model="rosterPhysician.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($contractTypes as $name => $contractType)
+                                            <option value="{{ $contractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="rosterPhysician.interview" />
@@ -351,6 +394,9 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="rosterPhysician.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterPhysician.highlight">
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -375,23 +421,27 @@
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
+                                <th class="mw60">@lang('FT/PT/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw100">@lang('Signed Not Started')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterApps">
+                            <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted}">
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
+                                <td class="text-uppercase">@{{ roster.contract }}</td>
                                 <td>@{{ roster.interview }}</td>
                                 <td>@{{ roster.contractOut }}</td>
                                 <td>@{{ roster.contractIn }}</td>
                                 <td>@{{ roster.firstShift }}</td>
                                 <td>@{{ roster.notes }}</td>
+                                <td><input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)"></td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -435,6 +485,14 @@
                                     <input type="number" class="form-control" v-model="rosterApps.hours" min="0" required />
                                 </td>
                                 <td>
+                                    <select class="form-control" v-model="rosterApps.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($contractTypes as $name => $contractType)
+                                            <option value="{{ $contractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
                                     <input type="text" class="form-control datepicker" v-model="rosterApps.interview" />
                                 </td>
                                 <td>
@@ -448,6 +506,9 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="rosterApps.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterApps.highlight">
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -468,7 +529,7 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Current Bench')</h4>
+            <h4 class="pipeline-blue-title">@lang('Current Bench')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
                 <div class="table-responsive">
@@ -481,7 +542,7 @@
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -578,7 +639,7 @@
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -667,7 +728,7 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Recruiting Pipeline')</h4>
+            <h4 class="pipeline-green-title">@lang('Recruiting Pipeline')</h4>
             <form @submit.prevent="addRecruiting">
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -675,12 +736,12 @@
                             <tr>
                                 <th class="mw60">@lang('MD/APP')</th>
                                 <th class="mw200">@lang('Name')</th>
-                                <th class="mw60">@lang('FT/PT')</th>
+                                <th class="mw60">@lang('FT/PT/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
-                                <th class="mw200 w100">@lang('Notes')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw120 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -772,7 +833,7 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Locums Pipeline')</h4>
+            <h4 class="pipeline-green-title">@lang('Locums Pipeline')</h4>
             <form @submit.prevent="addLocum">
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -875,13 +936,13 @@
 
 
         <div class="no-break-inside">
-            <h4>@lang('Declined List')</h4>
+            <h4 class="pipeline-orange-title">@lang('Declined List')</h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw200">@lang('Name')</th>
-                            <th class="mw60">@lang('FT/PT')</th>
+                            <th class="mw60">@lang('FT/PT/EMB')</th>
                             <th class="mw100">@lang('Interview')</th>
                             <th class="mw100">@lang('Application')</th>
                             <th class="mw100">@lang('Contract Out')</th>
@@ -972,7 +1033,7 @@
         </div>
 
         <div class="no-break-inside">
-            <h4>@lang('Resigned List')</h4>
+            <h4 class="pipeline-orange-title">@lang('Resigned List')</h4>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead class="bg-gray">
@@ -1034,6 +1095,10 @@
                                 <label for="resigningreason">@lang('Reason')</label>
                                 <input id="resigningreason" type="text" class="form-control" v-model="resigning.resignedReason" required />
                             </div>
+                            <div class="form-group">
+                                <label for="resigninglastshift">@lang('Last Shift')</label>
+                                <input id="resigninglastshift" type="text" class="form-control datepicker" v-model="resigning.lastShift" required />
+                            </div>
                             <div class="row mt5">
                                 <div class="col-xs-6">
                                     <button type="submit" class="btn btn-warning">
@@ -1055,6 +1120,12 @@
 
 @push('scripts')
     <script>
+        $('#accountId').on('change', function() {
+            var accountId = $(this).val();
+
+            window.location.href = '/admin/accounts/'+accountId+'/pipeline';
+        });
+
         window.app = new Vue({
             el: '#app',
 
@@ -1067,6 +1138,9 @@
 
                 fullTimeHoursPhys: BackendVars.pipeline.fullTimeHoursPhys,
                 fullTimeHoursApps: BackendVars.pipeline.fullTimeHoursApps,
+
+                oldSMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isSMD == 1 } ),
+                oldAMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isAMD == 1 } ),
 
                 rosterPhysician: {
                     name: '',
@@ -1225,6 +1299,7 @@
                     return _.chain(this.pipeline.rostersBenchs)
                         .filter({ place: 'roster', activity: 'physician' })
                         .reject('resigned')
+                        .orderBy(['isSMD', 'isAMD', 'name'], ['desc', 'desc', 'asc'])
                         .value();
                 },
 
@@ -1276,6 +1351,19 @@
 
             methods: {
                 addRosterBench: function (place, activity, entity) {
+                    if(entity == 'rosterPhysician') {
+                        this[entity].oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
+                        this[entity].oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
+
+                        if( this.oldSMD.length && this[entity].isSMD) {
+                            this.oldSMD[0].isSMD = 0;
+                        }
+                        
+                        if( this.oldAMD.length && this[entity].isAMD) {
+                            this.oldAMD[0].isAMD = 0;
+                        }
+                    }
+
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
                         place: place,
                         activity: activity
@@ -1284,6 +1372,16 @@
                             var rosterBench = response.data;
                             this.pipeline.rostersBenchs.push(rosterBench);
                             this[entity] = {};
+
+                            if(response.data.isSMD) {
+                                this.oldSMD = [];
+                                this.oldSMD.push(response.data);
+                            }
+
+                            if(response.data.isAMD) {
+                                this.oldAMD = [];
+                                this.oldAMD.push(response.data);
+                            }
                         }.bind(this));
                 },
 
@@ -1421,6 +1519,59 @@
 
                     return Math.round(number * factor) / factor;
                 },
+
+                updateRosterBench: function(roster, type) {
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+
+                    if (type == 'SMD') {
+                        roster.isSMD = !roster.isSMD;
+                    } else {
+                        roster.isAMD = !roster.isAMD;
+                    }
+
+                    roster.type = type;
+
+                    if ( this.oldSMD.length && type == 'SMD') {
+                        this.oldSMD[0].isSMD = 0;
+                    }
+                    
+                    if ( this.oldAMD.length && type == 'AMD') {
+                        this.oldAMD[0].isAMD = 0;
+                    }
+
+                    roster.oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
+                    roster.oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
+
+
+
+                    axios.patch(endpoint, roster)
+                        .then(function (response) {
+                            if(type == 'SMD') {
+                                this.oldSMD = [];
+                                roster.isSMD = response.data.isSMD;
+                                
+                                if(roster.isSMD) {
+                                    this.oldSMD.push(roster);
+                                }
+                            } else {
+                                this.oldAMD = [];
+                                roster.isAMD = response.data.isAMD;
+                                
+                                if(roster.isAMD){
+                                    this.oldAMD.push(roster);
+                                }
+                            }
+                        }.bind(this));
+                },
+
+                updateHighLight: function(roster) {
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+
+                    axios.patch(endpoint, roster)
+                        .then(function (response) {
+                            
+                        }.bind(this));
+                }
             }
         });
     </script>

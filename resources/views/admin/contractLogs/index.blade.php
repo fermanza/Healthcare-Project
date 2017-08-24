@@ -6,7 +6,12 @@
     <a href="{{ route('admin.contractLogs.toggleScope') }}" class="btn btn-sm btn-default{{ session('ignore-contract-log-role-scope') ? ' active' : '' }}">
         @lang('View All')
     </a>
-
+    @permission('admin.contractLogs.excel')
+        <a href="{{ route('admin.contractLogs.excel', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
+            <i class="fa fa-file-excel-o"></i>
+            @lang('Export to Excel')
+        </a>
+    @endpermission
     @permission('admin.contractLogs.create')
         <a href="{{ route('admin.contractLogs.create') }}" class="btn btn-sm btn-success">
             <i class="fa fa-plus"></i>
@@ -16,9 +21,14 @@
 @endsection
 
 @section('content')
+<div class="contractLogs">
     <form class="box-body">
         <div class="flexboxgrid">
             <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <input type="text" class="form-control" name="provider" value="{{ Request::input('provider') }}" placeholder="@lang('Provider')" />
+                </div>
+
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
                     <select class="form-control select2" name="divisions[]" data-placeholder="@lang('Alliance OU Divisions')" multiple>
                         @foreach ($divisions as $division)
@@ -76,21 +86,33 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <input type="text" class="form-control" name="provider" value="{{ Request::input('provider') }}" placeholder="@lang('Provider')" />
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <div class="input-group date datepicker">
-                        <input type="text" class="form-control" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
+                    <div class="input-group date">
+                        <input type="text" class="form-control rangedatepicker" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <div class="input-group date datepicker">
-                        <input type="text" class="form-control" name="contractInDate" value="{{ Request::input('contractInDate') }}" placeholder="@lang('Contract In Date')" />
+                    <div class="input-group date">
+                        <input type="text" class="form-control rangedatepicker" name="contractInDate" value="{{ Request::input('contractInDate') ? Request::input('contractInDate') : '' }}" placeholder="@lang('Contract In Date')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="recruiters[]" data-placeholder="@lang('Recruiter')" multiple>
+                        @foreach ($employees as $recruiter)
+                            <option value="{{ $recruiter->id }}" {{ in_array($recruiter->id, Request::input('recruiters') ?: []) ? 'selected' : '' }}>{{ $recruiter->fullName() }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="owners[]" data-placeholder="@lang('Contract Owner')" multiple>
+                        @foreach ($owners as $owner)
+                            <option value="{{ $owner->id }}" {{ in_array($owner->id, Request::input('owners') ?: []) ? 'selected' : '' }}>{{ $owner->fullName() }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         
@@ -109,7 +131,7 @@
         </div>
     </form>
 
-    <div class="table-responsive">
+    <div class="table-responsive mh400">
         <table class="table table-hover table-bordered table-sortable">
             <thead>
                 <tr>
@@ -205,4 +227,5 @@
             {{ $contractLogs->appends(Request::except('page'))->links() }}
         </div>
     </div>
+</div>
 @endsection

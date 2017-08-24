@@ -10,4 +10,8 @@ class PipelineRosterBench extends Model
      * @var string
      */
     protected $table = 'tAccountPipelineRosterBench';
+
+    protected $dates = [
+        'firstShift',
+    ];
 }

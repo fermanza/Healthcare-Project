@@ -25,6 +25,7 @@ return [
     'contract_types' => [
         'FT' => 'ft',
         'PT' => 'pt',
+        'EMB' => 'emb',
     ],
 
 ];

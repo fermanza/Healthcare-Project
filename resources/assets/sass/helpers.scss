@@ -94,3 +94,19 @@
 .w33 { width: 33% !important; }
 .w25 { width: 25% !important; }
 .w20 { width: 20% !important; }
+
+.mh400 {
+	max-height: 500px;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+.calendar.left::before {
+	content: "From";
+}
+
+.calendar.right::before {
+	content: "To";
+}

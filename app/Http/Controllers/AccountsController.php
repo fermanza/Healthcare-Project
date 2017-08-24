@@ -11,6 +11,7 @@ use App\Division;
 use App\Employee;
 use App\Practice;
 use App\Scopes\AccountScope;
+use App\Filters\AccountFilter;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use Illuminate\Support\Facades\Validator;
@@ -22,20 +23,23 @@ class AccountsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, AccountFilter $filter)
     {
 
         $termed = $request->exists('termed');
 
-        $accounts = Account::with([
+        $accounts = Account::withGlobalScope('role', new AccountScope)->with([
                 'rsc',
                 'region',
                 'recruiter.employee.person',
                 'manager.employee.person',
             ])
-            ->where('active', true)->termed($termed)->get();
+            ->where('active', true)
+            ->filter($filter)->termed($termed)->get();
 
-        return view('admin.accounts.index', compact('accounts'));
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
+
+        return view('admin.accounts.index', compact('accounts', 'RSCs'));
     }
 
     /**

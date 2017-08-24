@@ -66,8 +66,25 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contractOut = $request->contractOut;
         $rosterBench->contractIn = $request->contractIn;
         $rosterBench->firstShift = $request->firstShift;
+        $rosterBench->isSMD = $request->isSMD ? 1 : 0;
+        $rosterBench->isAMD = $request->isAMD ? 1 : 0;
+        $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->notes = $request->notes;
-        $rosterBench->save();
+        $rosterBench->contract = $request->contract;
+
+        if($rosterBench->save()) {
+            if($request->isSMD && $request->oldSMD != '') {
+                $oldRoster = PipelineRosterBench::find($request->oldSMD);
+                $oldRoster->isSMD = 0;
+                $oldRoster->save();
+            }
+
+            if($request->isAMD && $request->oldAMD != '') {
+                $oldRoster = PipelineRosterBench::find($request->oldAMD);
+                $oldRoster->isAMD = 0;
+                $oldRoster->save();
+            }
+        }
 
         return $rosterBench->fresh();
     }
@@ -111,8 +128,31 @@ class PipelineRosterBenchController extends Controller
             ],
         ]);
 
+        $rosterBench->signedNotStarted = $request->signedNotStarted;
+        $rosterBench->contract = $request->contract;
+
         $rosterBench->place = $request->place;
-        $rosterBench->save();
+        if($request->type == 'SMD') {
+            $rosterBench->isSMD = $request->isSMD;
+        } else {
+            $rosterBench->isAMD = $request->isAMD;
+        }
+
+        if($rosterBench->save()) {
+            if($request->type == 'SMD') {
+                if($oldRoster = PipelineRosterBench::find($request->oldSMD)) {
+                    $oldRoster->isSMD = 0;
+                }
+            } else {
+                if($oldRoster = PipelineRosterBench::find($request->oldAMD)) {
+                    $oldRoster->isAMD = 0;
+                }
+            }
+
+            if($oldRoster){
+                $oldRoster->save();
+            }
+        }
 
         return $rosterBench;
     }
@@ -134,11 +174,15 @@ class PipelineRosterBenchController extends Controller
             ],
             'resigned' => 'required|date_format:"Y-m-d"',
             'resignedReason' => 'required',
+            'lastShift' => 'required|date_format:"Y-m-d"',
         ]);
 
         $rosterBench->type = $request->type;
         $rosterBench->resigned = $request->resigned;
         $rosterBench->resignedReason = $request->resignedReason;
+        $rosterBench->lastShift = $request->lastShift;
+        $rosterBench->isSMD = 0;
+        $rosterBench->isAMD = 0;
         $rosterBench->save();
 
         return $rosterBench;

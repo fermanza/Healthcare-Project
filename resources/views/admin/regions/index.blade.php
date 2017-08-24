@@ -12,7 +12,7 @@
 @endsection
 
 @section('content')
-    <div class="table-responsive">
+    <div class="table-responsive mh400">
         <table class="table table-hover table-bordered datatable">
             <thead>
                 <tr>

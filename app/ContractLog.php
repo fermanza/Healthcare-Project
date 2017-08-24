@@ -29,53 +29,6 @@ class ContractLog extends Model
     ];
 
     /**
-     * The "booting" method of the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('role', function (Builder $builder) {
-            $user = auth()->user();
-            
-            if (! $user || session('ignore-contract-log-role-scope')) {
-                return;
-            }
-
-            if ($user->hasRoleId(config('instances.roles.manager'))) {
-                $builder->whereHas('accounts.manager', function ($query) use ($user) {
-                    $query->where('employeeId', $user->employeeId)
-                        ->whereNotNull('employeeId');
-                });
-            } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
-                $builder->whereHas('accounts.recruiter', function ($query) use ($user) {
-                    $query->where('employeeId', $user->employeeId)
-                        ->whereNotNull('employeeId');
-                });
-            } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
-                $builder->whereHas('accounts.coordinator', function ($query) use ($user) {
-                    $query->where('employeeId', $user->employeeId)
-                        ->whereNotNull('employeeId');
-                });
-            } else if ($user->hasRoleId(config('instances.roles.director'))) {
-                $builder->whereHas('accounts.rsc', function ($query) use ($user) {
-                    $query->where('directorId', $user->employeeId)
-                        ->whereNotNull('directorId');
-                });
-            }
-
-            // if ($user->hasRoleId(config('instances.roles.director'))) {
-            //     $builder->whereHas('accounts.manager.employee', function ($query) use ($user) {
-            //         $query->where('managerId', $user->employeeId)
-            //             ->whereNotNull('managerId');
-            //     });
-            // }
-        });
-    }
-
-    /**
      * Get the Account for the ContractLog.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -195,5 +148,35 @@ class ContractLog extends Model
     public function coordinator()
     {
         return $this->belongsTo(Employee::class, 'contractCoordinatorId');
+    }
+
+    /**
+     * Get the Speciality for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function specialty()
+    {
+        return $this->belongsTo(Specialty::class, 'specialtyId');
+    }
+
+    /**
+     * Get the Contract Type for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function type()
+    {
+        return $this->belongsTo(ContractType::class, 'contractTypeId');
+    }
+
+    /**
+     * Get the Owner for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner()
+    {
+        return $this->belongsTo(Employee::class, 'logOwnerId');
     }
 }

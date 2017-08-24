@@ -9,12 +9,12 @@ class SummaryFilter extends Filter
     /**
      * Apply practices filter.
      *
-     * @param  array  $ids
+     * @param  array  $names
      * @return void
      */
-    public function practices($ids)
+    public function practices($names)
     {
-        $this->query->whereIn('tAccountToPractice.practiceId', $ids);
+        $this->query->whereIn('practice', $names);
     }
 
     /**
@@ -25,40 +25,42 @@ class SummaryFilter extends Filter
      */
     public function divisions($ids)
     {
-        $this->query->whereIn('tAccount.divisionId', $ids);
+        $this->query->whereHas('account', function($query) use ($ids) {
+            $query->whereIn('divisionId', $ids);
+        });
     }
 
     /**
      * Apply recruiters filter.
      *
-     * @param  array  $ids
+     * @param  array  $names
      * @return void
      */
-    public function recruiters($ids)
+    public function recruiters($names)
     {
-        $this->query->whereIn('tRecruiter.employeeId', $ids);
+        $this->query->whereIn('RSC Recruiter', $names);
     }
 
     /**
      * Apply managers filter.
      *
-     * @param  array  $ids
+     * @param  array  $names
      * @return void
      */
-    public function managers($ids)
+    public function managers($names)
     {
-        $this->query->whereIn('tManager.employeeId', $ids);
+        $this->query->whereIn('Managers', $names);
     }
 
     /**
      * Apply regions filter.
      *
-     * @param  array  $ids
+     * @param  array  $names
      * @return void
      */
-    public function regions($ids)
+    public function regions($names)
     {
-        $this->query->whereIn('tGroup.regionId', $ids);
+        $this->query->whereIn('vAccountSummary.Operating Unit', $names);
     }
     
     /**
@@ -69,7 +71,9 @@ class SummaryFilter extends Filter
      */
     public function RSCs($ids)
     {
-        $this->query->whereIn('tAccount.RSCId', $ids);
+        $this->query->whereHas('account', function($query) use ($ids) {
+            $query->whereIn('RSCId', $ids);
+        });
     }
 
     /**
@@ -78,45 +82,13 @@ class SummaryFilter extends Filter
      * @param  string  $date
      * @return void
      */
-    public function startDate($date)
+    public function monthEndDate($date)
     {
-        $dt = Carbon::parse($date);
+        $monthYear = explode('-', $date);
+        $month = $monthYear[0];
+        $year = $monthYear[1];
 
-        $firstDayOfMonth = new Carbon('first day of ' . $dt->format('F') . ' ' . $dt->format('Y'));
-        $lastDayOfMonth = new Carbon('last day of ' . $dt->format('F') . ' ' . $dt->format('Y'));
-
-        $this->query->whereBetween('tAccount.startDate', [$firstDayOfMonth, $lastDayOfMonth]);
+        $this->query->whereYear('MonthEndDate', $year)
+            ->whereMonth('MonthEndDate', $month);
     }
-
-    // /**
-    //  * Apply sort filter.
-    //  *
-    //  * @param  string  $key
-    //  * @return void
-    //  */
-    // public function sort($key)
-    // {
-    //     $sorts = [
-    //         'value' => 'tContractLogs.value',
-    //         'status' => 'tContractStatus.contractStatus',
-    //         'provider_first_name' => 'tContractLogs.providerFirstName',
-    //         'provider_last_name' => 'tContractLogs.providerLastName',
-    //         'position' => 'tPosition.position',
-    //         'hours' => 'tContractLogs.numOfHours',
-    //         'practice' => 'tPractice.name',
-    //         'hospital_name' => 'tAccount.name',
-    //         'site_code' => 'tAccount.siteCode',
-    //         'group' => 'tGroup.name',
-    //         'division' => 'tDivision.name',
-    //         'contract_out' => 'tContractLogs.contractOutDate',
-    //         'contract_in' => 'tContractLogs.contractInDate',
-    //         'projected_start_date' => 'tContractLogs.projectedStartDate',
-    //         'reason' => 'tContractNote.contractNote',
-    //     ];
-
-    //     $order = $this->request->input('order', 'asc');
-    //     $column = array_get($sorts, $key, 'tContractLogs.id');
-
-    //     $this->query->orderBy($column, $order);
-    // }
 }

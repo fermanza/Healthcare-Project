@@ -34,6 +34,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'acl']], function ($router) {
 
     $router->get('reports/summary', 'ReportsController@summary')->name('reports.summary.index');
+    $router->get('reports/summary/excel', 'ReportsController@exportToExcel')->name('reports.summary.excel');
 
     $router->post('accounts/image', 'AccountsController@image')->name('accounts.image');
     $router->patch('accounts/merge', 'AccountsController@merge')->name('accounts.merge');
@@ -45,6 +46,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
 
     $router->get('accounts/{account}/pipeline', 'AccountsPipelineController@index')->name('accounts.pipeline.index');
     $router->patch('accounts/{account}/pipeline', 'AccountsPipelineController@update')->name('accounts.pipeline.update');
+    $router->get('accounts/{account}/pipeline/export', 'AccountsPipelineController@export')->name('accounts.pipeline.export');
 
     $router->post('accounts/{account}/pipeline/rosterBench', 'PipelineRosterBenchController@store')->name('accounts.pipeline.rosterBench.store');
     $router->patch('accounts/{account}/pipeline/rosterBench/{rosterBench}', 'PipelineRosterBenchController@update')->name('accounts.pipeline.rosterBench.update');
@@ -70,6 +72,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->resource('people', 'PeopleController', ['except' => 'show']);
     $router->resource('positionTypes', 'PositionTypesController', ['except' => 'show']);
     $router->resource('employees', 'EmployeesController', ['except' => 'show']);
+    
+    $router->get('contractLogs/excel', 'ContractLogsController@exportToExcel')->name('contractLogs.excel');
     $router->resource('contractLogs', 'ContractLogsController', ['except' => 'show']);
-
 });

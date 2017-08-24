@@ -16,7 +16,33 @@
 @endsection
 
 @section('content')
-    <div class="table-responsive">
+    <form class="box-body">
+        <div class="flexboxgrid">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="RSCs[]" data-placeholder="@lang('RSC')" multiple>
+                        @foreach ($RSCs as $RSC)
+                            <option value="{{ $RSC->id }}" {{ in_array($RSC->id, Request::input('RSCs') ?: []) ? 'selected' : '' }}>{{ $RSC->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-sm btn-info">
+                        <i class="fa fa-filter"></i>
+                        @lang('Apply')
+                    </button>
+                    <a href="{{ route('admin.accounts.index') }}" type="submit" class="btn btn-sm btn-default">
+                        <i class="fa fa-times"></i>
+                        @lang('Clear')
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="table-responsive mh400">
         <table id="datatable-accounts" class="table table-hover table-bordered">
             <thead>
                 <tr>
@@ -38,6 +64,7 @@
             </thead>
             <tbody>
                 @foreach($accounts as $account)
+                    @if(!$account->parentSiteCode)
                     <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}"
                         data-id="{{ $account->id }}" data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
                         data-edit="{{ route('admin.accounts.edit', [$account]) }}"
@@ -116,6 +143,7 @@
                             @endpermission
                         </td>
                     </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>
@@ -247,7 +275,7 @@
                 var action = $(this).data('action');
                 var message = "@lang('Are you sure you want to unset Parent Site Code for')";
                 var name = $(this).data('name');
-                if (confirm(`${message} ${name}?`)) {
+                if (confirm(message + ' ' + name)) {
                     $removeParentForm.attr('action', action);
                     $removeParentForm.submit();
                 }

@@ -27,8 +27,10 @@ require('icheck');
 
 // DataTables
 require('datatables');
-require('datatables-bootstrap3-plugin');
 require('datatables-select');
+require('./app/fixedColumnsOveride');
+require('datatables-bootstrap3-plugin');
+require('datatables.net-bs');
 
 // Select2
 require('select2');
@@ -60,6 +62,32 @@ FastClick.attach(document.body);
 
 // Moment
 window.moment = require('moment');
+
+// DateRangePicker
+const daterangepicker = require('bootstrap-daterangepicker');
+
+window.$.fn.DataTable.Api.register( 'sum()', function ( ) {
+    return this.flatten().reduce( function ( a, b ) {
+        if ( typeof a === 'string' ) {
+            a = a.replace(/[^\d.-]/g, '') * 1;
+        }
+        if ( typeof b === 'string' ) {
+            b = b.replace(/[^\d.-]/g, '') * 1;
+        }
+
+        return a + b;
+    }, 0 );
+} );
+
+window.$.fn.daterangepicker = function(options, callback) {
+    this.each(function() {
+        var el = $(this);
+        if (el.data('daterangepicker'))
+            el.data('daterangepicker').remove();
+        el.data('daterangepicker', new daterangepicker(el, options, callback));
+    });
+    return this;
+};
 
 // Onload Defaults
 require('./app/onload-defaults');

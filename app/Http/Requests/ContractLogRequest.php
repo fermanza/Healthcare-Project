@@ -35,11 +35,13 @@ class ContractLogRequest extends FormRequest
             'sentToPayrollDate' => 'nullable|date_format:"Y-m-d"',
             'projectedStartDate' => 'date_format:"Y-m-d"',
             'actualStartDate' => 'nullable|date_format:"Y-m-d"',
-            'numOfHours' => 'required|numeric|min:0',
+            'numOfHours' => 'required_without:numOfShifts|nullable|numeric|min:0',
+            'numOfShifts' => 'required_without:numOfHours|nullable|numeric|min:0',
             'contractTypeId' => 'required|exists:tContractType,id',
             'contractNoteId' => 'nullable|exists:tContractNote,id',
             'comments' => '',
             'contractCoordinatorId' => 'required|exists:tEmployee,id',
+            'logOwnerId' => 'required|exists:tEmployee,id',
             'positionId' => 'required|exists:tPosition,id',
         ];
 
@@ -84,12 +86,15 @@ class ContractLogRequest extends FormRequest
         $contractLog->projectedStartDate = $this->projectedStartDate ? $this->projectedStartDate : null;;
         $contractLog->actualStartDate = $this->actualStartDate ? $this->actualStartDate : null;;
         $contractLog->numOfHours = $this->numOfHours;
+        $contractLog->numOfShifts = $this->numOfShifts;
         $contractLog->contractTypeId = $this->contractTypeId;
         $contractLog->contractNoteId = $this->contractNoteId;
         $contractLog->comments = $this->comments;
         $contractLog->contractCoordinatorId = $this->contractCoordinatorId;
+        $contractLog->logOwnerId = $this->logOwnerId;
         $contractLog->positionId = $this->positionId;
         $contractLog->value = $status->value;
+        $contractLog->inactive = $this->inactive ? $this->inactive : 0;
         $contractLog->save();
 
         $contractLog->accounts()->sync(array_merge(
