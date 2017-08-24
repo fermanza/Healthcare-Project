@@ -149,7 +149,7 @@
                         <th class="thwd80">@lang('Pending Contracts')</th>
                         <th class="thwd80">@lang('Contracts In ')</th>
                         <th class="thwd100">@lang('Signed Not Yet Started')</th>
-                        <th class="thwd50">@lang('Inc Comp')</th>
+                        <th class="thwd100">@lang('Inc Comp')</th>
                         <th class="thwd50">@lang('Attrition')</th>
 	                </tr>
 	            </thead>
@@ -253,10 +253,10 @@
                             <td class="wd50">
                                 {{ $account->present()->{'YTD - Signed Not Yet Started'} }}
                             </td>
-                            <td class="wd50">
+                            <td class="wd100">
                                 {{ $account->present()->{'YTD - Inc Comp'} }}
                             </td>
-                            <td>
+                            <td class="wd100">
                                 {{ $account->present()->{'YTD - Attrition'} }}
                             </td>
 	                    </tr>
