@@ -184,7 +184,7 @@
 	                        <td class="wd70">{{ $account->RMD }}</td>
 	                        <td class="wd60">{{ $account->City }}</td>
 	                        <td class="wd100">{{ $account->Location }}</td>
-	                        <td class="wd100">{{ $account->{'Start Date'} ? $account->{'Start Date'}->format('d/m/y') : '' }}</td>
+	                        <td class="wd100">{{ $account->{'Start Date'} ? $account->{'Start Date'}->format('m/d/y') : '' }}</td>
 	                        <td class="wd150 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
 	                        	{{ $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated() }}
 	                        </td>
@@ -262,9 +262,6 @@
 	                    </tr>
 	                @endforeach
 	            </tbody>
-                <tfoot>
-                    
-                </tfoot>
 	        </table>
 	    </div>
 	</div>
@@ -281,9 +278,41 @@
                     leftColumns: 2
                 },
                 drawCallback: function () {
-                  var api = this.api();
+                    var api = this.api();
+                    var sum17 = api.column( 17, {page:'current'} ).data().sum();
+                    var sum18 = api.column( 18, {page:'current'} ).data().sum(); 
+                    var sum19 = api.column( 19, {page:'current'} ).data().sum(); 
+                    var sum20 = api.column( 20, {page:'current'} ).data().sum(); 
+                    var sum21 = api.column( 21, {page:'current'} ).data().sum(); 
+                    var sum22 = api.column( 22, {page:'current'} ).data().sum(); 
+                    var sum23 = api.column( 23, {page:'current'} ).data().sum(); 
+                    var sum24 = api.column( 24, {page:'current'} ).data().sum();
+                    var sum25 = api.column( 25, {page:'current'} ).data().sum(); 
+                    var sum26 = api.column( 26, {page:'current'} ).data().sum(); 
+                    var sum27 = api.column( 27, {page:'current'} ).data().sum(); 
+                    var sum28 = api.column( 22, {page:'current'} ).data().sum()/api.column( 19, {page:'current'} ).data().sum()
+                    var sum29 = api.column( 20, {page:'current'} ).data().sum()/api.column( 17, {page:'current'} ).data().sum();
+                    var sum30 = api.column( 21, {page:'current'} ).data().sum()/api.column( 18, {page:'current'} ).data().sum();
+                    var sum31 = api.column( 31, {page:'current'} ).data().sum(); 
+                    var sum32 = api.column( 32, {page:'current'} ).data().sum(); 
+                    var sum33 = api.column( 33, {page:'current'} ).data().sum(); 
+                    var sum34 = api.column( 34, {page:'current'} ).data().sum(); 
+                    var sum35 = api.column( 35, {page:'current'} ).data().sum(); 
+                    var sum36 = api.column( 36, {page:'current'} ).data().sum(); 
+                    var sum37 = api.column( 37, {page:'current'} ).data().sum(); 
+                    var sum38 = api.column( 38, {page:'current'} ).data().sum(); 
+                    var sum39 = api.column( 39, {page:'current'} ).data().sum();
+                    var sum40 = api.column( 40, {page:'current'} ).data().sum(); 
+                    var sum41 = api.column( 41, {page:'current'} ).data().sum();
+                    var sum42 = api.column( 42, {page:'current'} ).data().sum(); 
+                    var sum43 = api.column( 43, {page:'current'} ).data().sum(); 
+                    var sum44 = api.column( 44, {page:'current'} ).data().sum();
+                    var sum45 = api.column( 45, {page:'current'} ).data().sum(); 
+                    var sum46 = api.column( 46, {page:'current'} ).data().sum(); 
+                    var sum47 = api.column( 47, {page:'current'} ).data().sum();
+                  
                   $( api.table().body() ).append(
-                    '<tr><td colspan="17">Total</td>Total<td>'+api.column( 17, {page:'current'} ).data().sum()+'</td><td>'+api.column( 18, {page:'current'} ).data().sum()+'</td><td>'+api.column( 19, {page:'current'} ).data().sum()+'</td><td>'+api.column( 20, {page:'current'} ).data().sum()+'</td><td>'+api.column( 21, {page:'current'} ).data().sum()+'</td><td>'+api.column( 22, {page:'current'} ).data().sum()+'</td><td>'+api.column( 23, {page:'current'} ).data().sum()+'</td><td>'+api.column( 24, {page:'current'} ).data().sum()+'</td><td>'+api.column( 25, {page:'current'} ).data().sum()+'</td><td>'+api.column( 26, {page:'current'} ).data().sum()+'</td><td>'+api.column( 27, {page:'current'} ).data().sum()+'</td><td>'+(api.column( 22, {page:'current'} ).data().sum()/api.column( 19, {page:'current'} ).data().sum()).toFixed(2)+'</td></td><td>'+(api.column( 20, {page:'current'} ).data().sum()/api.column( 17, {page:'current'} ).data().sum()).toFixed(2)+'</td><td>'+(api.column( 21, {page:'current'} ).data().sum()/api.column( 18, {page:'current'} ).data().sum()).toFixed(2)+'</td><td>'+api.column( 31, {page:'current'} ).data().sum()+'</td><td></td><td></td><td></td><td></td><td>'+api.column( 36, {page:'current'} ).data().sum()+'</td><td>'+api.column( 37, {page:'current'} ).data().sum()+'</td><td>'+api.column( 38, {page:'current'} ).data().sum()+'</td><td>'+api.column( 39, {page:'current'} ).data().sum()+'</td><td>'+api.column( 40, {page:'current'} ).data().sum()+'</td><td>'+api.column( 41, {page:'current'} ).data().sum()+'</td><td>'+api.column( 42, {page:'current'} ).data().sum()+'</td><td>'+api.column( 43, {page:'current'} ).data().sum()+'</td><td>'+api.column( 44, {page:'current'} ).data().sum()+'</td><td>'+api.column( 45, {page:'current'} ).data().sum()+'</td><td>'+api.column( 46, {page:'current'} ).data().sum()+'</td><td>'+api.column( 47, {page:'current'} ).data().sum()+'</td></tr>'
+                    '<tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>'+(sum17 > 0 ? sum17.toFixed(1) : '')+'</td><td>'+(sum18 > 0 ? sum18.toFixed(1) : '')+'</td><td>'+(sum19 > 0 ? sum19.toFixed(1) : '')+'</td><td>'+(sum20 > 0 ? sum20.toFixed(1) : '')+'</td><td>'+(sum21 > 0 ? sum21.toFixed(1) : '')+'</td><td>'+(sum22 > 0 ? sum22.toFixed(1) : '')+'</td><td>'+(sum23 > 0 ? sum23.toFixed(1) : '')+'</td><td>'+(sum24 > 0 ? sum24.toFixed(1) : '')+'</td><td>'+(sum25 > 0 ? sum25.toFixed(1) : '')+'</td><td>'+(sum26 > 0 ? sum26.toFixed(1) : '')+'</td><td>'+(sum27 > 0 ? sum27.toFixed(1) : '')+'</td><td>'+(sum28 > 0 ? sum28.toFixed(1)+'%' : '')+'</td></td><td>'+(sum29 > 0 ? sum29.toFixed(1)+'%' : '')+'</td><td>'+(sum30 > 0 ? sum30.toFixed(1)+'%' : '')+'</td><td>'+(sum31 > 0 ? '$'+sum31.toFixed(2) : '')+'</td><td></td><td></td><td></td><td></td><td>'+(sum36 > 0 ? sum36.toFixed(1) : '')+'</td><td>'+(sum37 > 0 ? sum37.toFixed(1) : '')+'</td><td>'+(sum38 > 0 ? sum38.toFixed(1) : '')+'</td><td>'+(sum39 > 0 ? sum39.toFixed(1) : '')+'</td><td>'+(sum40 > 0 ? sum40.toFixed(1) : '')+'</td><td>'+(sum41 > 0 ? sum41.toFixed(1) : '')+'</td><td>'+(sum42 > 0 ? sum42.toFixed(1) : '')+'</td><td>'+(sum43 > 0 ? sum43.toFixed(1) : '')+'</td><td>'+(sum44 > 0 ? sum44.toFixed(1) : '')+'</td><td>'+(sum45 > 0 ? sum45.toFixed(1) : '')+'</td><td>'+(sum46 > 0 ? '$'+sum46.toFixed(2) : '')+'</td><td>'+(sum47 > 0 ? sum47.toFixed(1) : '')+'</td></tr>'
                   );
                 }
             }));

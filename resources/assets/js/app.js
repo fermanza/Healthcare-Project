@@ -28,7 +28,7 @@ require('icheck');
 // DataTables
 require('datatables');
 require('datatables-select');
-require('datatables-fixedcolumns');
+require('./app/fixedColumnsOveride');
 require('datatables-bootstrap3-plugin');
 require('datatables.net-bs');
 

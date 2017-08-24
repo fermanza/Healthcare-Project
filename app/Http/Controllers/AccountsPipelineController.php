@@ -211,7 +211,7 @@ class AccountsPipelineController extends Controller
         $section->addImage(
             'envision.png',
             array(
-                'width' => 180,
+                'width' => 160,
                 'height' => 40,
                 // 'marginTop'     => -1,
                 // 'marginLeft'    => -1,
@@ -220,7 +220,7 @@ class AccountsPipelineController extends Controller
         );
 
         $section->addText(
-            $account->name.' '.($account->practices->count() ? $account->practices->first()->name : '').'<w:br/>'.
+            '<w:br/><w:br/><w:br/>'.$account->name.' '.($account->practices->count() ? $account->practices->first()->name : '').'<w:br/>'.
             $account->city.','.$account->state.'<w:br/>'.
             Carbon::today()->format('F d, Y').'<w:br/>',
             $boldFontStyle,
@@ -387,7 +387,8 @@ class AccountsPipelineController extends Controller
         $section2 = $word->addSection();
 
         $header = $section2->addHeader();
-        $header->addText('ENVISION PHYSICIAN SERVICES', $normalFontStyle, array('align' => 'right'));
+        //$header->addText('ENVISION PHYSICIAN SERVICES', $normalFontStyle);
+        $header->addPreserveText('ENVISION PHYSICIAN SERVICES           {PAGE}', $normalFontStyle, array('align' => 'right'));
 
         $section2->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
         $section2->addText($futureRostersList, $normalFontStyle);
