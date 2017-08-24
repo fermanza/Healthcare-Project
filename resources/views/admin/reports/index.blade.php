@@ -290,9 +290,9 @@
                     var sum25 = api.column( 25, {page:'current'} ).data().sum(); 
                     var sum26 = api.column( 26, {page:'current'} ).data().sum(); 
                     var sum27 = api.column( 27, {page:'current'} ).data().sum(); 
-                    var sum28 = api.column( 22, {page:'current'} ).data().sum()/api.column( 19, {page:'current'} ).data().sum()
-                    var sum29 = api.column( 20, {page:'current'} ).data().sum()/api.column( 17, {page:'current'} ).data().sum();
-                    var sum30 = api.column( 21, {page:'current'} ).data().sum()/api.column( 18, {page:'current'} ).data().sum();
+                    var sum28 = (api.column( 22, {page:'current'} ).data().sum()/api.column( 19, {page:'current'} ).data().sum()) * 100;
+                    var sum29 = (api.column( 20, {page:'current'} ).data().sum()/api.column( 17, {page:'current'} ).data().sum()) * 100;
+                    var sum30 = (api.column( 21, {page:'current'} ).data().sum()/api.column( 18, {page:'current'} ).data().sum()) * 100;
                     var sum31 = api.column( 31, {page:'current'} ).data().sum(); 
                     var sum32 = api.column( 32, {page:'current'} ).data().sum(); 
                     var sum33 = api.column( 33, {page:'current'} ).data().sum(); 
