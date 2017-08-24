@@ -22,9 +22,20 @@ class ReportsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function summary(SummaryFilter $filter)
+    public function summary(SummaryFilter $filter, Request $request)
     {
-        $accounts = $this->getSummaryData($filter, 100);
+
+        $queryString = $request->query();
+
+        if(count($queryString) == 0) {
+            $maxDate = AccountSummary::max('MonthEndDate');
+
+            $maxDate = Carbon::parse($maxDate)->format('m-Y');
+
+            return redirect()->route('admin.reports.summary.index', ['monthEndDate' => $maxDate]);
+        }
+
+        $accounts = $this->getSummaryData($filter, 500);
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
