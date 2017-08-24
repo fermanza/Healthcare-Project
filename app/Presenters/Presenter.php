@@ -11,10 +11,10 @@ abstract class Presenter extends BasePresenter
         'Percent Recruited - Total',
         'Percent Recruited - Phys',
         'Percent Recruited - APP',
-        'Prev Month - FT Utilization - %',
-        'Prev Month - Embassador Utilization - %',
-        'Prev Month - Internal Locum Utilization - %',
-        'Prev Month - External Locum Utilization - %',
+        'Prev - FT Util - %',
+        'Prev - Embassador Util - %',
+        'Prev - Int Locum Util - %',
+        'Prev - Ext Locum Util - %',
 	];
 
 	protected $currency = [
@@ -47,6 +47,9 @@ abstract class Presenter extends BasePresenter
 		// }
 
 		// $actualValue = $this->entity->{$property};
+
+
+
 		$actualValue = parent::__get($property);
 
 		if (is_numeric($actualValue) && $actualValue == 0) {

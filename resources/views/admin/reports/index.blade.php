@@ -209,19 +209,19 @@
                                 {{ $account->present()->{'Percent Recruited - APP'} }}
                             </td>
                             <td class="wd50">
-                                {{ $account->present()->{'Prev Month - Inc Comp'} }}
+                                {{ $account->present()->{'Prev - Inc Comp'} }}
                             </td>
                             <td class="wd50">
-                                {{ $account->present()->{'Prev Month - FT Utilization - %'} }}
+                                {{ $account->present()->{'Prev - FT Util - %'} }}
                             </td>
                             <td class="wd50">
-                                {{ $account->present()->{'Prev Month - Embassador Utilization - %'} }}
+                                {{ $account->present()->{'Prev - Embassador Util - %'} }}
                             </td>
                             <td class="wd50">
-                                {{ $account->present()->{'Prev Month - Internal Locum Utilization - %'} }}
+                                {{ $account->present()->{'Prev - Int Locum Util - %'} }}
                             </td>
                             <td class="wd50">
-                                {{ $account->present()->{'Prev Month - External Locum Utilization - %'} }}
+                                {{ $account->present()->{'Prev - Ext Locum Util - %'} }}
                             </td>
                             <td class="wd50">
                                 {{ $account->present()->{'MTD - Applications'} }}
