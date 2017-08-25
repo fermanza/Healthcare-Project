@@ -149,6 +149,28 @@ class ContractLogsFilter extends Filter
     }
 
     /**
+     * Apply pending filter.
+     *
+     * @param  string  $date
+     * @return void
+     */
+    public function pending($value)
+    {
+        $this->query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate');
+    }
+
+    /**
+     * Apply placements filter.
+     *
+     * @param  string  $date
+     * @return void
+     */
+    public function placements($value)
+    {
+        $this->query->where('tContractLogs.value', '>', 0)->whereNotNull('tContractLogs.contractInDate');
+    }
+
+    /**
      * Apply sort filter.
      *
      * @param  string  $key

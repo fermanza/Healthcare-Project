@@ -1290,7 +1290,6 @@
                 },
 
                 staffPhysicianFTENeeds: function () {
-                    if (this.pipeline.practiceTime == 'fte') return '';
                     if (this.fullTimeHoursPhys == 0) return 0;
                     var result = this.staffPhysicianNeeds / this.fullTimeHoursPhys;
                     
@@ -1298,7 +1297,6 @@
                 },
 
                 staffAppsFTENeeds: function () {
-                    if (this.pipeline.practiceTime == 'fte') return '';
                     if (this.fullTimeHoursApps == 0) return 0;
                     var result = this.staffAppsNeeds / this.fullTimeHoursApps;
                     
@@ -1306,7 +1304,10 @@
                 },
 
                 staffPhysicianFTEOpenings: function () {
-                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.pipeline.practiceTime == 'fte') {
+                        return this.staffPhysicianFTEHaves - this.staffPhysicianFTENeeds;
+                    };
+
                     if (this.fullTimeHoursPhys == 0) return 0;
                     var result = this.staffPhysicianOpenings / this.fullTimeHoursPhys;
                     
@@ -1314,7 +1315,9 @@
                 },
 
                 staffAppsFTEOpenings: function () {
-                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.pipeline.practiceTime == 'fte') {
+                        return this.staffAppsFTEHaves - this.staffAppsFTENeeds;
+                    };
                     if (this.fullTimeHoursApps == 0) return 0;
                     var result = this.staffAppsOpenings / this.fullTimeHoursApps;
                     

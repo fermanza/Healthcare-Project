@@ -25,11 +25,11 @@
     <form class="box-body">
         <div class="flexboxgrid">
             <div class="row">
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <input type="text" class="form-control" name="provider" value="{{ Request::input('provider') }}" placeholder="@lang('Provider')" />
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="divisions[]" data-placeholder="@lang('Alliance OU Divisions')" multiple>
                         @foreach ($divisions as $division)
                             <option value="{{ $division->id }}" {{ in_array($division->id, Request::input('divisions') ?: []) ? 'selected' : '' }}>{{ $division->name }}</option>
@@ -37,7 +37,7 @@
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="practices[]" data-placeholder="@lang('Service Lines')" multiple>
                         @foreach ($practiceTypes as $practice)
                             <option value="{{ $practice }}" {{ in_array($practice, Request::input('practices') ?: []) ? 'selected' : '' }}>{{ $practice }}</option>
@@ -45,7 +45,7 @@
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="positions[]" data-placeholder="@lang('Positions')" multiple>
                         @foreach ($positions as $position)
                             <option value="{{ $position->id }}" {{ in_array($position->id, Request::input('positions') ?: []) ? 'selected' : '' }}>{{ $position->position }}</option>
@@ -53,7 +53,7 @@
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="statuses[]" data-placeholder="@lang('Statuses')" multiple>
                         @foreach ($statuses as $status)
                             <option value="{{ $status->id }}" {{ in_array($status->id, Request::input('statuses') ?: []) ? 'selected' : '' }}>{{ $status->contractStatus }}</option>
@@ -61,7 +61,7 @@
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="accounts[]" data-placeholder="@lang('Hospital Names')" multiple>
                         @foreach ($accounts as $account)
                             <option value="{{ $account->id }}" {{ in_array($account->id, Request::input('accounts') ?: []) ? 'selected' : '' }}>{{ $account->name }}</option>
@@ -69,7 +69,7 @@
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="regions[]" data-placeholder="@lang('Operating Unit')" multiple>
                         @foreach ($regions as $region)
                             <option value="{{ $region->id }}" {{ in_array($region->id, Request::input('regions') ?: []) ? 'selected' : '' }}>{{ $region->name }}</option>
@@ -77,29 +77,29 @@
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="RSCs[]" data-placeholder="@lang('Regional Support Center')" multiple>
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <select class="form-control select2" name="RSCs[]" data-placeholder="@lang('RSC')" multiple>
                         @foreach ($RSCs as $RSC)
                             <option value="{{ $RSC->id }}" {{ in_array($RSC->id, Request::input('RSCs') ?: []) ? 'selected' : '' }}>{{ $RSC->name }}</option>
                         @endforeach
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <div class="input-group date">
                         <input type="text" class="form-control rangedatepicker" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <div class="input-group date">
                         <input type="text" class="form-control rangedatepicker" name="contractInDate" value="{{ Request::input('contractInDate') ? Request::input('contractInDate') : '' }}" placeholder="@lang('Contract In Date')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="recruiters[]" data-placeholder="@lang('Recruiter')" multiple>
                         @foreach ($employees as $recruiter)
                             <option value="{{ $recruiter->id }}" {{ in_array($recruiter->id, Request::input('recruiters') ?: []) ? 'selected' : '' }}>{{ $recruiter->fullName() }}</option>
@@ -107,12 +107,30 @@
                     </select>
                 </div>
 
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <select class="form-control select2" name="managers[]" data-placeholder="@lang('Manager')" multiple>
+                        @foreach ($employees as $manager)
+                            <option value="{{ $manager->id }}" {{ in_array($manager->id, Request::input('managers') ?: []) ? 'selected' : '' }}>{{ $manager->fullName() }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="owners[]" data-placeholder="@lang('Contract Owner')" multiple>
                         @foreach ($owners as $owner)
                             <option value="{{ $owner->id }}" {{ in_array($owner->id, Request::input('owners') ?: []) ? 'selected' : '' }}>{{ $owner->fullName() }}</option>
                         @endforeach
                     </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <input type="checkbox" name="pending" value="1" {{ Request::input('pending') ? 'checked' : '' }} />
+                    @lang('Pending Contract')
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <input type="checkbox" name="placements" value="1" {{ Request::input('placements') ? 'checked' : '' }} />
+                    @lang('Placements Only')
                 </div>
             </div>
         
