@@ -14,20 +14,18 @@ class SummaryFilter extends Filter
      */
     public function practices($names)
     {
-        $this->query->whereIn('practice', $names);
+        $this->query->whereIn('Practice', $names);
     }
 
     /**
-     * Apply divisions filter.
+     * Apply affiliation filter.
      *
-     * @param  array  $ids
+     * @param  string  $name
      * @return void
      */
-    public function divisions($ids)
+    public function affiliation($name)
     {
-        $this->query->whereHas('account', function($query) use ($ids) {
-            $query->whereIn('divisionId', $ids);
-        });
+        $this->query->where('System Affiliation', 'like', '%'.$name.'%');
     }
 
     /**
@@ -90,5 +88,16 @@ class SummaryFilter extends Filter
 
         $this->query->whereYear('MonthEndDate', $year)
             ->whereMonth('MonthEndDate', $month);
+    }
+
+    /**
+     * Apply DOO filter.
+     *
+     * @param  string  $date
+     * @return void
+     */
+    public function DOO($name)
+    {
+        $this->query->where('DOO', 'like', '%'.$name.'%');
     }
 }
