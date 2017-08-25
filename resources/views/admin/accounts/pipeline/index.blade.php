@@ -1248,7 +1248,20 @@
                 },
 
                 staffPhysicianFTEHaves: function () {
-                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.pipeline.practiceTime == 'fte') {
+                        var result = 0;
+
+                        $.each(this.activeRosterPhysicians, function(index, roster) {
+                            if (roster.contract == 'ft' || roster.contract == 'emb') {
+                                result += 1;
+                            } else {
+                                result += 0.5;
+                            }
+                        });
+                        
+                        return result;
+                    };
+
                     if (this.fullTimeHoursPhys == 0) return 0;
                     var result = this.staffPhysicianHaves / this.fullTimeHoursPhys;
                     
@@ -1256,7 +1269,20 @@
                 },
 
                 staffAppsFTEHaves: function () {
-                    if (this.pipeline.practiceTime == 'fte') return '';
+                    if (this.pipeline.practiceTime == 'fte') {
+                        var result = 0;
+
+                        $.each(this.activeRosterApps, function(index, roster) {
+                            if (roster.contract == 'ft' || roster.contract == 'emb') {
+                                result += 1;
+                            } else {
+                                result += 0.5;
+                            }
+                        });
+                        
+                        return result;
+                    };
+
                     if (this.fullTimeHoursApps == 0) return 0;
                     var result = this.staffAppsHaves / this.fullTimeHoursApps;
                     
