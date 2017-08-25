@@ -488,6 +488,6 @@ class ReportsController extends Controller
     }
 
     private function getSummaryData(SummaryFilter $filter, $pages) {
-        return AccountSummary::filter($filter)->paginate($pages);
+        return AccountSummary::with('account')->filter($filter)->paginate($pages);
     }
 }

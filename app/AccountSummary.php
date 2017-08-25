@@ -61,6 +61,11 @@ class AccountSummary extends Model
 
         return $months;
     }
+    
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'accountId');
+    }
 
     public function getFirstNameAttribute($value)
     {
