@@ -149,13 +149,16 @@
                     <th class="mw110">{{ sort_column_link('division', __('Alliance OU Division')) }}</th>
                     <th class="mw100">{{ sort_column_link('contract_out', __('Contract Out')) }}</th>
                     <th class="mw100">{{ sort_column_link('contract_in', __('Contract In')) }}</th>
+                    <th class="mw100">{{ sort_column_link('inactive', __('Inactive')) }}</th>
+                    <th class="mw100">{{ sort_column_link('last_updated', __('Last Updated')) }}</th>
                     <th class="mw100">{{ sort_column_link('projected_start_date', __('Projected Start Date')) }}</th>
                     <th class="mw200">{{ sort_column_link('reason', __('Reason')) }}</th>
+                    <th class="mw200">{{ sort_column_link('comments', __('Comments')) }}</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($contractLogs as $contractLog)
-                    <tr>
+                    <tr class="{{$contractLog->inactive ? 'danger' : ''}}">
                         <td class="text-center">
                             @permission('admin.contractLogs.edit')
                                 <a href="{{ route('admin.contractLogs.edit', [$contractLog]) }}" class="btn btn-xs btn-primary">
@@ -194,8 +197,15 @@
                         <td>{{ $contractLog->division ? $contractLog->division->name : '' }}</td>
                         <td>{{ $contractLog->contractOutDate ? $contractLog->contractOutDate->format('Y-m-d') : '' }}</td>
                         <td>{{ $contractLog->contractInDate ? $contractLog->contractInDate->format('Y-m-d') : '' }}</td>
+                        <td> 
+                            @if($contractLog->inactive)
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                            @endif
+                        </td>
+                        <td>{{ $contractLog->lastUpdated }}</td>
                         <td>{{ $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('Y-m-d') : '' }}</td>
                         <td>{{ $contractLog->note ? $contractLog->note->contractNote : '' }}</td>
+                        <td>{{ $contractLog->comments }}</td>
                     </tr>
                 @endforeach
             </tbody>

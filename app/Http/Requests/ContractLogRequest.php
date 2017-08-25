@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Account;
 use App\ContractStatus;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class ContractLogRequest extends FormRequest
 {
@@ -95,6 +96,8 @@ class ContractLogRequest extends FormRequest
         $contractLog->positionId = $this->positionId;
         $contractLog->value = $status->value;
         $contractLog->inactive = $this->inactive ? $this->inactive : 0;
+        $contractLog->lastUpdated = Carbon::now();
+        $contractLog->lastUpdatedBy = \Auth::id();
         $contractLog->save();
 
         $contractLog->accounts()->sync(array_merge(

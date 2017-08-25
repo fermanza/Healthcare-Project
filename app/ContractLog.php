@@ -179,4 +179,14 @@ class ContractLog extends Model
     {
         return $this->belongsTo(Employee::class, 'logOwnerId');
     }
+
+    /**
+     * Get the Owner for the ContractLog.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'lastUpdatedBy');
+    }
 }
