@@ -290,7 +290,7 @@
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysician')">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table id="rosterPhysicianTable" class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw50">@lang('SMD')</th>
@@ -310,10 +310,12 @@
                         <tbody>
                             <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': roster.signedNotStarted}">
                                 <td>
-                                    <input class="roster-radio" type="checkbox" name="SMD" :value="roster.name" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
+                                    <input class="roster-radio" type="checkbox" name="SMD" :value="1" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
+                                    <span class="hidden">@{{roster.isSMD}}</span>
                                 </td>
                                 <td>
-                                    <input class="roster-radio" type="checkbox" name="AMD" :value="roster.name" :checked='roster.isAMD' @change="updateRosterBench(roster, 'AMD')">
+                                    <input class="roster-radio" type="checkbox" name="AMD" :value="1" :checked='roster.isAMD' @change="updateRosterBench(roster, 'AMD')">
+                                    <span class="hidden">@{{roster.isAMD}}</span>
                                 </td>
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
@@ -416,7 +418,7 @@
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -533,7 +535,7 @@
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -630,7 +632,7 @@
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -731,7 +733,7 @@
             <h4 class="pipeline-green-title">@lang('Recruiting Pipeline')</h4>
             <form @submit.prevent="addRecruiting">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('MD/APP')</th>
@@ -756,8 +758,18 @@
                                 <td>@{{ recruiting.firstShift }}</td>
                                 <td>@{{ recruiting.notes }}</td>
                                 <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.recruiting.switch')
+                                        <button @click="switchRecruitingTo(recruiting, 'roster')" type="button" class="btn btn-xs btn-primary mb5">
+                                            @lang('Roster')
+                                        </button>
+                                        
+                                        <button @click="switchRecruitingTo(recruiting, 'bench')" type="button" class="btn btn-xs btn-primary mb5">
+                                            @lang('Bench')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.recruiting.decline')
-                                        <button type="button" class="btn btn-xs btn-warning"
+                                        <button type="button" class="btn btn-xs btn-warning mb5"
                                             data-toggle="modal" data-target="#declineModal"
                                             @click="setDeclining(recruiting)"
                                         >
@@ -766,7 +778,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.recruiting.store')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-info mb5"
                                             @click="editRecruiting(recruiting)"
                                         >
                                             <i class="fa fa-pencil"></i>
@@ -774,7 +786,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.recruiting.destroy')
-                                        <button @click="deleteRecruiting(recruiting)" type="button" class="btn btn-xs btn-danger">
+                                        <button @click="deleteRecruiting(recruiting)" type="button" class="btn btn-xs btn-danger mb5">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     @endpermission
@@ -836,7 +848,7 @@
             <h4 class="pipeline-green-title">@lang('Locums Pipeline')</h4>
             <form @submit.prevent="addLocum">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('MD/APP')</th>
@@ -861,6 +873,16 @@
                                 <td>@{{ locum.startDate }}</td>
                                 <td>@{{ locum.comments }}</td>
                                 <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.locum.switch')
+                                        <button @click="switchLocumTo(locum, 'roster')" type="button" class="btn btn-xs btn-primary mb5">
+                                            @lang('Roster')
+                                        </button>
+                                        
+                                        <button @click="switchLocumTo(locum, 'bench')" type="button" class="btn btn-xs btn-primary mb5">
+                                            @lang('Bench')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.locum.decline')
                                         <button type="button" class="btn btn-xs btn-warning"
                                             data-toggle="modal" data-target="#declineModal"
@@ -938,7 +960,7 @@
         <div class="no-break-inside">
             <h4 class="pipeline-orange-title">@lang('Declined List')</h4>
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered datatable">
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw200">@lang('Name')</th>
@@ -1035,7 +1057,7 @@
         <div class="no-break-inside">
             <h4 class="pipeline-orange-title">@lang('Resigned List')</h4>
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered datatable">
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw60">@lang('MD/APP')</th>
@@ -1124,6 +1146,12 @@
             var accountId = $(this).val();
 
             window.location.href = '/admin/accounts/'+accountId+'/pipeline';
+        });
+
+        $(document).ready(function() {
+            var accountsDT = $('#rosterPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]]
+            }));
         });
 
         window.app = new Vue({
@@ -1435,9 +1463,10 @@
                 },
 
                 switchRosterBenchTo: function (rosterBench, place) {
-                    axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, {
-                        place: place
-                    })
+                    rosterBench.place = place;
+
+                    axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, rosterBench
+                    )
                         .then(function (response) {
                             var newRosterBench = response.data;
                             _.assignIn(rosterBench, newRosterBench);
@@ -1663,6 +1692,30 @@
                         };
                         break;
                     }
+                },
+
+                switchRecruitingTo: function(recruiting, place) {
+                    recruiting.place = place;
+                    recruiting.activity = recruiting.type == 'md' ? 'physician' : 'app';
+                    
+                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id + '/switch', recruiting
+                    ).then(function (response) {
+                        this.pipeline.rostersBenchs.push(response.data);
+                        this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
+                    }.bind(this));
+
+
+                },
+
+                switchLocumTo: function(locum, place) {
+                    locum.place = place;
+                    locum.activity = locum.type == 'md' ? 'physician' : 'app';
+
+                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum/' + locum.id + '/switch', locum
+                    ).then(function (response) {
+                        this.pipeline.rostersBenchs.push(response.data);
+                        this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': locum.id });
+                    }.bind(this));
                 }
             }
         });

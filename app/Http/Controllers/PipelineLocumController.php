@@ -6,6 +6,7 @@ use App\Account;
 use App\PipelineLocum;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\PipelineRosterBench;
 
 class PipelineLocumController extends Controller
 {
@@ -146,5 +147,33 @@ class PipelineLocumController extends Controller
         $locum->delete();
 
         return $locum;
+    }
+
+    /**
+     * Switch specified locum to rosterbench.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @param  \App\PipelineLocum  $locum
+     * @return \Illuminate\Http\Response
+     */
+    public function switch(Request $request, Account $account, PipelineLocum $locum)
+    {
+        $rosterBench = new PipelineRosterBench;
+        $rosterBench->pipelineId = $request->pipelineId;
+        $rosterBench->place = $request->place;
+        $rosterBench->type = $request->type;
+        $rosterBench->activity = $request->activity;
+        $rosterBench->hours = 0;
+        $rosterBench->name = $request->name;
+        $rosterBench->contract = $request->contract;
+        $rosterBench->interview = $request->interview;
+        $rosterBench->notes = $request->comments;
+
+        if ($rosterBench->save()) {
+            $locum->delete();
+
+            return $rosterBench;
+        }
     }
 }

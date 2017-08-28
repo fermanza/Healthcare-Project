@@ -56,10 +56,12 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->post('accounts/{account}/pipeline/recruiting', 'PipelineRecruitingController@store')->name('accounts.pipeline.recruiting.store');
     $router->patch('accounts/{account}/pipeline/recruiting/{recruiting}/decline', 'PipelineRecruitingController@decline')->name('accounts.pipeline.recruiting.decline');
     $router->delete('accounts/{account}/pipeline/recruiting/{recruiting}', 'PipelineRecruitingController@destroy')->name('accounts.pipeline.recruiting.destroy');
+    $router->post('accounts/{account}/pipeline/recruiting/{recruiting}/switch', 'PipelineRecruitingController@switch')->name('accounts.pipeline.recruiting.switch');
 
     $router->post('accounts/{account}/pipeline/locum', 'PipelineLocumController@store')->name('accounts.pipeline.locum.store');
     $router->patch('accounts/{account}/pipeline/locum/{locum}/decline', 'PipelineLocumController@decline')->name('accounts.pipeline.locum.decline');
     $router->delete('accounts/{account}/pipeline/locum/{locum}', 'PipelineLocumController@destroy')->name('accounts.pipeline.locum.destroy');
+    $router->post('accounts/{account}/pipeline/locum/{locum}/switch', 'PipelineLocumController@switch')->name('accounts.pipeline.locum.switch');
 
     $router->resource('users', 'UsersController', ['except' => 'show']);
     $router->resource('roles', 'RolesController', ['except' => 'show']);

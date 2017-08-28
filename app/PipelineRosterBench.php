@@ -17,13 +17,13 @@ class PipelineRosterBench extends Model
         'firstShift',
     ];
 
-    public function getFirstShiftAttribute($value){
-    	if($value) {
-    		$formattedDate = Carbon::parse($value)->format('Y-m-d');
+    // public function getFirstShiftAttribute($value){
+    // 	if($value) {
+    // 		$formattedDate = Carbon::parse($value)->format('Y-m-d');
 
-    		return $formattedDate;
-    	}
+    // 		return $formattedDate;
+    // 	}
 
-    	return $value;
-    }
+    // 	return $value;
+    // }
 }

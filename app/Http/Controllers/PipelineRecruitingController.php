@@ -6,6 +6,7 @@ use App\Account;
 use App\PipelineRecruiting;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\PipelineRosterBench;
 
 class PipelineRecruitingController extends Controller
 {
@@ -149,5 +150,36 @@ class PipelineRecruitingController extends Controller
         $recruiting->delete();
 
         return $recruiting;
+    }
+
+    /**
+     * Switch specified recruiting to rosterbench.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @param  \App\PipelineRecruiting  $recruiting
+     * @return \Illuminate\Http\Response
+     */
+    public function switch(Request $request, Account $account, PipelineRecruiting $recruiting)
+    {
+        $rosterBench = new PipelineRosterBench;
+        $rosterBench->pipelineId = $request->pipelineId;
+        $rosterBench->place = $request->place;
+        $rosterBench->type = $request->type;
+        $rosterBench->activity = $request->activity;
+        $rosterBench->hours = 0;
+        $rosterBench->name = $request->name;
+        $rosterBench->contract = $request->contract;
+        $rosterBench->interview = $request->interview;
+        $rosterBench->contractOut = $request->contractOut;
+        $rosterBench->contractIn = $request->contractIn;
+        $rosterBench->firstShift = $request->firstShift;
+        $rosterBench->notes = $request->notes;
+
+        if ($rosterBench->save()) {
+            $recruiting->delete();
+
+            return $rosterBench;
+        }
     }
 }
