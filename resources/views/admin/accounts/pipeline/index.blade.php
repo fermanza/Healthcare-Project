@@ -1143,6 +1143,7 @@
                 oldAMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isAMD == 1 } ),
 
                 rosterPhysician: {
+                    id: null,
                     name: '',
                     hours: '',
                     interview: '',
@@ -1153,6 +1154,7 @@
                 },
 
                 rosterApps: {
+                    id: null,
                     name: '',
                     hours: '',
                     interview: '',
@@ -1393,33 +1395,43 @@
                         }
                     }
 
-                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
-                        place: place,
-                        activity: activity
-                    }, this[entity]))
-                        .then(function (response) {
-                            var rosterBench = response.data;
-                            this.pipeline.rostersBenchs.push(rosterBench);
-                            this[entity] = {};
+                    if(this[entity].id) {
+                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
 
-                            if(response.data.isSMD) {
-                                this.oldSMD = [];
-                                this.oldSMD.push(response.data);
-                            }
-
-                            if(response.data.isAMD) {
-                                this.oldAMD = [];
-                                this.oldAMD.push(response.data);
-                            }
+                        axios.patch(endpoint, $.extend({}, {
+                            place: place,
+                            activity: activity
+                        }, this[entity]))
+                            .then(function (response) {
+                                var rosterBench = _.find(this.pipeline.rostersBenchs, {id: this[entity].id});
+                                _.assignIn(rosterBench, response.data);
+                                this.clearRosterBench(entity);
                         }.bind(this));
+                    } else {
+                        axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
+                            place: place,
+                            activity: activity
+                        }, this[entity]))
+                            .then(function (response) {
+                                var rosterBench = response.data;
+                                this.pipeline.rostersBenchs.push(rosterBench);
+                                this[entity] = {};
+
+                                if(response.data.isSMD) {
+                                    this.oldSMD = [];
+                                    this.oldSMD.push(response.data);
+                                }
+
+                                if(response.data.isAMD) {
+                                    this.oldAMD = [];
+                                    this.oldAMD.push(response.data);
+                                }
+                            }.bind(this));
+                        }
                 },
 
                 editRosterBench: function (rosterBench, object) {
-                    axios.delete('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id)
-                        .then(function (response) {
-                            _.assignIn(this[object], rosterBench);
-                            this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': rosterBench.id });
-                        }.bind(this));
+                    _.assignIn(this[object], rosterBench);
                 },
 
                 switchRosterBenchTo: function (rosterBench, place) {
@@ -1600,6 +1612,57 @@
                         .then(function (response) {
                             
                         }.bind(this));
+                },
+
+                clearRosterBench: function(entity) {
+                    switch(entity) {
+                        case 'rosterPhysician': this[entity] = {
+                            id: null,
+                            name: '',
+                            hours: '',
+                            interview: '',
+                            contractOut: '',
+                            contractIn: '',
+                            firstShift: '',
+                            notes: '',
+                        };
+                        break;
+
+                        case 'rosterApps': this[entity] = {
+                            id: null,
+                            name: '',
+                            hours: '',
+                            interview: '',
+                            contractOut: '',
+                            contractIn: '',
+                            firstShift: '',
+                            notes: '',
+                        };
+                        break;
+
+
+                        case 'benchPhysician': this[entity] = {
+                            name: '',
+                            hours: '',
+                            interview: '',
+                            contractOut: '',
+                            contractIn: '',
+                            firstShift: '',
+                            notes: '',
+                        };
+                        break;
+
+                        case 'benchApps': this[entity] = {
+                            name: '',
+                            hours: '',
+                            interview: '',
+                            contractOut: '',
+                            contractIn: '',
+                            firstShift: '',
+                            notes: '',
+                        };
+                        break;
+                    }
                 }
             }
         });

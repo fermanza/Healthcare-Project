@@ -243,14 +243,14 @@ class ContractLogsController extends Controller
                         $contractLog->account ? $contractLog->account->name : '',
                         ($contractLog->account && $contractLog->account->division) ? $contractLog->account->division->name : '',
                         ($contractLog->division && $contractLog->division->group) ? $contractLog->division->group->name : '',
-                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m/d/Y') : '',
-                        $contractLog->contractInDate ? $contractLog->contractInDate->format('m/d/Y') : '',
+                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m-d-Y') : '',
+                        $contractLog->contractInDate ? $contractLog->contractInDate->format('m-d-Y') : '',
                         $contractLog->contractInDate ? $contractLog->contractInDate->diffInDays($contractLog->contractOutDate) : 'Contract Pending',
-                        $contractLog->sentToQADate ? $contractLog->sentToQADate->format('m/d/Y'): '',
-                        $contractLog->countersigDate ? $contractLog->countersigDate->format('m/d/Y') : '',
-                        $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->format('m/d/Y') : '',
+                        $contractLog->sentToQADate ? $contractLog->sentToQADate->format('m-d-Y'): '',
+                        $contractLog->countersigDate ? $contractLog->countersigDate->format('m-d-Y') : '',
+                        $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->format('m-d-Y') : '',
                         $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->diffInDays($contractLog->contractOutDate) : 'Payroll Pending',
-                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '',
+                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m-d-Y') : '',
                         $contractLog->numOfHours,
                         $contractLog->recruiter ? $contractLog->recruiter->fullName() : '',
                         $contractLog->manager ? $contractLog->manager->fullName() : '',
@@ -266,9 +266,9 @@ class ContractLogsController extends Controller
                         $contractStatus == "Attrition - FT" ? 1 : '',
                         '',
                         $contractLog->position ? $contractLog->position->position : '',
-                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('01/m/Y') : '',
-                        $contractLog->contractInDate ? $contractLog->contractInDate->format('01/m/Y') : '',
-                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('01/m/Y') : '',
+                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m-01-Y') : '',
+                        $contractLog->contractInDate ? $contractLog->contractInDate->format('m-01-Y') : '',
+                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m-01-Y') : '',
                         '',
                         ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '',
                         ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : ''
@@ -340,6 +340,13 @@ class ContractLogsController extends Controller
                     'AH'    => 13,
                     'AI'    => 8,
                     'AJ'    => 8,
+                ));
+
+                $sheet->setColumnFormat(array(
+                    'H2:I'.$rowNumber      => 'mm-dd-yyyy',
+                    'K2:M'.$rowNumber      => 'mm-dd-yyyy',
+                    'O2:O'.$rowNumber      => 'mm-dd-yyyy',
+                    'AE2:AG'.$rowNumber      => 'mm-dd-yyyy',
                 ));
 
                 $tableStyle = array(

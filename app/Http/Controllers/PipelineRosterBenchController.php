@@ -128,6 +128,42 @@ class PipelineRosterBenchController extends Controller
             ],
         ]);
 
+
+        $this->validate($request, [
+            'place' => [
+                'required',
+                Rule::in(config('pipeline.places')),
+            ],
+            'activity' => [
+                'required',
+                Rule::in(config('pipeline.activities')),
+            ],
+            'name' => 'required',
+            'hours' => 'required|numeric|min:0',
+            'interview' => 'nullable|date_format:"Y-m-d"',
+            'contractOut' => 'nullable|date_format:"Y-m-d"',
+            'contractIn' => 'nullable|date_format:"Y-m-d"',
+            'firstShift' => 'nullable|date_format:"Y-m-d"',
+            'notes' => 'nullable',
+        ]);
+
+        $rosterBench->pipelineId = $account->pipeline->id;
+        $rosterBench->place = $request->place;
+        $rosterBench->activity = $request->activity;
+        $rosterBench->name = $request->name;
+        $rosterBench->hours = $request->hours;
+        $rosterBench->interview = $request->interview;
+        $rosterBench->contractOut = $request->contractOut;
+        $rosterBench->contractIn = $request->contractIn;
+        $rosterBench->firstShift = $request->firstShift;
+        $rosterBench->isSMD = $request->isSMD ? 1 : 0;
+        $rosterBench->isAMD = $request->isAMD ? 1 : 0;
+        $rosterBench->signedNotStarted = $request->signedNotStarted;
+        $rosterBench->notes = $request->notes;
+        $rosterBench->contract = $request->contract;
+
+
+
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->contract = $request->contract;
 
