@@ -12,18 +12,4 @@ class PipelineRosterBench extends Model
      * @var string
      */
     protected $table = 'tAccountPipelineRosterBench';
-
-    protected $dates = [
-        'firstShift',
-    ];
-
-    // public function getFirstShiftAttribute($value){
-    // 	if($value) {
-    // 		$formattedDate = Carbon::parse($value)->format('Y-m-d');
-
-    // 		return $formattedDate;
-    // 	}
-
-    // 	return $value;
-    // }
 }

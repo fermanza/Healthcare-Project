@@ -320,10 +320,10 @@
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
                                 <td class="text-uppercase">@{{ roster.contract }}</td>
-                                <td>@{{ roster.interview }}</td>
-                                <td>@{{ roster.contractOut }}</td>
-                                <td>@{{ roster.contractIn }}</td>
-                                <td>@{{ roster.firstShift }}</td>
+                                <td>@{{ moment(roster.interview) }}</td>
+                                <td>@{{ moment(roster.contractOut) }}</td>
+                                <td>@{{ moment(roster.contractIn) }}</td>
+                                <td>@{{ moment(roster.firstShift) }}</td>
                                 <td>@{{ roster.notes }}</td>
                                 <td><input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)"></td>
                                 <td class="text-center hidden-print">
@@ -438,10 +438,10 @@
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
                                 <td class="text-uppercase">@{{ roster.contract }}</td>
-                                <td>@{{ roster.interview }}</td>
-                                <td>@{{ roster.contractOut }}</td>
-                                <td>@{{ roster.contractIn }}</td>
-                                <td>@{{ roster.firstShift }}</td>
+                                <td>@{{ moment(roster.interview) }}</td>
+                                <td>@{{ moment(roster.contractOut) }}</td>
+                                <td>@{{ moment(roster.contractIn) }}</td>
+                                <td>@{{ moment(roster.firstShift) }}</td>
                                 <td>@{{ roster.notes }}</td>
                                 <td><input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)"></td>
                                 <td class="text-center hidden-print">
@@ -552,10 +552,10 @@
                             <tr v-for="bench in activeBenchPhysicians">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
-                                <td>@{{ bench.interview }}</td>
-                                <td>@{{ bench.contractOut }}</td>
-                                <td>@{{ bench.contractIn }}</td>
-                                <td>@{{ bench.firstShift }}</td>
+                                <td>@{{ moment(bench.interview) }}</td>
+                                <td>@{{ moment(bench.contractOut) }}</td>
+                                <td>@{{ moment(bench.contractIn) }}</td>
+                                <td>@{{ moment(bench.firstShift) }}</td>
                                 <td>@{{ bench.notes }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
@@ -649,10 +649,10 @@
                             <tr v-for="bench in activeBenchApps">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
-                                <td>@{{ bench.interview }}</td>
-                                <td>@{{ bench.contractOut }}</td>
-                                <td>@{{ bench.contractIn }}</td>
-                                <td>@{{ bench.firstShift }}</td>
+                                <td>@{{ moment(bench.interview) }}</td>
+                                <td>@{{ moment(bench.contractOut) }}</td>
+                                <td>@{{ moment(bench.contractIn) }}</td>
+                                <td>@{{ moment(bench.firstShift) }}</td>
                                 <td>@{{ bench.notes }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
@@ -752,10 +752,10 @@
                                 <td class="text-uppercase">@{{ recruiting.type }}</td>
                                 <td>@{{ recruiting.name }}</td>
                                 <td class="text-uppercase">@{{ recruiting.contract }}</td>
-                                <td>@{{ recruiting.interview }}</td>
-                                <td>@{{ recruiting.contractOut }}</td>
-                                <td>@{{ recruiting.contractIn }}</td>
-                                <td>@{{ recruiting.firstShift }}</td>
+                                <td>@{{ moment(recruiting.interview) }}</td>
+                                <td>@{{ moment(recruiting.contractOut) }}</td>
+                                <td>@{{ moment(recruiting.contractIn) }}</td>
+                                <td>@{{ moment(recruiting.firstShift) }}</td>
                                 <td>@{{ recruiting.notes }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.recruiting.switch')
@@ -867,10 +867,10 @@
                                 <td class="text-uppercase">@{{ locum.type }}</td>
                                 <td>@{{ locum.name }}</td>
                                 <td>@{{ locum.agency }}</td>
-                                <td>@{{ locum.potentialStart }}</td>
+                                <td>@{{ moment(locum.potentialStart) }}</td>
                                 <td>@{{ locum.credentialingNotes }}</td>
                                 <td>@{{ locum.shiftsOffered }}</td>
-                                <td>@{{ locum.startDate }}</td>
+                                <td>@{{ moment(locum.startDate) }}</td>
                                 <td>@{{ locum.comments }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.locum.switch')
@@ -977,10 +977,10 @@
                         <tr v-for="declined in declines">
                             <td>@{{ declined.name }}</td>
                             <td class="text-uppercase">@{{ declined.contract }}</td>
-                            <td>@{{ declined.interview }}</td>
-                            <td>@{{ declined.application }}</td>
-                            <td>@{{ declined.contractOut }}</td>
-                            <td>@{{ declined.declined }}</td>
+                            <td>@{{ moment(declined.interview) }}</td>
+                            <td>@{{ moment(declined.application) }}</td>
+                            <td>@{{ moment(declined.contractOut) }}</td>
+                            <td>@{{ moment(declined.declined) }}</td>
                             <td>@{{ declined.declinedReason }}</td>
                             <td class="text-center hidden-print">
                                 @permission('admin.accounts.pipeline.locum.decline')
@@ -1071,7 +1071,7 @@
                         <tr v-for="resigned in resigns">
                             <td class="text-uppercase">@{{ resigned.type }}</td>
                             <td>@{{ resigned.name }}</td>
-                            <td>@{{ resigned.resigned }}</td>
+                            <td>@{{ moment(resigned.resigned) }}</td>
                             <td>@{{ resigned.resignedReason }}</td>
                             <td class="text-center hidden-print">
                                 @permission('admin.accounts.pipeline.rosterBench.resign')
@@ -1716,6 +1716,14 @@
                         this.pipeline.rostersBenchs.push(response.data);
                         this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': locum.id });
                     }.bind(this));
+                },
+
+                moment: function(date) {
+                    if(date) {
+                        return moment(date).format('MM/DD/YYYY');
+                    }
+
+                    return null;
                 }
             }
         });

@@ -213,15 +213,15 @@
                         <td>{{ $contractLog->account ? $contractLog->account->siteCode : '' }}</td>
                         <td>{{ ($contractLog->division && $contractLog->division->group) ? $contractLog->division->group->name : '' }}</td>
                         <td>{{ $contractLog->division ? $contractLog->division->name : '' }}</td>
-                        <td>{{ $contractLog->contractOutDate ? $contractLog->contractOutDate->format('Y-m-d') : '' }}</td>
-                        <td>{{ $contractLog->contractInDate ? $contractLog->contractInDate->format('Y-m-d') : '' }}</td>
+                        <td>{{ $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m/d/Y') : '' }}</td>
+                        <td>{{ $contractLog->contractInDate ? $contractLog->contractInDate->format('m/d/Y') : '' }}</td>
                         <td> 
                             @if($contractLog->inactive)
                                 <i class="fa fa-check" aria-hidden="true"></i>
                             @endif
                         </td>
-                        <td>{{ $contractLog->lastUpdated }}</td>
-                        <td>{{ $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('Y-m-d') : '' }}</td>
+                        <td>{{ $contractLog->lastUpdated ? $contractLog->lastUpdated->format('m/d/Y H:m:s') : '' }}</td>
+                        <td>{{ $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '' }}</td>
                         <td>{{ $contractLog->note ? $contractLog->note->contractNote : '' }}</td>
                         <td>{{ $contractLog->comments }}</td>
                     </tr>

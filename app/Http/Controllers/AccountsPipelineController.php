@@ -270,11 +270,19 @@ class AccountsPipelineController extends Controller
         })->sortBy('name');
 
         $futureRosters = $account->pipeline->rostersBenchs->filter(function($rosterBench) use ($today) {
-            return $rosterBench->firstShift && ($rosterBench->firstShift->gte($today));
+            if($rosterBench->firstShift) {
+                $firstShift = Carbon::parse($rosterBench->firstShift);
+
+                return $firstShift->gte($today);
+            }
         });
 
         $futureLocums = $account->pipeline->locums->filter(function($locum) use ($today) {
-            return $locum->startDate && ($locum->startDate->gte($today));
+            if($locum->startDate) {
+                $startDate = Carbon::parse($locum->startDate);
+
+                return $startDate->gte($today);
+            }
         });
         /////// End of Elements for lists /////////
 

@@ -81,8 +81,8 @@
                         </td>
                         <td>{{ $account->city }}</td>
                         <td>{{ $account->state }}</td>
-                        <td>{{ $account->startDate ? $account->startDate->format('Y-m-d') : '' }}</td>
-                        <td>{{ $account->endDate ? $account->endDate->format('Y-m-d') : '' }}</td>
+                        <td>{{ $account->startDate ? $account->startDate->format('m/d/Y') : '' }}</td>
+                        <td>{{ $account->endDate ? $account->endDate->format('m/d/Y') : '' }}</td>
                         <td>
                             {{ $account->parentSiteCode }}
                             @permission('admin.accounts.removeParent')

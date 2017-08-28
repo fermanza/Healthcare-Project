@@ -26,6 +26,7 @@ class ContractLog extends Model
         'sentToPayrollDate',
         'projectedStartDate',
         'actualStartDate',
+        'lastUpdated'
     ];
 
     /**

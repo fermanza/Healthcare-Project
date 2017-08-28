@@ -58,9 +58,11 @@ return [
         'admin.accounts.pipeline.recruiting.store' => 'Account Summary Recruiting Create Action',
         'admin.accounts.pipeline.recruiting.decline' => 'Account Summary Recruiting Decline Action',
         'admin.accounts.pipeline.recruiting.destroy' => 'Account Summary Delete Recruiting',
+        'admin.accounts.pipeline.recruiting.swtich' => 'Account Summary Switch Recruiting To RosterBench',
         'admin.accounts.pipeline.locum.store' => 'Account Summary Locum Create Action',
         'admin.accounts.pipeline.locum.decline' => 'Account Summary Locum Decline Action',
         'admin.accounts.pipeline.locum.destroy' => 'Account Summary Delete Locum',
+        'admin.accounts.pipeline.locum.swtich' => 'Account Summary Switch Locum To RosterBench',
         'admin.accounts.pipeline.export' => 'Export Account Summary',
     ],
 

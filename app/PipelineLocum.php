@@ -20,10 +20,6 @@ class PipelineLocum extends Model
         'instance',
     ];
 
-    protected $dates = [
-        'startDate',
-    ];
-
     /**
      * Accessor for instance attribute.
      *
