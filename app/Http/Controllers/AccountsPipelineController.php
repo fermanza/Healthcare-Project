@@ -209,13 +209,22 @@ class AccountsPipelineController extends Controller
         $section = $word->addSection();
 
         $section->addImage(
+            'swoosh.png',
+            array(
+                'width'            => 612,
+                'height'           => 140,
+                'positioning'      => \PhpOffice\PhpWord\Style\Image::POSITION_ABSOLUTE,
+                'posHorizontal'    => \PhpOffice\PhpWord\Style\Image::POSITION_HORIZONTAL_LEFT,
+                'posHorizontalRel' => \PhpOffice\PhpWord\Style\Image::POSITION_RELATIVE_TO_PAGE,
+                'posVerticalRel'   => \PhpOffice\PhpWord\Style\Image::POSITION_RELATIVE_TO_PAGE
+            )
+        );
+
+        $section->addImage(
             'envision.png',
             array(
                 'width' => 160,
-                'height' => 40,
-                // 'marginTop'     => -1,
-                // 'marginLeft'    => -1,
-                // 'wrappingStyle' => 'behind'
+                'height' => 40
             )
         );
 
