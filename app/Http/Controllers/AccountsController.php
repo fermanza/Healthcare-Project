@@ -141,12 +141,14 @@ class AccountsController extends Controller
     {
         $account->load('siteCodes', 'physiciansApps', 'practices', 'recruiter', 'recruiters', 'manager');
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+        $recruiters =  $employees->filter->hasPosition(config('instances.position_types.recruiter'));
+        $managers =  $employees->filter->hasPosition(config('instances.position_types.manager'));
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
 
-        $params = compact('account', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'action');
+        $params = compact('account', 'recruiters', 'managers', 'practices', 'divisions', 'RSCs', 'regions', 'action');
 
         JavaScript::put([
             'account' => [

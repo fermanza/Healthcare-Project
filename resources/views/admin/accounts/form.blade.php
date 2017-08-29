@@ -76,8 +76,8 @@
                 <label for="recruiterId">@lang('Recruiter')</label>
                 <select class="form-control select2" id="recruiterId" name="recruiterId">
                     <option value="" disabled selected></option>
-                    @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}" {{ (old('recruiterId') == $employee->id ?: ($account->recruiter && $account->recruiter->employeeId == $employee->id)) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                    @foreach ($recruiters as $recruiter)
+                        <option value="{{ $recruiter->id }}" {{ (old('recruiterId') == $recruiter->id ?: ($account->recruiter && $account->recruiter->recruiterId == $recruiter->id)) ? 'selected': '' }}>{{ $recruiter->fullName() }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('recruiterId'))
@@ -89,8 +89,8 @@
             <div class="form-group{{ $errors->has('recruiters') ? ' has-error' : '' }}">
                 <label for="recruiters[]">@lang('Additional Recruiters')</label>
                 <select class="form-control select2" id="recruiters" name="recruiters[]" multiple>
-                    @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}" {{ (in_array($employee->id, old('employees') ?: []) ?: $account->recruiters->pluck('employeeId')->contains($employee->id)) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                    @foreach ($recruiters as $recruiter)
+                        <option value="{{ $recruiter->id }}" {{ (in_array($recruiter->id, old('employees') ?: []) ?: $account->recruiters->pluck('employeeId')->contains($recruiter->id)) ? 'selected': '' }}>{{ $recruiter->fullName() }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('recruiters'))
@@ -103,8 +103,8 @@
                 <label for="managerId">@lang('Manager')</label>
                 <select class="form-control select2" id="managerId" name="managerId">
                     <option value="" disabled selected></option>
-                    @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}" {{ (old('managerId') == $employee->id ?: ($account->manager && $account->manager->employeeId == $employee->id)) ? 'selected': '' }}>{{ $employee->fullName() }}</option>
+                    @foreach ($managers as $manager)
+                        <option value="{{ $manager->id }}" {{ (old('managerId') == $manager->id ?: ($account->manager && $account->manager->employeeId == $manager->id)) ? 'selected': '' }}>{{ $manager->fullName() }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('managerId'))
