@@ -343,10 +343,10 @@ class ContractLogsController extends Controller
                 ));
 
                 $sheet->setColumnFormat(array(
-                    'H2:I'.$rowNumber      => 'mm-dd-yyyy',
-                    'K2:M'.$rowNumber      => 'mm-dd-yyyy',
-                    'O2:O'.$rowNumber      => 'mm-dd-yyyy',
-                    'AE2:AG'.$rowNumber      => 'mm-dd-yyyy',
+                    'H2:I'.$rowNumber      => 'mm-dd-yy',
+                    'K2:M'.$rowNumber      => 'mm-dd-yy',
+                    'O2:O'.$rowNumber      => 'mm-dd-yy',
+                    'AE2:AG'.$rowNumber      => 'mm-dd-yy',
                 ));
 
                 $tableStyle = array(
