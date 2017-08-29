@@ -89,6 +89,16 @@ $(() => {
         this.dispatchEvent(event);
     });
 
+    $(".yearpicker").datepicker( {
+        format: "yyyy",
+        viewMode: "years", 
+        minViewMode: "years",
+        autoclose: true,
+    }).on('changeDate', function () {
+        const event = new CustomEvent('input');
+        this.dispatchEvent(event);
+    });
+
     // DateRangePicker
     $('.rangedatepicker').each(function() {
         var el = $(this);

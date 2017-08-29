@@ -16,4 +16,15 @@ class AccountFilter extends Filter
             $query->whereIn('id', $ids);
         });
     }
+
+    /**
+     * Apply startDate filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function startDate($year)
+    {
+        $this->query->whereYear('startDate', $year);
+    }
 }

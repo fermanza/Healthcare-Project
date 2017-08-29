@@ -19,12 +19,16 @@
     <form class="box-body">
         <div class="flexboxgrid">
             <div class="row">
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="RSCs[]" data-placeholder="@lang('RSC')" multiple>
                         @foreach ($RSCs as $RSC)
                             <option value="{{ $RSC->id }}" {{ in_array($RSC->id, Request::input('RSCs') ?: []) ? 'selected' : '' }}>{{ $RSC->name }}</option>
                         @endforeach
                     </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <input type="text" name="startDate" class="form-control yearpicker" value="{{ Request::input('startDate') ? Request::input('startDate') : '' }}" placeholder="@lang('Year')">
                 </div>
             </div>
         

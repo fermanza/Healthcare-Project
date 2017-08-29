@@ -15,6 +15,7 @@ use App\Filters\AccountFilter;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class AccountsController extends Controller
 {
@@ -25,7 +26,6 @@ class AccountsController extends Controller
      */
     public function index(Request $request, AccountFilter $filter)
     {
-
         $termed = $request->exists('termed');
 
         $accounts = Account::withGlobalScope('role', new AccountScope)->with([
