@@ -18,7 +18,7 @@ abstract class Presenter extends BasePresenter
 	];
 
 	protected $currency = [
-        'Prev Month - Inc Comp',
+        'Prev - Inc Comp',
         'YTD - Inc Comp',
 	];
 
