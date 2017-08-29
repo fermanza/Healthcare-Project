@@ -1431,7 +1431,7 @@
                             activity: activity
                         }, this[entity]))
                             .then(function (response) {
-                                var rosterBench = _.find(this.pipeline.rostersBenchs, {id: this[entity].id});
+                                var rosterBench = _.find(this.pipeline.rostersBenchs, {id: response.data.id});
                                 _.assignIn(rosterBench, response.data);
                                 this.clearRosterBench(entity);
                         }.bind(this));
@@ -1611,8 +1611,6 @@
 
                     roster.oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
                     roster.oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
-
-
 
                     axios.patch(endpoint, roster)
                         .then(function (response) {
