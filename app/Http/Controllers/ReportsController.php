@@ -9,6 +9,7 @@ use App\Region;
 use App\Division;
 use App\Employee;
 use App\Practice;
+use App\Scopes\AccountSummaryScope;
 use App\Filters\SummaryFilter;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
@@ -488,6 +489,6 @@ class ReportsController extends Controller
     }
 
     private function getSummaryData(SummaryFilter $filter, $pages) {
-        return AccountSummary::with('account')->filter($filter)->paginate($pages);
+        return AccountSummary::withGlobalScope('role', new AccountSummaryScope)->with('account')->filter($filter)->paginate($pages);
     }
 }
