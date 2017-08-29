@@ -102,7 +102,7 @@
 
                     @permission('admin.accounts.index')
                         <li class="{{ route_starts_with('admin.accounts') }}">
-                            <a href="{{ route('admin.accounts.index', ['startDate' => Carbon\Carbon::now()->format('Y')]) }}">
+                            <a href="{{ route('admin.accounts.index') }}">
                                 <i class="fa fa-hospital-o"></i>
                                 <span>@lang('Accounts')</span>
                             </a>

@@ -1370,13 +1370,6 @@ datatables-bootstrap3-plugin@^0.5.0:
     font-awesome "^4.3"
     jquery "~1.11"
 
-datatables-fixedcolumns@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/datatables-fixedcolumns/-/datatables-fixedcolumns-3.1.0.tgz#16cbf46582f468586259066398c279524322bd10"
-  dependencies:
-    datatables ">=1.8.0"
-    jquery ">=1.7.0"
-
 datatables-select@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/datatables-select/-/datatables-select-1.1.0.tgz#97d613c9794f7d107995ad4b358f24e04f5098f1"
@@ -1403,7 +1396,7 @@ datatables.net@^1.10.15:
   dependencies:
     jquery ">=1.7"
 
-datatables@>=1.10.8, datatables@>=1.8.0, datatables@^1.10, datatables@^1.10.13:
+datatables@>=1.10.8, datatables@^1.10, datatables@^1.10.13:
   version "1.10.13"
   resolved "https://registry.yarnpkg.com/datatables/-/datatables-1.10.13.tgz#9bb2dec6f7dcf02049a00e4f0e7d3fe009c39346"
   dependencies:

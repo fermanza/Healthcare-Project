@@ -22,7 +22,6 @@ $(() => {
         radioClass: 'iradio_square-blue',
         increaseArea: '20%'
     });
-    
 
     // DataTables
     (() => {
