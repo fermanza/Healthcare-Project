@@ -188,7 +188,7 @@
         <div class="col-md-3">
             <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
                 <label for="administrative_area_level_1">@lang('State')</label>
-                <select class="form-control" id="administrative_area_level_1" name="state"">
+                <select class="form-control select2" id="administrative_area_level_1" name="state"">
                     @foreach($states as $state)
                         <option value="{{ $state->abbreviation }}" {{ (old('state') == $state->abbreviation ?: $state->abbreviation == $account->state) ? 'selected': '' }}>{{ $state->name }}</option>
                     @endforeach
