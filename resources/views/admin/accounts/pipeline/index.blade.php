@@ -821,7 +821,7 @@
                                     <input type="text" class="form-control datepicker" v-model="newRecruiting.contractOut" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" required />
+                                    <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" />
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="newRecruiting.firstShift" />

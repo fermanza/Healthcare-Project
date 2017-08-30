@@ -77,7 +77,7 @@
                 <select class="form-control select2" id="recruiterId" name="recruiterId">
                     <option value="" disabled selected></option>
                     @foreach ($recruiters as $recruiter)
-                        <option value="{{ $recruiter->id }}" {{ (old('recruiterId') == $recruiter->id ?: ($account->recruiter && $account->recruiter->recruiterId == $recruiter->id)) ? 'selected': '' }}>{{ $recruiter->fullName() }}</option>
+                        <option value="{{ $recruiter->id }}" {{ (old('recruiterId') == $recruiter->id ?: ($account->recruiter && $account->recruiter->employeeId == $recruiter->id)) ? 'selected': '' }}>{{ $recruiter->fullName() }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('recruiterId'))
