@@ -821,7 +821,7 @@
                                     <input type="text" class="form-control datepicker" v-model="newRecruiting.contractOut" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" />
+                                    <input type="text" class="form-control datepicker" v-model="newRecruiting.contractIn" required />
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="newRecruiting.firstShift" />
@@ -1696,13 +1696,15 @@
                     recruiting.place = place;
                     recruiting.activity = recruiting.type == 'md' ? 'physician' : 'app';
                     
-                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id + '/switch', recruiting
-                    ).then(function (response) {
-                        this.pipeline.rostersBenchs.push(response.data);
-                        this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
-                    }.bind(this));
-
-
+                    if(!recruiting.contractIn) {
+                        alert('Please fill Contract In date before moving to Roster Or Bench.')
+                    } else {
+                        axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id + '/switch', recruiting
+                        ).then(function (response) {
+                            this.pipeline.rostersBenchs.push(response.data);
+                            this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
+                        }.bind(this));
+                    }
                 },
 
                 switchLocumTo: function(locum, place) {
