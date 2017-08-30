@@ -211,8 +211,8 @@ class AccountsPipelineController extends Controller
         $section->addImage(
             'swoosh.png',
             array(
-                'width'            => 612,
-                'height'           => 140,
+                'width'            => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(21.59),
+                'height'           => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(6),
                 'positioning'      => \PhpOffice\PhpWord\Style\Image::POSITION_ABSOLUTE,
                 'posHorizontal'    => \PhpOffice\PhpWord\Style\Image::POSITION_HORIZONTAL_LEFT,
                 'posHorizontalRel' => \PhpOffice\PhpWord\Style\Image::POSITION_RELATIVE_TO_PAGE,
