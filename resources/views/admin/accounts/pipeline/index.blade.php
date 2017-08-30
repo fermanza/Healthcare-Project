@@ -1335,7 +1335,7 @@
 
                 staffPhysicianFTEOpenings: function () {
                     if (this.pipeline.practiceTime == 'fte') {
-                        return this.staffPhysicianFTEHaves - this.staffPhysicianFTENeeds;
+                        return this.staffPhysicianFTENeeds - this.staffPhysicianFTEHaves;
                     };
 
                     if (this.fullTimeHoursPhys == 0) return 0;
