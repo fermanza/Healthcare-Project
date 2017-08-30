@@ -25,11 +25,8 @@ class ContractLog extends Model
         'counterSigDate',
         'sentToPayrollDate',
         'projectedStartDate',
-        'actualStartDate',
-        'lastUpdated'
+        'actualStartDate'
     ];
-
-    //protected $dateFormat = 'Y-m-d H:i:s+';
 
     /**
      * Get the Account for the ContractLog.

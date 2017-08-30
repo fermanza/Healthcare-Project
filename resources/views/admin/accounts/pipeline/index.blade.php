@@ -1346,7 +1346,7 @@
 
                 staffAppsFTEOpenings: function () {
                     if (this.pipeline.practiceTime == 'fte') {
-                        return this.staffAppsFTEHaves - this.staffAppsFTENeeds;
+                        return this.staffAppsFTENeeds - this.staffAppsFTEHaves;
                     };
                     if (this.fullTimeHoursApps == 0) return 0;
                     var result = this.staffAppsOpenings / this.fullTimeHoursApps;

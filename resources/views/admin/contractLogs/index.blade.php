@@ -220,7 +220,7 @@
                                 <i class="fa fa-check" aria-hidden="true"></i>
                             @endif
                         </td>
-                        <td>{{ $contractLog->lastUpdated ? $contractLog->lastUpdated->format('m/d/Y H:m:s') : '' }}</td>
+                        <td>{{ $contractLog->lastUpdated }}</td>
                         <td>{{ $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '' }}</td>
                         <td>{{ $contractLog->note ? $contractLog->note->contractNote : '' }}</td>
                         <td>{{ $contractLog->comments }}</td>
