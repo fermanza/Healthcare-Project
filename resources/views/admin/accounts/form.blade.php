@@ -188,7 +188,11 @@
         <div class="col-md-3">
             <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
                 <label for="administrative_area_level_1">@lang('State')</label>
-                <input type="text" class="form-control" id="administrative_area_level_1" name="state" value="{{ old('state') ?: $account->state }}" />
+                <select class="form-control" id="administrative_area_level_1" name="state"">
+                    @foreach($states as $state)
+                        <option value="{{ $state->abbreviation }}" {{ (old('state') == $state->abbreviation ?: $state->abbreviation == $account->state) ? 'selected': '' }}>{{ $state->name }}</option>
+                    @endforeach
+                </select>
                 @if ($errors->has('state'))
                     <span class="help-block"><strong>{{ $errors->first('state') }}</strong></span>
                 @endif
@@ -248,9 +252,7 @@
         </div>
     </div>
 
-    <hr />
-
-    @if ($action == 'edit' && $account->physiciansApps->count())
+    {{-- @if ($action == 'edit' && $account->physiciansApps->count())
         <div class="row mb10">
             <div class="col-md-12">
                 <a href="javascript:;" data-toggle="modal" data-target="#physicians-apps-history">
@@ -258,49 +260,7 @@
                 </a>
             </div>
         </div>
-    @endif
-    
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group{{ $errors->has('physiciansNeeded') ? ' has-error' : '' }}">
-                <label for="physiciansNeeded">@lang('No. of Physicians needed')</label>
-                <input type="number" class="form-control" id="physiciansNeeded" name="physiciansNeeded" min="0" value="{{ old('physiciansNeeded') ?: $account->physiciansNeeded ?: '0' }}" />
-                @if ($errors->has('physiciansNeeded'))
-                    <span class="help-block"><strong>{{ $errors->first('physiciansNeeded') }}</strong></span>
-                @endif
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group{{ $errors->has('appsNeeded') ? ' has-error' : '' }}">
-                <label for="appsNeeded">@lang('No. of APPs needed')</label>
-                <input type="number" class="form-control" id="appsNeeded" name="appsNeeded" min="0" value="{{ old('appsNeeded') ?: $account->appsNeeded ?: '0' }}" />
-                @if ($errors->has('appsNeeded'))
-                    <span class="help-block"><strong>{{ $errors->first('appsNeeded') }}</strong></span>
-                @endif
-            </div>
-        </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group{{ $errors->has('physicianHoursPerMonth') ? ' has-error' : '' }}">
-                <label for="physicianHoursPerMonth">@lang('No. of hours for Physicians per month')</label>
-                <input type="number" class="form-control" id="physicianHoursPerMonth" name="physicianHoursPerMonth" min="0" value="{{ old('physicianHoursPerMonth') ?: $account->physicianHoursPerMonth ?: '0' }}" />
-                @if ($errors->has('physicianHoursPerMonth'))
-                    <span class="help-block"><strong>{{ $errors->first('physicianHoursPerMonth') }}</strong></span>
-                @endif
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group{{ $errors->has('appHoursPerMonth') ? ' has-error' : '' }}">
-                <label for="appHoursPerMonth">@lang('No. of hours for APP per month')</label>
-                <input type="number" class="form-control" id="appHoursPerMonth" name="appHoursPerMonth" min="0" value="{{ old('appHoursPerMonth') ?: $account->appHoursPerMonth ?: '0' }}" />
-                @if ($errors->has('appHoursPerMonth'))
-                    <span class="help-block"><strong>{{ $errors->first('appHoursPerMonth') }}</strong></span>
-                @endif
-            </div>
-        </div>
-    </div>
+    @endif --}}
     
     @if ($action == 'edit')
         <div id="physicianAppsChangeConfirmation" style="display: none;" class="row">
@@ -654,26 +614,26 @@
 @push('scripts')
     <script>
         @if ($action == 'edit')
-            $(document).ready(function () {
-                promptForNotesAndDateIfDifferent();
-                $('#physiciansNeeded, #appsNeeded, #physicianHoursPerMonth, #appHoursPerMonth').on('input', promptForNotesAndDateIfDifferent);
-            });
+            // $(document).ready(function () {
+            //     promptForNotesAndDateIfDifferent();
+            //     $('#physiciansNeeded, #appsNeeded, #physicianHoursPerMonth, #appHoursPerMonth').on('input', promptForNotesAndDateIfDifferent);
+            // });
 
-            function promptForNotesAndDateIfDifferent() {
-                var account = BackendVars.account;
-                if (
-                    $('#physiciansNeeded').val() != account.physiciansNeeded ||
-                    $('#appsNeeded').val() != account.appsNeeded ||
-                    $('#physicianHoursPerMonth').val() != account.physicianHoursPerMonth ||
-                    $('#appHoursPerMonth').val() != account.appHoursPerMonth
-                ) {
-                    $('#physicianAppsChangeConfirmation').show();
-                    $('#physicianAppsChangeDate, #physicianAppsChangeReason').prop('required', true);
-                } else {
-                    $('#physicianAppsChangeConfirmation').hide();
-                    $('#physicianAppsChangeDate, #physicianAppsChangeReason').prop('required', false);
-                }
-            }
+            // function promptForNotesAndDateIfDifferent() {
+            //     var account = BackendVars.account;
+            //     if (
+            //         $('#physiciansNeeded').val() != account.physiciansNeeded ||
+            //         $('#appsNeeded').val() != account.appsNeeded ||
+            //         $('#physicianHoursPerMonth').val() != account.physicianHoursPerMonth ||
+            //         $('#appHoursPerMonth').val() != account.appHoursPerMonth
+            //     ) {
+            //         $('#physicianAppsChangeConfirmation').show();
+            //         $('#physicianAppsChangeDate, #physicianAppsChangeReason').prop('required', true);
+            //     } else {
+            //         $('#physicianAppsChangeConfirmation').hide();
+            //         $('#physicianAppsChangeDate, #physicianAppsChangeReason').prop('required', false);
+            //     }
+            // }
         @endif
 
         function initAutocomplete() {

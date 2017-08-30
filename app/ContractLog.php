@@ -29,6 +29,8 @@ class ContractLog extends Model
         'lastUpdated'
     ];
 
+    protected $dateFormat = 'Y-m-d H:i:s+';
+
     /**
      * Get the Account for the ContractLog.
      *

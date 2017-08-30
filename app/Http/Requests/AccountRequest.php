@@ -41,10 +41,6 @@ class AccountRequest extends FormRequest
             'longitude' => 'between:-180,180',
             'startDate' => 'nullable|date_format:"Y-m-d"',
             'endDate' => 'nullable|date_format:"Y-m-d"',
-            'physiciansNeeded' => 'integer|min:0',
-            'appsNeeded' => 'integer|min:0',
-            'physicianHoursPerMonth' => 'integer|min:0',
-            'appHoursPerMonth' => 'integer|min:0',
             'accountDescription' => '',
             'pressRelease' => 'boolean',
             'pressReleaseDate' => 'nullable|date_format:"Y-m-d"',
@@ -107,10 +103,6 @@ class AccountRequest extends FormRequest
         $account->longitude = $this->longitude;
         $account->startDate = $this->startDate ? $this->startDate: null;
         $account->endDate = $this->endDate ? $this->endDate: null;
-        $account->physiciansNeeded = $this->physiciansNeeded;
-        $account->appsNeeded = $this->appsNeeded;
-        $account->physicianHoursPerMonth = $this->physicianHoursPerMonth;
-        $account->appHoursPerMonth = $this->appHoursPerMonth;
         $account->accountDescription = $this->accountDescription;
         $account->pressRelease = $this->pressRelease ?: false;
         $account->pressReleaseDate = $this->pressReleaseDate;
