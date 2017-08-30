@@ -1367,7 +1367,7 @@
                     };
 
                     if (this.fullTimeHoursPhys == 0) return 0;
-                    var result = this.staffPhysicianOpenings / this.fullTimeHoursPhys;
+                    var result = this.staffPhysicianFTENeeds - this.staffPhysicianFTEHaves;
                     
                     return this.roundStep(result, 0.5);
                 },
@@ -1377,7 +1377,7 @@
                         return this.staffAppsFTENeeds - this.staffAppsFTEHaves;
                     };
                     if (this.fullTimeHoursApps == 0) return 0;
-                    var result = this.staffAppsOpenings / this.fullTimeHoursApps;
+                    var result = this.staffAppsFTENeeds - this.staffAppsFTEHaves;
                     
                     return this.roundStep(result, 0.5);
                 },
