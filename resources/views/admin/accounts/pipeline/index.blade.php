@@ -1262,11 +1262,39 @@
 
             computed: {
                 staffPhysicianHaves: function () {
-                    return this.pipeline.practiceTime == 'hours' ? _(this.activeRosterPhysicians).sumBy('hours') : this.activeRosterPhysicians.length;
+                    var result = 0;
+
+                    if(this.pipeline.practiceTime == 'hours') {
+                        return _(this.activeRosterPhysicians).sumBy('hours')
+                    } else {
+                        $.each(this.activeRosterPhysicians, function(index, roster) {
+                            if (roster.contract == 'ft' || roster.contract == 'emb') {
+                                result += 1;
+                            } else {
+                                result += 0.5;
+                            }
+                        });
+
+                        return result;
+                    }
                 },
 
                 staffAppsHaves: function () {
-                    return this.pipeline.practiceTime == 'hours' ? _(this.activeRosterApps).sumBy('hours') : this.activeRosterApps.length;
+                    var result = 0;
+
+                    if(this.pipeline.practiceTime == 'hours') {
+                        return _(this.activeRosterApps).sumBy('hours') 
+                    } else {
+                        $.each(this.activeRosterApps, function(index, roster) {
+                            if (roster.contract == 'ft' || roster.contract == 'emb') {
+                                result += 1;
+                            } else {
+                                result += 0.5;
+                            }
+                        });
+                        
+                        return result;
+                    }
                 },
 
                 staffPhysicianOpenings: function () {
