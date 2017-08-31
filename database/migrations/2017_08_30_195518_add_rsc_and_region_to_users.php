@@ -14,9 +14,6 @@ class AddRscAndRegionToUsers extends Migration
     public function up()
     {
         Schema::table('tUser', function (Blueprint $table) {
-            $table->integer('RSCId')->unsigned()->nullable();
-
-            $table->integer('operatingUnitId')->unsigned()->nullable();
         });
     }
 
