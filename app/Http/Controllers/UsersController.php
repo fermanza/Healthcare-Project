@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Role;
 use App\User;
 use App\Employee;
+use App\RSC;
+use App\Region;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 
@@ -123,8 +125,10 @@ class UsersController extends Controller
         $employees = Employee::with('person')
             ->where('active', true)
             ->get()->sortBy->fullName();
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
+        $regions = Region::where('active', true)->orderBy('name')->get();
 
-        $params = compact('user', 'roles', 'employees', 'action');
+        $params = compact('user', 'roles', 'employees', 'RSCs', 'regions', 'action');
 
         return view($view, $params);
     }

@@ -31,7 +31,9 @@ return [
         'contract_coordinator' => 7,
         'svp' => 8,
         'rmd' => 9,
-        'other' => 10
+        'other' => 10,
+        'credentialer' => 11,
+        'VP of Operations' => 12
     ],
 
 ];

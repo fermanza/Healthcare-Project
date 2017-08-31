@@ -144,6 +144,7 @@ class AccountsController extends Controller
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
         $recruiters =  $employees->filter->hasPosition(config('instances.position_types.recruiter'));
         $managers =  $employees->filter->hasPosition(config('instances.position_types.manager'));
+        $credentialers = $employees->filter->hasPosition(config('instances.position_types.credentialer'));
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
@@ -151,7 +152,7 @@ class AccountsController extends Controller
         $states = StateAbbreviation::all();
 
         $params = compact('account', 'recruiters', 'managers', 'practices', 
-            'divisions', 'RSCs', 'regions', 'action', 'states'
+            'divisions', 'RSCs', 'regions', 'action', 'states', 'credentialers'
         );
 
         return view($view, $params);

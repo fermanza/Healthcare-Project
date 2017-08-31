@@ -71,6 +71,17 @@ class Account extends Model
     }
 
     /**
+     * Get the Credentialer (AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function credentialer()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.credentialer'));
+    }
+
+    /**
      * Get the DCA role ((AccountEmployee) for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

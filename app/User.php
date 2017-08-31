@@ -47,6 +47,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the RSC for the User.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function RSC()
+    {
+        return $this->belongsTo(RSC::class, 'RSCId');
+    }
+
+    /**
+     * Get the operatingUnit for the User.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function operatingUnit()
+    {
+        return $this->belongsTo(Region::class, 'operatingUnitId');
+    }
+
+    /**
      * Check if user has a permission by its name.
      *
      * @param  string|array  $permission Permission string or array of permissions.

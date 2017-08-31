@@ -112,6 +112,20 @@
                 @endif
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('credentialerId') ? ' has-error' : '' }}">
+                <label for="credentialerId">@lang('Credentialer')</label>
+                <select class="form-control select2" id="credentialerId" name="credentialerId">
+                    <option value="" disabled selected></option>
+                    @foreach ($credentialers as $credentialer)
+                        <option value="{{ $credentialer->id }}" {{ (old('credentialerId') == $credentialer->id ?: ($account->credentialer && $account->credentialer->employeeId == $credentialer->id)) ? 'selected': '' }}>{{ $credentialer->fullName() }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('credentialerId'))
+                    <span class="help-block"><strong>{{ $errors->first('credentialerId') }}</strong></span>
+                @endif
+            </div>
+        </div>
     </div>
 
     <div class="row">
