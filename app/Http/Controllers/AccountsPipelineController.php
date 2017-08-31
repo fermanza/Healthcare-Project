@@ -664,10 +664,10 @@ class AccountsPipelineController extends Controller
                     $cell->setValue('');
                 });
                 $sheet->cell('I14', function($cell) use ($account) {
-                    $cell->setValue('Physician Opens');
+                    $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
                 });
                 $sheet->cell('I15', function($cell) use ($account) {
-                    $cell->setValue('APP Opens');
+                    $cell->setValue($account->pipeline->staffAppsFTEOpenings);
                 });
                 ///////// Team Members //////////
 
