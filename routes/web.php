@@ -46,7 +46,8 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
 
     $router->get('accounts/{account}/pipeline', 'AccountsPipelineController@index')->name('accounts.pipeline.index');
     $router->patch('accounts/{account}/pipeline', 'AccountsPipelineController@update')->name('accounts.pipeline.update');
-    $router->get('accounts/{account}/pipeline/export', 'AccountsPipelineController@export')->name('accounts.pipeline.export');
+    $router->get('accounts/{account}/pipeline/export/word', 'AccountsPipelineController@exportWord')->name('accounts.pipeline.export.word');
+    $router->get('accounts/{account}/pipeline/export/excel', 'AccountsPipelineController@exportExcel')->name('accounts.pipeline.export.excel');
 
     $router->post('accounts/{account}/pipeline/rosterBench', 'PipelineRosterBenchController@store')->name('accounts.pipeline.rosterBench.store');
     $router->patch('accounts/{account}/pipeline/rosterBench/{rosterBench}', 'PipelineRosterBenchController@update')->name('accounts.pipeline.rosterBench.update');

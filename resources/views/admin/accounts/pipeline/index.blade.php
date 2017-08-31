@@ -18,9 +18,15 @@
         <i class="fa fa-print"></i>
         @lang('Print')
     </a>
-    @permission('admin.accounts.pipeline.export')
-        <a href="{{ route('admin.accounts.pipeline.export', [$account]) }}" type="submit" class="btn btn-sm btn-info">
+    @permission('admin.accounts.pipeline.export.word')
+        <a href="{{ route('admin.accounts.pipeline.export.word', [$account]) }}" type="submit" class="btn btn-sm btn-info">
             <i class="fa fa-file-word-o"></i>
+            @lang('Export')
+        </a>
+    @endpermission
+    @permission('admin.accounts.pipeline.export.excel')
+        <a href="{{ route('admin.accounts.pipeline.export.excel', [$account]) }}" type="submit" class="btn btn-sm btn-info">
+            <i class="fa fa-file-excel-o"></i>
             @lang('Export')
         </a>
     @endpermission

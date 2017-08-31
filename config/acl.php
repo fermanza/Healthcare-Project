@@ -63,7 +63,8 @@ return [
         'admin.accounts.pipeline.locum.decline' => 'Account Summary Locum Decline Action',
         'admin.accounts.pipeline.locum.destroy' => 'Account Summary Delete Locum',
         'admin.accounts.pipeline.locum.swtich' => 'Account Summary Switch Locum To RosterBench',
-        'admin.accounts.pipeline.export' => 'Export Account Summary',
+        'admin.accounts.pipeline.export.word' => 'Export Account Summary To Word',
+        'admin.accounts.pipeline.export.excel' => 'Export Account Summary To Excel',
     ],
 
     'Files' => [

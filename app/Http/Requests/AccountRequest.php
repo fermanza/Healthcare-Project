@@ -24,6 +24,7 @@ class AccountRequest extends FormRequest
             'siteCode' => 'required|numeric',
             'photoPath' => '',
             'recruiterId' => 'exists:tEmployee,id',
+            'credentialerId' => 'exists:tEmployee,id',
             'recruiters' => 'nullable|array|exists:tEmployee,id',
             'managerId' => 'exists:tEmployee,id',
             'practiceId' => 'exists:tPractice,id',
@@ -130,6 +131,10 @@ class AccountRequest extends FormRequest
             $this->associateRecruiter($account);
         }
 
+        if ($this->credentialerId) {
+            $this->associateCredentialer($account);
+        }
+
         $this->associateRecruiters($account);
 
         if ($this->managerId) {
@@ -175,6 +180,25 @@ class AccountRequest extends FormRequest
             'isPrimary' => true,
         ], [
             'employeeId' => $this->recruiterId,
+        ]);
+        AccountEmployee::reguard();
+    }
+
+    /**
+     * Associates a Credentialer to the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function associateCredentialer($account)
+    {
+        AccountEmployee::unguard();
+        AccountEmployee::updateOrCreate([
+            'accountId' => $account->id,
+            'positionTypeId' => config('instances.position_types.credentialer'),
+            'isPrimary' => true,
+        ], [
+            'employeeId' => $this->credentialerId,
         ]);
         AccountEmployee::reguard();
     }
