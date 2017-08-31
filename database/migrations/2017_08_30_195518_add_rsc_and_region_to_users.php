@@ -15,10 +15,8 @@ class AddRscAndRegionToUsers extends Migration
     {
         Schema::table('tUser', function (Blueprint $table) {
             $table->integer('RSCId')->unsigned()->nullable();
-            $table->foreign('RSCId')->references('id')->on('tRSC')->onDelete('cascade');
 
             $table->integer('operatingUnitId')->unsigned()->nullable();
-            $table->foreign('operatingUnitId')->references('id')->on('tOperatingUnit')->onDelete('cascade');
         });
     }
 
