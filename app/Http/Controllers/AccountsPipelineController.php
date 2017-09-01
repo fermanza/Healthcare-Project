@@ -1099,6 +1099,7 @@ class AccountsPipelineController extends Controller
                 }
 
                 $sheet->setHeight($heights);
+                $sheet->setHeight(array($rosterBenchRow => 3));
 
                 $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
                 $sheet->getStyle('H4:I14')->applyFromArray($tableStyle);
