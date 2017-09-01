@@ -448,30 +448,56 @@ class AccountsPipelineController extends Controller
 
         $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
-        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })->sortBy('name');
+        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+        ->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->sortBy('name');
 
         $activeRosterPhysicians = $activeRosterPhysicians->values();
 
         $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
-        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })->sortBy('name');
+        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+        ->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->sortBy('name');
 
         $benchPhysicians = $benchPhysicians->values();
 
         $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
-        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })->sortBy('name');
+        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+        ->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->sortBy('name');
 
         $activeRosterAPPs = $activeRosterAPPs->values();
 
         $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
-        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })->sortBy('name');
+        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+        ->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->sortBy('name');
 
         $benchAPPs = $benchAPPs->values();
 
-        Excel::create('Pipeline', function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs){
-            $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs){
+        $credentialers = $account->pipeline->rostersBenchs
+        ->reject(function($rosterBench) { 
+            return !is_null($rosterBench->resigned); 
+        })
+        ->reject(function($rosterBench){
+            return !$rosterBench->signedNotStarted;
+        })->sortBy('name');
+
+        $recruitings = $account->pipeline->recruitings
+        ->reject(function($rosterBench) { 
+            return !is_null($rosterBench->declined); 
+        })
+        ->sortBy('name');
+
+        Excel::create('Pipeline', function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings){
+            $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings){
                 $sheet->mergeCells('A1:I1');
                 $sheet->mergeCells('A2:E2');
                 $sheet->mergeCells('A4:B4');
@@ -533,11 +559,13 @@ class AccountsPipelineController extends Controller
                 $rosterBenchCount = 1;
 
                 if(count($activeRosterPhysicians) >= count($activeRosterAPPs)) {
-                    for ($i = 0; $i < count($activeRosterPhysicians); $i++) { 
+                    $countUntil = count($activeRosterPhysicians) < 15 ? 15 : count($activeRosterPhysicians);
+
+                    for ($i = 0; $i < $countUntil; $i++) { 
                         $row = [
                             $rosterBenchCount,
-                            $activeRosterPhysicians[$i]->name,
-                            $activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '',
+                            isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
+                            isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
                             $rosterBenchCount,
                             isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]->name : '',
                             isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
@@ -549,14 +577,16 @@ class AccountsPipelineController extends Controller
                         $rosterBenchCount++;
                     }
                 } else {
-                    for ($i = 0; $i < count($activeRosterAPPs); $i++) { 
+                    $countUntil = count($activeRosterAPPs) < 15 ? 15 : count($activeRosterPhysicians);
+
+                    for ($i = 0; $i < count($countUntil); $i++) { 
                         $row = [
                             $rosterBenchCount,
                             isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
                             isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
                             $rosterBenchCount,
-                            $activeRosterAPPs[$i]->name,
-                            $activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : ''
+                            isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]->name : '',
+                            isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
                         ];
 
                         $sheet->row($rosterBenchRow, $row);
@@ -741,7 +771,7 @@ class AccountsPipelineController extends Controller
 
                 $sheet->mergeCells('A'.$recruitingTableStart.':F'.$recruitingTableStart);
                 $sheet->mergeCells('G'.$recruitingTableStart.':H'.$recruitingTableStart);
-                $sheet->mergeCells('D'.($recruitingTableStart+1).':I'.($recruitingTableStart+1));
+                $sheet->mergeCells('E'.($recruitingTableStart+1).':I'.($recruitingTableStart+1));
 
                 $sheet->cell('A'.$recruitingTableStart, function($cell) use ($account) {
                     $cell->setValue('Recruiting Pipeline');
@@ -778,14 +808,18 @@ class AccountsPipelineController extends Controller
                 });
 
                 $sheet->cell('C'.($recruitingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Stage');
+                    $cell->setValue('MD\APP');
                 });
 
                 $sheet->cell('D'.($recruitingTableStart+1), function($cell) use ($account) {
+                    $cell->setValue('Stage');
+                });
+
+                $sheet->cell('E'.($recruitingTableStart+1), function($cell) use ($account) {
                     $cell->setValue('Notes');
                 });
 
-                $sheet->cell('A'.($recruitingTableStart+1).':D'.($recruitingTableStart+1), function($cell) use ($account) {
+                $sheet->cell('A'.($recruitingTableStart+1).':E'.($recruitingTableStart+1), function($cell) use ($account) {
                     $cell->setBackground('#fff1ce');
                     $cell->setFontFamily('Calibri (Body)');
                     $cell->setFontSize(11);
@@ -795,12 +829,13 @@ class AccountsPipelineController extends Controller
 
                 $recruitingTableDataStart = $recruitingTableStart+2;
 
-                foreach ($account->pipeline->recruitings as $recruiting) {
-                    $sheet->mergeCells('D'.$recruitingTableDataStart.':I'.$recruitingTableDataStart);
+                foreach ($recruitings as $recruiting) {
+                    $sheet->mergeCells('E'.$recruitingTableDataStart.':I'.$recruitingTableDataStart);
 
                     $row = [
                         strtoupper($recruiting->contract),
                         $recruiting->name,
+                        strtoupper($recruiting->type),
                         '',
                         $recruiting->notes
                     ];
@@ -809,6 +844,13 @@ class AccountsPipelineController extends Controller
 
                     $recruitingTableDataStart++;
                 }
+
+                $sheet->cell('E'.($recruitingTableStart+2).':E'.($recruitingTableDataStart), function($cell) use ($account) {
+                    $cell->setFontFamily('Calibri (Body)');
+                    $cell->setFontSize(8);
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
+                });
                 /////// Recruiting Table /////////
 
                 ////// Credentialing Table ////////
@@ -817,7 +859,6 @@ class AccountsPipelineController extends Controller
                 $sheet->mergeCells('A'.$credentialingTableStart.':F'.$credentialingTableStart);
                 $sheet->mergeCells('G'.$credentialingTableStart.':H'.$credentialingTableStart);
                 $sheet->mergeCells('F'.($credentialingTableStart+1).':G'.($credentialingTableStart+1));
-                $sheet->mergeCells('H'.($credentialingTableStart+1).':I'.($credentialingTableStart+1));
 
                 $sheet->cell('A'.$credentialingTableStart, function($cell) use ($account) {
                     $cell->setValue('Credentialing Pipeline');
@@ -854,26 +895,30 @@ class AccountsPipelineController extends Controller
                 });
 
                 $sheet->cell('C'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Contract Received');
+                    $cell->setValue('MD\APP');
                 });
 
                 $sheet->cell('D'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('File to Credentialing');
+                    $cell->setValue('Contract Received');
                 });
 
                 $sheet->cell('E'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('APP to Hospital');
+                    $cell->setValue('File to Credentialing');
                 });
 
                 $sheet->cell('F'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Privilege Goal');
+                    $cell->setValue('APP to Hospital');
                 });
 
                 $sheet->cell('H'.($credentialingTableStart+1), function($cell) use ($account) {
+                    $cell->setValue('Privilege Goal');
+                });
+
+                $sheet->cell('I'.($credentialingTableStart+1), function($cell) use ($account) {
                     $cell->setValue('Notes');
                 });
 
-                $sheet->cell('A'.($credentialingTableStart+1).':H'.($credentialingTableStart+1), function($cell) use ($account) {
+                $sheet->cell('A'.($credentialingTableStart+1).':I'.($credentialingTableStart+1), function($cell) use ($account) {
                     $cell->setBackground('#fff1ce');
                     $cell->setFontFamily('Calibri (Body)');
                     $cell->setFontSize(11);
@@ -883,7 +928,31 @@ class AccountsPipelineController extends Controller
 
                 $credentialingTableDataStart = $credentialingTableStart+2;
 
-                $sheet->row($credentialingTableDataStart, ['','','','','','','']);
+                foreach ($credentialers as $credentialer) {
+                    $sheet->mergeCells('F'.$credentialingTableDataStart.':G'.$credentialingTableDataStart);
+
+                    $row = [
+                        strtoupper($credentialer->contract),
+                        $credentialer->name,
+                        strtoupper($credentialer->type),
+                        '',
+                        '',
+                        '',
+                        '',
+                        $credentialer->notes
+                    ];
+
+                    $sheet->row($credentialingTableDataStart, $row);
+
+                    $credentialingTableDataStart++;
+                }
+
+                $sheet->cell('I'.($credentialingTableStart+2).':I'.($credentialingTableDataStart), function($cell) use ($account) {
+                    $cell->setFontFamily('Calibri (Body)');
+                    $cell->setFontSize(8);
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
+                });
                 ////// Credentialing Recruiting Table ////////
 
                 ////// Requirements Table ////////
@@ -1011,21 +1080,29 @@ class AccountsPipelineController extends Controller
                     ),
                 );
 
+                $sheet->setAutoSize(true);
+
                 $sheet->setWidth(array(
                     'A'     => 12,
-                    'B'     => 15,
                     'C'     => 10,
                     'D'     => 12,
-                    'E'     => 10,
                     'F'     => 10,
                     'G'     => 1,
-                    'H'     => 13,
-                    'I'     => 17,
+                    'H'     => 14,
+                    'I'     => 18,
                 ));
 
-                $sheet->setHeight(array(
-                    $rosterBenchRow => 3
-                ));
+                $heights = array();
+
+                for($x = 1; $x <= ($requirementsTableStart+5); $x++) {
+                    if($x == $rosterBenchRow) {
+                        $heights[$x] = 3;
+                    } else {
+                        $heights[$x] = 25;
+                    }
+                }
+
+                $sheet->setHeight($heights);
 
                 $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
                 $sheet->getStyle('H4:I14')->applyFromArray($tableStyle);
@@ -1035,6 +1112,12 @@ class AccountsPipelineController extends Controller
                 $sheet->getStyle('A'.$recruitingTableStart.':I'.$recruitingTableDataStart)->applyFromArray($tableStyle);
                 $sheet->getStyle('A'.$credentialingTableStart.':I'.$credentialingTableDataStart)->applyFromArray($tableStyle);
                 $sheet->getStyle('A'.$requirementsTableStart.':I'.($requirementsTableStart+5))->applyFromArray($tableStyle);
+
+                $sheet->getStyle('D'.($credentialingTableStart+1))->getAlignment()->setWrapText(true);
+                $sheet->getStyle('E'.($credentialingTableStart+1))->getAlignment()->setWrapText(true);
+                $sheet->getStyle('F'.($credentialingTableStart+1))->getAlignment()->setWrapText(true);
+                $sheet->getStyle('E'.($recruitingTableStart+2).':I'.$recruitingTableDataStart)->getAlignment()->setWrapText(true);
+                $sheet->getStyle('I'.($credentialingTableStart+2).':I'.$credentialingTableDataStart)->getAlignment()->setWrapText(true);
             });
         })->download('xlsx'); 
     }

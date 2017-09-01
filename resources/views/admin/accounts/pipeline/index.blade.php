@@ -404,7 +404,7 @@
                                     <input type="text" class="form-control" v-model="rosterPhysician.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="rosterPhysician.highlight">
+                                    <input type="checkbox" v-model="rosterPhysician.signedNotStarted">
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -516,7 +516,7 @@
                                     <input type="text" class="form-control" v-model="rosterApps.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="rosterApps.highlight">
+                                    <input type="checkbox" v-model="rosterApps.signedNotStarted">
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -551,11 +551,12 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw100">@lang('Signed Not Started')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="bench in activeBenchPhysicians">
+                            <tr v-for="bench in activeBenchPhysicians" :class="{'highlight': bench.signedNotStarted}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td>@{{ moment(bench.interview) }}</td>
@@ -563,6 +564,7 @@
                                 <td>@{{ moment(bench.contractIn) }}</td>
                                 <td>@{{ moment(bench.firstShift) }}</td>
                                 <td>@{{ bench.notes }}</td>
+                                <td><input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -620,6 +622,9 @@
                                 <td>
                                     <input type="text" class="form-control" v-model="benchPhysician.notes" />
                                 </td>
+                                <td>
+                                    <input type="checkbox" v-model="benchPhysician.signedNotStarted">
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -648,11 +653,12 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw100">@lang('Signed Not Started')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="bench in activeBenchApps">
+                            <tr v-for="bench in activeBenchApps" :class="{'highlight': bench.signedNotStarted}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td>@{{ moment(bench.interview) }}</td>
@@ -660,6 +666,7 @@
                                 <td>@{{ moment(bench.contractIn) }}</td>
                                 <td>@{{ moment(bench.firstShift) }}</td>
                                 <td>@{{ bench.notes }}</td>
+                                <td><input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -716,6 +723,9 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="benchApps.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="benchApps.signedNotStarted">
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
