@@ -667,13 +667,13 @@ class AccountsPipelineController extends Controller
                 });
 
                 $sheet->cell('I5', function($cell) use ($account) {
-                    $cell->setValue($account->svp ? $account->svp->fullName() : '');
+                    $cell->setValue($account->pipeline->svp);
                 });
                 $sheet->cell('I6', function($cell) use ($account) {
-                    $cell->setValue($account->rmd ? $account->rmd->fullName() : '');
+                    $cell->setValue($account->pipeline->rmd);
                 });
                 $sheet->cell('I7', function($cell) use ($account) {
-                    $cell->setValue($account->dca ? $account->dca->fullName() : '');
+                    $cell->setValue($account->pipeline->dca);
                 });
                 $sheet->cell('I8', function($cell) use ($account) {
                     $cell->setValue('');
@@ -1094,12 +1094,8 @@ class AccountsPipelineController extends Controller
 
                 $heights = array();
 
-                for($x = 1; $x <= ($requirementsTableStart+5); $x++) {
-                    if($x == $rosterBenchRow) {
-                        $heights[$x] = 3;
-                    } else {
+                for($x = $recruitingTableStart; $x <= ($credentialingTableDataStart); $x++) {
                         $heights[$x] = 25;
-                    }
                 }
 
                 $sheet->setHeight($heights);

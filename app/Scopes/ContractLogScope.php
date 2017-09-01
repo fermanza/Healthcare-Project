@@ -23,41 +23,23 @@ class ContractLogScope implements Scope
         }
 
         if ($user->hasRoleId(config('instances.roles.manager'))) {
-            $builder->whereHas('accounts.manager', function ($query) use ($user) {
-                $query = $this->validate($query, $user, 'employeeId');
-            });
+            $builder = $this->validate($builder, $user, 'account.manager', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
-            $builder->whereHas('accounts.recruiter', function ($query) use ($user) {
-                $query = $this->validate($query, $user, 'employeeId');
-            });
+            $builder = $this->validate($builder, $user, 'account.recruiter', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
-            $builder->whereHas('accounts.coordinator', function ($query) use ($user) {
-                $query = $this->validate($query, $user, 'employeeId');
-            });
+            $builder = $this->validate($builder, $user, 'account.coordinator', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
-            $builder->whereHas('accounts.rsc', function ($query) use ($user) {
-                $query = $this->validate($query, $user, 'directorId');
-            });
-        }  else if ($user->hasRoleId(config('instances.roles.dca'))) {
-            $builder->whereHas('accounts.dca', function($query) use ($user) {
-                $query = $this->validate($query, $user, 'employeeId');
-            });
+            $builder = $this->validate($builder, $user, 'account.rsc', 'directorId');
+        } else if ($user->hasRoleId(config('instances.roles.dca'))) {
+            $builder = $this->validate($builder, $user, 'account.dca', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.svp'))) {
-            $builder->whereHas('accounts.svp', function($query) use ($user) {
-                $query = $this->validate($query, $user, 'employeeId');
-            });
+            $builder = $this->validate($builder, $user, 'account.svp', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.rmd'))) {
-            $builder->whereHas('accounts.rmd', function($query) use ($user) {
-                $query = $this->validate($query, $user, 'employeeId');
-            });
+            $builder = $this->validate($builder, $user, 'account.rmd', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other'))) {
-            $builder->whereHas('accounts.other', function($query) use ($user) {
-                $query = $this->validate($query, $user, 'employeeId');
-            });
+            $builder = $this->validate($builder, $user, 'account.other', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.credentialer'))) {
-            $builder->whereHas('account.credentialer', function($query) use ($user) {
-                $query = $this->validate($query, $user, 'employeeId');
-            });
+            $builder = $this->validate($builder, $user, 'account.credentialer', 'employeeId');
         }
 
         // if ($user->hasRoleId(config('instances.roles.director'))) {
@@ -68,29 +50,35 @@ class ContractLogScope implements Scope
         // }
     }
 
-    private function validate($query, $user, $role) {
+    private function validate($builder, $user, $role, $employeeType) {
         if ($user->RSCId && $user->operatingUnitId) {
-            $query->where($role, $user->employeeId)
-                ->where('RSCId', $user->RSCId)
+            $builder->where('RSCId', $user->RSCId)
                 ->where('operatingUnitId', $user->operatingUnitId)
-                ->whereNotNull($role)
                 ->whereNotNull('RSCId')
                 ->whereNotNull('operatingUnitId');
         } else if ($user->RSCId && !$user->operatingUnitId) {
-            $query->where($role, $user->employeeId)
-                ->where('RSCId', $user->RSCId)
-                ->whereNotNull($role)
+            $builder->where('RSCId', $user->RSCId)
                 ->whereNotNull('RSCId');
         } else if (!$user->RSCId && $user->operatingUnitId) {
-            $query->where($role, $user->employeeId)
-                ->where('operatingUnitId', $user->operatingUnitId)
-                ->whereNotNull($role)
+            $builder->where('operatingUnitId', $user->operatingUnitId)
                 ->whereNotNull('operatingUnitId');
         } else {
-            $query->where($role, $user->employeeId)
-                ->whereNotNull($role);
+            if($role == 'account.recruiter') {
+                $builder->whereHas($role, function ($query) use ($user, $employeeType) {
+                    $query->where($employeeType, $user->employeeId)
+                        ->whereNotNull($employeeType);
+                })->orWhereHas('account.recruiters', function($query) use ($user, $employeeType) {
+                    $query->where($employeeType, $user->employeeId)
+                        ->whereNotNull($employeeType);
+                });
+            } else {
+                $builder->whereHas($role, function ($query) use ($user, $employeeType) {
+                    $query->where($employeeType, $user->employeeId)
+                        ->whereNotNull($employeeType);
+                });
+            }
         }
 
-        return $query;
+        return $builder;
     }
 }
