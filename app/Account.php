@@ -115,6 +115,17 @@ class Account extends Model
     }
 
     /**
+     * Get the VP role ((AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function vp()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.vp_of_operations'));
+    }
+
+    /**
      * Get the Other role (AccountEmployee) for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

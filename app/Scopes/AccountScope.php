@@ -32,14 +32,14 @@ class AccountScope implements Scope
             $builder = $this->validate($builder, $user, 'rsc', 'directorId');
         } else if ($user->hasRoleId(config('instances.roles.dca'))) {
             $builder = $this->validate($builder, $user, 'dca', 'employeeId');
-        } else if ($user->hasRoleId(config('instances.roles.svp'))) {
-            $builder = $this->validate($builder, $user, 'svp', 'employeeId');
-        } else if ($user->hasRoleId(config('instances.roles.rmd'))) {
-            $builder = $this->validate($builder, $user, 'rmd', 'employeeId');
-        } else if ($user->hasRoleId(config('instances.roles.other'))) {
+        } else if ($user->hasRoleId(config('instances.roles.other_view'))) {
             $builder = $this->validate($builder, $user, 'other', 'employeeId');
-        } else if ($user->hasRoleId(config('instances.roles.credentialer'))) {
+        } else if ($user->hasRoleId(config('instances.roles.other_edit'))) {
+            $builder = $this->validate($builder, $user, 'other', 'employeeId');
+        }  else if ($user->hasRoleId(config('instances.roles.credentialer'))) {
             $builder = $this->validate($builder, $user, 'credentialer', 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.vp_of_operations'))) {
+            $builder = $this->validate($builder, $user, 'vp', 'employeeId');
         }
 
         // if ($user->hasRoleId(config('instances.roles.director'))) {

@@ -9,6 +9,10 @@ return [
         'contract_coordinator' => 4,
         'dca' => 5,
         'recruiter' => 6,
+        'other_view' => 7,
+        'other_edit' => 8,
+        'credentialer' => 11,
+        'vp_of_operations' => 12
     ],
     
     'file_feeds' => [
@@ -33,7 +37,7 @@ return [
         'rmd' => 9,
         'other' => 10,
         'credentialer' => 11,
-        'VP of Operations' => 12
+        'vp_of_operations' => 12
     ],
 
 ];
