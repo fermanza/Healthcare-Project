@@ -577,7 +577,7 @@ class AccountsPipelineController extends Controller
                         $rosterBenchCount++;
                     }
                 } else {
-                    $countUntil = count($activeRosterAPPs) < 15 ? 15 : count($activeRosterPhysicians);
+                    $countUntil = count($activeRosterAPPs) < 15 ? 15 : count($activeRosterAPPs);
 
                     for ($i = 0; $i < count($countUntil); $i++) { 
                         $row = [
