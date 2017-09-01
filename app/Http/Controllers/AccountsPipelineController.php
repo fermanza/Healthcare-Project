@@ -579,7 +579,7 @@ class AccountsPipelineController extends Controller
                 } else {
                     $countUntil = count($activeRosterAPPs) < 15 ? 15 : count($activeRosterAPPs);
 
-                    for ($i = 0; $i < count($countUntil); $i++) { 
+                    for ($i = 0; $i < $countUntil; $i++) { 
                         $row = [
                             $rosterBenchCount,
                             isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
