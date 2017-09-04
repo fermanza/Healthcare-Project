@@ -158,30 +158,32 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->firstShift = $request->firstShift;
         $rosterBench->isSMD = $request->isSMD ? 1 : 0;
         $rosterBench->isAMD = $request->isAMD ? 1 : 0;
+        $rosterBench->isChief = $request->isChief;
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->notes = $request->notes;
         $rosterBench->contract = $request->contract;
-
-
 
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->contract = $request->contract;
 
         $rosterBench->place = $request->place;
-        if($request->type == 'SMD') {
-            $rosterBench->isSMD = $request->isSMD;
-        } else {
-            $rosterBench->isAMD = $request->isAMD;
-        }
 
         if($rosterBench->save()) {
-            if($request->type == 'SMD') {
+            if ($request->type == 'SMD') {
                 if($oldRoster = PipelineRosterBench::find($request->oldSMD)) {
                     $oldRoster->isSMD = 0;
                 }
-            } else {
+            }
+
+            if ($request->type == 'AMD') {
                 if($oldRoster = PipelineRosterBench::find($request->oldAMD)) {
                     $oldRoster->isAMD = 0;
+                }
+            }
+
+            if ($request->type == 'Chief') {
+                if($oldRoster = PipelineRosterBench::find($request->oldChief)) {
+                    $oldRoster->isChief = 0;
                 }
             }
 

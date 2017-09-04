@@ -57,7 +57,12 @@
                 <div class="row">
                     <div class="mb5 col-xs-offset-1 col-xs-5 col-sm-offset-0 col-sm-2 text-right">
                         <div class="form-group{{ $errors->has('medicalDirector') ? ' has-error' : '' }}">
-                            <label for="medicalDirector">@lang('Medical Director'):</label>
+                            <label v-if="activeRosterPhysicians.length > 0 || !oldChief.length" for="medicalDirector">
+                                @lang('Medical Director'):
+                            </label>
+                            <label v-if="activeRosterPhysicians.length == 0 && oldChief.length" for="medicalDirector">
+                                @lang('Chief'):
+                            </label>
                         </div>
                     </div>
                     <div class="mb5 col-xs-5 col-sm-2">
@@ -331,7 +336,10 @@
                                 <td>@{{ moment(roster.contractIn) }}</td>
                                 <td>@{{ moment(roster.firstShift) }}</td>
                                 <td>@{{ roster.notes }}</td>
-                                <td><input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)"></td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)">
+                                    <span class="hidden">@{{roster.signedNotStarted}}</span>
+                                </td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -427,6 +435,7 @@
                     <table class="table table-bordered datatable">
                         <thead class="bg-gray">
                             <tr>
+                                <th class="mw100">@lang('Chief')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
                                 <th class="mw60">@lang('FT/PT/EMB')</th>
@@ -441,6 +450,10 @@
                         </thead>
                         <tbody>
                             <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted}">
+                                <td>
+                                    <input type="checkbox" v-model="roster.isChief" @click="updateRosterBench(roster, 'Chief')">
+                                    <span class="hidden">@{{roster.isChief}}</span>
+                                </td>
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
                                 <td class="text-uppercase">@{{ roster.contract }}</td>
@@ -449,7 +462,10 @@
                                 <td>@{{ moment(roster.contractIn) }}</td>
                                 <td>@{{ moment(roster.firstShift) }}</td>
                                 <td>@{{ roster.notes }}</td>
-                                <td><input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)"></td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)">
+                                    <span class="hidden">@{{roster.signedNotStarted}}</span>
+                                </td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -486,6 +502,9 @@
                         </tbody>
                         <tfoot class="hidden-print">
                             <tr>
+                                <td>
+                                    <input type="text" class="form-control" v-model="rosterApps.isChief" />
+                                </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="rosterApps.name" required />
                                 </td>
@@ -564,7 +583,10 @@
                                 <td>@{{ moment(bench.contractIn) }}</td>
                                 <td>@{{ moment(bench.firstShift) }}</td>
                                 <td>@{{ bench.notes }}</td>
-                                <td><input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
+                                <td>
+                                    <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
+                                    <span class="hidden">@{{bench.signedNotStarted}}</span>
+                                </td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -666,7 +688,10 @@
                                 <td>@{{ moment(bench.contractIn) }}</td>
                                 <td>@{{ moment(bench.firstShift) }}</td>
                                 <td>@{{ bench.notes }}</td>
-                                <td><input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
+                                <td>
+                                    <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
+                                    <span class="hidden">@{{bench.signedNotStarted}}</span>
+                                </td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -1185,6 +1210,7 @@
 
                 oldSMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isSMD == 1 } ),
                 oldAMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isAMD == 1 } ),
+                oldChief: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isChief == 1 } ),
 
                 rosterPhysician: {
                     id: null,
@@ -1410,6 +1436,7 @@
                     return _.chain(this.pipeline.rostersBenchs)
                         .filter({ place: 'roster', activity: 'app' })
                         .reject('resigned')
+                        .orderBy(['isChief', 'name'], ['desc', 'asc'])
                         .value();
                 },
 
@@ -1650,8 +1677,27 @@
                             .then(function (response) {
 
                             }.bind(this));
-                    } else {
+                    } 
+
+                    if (type == 'AMD') {
                         roster.isAMD = !roster.isAMD;
+                    }
+
+                    if (type == 'Chief') {
+                        if (this.activeRosterPhysicians.length == 0) {
+                            if (roster.isChief) {
+                                this.isChief = true;
+                                this.pipeline.medicalDirector = roster.name;
+                            } else {
+                                this.isChief = false;
+                                this.pipeline.medicalDirector = '';
+                            }
+
+                            axios.patch('/admin/accounts/' + this.account.id + '/pipeline', this.pipeline)
+                            .then(function (response) {
+
+                            }.bind(this));
+                        }
                     }
 
                     roster.type = type;
@@ -1664,8 +1710,13 @@
                         this.oldAMD[0].isAMD = 0;
                     }
 
+                    if ( this.oldChief.length && type == 'Chief') {
+                        this.oldChief[0].isChief = 0;
+                    }
+
                     roster.oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
                     roster.oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
+                    roster.oldChief = this.oldChief.length ? this.oldChief[0].id : '';
 
                     axios.patch(endpoint, roster)
                         .then(function (response) {
@@ -1676,12 +1727,23 @@
                                 if(roster.isSMD) {
                                     this.oldSMD.push(roster);
                                 }
-                            } else {
+                            } 
+
+                            if (type == 'AMD') {
                                 this.oldAMD = [];
                                 roster.isAMD = response.data.isAMD;
                                 
                                 if(roster.isAMD){
                                     this.oldAMD.push(roster);
+                                }
+                            }
+
+                            if (type == 'Chief') {
+                                this.oldChief = [];
+                                roster.isChief = response.data.isChief;
+                                
+                                if(roster.isChief){
+                                    this.oldChief.push(roster);
                                 }
                             }
                         }.bind(this));
