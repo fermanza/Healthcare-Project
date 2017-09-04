@@ -16,4 +16,17 @@ class PipelineRosterBench extends Model
     protected $casts = [
         'hours' => 'double',
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'interview',
+        'contractIn',
+        'contractOut',
+        'firstShift',
+        'resigned',
+    ];
 }

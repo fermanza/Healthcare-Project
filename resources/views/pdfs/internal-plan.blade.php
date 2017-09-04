@@ -78,7 +78,7 @@
             @lang('Has a press release gone out announcing newstart, and if so when?')
         </td>
         <td width="220px">
-            {{ $account->pressReleaseDate ? $account->pressReleaseDate->format('Y-m-d') : '' }}
+            {{ $account->pressReleaseDate ? $account->pressReleaseDate->format('m/d/Y') : '' }}
         </td>
     </tr>
     <tr>

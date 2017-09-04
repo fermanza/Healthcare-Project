@@ -41,11 +41,11 @@ class AccountRequest extends FormRequest
             'country' => '',
             'latitude' => 'between:-90,90',
             'longitude' => 'between:-180,180',
-            'startDate' => 'nullable|date_format:"Y-m-d"',
-            'endDate' => 'nullable|date_format:"Y-m-d"',
+            'startDate' => 'nullable|date_format:"m/d/Y"',
+            'endDate' => 'nullable|date_format:"m/d/Y"',
             'accountDescription' => '',
             'pressRelease' => 'boolean',
-            'pressReleaseDate' => 'nullable|date_format:"Y-m-d"',
+            'pressReleaseDate' => 'nullable|date_format:"m/d/Y"',
             'managementChangeMailers' => 'boolean',
             'recruitingMailers' => 'boolean',
             'emailBlast' => 'boolean',
@@ -67,7 +67,7 @@ class AccountRequest extends FormRequest
             $methodRules = [];
         } else {
             $methodRules = [
-                'physicianAppsChangeDate' => ($this->physiciansOrAppsChanged() ? 'required|date_format:"Y-m-d"' : ''),
+                'physicianAppsChangeDate' => ($this->physiciansOrAppsChanged() ? 'required|date_format:"m/d/Y"' : ''),
                 'physicianAppsChangeReason' => ($this->physiciansOrAppsChanged() ? 'required' : ''),
             ];
         }

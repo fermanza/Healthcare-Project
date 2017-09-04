@@ -113,7 +113,7 @@
                 <div class="form-group{{ $errors->has('contractOutDate') ? ' has-error' : '' }}">
                     <label for="contractOutDate">@lang('Contract Out')</label>
                     <div class="input-group date datepicker">
-                        <input type="text" class="form-control" id="contractOutDate" name="contractOutDate" value="{{ old('contractOutDate') ?: ($contractLog->contractOutDate ? $contractLog->contractOutDate->format('Y-m-d') : '') }}" required />
+                        <input type="text" class="form-control" id="contractOutDate" name="contractOutDate" value="{{ old('contractOutDate') ?: ($contractLog->contractOutDate ? $contractLog->contractOutDate->format('m/d/Y') : '') }}" required />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                     @if ($errors->has('contractOutDate'))
@@ -126,7 +126,7 @@
                 <div class="form-group{{ $errors->has('contractInDate') ? ' has-error' : '' }}">
                     <label for="contractInDate">@lang('Contract In')</label>
                     <div class="input-group date datepicker">
-                        <input type="text" class="form-control" id="contractInDate" name="contractInDate" value="{{ old('contractInDate') ?: ($contractLog->contractInDate ? $contractLog->contractInDate->format('Y-m-d') : '') }}" />
+                        <input type="text" class="form-control" id="contractInDate" name="contractInDate" value="{{ old('contractInDate') ?: ($contractLog->contractInDate ? $contractLog->contractInDate->format('m/d/Y') : '') }}" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                     @if ($errors->has('contractInDate'))
@@ -139,7 +139,7 @@
                 <div class="form-group{{ $errors->has('counterSigDate') ? ' has-error' : '' }}">
                     <label for="counterSigDate">@lang('Counter Sig')</label>
                     <div class="input-group date datepicker">
-                        <input type="text" class="form-control" id="counterSigDate" name="counterSigDate" value="{{ old('counterSigDate') ?: ($contractLog->counterSigDate ? $contractLog->counterSigDate->format('Y-m-d') : '') }}" />
+                        <input type="text" class="form-control" id="counterSigDate" name="counterSigDate" value="{{ old('counterSigDate') ?: ($contractLog->counterSigDate ? $contractLog->counterSigDate->format('m/d/Y') : '') }}" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                     @if ($errors->has('counterSigDate'))
@@ -152,7 +152,7 @@
                 <div class="form-group{{ $errors->has('sentToQADate') ? ' has-error' : '' }}">
                     <label for="sentToQADate">@lang('Sent to Q/A')</label>
                     <div class="input-group date datepicker">
-                        <input type="text" class="form-control" id="sentToQADate" name="sentToQADate" value="{{ old('sentToQADate') ?: ($contractLog->sentToQADate ? $contractLog->sentToQADate->format('Y-m-d') : '') }}" />
+                        <input type="text" class="form-control" id="sentToQADate" name="sentToQADate" value="{{ old('sentToQADate') ?: ($contractLog->sentToQADate ? $contractLog->sentToQADate->format('m/d/Y') : '') }}" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                     @if ($errors->has('sentToQADate'))
@@ -165,7 +165,7 @@
                 <div class="form-group{{ $errors->has('sentToPayrollDate') ? ' has-error' : '' }}">
                     <label for="sentToPayrollDate">@lang('Sent to Payroll')</label>
                     <div class="input-group date datepicker">
-                        <input type="text" class="form-control" id="sentToPayrollDate" name="sentToPayrollDate" value="{{ old('sentToPayrollDate') ?: ($contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->format('Y-m-d') : '') }}" />
+                        <input type="text" class="form-control" id="sentToPayrollDate" name="sentToPayrollDate" value="{{ old('sentToPayrollDate') ?: ($contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->format('m/d/Y') : '') }}" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                     @if ($errors->has('sentToPayrollDate'))
@@ -178,7 +178,7 @@
                 <div class="form-group{{ $errors->has('projectedStartDate') ? ' has-error' : '' }}">
                     <label for="projectedStartDate">@lang('Projected Start Date')</label>
                     <div class="input-group date datepicker">
-                        <input type="text" class="form-control" id="projectedStartDate" name="projectedStartDate" value="{{ old('projectedStartDate') ?: ($contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('Y-m-d') : '') }}" required />
+                        <input type="text" class="form-control" id="projectedStartDate" name="projectedStartDate" value="{{ old('projectedStartDate') ?: ($contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '') }}" required />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                     @if ($errors->has('projectedStartDate'))
@@ -191,7 +191,7 @@
                 <div class="form-group{{ $errors->has('actualStartDate') ? ' has-error' : '' }}">
                     <label for="actualStartDate">@lang('Actual Start Date')</label>
                     <div class="input-group date datepicker">
-                        <input type="text" class="form-control" id="actualStartDate" name="actualStartDate" value="{{ old('actualStartDate') ?: ($contractLog->actualStartDate ? $contractLog->actualStartDate->format('Y-m-d') : '') }}" />
+                        <input type="text" class="form-control" id="actualStartDate" name="actualStartDate" value="{{ old('actualStartDate') ?: ($contractLog->actualStartDate ? $contractLog->actualStartDate->format('m/d/Y') : '') }}" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                     @if ($errors->has('actualStartDate'))

@@ -253,7 +253,7 @@
             <div class="form-group{{ $errors->has('startDate') ? ' has-error' : '' }}">
                 <label for="startDate">@lang('Start Date')</label>
                 <div class="input-group date datepicker">
-                    <input type="text" class="form-control" id="startDate" name="startDate" value="{{ old('startDate') ?: ($account->startDate ? $account->startDate->format('Y-m-d') : '') }}" />
+                    <input type="text" class="form-control" id="startDate" name="startDate" value="{{ old('startDate') ?: ($account->startDate ? $account->startDate->format('m/d/Y') : '') }}" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
                 @if ($errors->has('startDate'))
@@ -274,7 +274,7 @@
             <div class="form-group{{ $errors->has('endDate') ? ' has-error' : '' }}">
                 <label for="endDate">@lang('End Date')</label>
                 <div class="input-group date datepicker">
-                    <input type="text" class="form-control" id="endDate" name="endDate" value="{{ old('endDate') ?: ($account->endDate ? $account->endDate->format('Y-m-d') : '') }}" />
+                    <input type="text" class="form-control" id="endDate" name="endDate" value="{{ old('endDate') ?: ($account->endDate ? $account->endDate->format('m/d/Y') : '') }}" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
                 @if ($errors->has('endDate'))
@@ -363,7 +363,7 @@
             </div>
             <div class="col-md-3">
                 <div class="input-group date datepicker">
-                    <input type="text" class="form-control" name="pressReleaseDate" value="{{ old('pressReleaseDate') ?: ($account->pressReleaseDate ? $account->pressReleaseDate->format('Y-m-d') : '') }}" placeholder="When?" />
+                    <input type="text" class="form-control" name="pressReleaseDate" value="{{ old('pressReleaseDate') ?: ($account->pressReleaseDate ? $account->pressReleaseDate->format('m/d/Y') : '') }}" placeholder="When?" />
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                 </div>
             </div>

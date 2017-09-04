@@ -49,10 +49,10 @@ class PipelineRecruitingController extends Controller
                 Rule::in(config('pipeline.contract_types')),
             ],
             'name' => 'required',
-            'interview' => 'nullable|date_format:"Y-m-d"',
-            'contractOut' => 'nullable|date_format:"Y-m-d"',
-            'contractIn' => 'nullable|date_format:"Y-m-d"',
-            'firstShift' => 'nullable|date_format:"Y-m-d"',
+            'interview' => 'nullable|date_format:"m/d/Y"',
+            'contractOut' => 'nullable|date_format:"m/d/Y"',
+            'contractIn' => 'nullable|date_format:"m/d/Y"',
+            'firstShift' => 'nullable|date_format:"m/d/Y"',
             'notes' => '',
         ]);
 
@@ -120,10 +120,10 @@ class PipelineRecruitingController extends Controller
                 'nullable',
                 Rule::in(config('pipeline.contract_types')),
             ],
-            'interview' => 'nullable|date_format:"Y-m-d"',
-            'application' => 'nullable|date_format:"Y-m-d"',
-            'contractOut' => 'nullable|date_format:"Y-m-d"',
-            'declined' => 'required|date_format:"Y-m-d"',
+            'interview' => 'nullable|date_format:"m/d/Y"',
+            'application' => 'nullable|date_format:"m/d/Y"',
+            'contractOut' => 'nullable|date_format:"m/d/Y"',
+            'declined' => 'required|date_format:"m/d/Y"',
             'declinedReason' => 'required',
         ]);
 

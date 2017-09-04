@@ -46,10 +46,10 @@ class PipelineLocumController extends Controller
             ],
             'name' => 'required',
             'agency' => 'required',
-            'potentialStart' => 'nullable|date_format:"Y-m-d"',
+            'potentialStart' => 'nullable|date_format:"m/d/Y"',
             'credentialingNotes' => '',
             'shiftsOffered' => 'nullable|integer|min:0',
-            'startDate' => 'nullable|date_format:"Y-m-d"',
+            'startDate' => 'nullable|date_format:"m/d/Y"',
             'comments' => '',
         ]);
 
@@ -117,10 +117,10 @@ class PipelineLocumController extends Controller
                 'nullable',
                 Rule::in(config('pipeline.contract_types')),
             ],
-            'interview' => 'nullable|date_format:"Y-m-d"',
-            'application' => 'nullable|date_format:"Y-m-d"',
-            'contractOut' => 'nullable|date_format:"Y-m-d"',
-            'declined' => 'required|date_format:"Y-m-d"',
+            'interview' => 'nullable|date_format:"m/d/Y"',
+            'application' => 'nullable|date_format:"m/d/Y"',
+            'contractOut' => 'nullable|date_format:"m/d/Y"',
+            'declined' => 'required|date_format:"m/d/Y"',
             'declinedReason' => 'required',
         ]);
 

@@ -49,10 +49,10 @@ class PipelineRosterBenchController extends Controller
             ],
             'name' => 'required',
             'hours' => 'required|numeric|min:0',
-            'interview' => 'nullable|date_format:"Y-m-d"',
-            'contractOut' => 'nullable|date_format:"Y-m-d"',
-            'contractIn' => 'nullable|date_format:"Y-m-d"',
-            'firstShift' => 'nullable|date_format:"Y-m-d"',
+            'interview' => 'nullable|date_format:"m/d/Y"',
+            'contractOut' => 'nullable|date_format:"m/d/Y"',
+            'contractIn' => 'nullable|date_format:"m/d/Y"',
+            'firstShift' => 'nullable|date_format:"m/d/Y"',
             'notes' => 'nullable',
         ]);
 
@@ -147,10 +147,10 @@ class PipelineRosterBenchController extends Controller
             ],
             'name' => 'required',
             'hours' => 'required|numeric|min:0',
-            'interview' => 'nullable|date_format:"Y-m-d"',
-            'contractOut' => 'nullable|date_format:"Y-m-d"',
-            'contractIn' => 'nullable|date_format:"Y-m-d"',
-            'firstShift' => 'nullable|date_format:"Y-m-d"',
+            'interview' => 'nullable|date_format:"m/d/Y"',
+            'contractOut' => 'nullable|date_format:"m/d/Y"',
+            'contractIn' => 'nullable|date_format:"m/d/Y"',
+            'firstShift' => 'nullable|date_format:"m/d/Y"',
             'notes' => 'nullable',
         ]);
 
@@ -217,9 +217,9 @@ class PipelineRosterBenchController extends Controller
                 'nullable',
                 Rule::in(config('pipeline.recruiting_types')),
             ],
-            'resigned' => 'required|date_format:"Y-m-d"',
+            'resigned' => 'required|date_format:"m/d/Y"',
             'resignedReason' => 'required',
-            'lastShift' => 'required|date_format:"Y-m-d"',
+            'lastShift' => 'required|date_format:"m/d/Y"',
         ]);
 
         $rosterBench->type = $request->type;

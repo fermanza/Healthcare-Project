@@ -69,7 +69,7 @@ $(() => {
 
     // DateTime Picker
     $('.datetimepicker').datetimepicker({
-        format: 'yyyy-mm-dd hh:ii',
+        format: 'mm/dd/yyyy hh:ii',
         autoclose: true,
         todayHighlight: true
     }).on('changeDate', function () {
@@ -80,7 +80,7 @@ $(() => {
 
     // DatePicker
     $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'mm/dd/yyyy',
         autoclose: true,
         todayHighlight: true
     }).on('changeDate', function () {
@@ -105,10 +105,10 @@ $(() => {
             autoUpdateInput: false,
             autoApply: true,
             locale: {
-              format: 'YYYY-MM-DD',
+              format: 'MM/DD/YYYY',
             }
         }, function (startDate, endDate) {
-            el.val(startDate.format('YYYY-MM-DD') + ' - ' + endDate.format('YYYY-MM-DD'));
+            el.val(startDate.format('MM/DD/YYYY') + ' - ' + endDate.format('MM/DD/YYYY'));
         });
     });
 
