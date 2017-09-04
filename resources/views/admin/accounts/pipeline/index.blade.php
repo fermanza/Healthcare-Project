@@ -1850,6 +1850,30 @@
 
                     return null;
                 }
+            },
+
+            mounted: function () {
+                this.pipeline.staffPhysicianFTEHaves = this.staffPhysicianFTEHaves;
+                this.pipeline.staffPhysicianFTENeeds = this.staffPhysicianFTENeeds;
+                this.pipeline.staffPhysicianFTEOpenings = this.staffPhysicianFTEOpenings;
+                this.pipeline.staffPhysicianHaves = this.staffPhysicianHaves;
+                this.pipeline.staffPhysicianNeeds = this.staffPhysicianNeeds;
+                this.pipeline.staffPhysicianOpenings = this.staffPhysicianOpenings;
+
+                this.pipeline.staffAppsFTEHaves = this.staffAppsFTEHaves;
+                this.pipeline.staffAppsFTENeeds = this.staffAppsFTENeeds;
+                this.pipeline.staffAppsFTEOpenings = this.staffAppsFTEOpenings;
+                this.pipeline.staffAppsHaves = this.staffAppsHaves;
+                this.pipeline.staffAppsNeeds = this.staffAppsNeeds;
+                this.pipeline.staffAppsOpenings = this.staffAppsOpenings;
+
+                this.pipeline.fullTimeHoursPhys = this.fullTimeHoursPhys;
+                this.pipeline.fullTimeHoursApps = this.fullTimeHoursApps;
+
+                axios.patch('/admin/accounts/' + this.account.id + '/pipeline', this.pipeline)
+                .then(function (response) {
+
+                }.bind(this));
             }
         });
     </script>

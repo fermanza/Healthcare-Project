@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use JavaScript;
 use App\Account;
+use App\AccountSummary;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use PhpOffice\PhpWord\PhpWord;
@@ -500,10 +501,14 @@ class AccountsPipelineController extends Controller
         })
         ->sortBy('name');
 
+        $accountPrevMonthIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+
+        $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+
         $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
 
-        Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings){
-            $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings){
+        Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
+            $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
                 $sheet->mergeCells('A1:I1');
                 $sheet->mergeCells('A2:E2');
                 $sheet->mergeCells('A4:B4');
@@ -565,7 +570,7 @@ class AccountsPipelineController extends Controller
                 $rosterBenchCount = 1;
 
                 if(count($activeRosterPhysicians) >= count($activeRosterAPPs)) {
-                    $countUntil = count($activeRosterPhysicians) < 15 ? 15 : count($activeRosterPhysicians);
+                    $countUntil = count($activeRosterPhysicians) < 17 ? 17 : count($activeRosterPhysicians);
 
                     for ($i = 0; $i < $countUntil; $i++) { 
                         $row = [
@@ -583,7 +588,7 @@ class AccountsPipelineController extends Controller
                         $rosterBenchCount++;
                     }
                 } else {
-                    $countUntil = count($activeRosterAPPs) < 15 ? 15 : count($activeRosterAPPs);
+                    $countUntil = count($activeRosterAPPs) < 17 ? 17 : count($activeRosterAPPs);
 
                     for ($i = 0; $i < $countUntil; $i++) { 
                         $row = [
@@ -627,11 +632,11 @@ class AccountsPipelineController extends Controller
                     $cells->setBackground('#fff1ce');
                 });
 
-                $sheet->cells('H14:I15', function($cells) {
+                $sheet->cells('H14:I17', function($cells) {
                     $cells->setBackground('#b5c7e6');
                 });
 
-                $sheet->cells('H5:I15', function($cells) {
+                $sheet->cells('H5:I17', function($cells) {
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(11);
                     $cells->setAlignment('center');
@@ -671,6 +676,12 @@ class AccountsPipelineController extends Controller
                 $sheet->cell('H15', function($cell) use ($account) {
                     $cell->setValue('APP Opens');
                 });
+                $sheet->cell('H16', function($cell) use ($account) {
+                    $cell->setValue('Prev Month - Inc Comp');
+                });
+                $sheet->cell('H17', function($cell) use ($account) {
+                    $cell->setValue('YTD - Inc Comp');
+                });
 
                 $sheet->cell('I5', function($cell) use ($account) {
                     $cell->setValue($account->pipeline->svp);
@@ -704,6 +715,12 @@ class AccountsPipelineController extends Controller
                 });
                 $sheet->cell('I15', function($cell) use ($account) {
                     $cell->setValue($account->pipeline->staffAppsFTEOpenings);
+                });
+                $sheet->cell('I16', function($cell) use ($accountPrevMonthIncComp) {
+                    $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
+                });
+                $sheet->cell('I17', function($cell) use ($accountYTDIncComp) {
+                    $cell->setValue($accountYTDIncComp->{'YTD - Inc Comp'});
                 });
                 ///////// Team Members //////////
 
@@ -999,6 +1016,26 @@ class AccountsPipelineController extends Controller
                 $sheet->cell('A'.($requirementsTableStart+5), function($cell) use ($account) {
                     $cell->setValue('Other');
                 });
+
+                $sheet->cell('B'.($requirementsTableStart+1), function($cell) use ($account) {
+                    $cell->setValue($account->requirements);
+                });
+
+                $sheet->cell('B'.($requirementsTableStart+2), function($cell) use ($account) {
+                    $cell->setValue($account->fees);
+                });
+
+                $sheet->cell('B'.($requirementsTableStart+3), function($cell) use ($account) {
+                    $cell->setValue($account->applications);
+                });
+
+                $sheet->cell('B'.($requirementsTableStart+4), function($cell) use ($account) {
+                    $cell->setValue($account->meetings);
+                });
+
+                $sheet->cell('B'.($requirementsTableStart+5), function($cell) use ($account) {
+                    $cell->setValue($account->other);
+                });
                 ////// Requirements Table ////////
 
                 $sheet->cells('A4:F4', function($cells) {
@@ -1094,8 +1131,12 @@ class AccountsPipelineController extends Controller
                     'D'     => 12,
                     'F'     => 10,
                     'G'     => 1,
-                    'H'     => 14,
+                    'H'     => 18,
                     'I'     => 18,
+                ));
+
+                $sheet->setColumnFormat(array(
+                    'I16:I17' => '"$"#,##0.00_-',
                 ));
 
                 $heights = array();
@@ -1108,8 +1149,8 @@ class AccountsPipelineController extends Controller
                 $sheet->setHeight(array($rosterBenchRow => 3));
 
                 $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
-                $sheet->getStyle('H4:I14')->applyFromArray($tableStyle);
-                $sheet->getStyle('H15:I15')->applyFromArray($tableStyle);
+                $sheet->getStyle('H4:I13')->applyFromArray($tableStyle);
+                $sheet->getStyle('H14:I17')->applyFromArray($tableStyle);
                 $sheet->getStyle('A4:F'.($rosterBenchRow+1))->applyFromArray($tableStyle);
                 $sheet->getStyle('A'.$benchTableStart.':F'.($benchTableStartData))->applyFromArray($tableStyle);
                 $sheet->getStyle('A'.$recruitingTableStart.':I'.$recruitingTableDataStart)->applyFromArray($tableStyle);
