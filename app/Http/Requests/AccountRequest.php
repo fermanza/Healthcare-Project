@@ -125,6 +125,11 @@ class AccountRequest extends FormRequest
         $account->locumCompaniesNotified = $this->locumCompaniesNotified ?: false;
         $account->searchFirmsNotified = $this->searchFirmsNotified ?: false;
         $account->departmentsCoordinated = $this->departmentsCoordinated ?: false;
+        $account->requirements = $this->requirements;
+        $account->fees = $this->fees;
+        $account->applications = $this->applications;
+        $account->meetings = $this->meetings;
+        $account->other = $this->other;
         $account->save();
 
         if ($this->isCreate()) {

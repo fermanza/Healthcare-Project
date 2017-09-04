@@ -351,6 +351,56 @@
 
     <hr />
 
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('requirements') ? ' has-error' : '' }}">
+                <label for="requirements">@lang('Requirements')</label>
+                <input type="text" class="form-control" id="requirements" name="requirements" value="{{ old('requirements') ?: $account->requirements }}" />
+                @if ($errors->has('requirements'))
+                    <span class="help-block"><strong>{{ $errors->first('requirements') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('fees') ? ' has-error' : '' }}">
+                <label for="fees">@lang('Fees')</label>
+                <input type="text" class="form-control" id="fees" name="fees" value="{{ old('fees') ?: $account->fees }}" />
+                @if ($errors->has('fees'))
+                    <span class="help-block"><strong>{{ $errors->first('fees') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('applications') ? ' has-error' : '' }}">
+                <label for="applications">@lang('Applications')</label>
+                <input type="text" class="form-control" id="applications" name="applications" value="{{ old('applications') ?: $account->applications }}" />
+                @if ($errors->has('applications'))
+                    <span class="help-block"><strong>{{ $errors->first('applications') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('meetings') ? ' has-error' : '' }}">
+                <label for="meetings">@lang('Meetings')</label>
+                <input type="text" class="form-control" id="meetings" name="meetings" value="{{ old('meetings') ?: $account->meetings }}" />
+                @if ($errors->has('meetings'))
+                    <span class="help-block"><strong>{{ $errors->first('meetings') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('other') ? ' has-error' : '' }}">
+                <label for="other">@lang('Other')</label>
+                <input type="text" class="form-control" id="other" name="other" value="{{ old('other') ?: $account->other }}" />
+                @if ($errors->has('other'))
+                    <span class="help-block"><strong>{{ $errors->first('other') }}</strong></span>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
     <div class="internal-plan-checkboxes">
         <div class="row">
             <div class="col-md-6">
