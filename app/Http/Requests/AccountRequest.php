@@ -30,6 +30,7 @@ class AccountRequest extends FormRequest
             'practiceId' => 'exists:tPractice,id',
             'divisionId' => 'exists:tDivision,id',
             'RSCId' => 'exists:tRSC,id',
+            'systemAffiliationId' => 'exists:tSystemAffiliation,id',
             'operatingUnitId' => 'exists:tOperatingUnit,id',
             'googleAddress' => '',
             'street' => '',
@@ -59,6 +60,7 @@ class AccountRequest extends FormRequest
             'locumCompaniesNotified' => 'boolean',
             'searchFirmsNotified' => 'boolean',
             'departmentsCoordinated' => 'boolean',
+            'isIC' => 'boolean',
         ];
 
         if ($this->isCreate()) {
@@ -93,6 +95,8 @@ class AccountRequest extends FormRequest
         $account->divisionId = $this->divisionId;
         $account->RSCId = $this->RSCId;
         $account->operatingUnitId = $this->operatingUnitId;
+        $account->systemAffiliationId = $this->systemAffiliationId;
+        $account->isIC = $this->isIC ?: false;
         $account->googleAddress = $this->googleAddress;
         $account->street = $this->street;
         $account->number = $this->number;

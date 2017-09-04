@@ -1640,11 +1640,15 @@
                     if (type == 'SMD') {
                         roster.isSMD = !roster.isSMD;
 
-                        this.pipeline.medicalDirector = roster.name;
+                        if(roster.isSMD) {
+                            this.pipeline.medicalDirector = roster.name;
+                        } else {
+                            this.pipeline.medicalDirector = '';
+                        }
 
                         axios.patch('/admin/accounts/' + this.account.id + '/pipeline', this.pipeline)
                             .then(function (response) {
-                                
+
                             }.bind(this));
                     } else {
                         roster.isAMD = !roster.isAMD;

@@ -157,6 +157,31 @@
                 @endif
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('systemAffiliationId') ? ' has-error' : '' }}">
+                <label for="systemAffiliationId">@lang('System Affiliation')</label>
+                <select class="form-control select2" id="systemAffiliationId" name="systemAffiliationId">
+                    <option value="" disabled selected></option>
+                    @foreach ($affiliations as $affiliation)
+                        <option value="{{ $affiliation->id }}" {{ (old('systemAffiliationId') == $affiliation->id ?: $affiliation->id == $account->systemAffiliationId) ? 'selected': '' }}>{{ $affiliation->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('systemAffiliationId'))
+                    <span class="help-block"><strong>{{ $errors->first('systemAffiliationId') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('isIC') ? ' has-error' : '' }}">
+                <label for="isIC">@lang('IC')</label>
+                <div>
+                    <input type="checkbox" name="isIC" value="1" {{ $account->isIC ? 'checked' : '' }}>
+                </div>
+                @if ($errors->has('isIC'))
+                    <span class="help-block"><strong>{{ $errors->first('isIC') }}</strong></span>
+                @endif
+            </div>
+        </div>
     </div>
 
     <hr />

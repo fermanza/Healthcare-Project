@@ -161,6 +161,10 @@ class AccountsPipelineController extends Controller
 
         flash(__('Pipeline Updated.'));
 
+        if($request->expectsJson()) {
+            return $pipeline;
+        }
+
         return back();
     }
 

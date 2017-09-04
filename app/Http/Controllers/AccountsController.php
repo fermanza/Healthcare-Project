@@ -11,6 +11,7 @@ use App\Division;
 use App\Employee;
 use App\Practice;
 use App\StateAbbreviation;
+use App\SystemAffiliation;
 use App\Scopes\AccountScope;
 use App\Filters\AccountFilter;
 use Illuminate\Http\Request;
@@ -148,11 +149,13 @@ class AccountsController extends Controller
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
+        $affiliations = SystemAffiliation::orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $states = StateAbbreviation::all();
 
         $params = compact('account', 'recruiters', 'managers', 'practices', 
-            'divisions', 'RSCs', 'regions', 'action', 'states', 'credentialers'
+            'divisions', 'RSCs', 'regions', 'action', 'states', 'credentialers',
+            'affiliations'
         );
 
         return view($view, $params);
