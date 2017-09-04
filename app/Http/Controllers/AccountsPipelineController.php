@@ -496,7 +496,9 @@ class AccountsPipelineController extends Controller
         })
         ->sortBy('name');
 
-        Excel::create('Pipeline', function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings){
+        $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
+
+        Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings){
             $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings){
                 $sheet->mergeCells('A1:I1');
                 $sheet->mergeCells('A2:E2');
@@ -848,7 +850,7 @@ class AccountsPipelineController extends Controller
                 $sheet->cell('E'.($recruitingTableStart+2).':E'.($recruitingTableDataStart), function($cell) use ($account) {
                     $cell->setFontFamily('Calibri (Body)');
                     $cell->setFontSize(8);
-                    $cell->setAlignment('center');
+                    $cell->setAlignment('left');
                     $cell->setValignment('center');
                 });
                 /////// Recruiting Table /////////
@@ -950,7 +952,7 @@ class AccountsPipelineController extends Controller
                 $sheet->cell('I'.($credentialingTableStart+2).':I'.($credentialingTableDataStart), function($cell) use ($account) {
                     $cell->setFontFamily('Calibri (Body)');
                     $cell->setFontSize(8);
-                    $cell->setAlignment('center');
+                    $cell->setAlignment('left');
                     $cell->setValignment('center');
                 });
                 ////// Credentialing Recruiting Table ////////
@@ -1017,14 +1019,14 @@ class AccountsPipelineController extends Controller
                     $cells->setValignment('center');
                 });
 
-                $sheet->cells('A'.($recruitingTableStart+1).':F'.($recruitingTableDataStart), function($cells) {
+                $sheet->cells('A'.($recruitingTableStart+1).':D'.($recruitingTableDataStart), function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setAlignment('center');
                     $cells->setValignment('center');
                 });
 
-                $sheet->cells('A'.($credentialingTableStart+1).':F'.($credentialingTableDataStart), function($cells) {
+                $sheet->cells('A'.($credentialingTableStart+1).':H'.($credentialingTableDataStart), function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setAlignment('center');
