@@ -68,6 +68,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->firstShift = $request->firstShift;
         $rosterBench->isSMD = $request->isSMD ? 1 : 0;
         $rosterBench->isAMD = $request->isAMD ? 1 : 0;
+        $rosterBench->isChief = $request->isChief;
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->notes = $request->notes;
         $rosterBench->contract = $request->contract;
@@ -82,6 +83,12 @@ class PipelineRosterBenchController extends Controller
             if($request->isAMD && $request->oldAMD != '') {
                 $oldRoster = PipelineRosterBench::find($request->oldAMD);
                 $oldRoster->isAMD = 0;
+                $oldRoster->save();
+            }
+
+            if($request->isChief && $request->oldChief != '') {
+                $oldRoster = PipelineRosterBench::find($request->oldChief);
+                $oldRoster->isChief = 0;
                 $oldRoster->save();
             }
         }

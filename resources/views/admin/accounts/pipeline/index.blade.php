@@ -503,7 +503,7 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control" v-model="rosterApps.isChief" />
+                                    <input type="checkbox" v-model="rosterApps.isChief" />
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="rosterApps.name" required />
@@ -1491,6 +1491,14 @@
                         
                         if( this.oldAMD.length && this[entity].isAMD) {
                             this.oldAMD[0].isAMD = 0;
+                        }
+                    }
+
+                    if(entity == 'rosterApps') {
+                        this[entity].oldChief = this.oldChief.length ? this.oldChief[0].id : '';
+
+                        if( this.oldChief.length && this[entity].isChief) {
+                            this.oldChief[0].isChief = 0;
                         }
                     }
 
