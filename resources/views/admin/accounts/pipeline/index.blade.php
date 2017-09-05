@@ -1538,6 +1538,11 @@
                 },
 
                 editRosterBench: function (rosterBench, object) {
+                    rosterBench.interview = this.moment(rosterBench.interview);
+                    rosterBench.contractIn = this.moment(rosterBench.contractIn);
+                    rosterBench.contractOut = this.moment(rosterBench.contractOut);
+                    rosterBench.firstShift = this.moment(rosterBench.firstShift);
+
                     _.assignIn(this[object], rosterBench);
                 },
 
@@ -1623,6 +1628,13 @@
 
 
                 setDeclining: function (toDecline) {
+                    toDecline.interview = this.moment(toDecline.interview);
+                    toDecline.application = this.moment(toDecline.application);
+                    toDecline.contractOut = this.moment(toDecline.contractOut);
+                    toDecline.declined = this.moment(toDecline.declined);
+                    toDecline.contractIn = this.moment(toDecline.contractIn);
+                    toDecline.firstShift = this.moment(toDecline.firstShift);
+
                     this.declining = _.cloneDeep(toDecline);
                     this.toDecline = toDecline;
                 },
@@ -1646,6 +1658,11 @@
 
 
                 setResigning: function (toResign) {
+                    toResign.interview = this.moment(toResign.interview);
+                    toResign.contractIn = this.moment(toResign.contractIn);
+                    toResign.contractOut = this.moment(toResign.contractOut);
+                    toResign.firstShift = this.moment(toResign.firstShift);
+                    
                     this.resigning = _.cloneDeep(toResign);
                     this.toResign = toResign;
                 },

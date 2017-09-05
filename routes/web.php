@@ -36,6 +36,8 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->get('reports/summary', 'ReportsController@summary')->name('reports.summary.index');
     $router->get('reports/summary/excel', 'ReportsController@exportToExcel')->name('reports.summary.excel');
 
+    $router->resource('dashboards', 'DashboardsController');
+
     $router->post('accounts/image', 'AccountsController@image')->name('accounts.image');
     $router->patch('accounts/merge', 'AccountsController@merge')->name('accounts.merge');
     $router->patch('accounts/parent', 'AccountsController@parent')->name('accounts.parent');

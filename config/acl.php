@@ -77,6 +77,16 @@ return [
         'admin.files.destroy' => 'Delete File',
     ],
 
+    'Dashboards' => [
+        'admin.dashboards.index' => 'Dashboard List',
+        'admin.dashboards.create' => 'Dashboard Create View',
+        'admin.dashboards.store' => 'Dashboard Create Action',
+        'admin.dashboards.show' => 'View Dashboard',
+        'admin.dashboards.edit' => 'Dashboard Edit View',
+        'admin.dashboards.update' => 'Dashboard Edit Action',
+        'admin.dashboards.destroy' => 'Delete Dashboard',
+    ],
+
     'Operating Units' => [
         'admin.regions.index' => 'Operating Units List',
         'admin.regions.create' => 'Operating Unit Create View',

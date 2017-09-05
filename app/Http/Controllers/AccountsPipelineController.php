@@ -160,12 +160,11 @@ class AccountsPipelineController extends Controller
         $pipeline->staffAppsFTEOpenings = $request->staffAppsFTEOpenings;
         $pipeline->save();
 
-        flash(__('Pipeline Updated.'));
-
         if($request->expectsJson()) {
             return $pipeline;
         }
 
+        flash(__('Pipeline Updated.'));
         return back();
     }
 
