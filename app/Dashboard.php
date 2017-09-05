@@ -18,6 +18,6 @@ class Dashboard extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'tUserToDashboard', 'id', 'userId');
+        return $this->belongsToMany(User::class, 'tUserToDashboard', 'dashboardId', 'userId');
     }
 }

@@ -53,14 +53,14 @@
                         </a>
                     </li>
 
-                    {{-- @permission('admin.dashboards.index')
+                    @permission('admin.dashboards.index')
                         <li class="{{ route_starts_with('admin.dashboards') }}">
                             <a href="{{ route('admin.dashboards.index') }}">
                                 <i class="fa fa-link"></i>
                                 <span>@lang('Dashboards')</span>
                             </a>
                         </li>
-                    @endpermission --}}
+                    @endpermission
 
                     @permission(['admin.reports.summary.index'])
                         <li class="treeview {{ route_starts_with('admin.reports') }}">
@@ -81,6 +81,14 @@
                             </ul>
                         </li>
                     @endpermission
+
+                    @foreach(Auth::user()->dashboards as $dashboard)
+                        <li>
+                            <a href="{{ 'http://'.$dashboard->url }}" target="_blank">
+                                <i class="fa fa-external-link"></i> {{ $dashboard->name }}
+                            </a>
+                        </li>
+                    @endforeach
 
                     @permission('admin.users.index')
                         <li class="{{ route_starts_with('admin.users') }}">

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Database\Eloquent\Model;
+use App\DashboardUser;
 
 class DashboardRequest extends FormRequest
 {
@@ -16,6 +17,7 @@ class DashboardRequest extends FormRequest
         return [
             'name' => 'required',
             'url' => 'required',
+            'users' => 'nullable|array|exists:tUser,id',
         ];
     }
 
@@ -30,7 +32,9 @@ class DashboardRequest extends FormRequest
         $dashboard->name = $this->name;
         $dashboard->description = $this->description;
         $dashboard->url = $this->url;
-        
+
         $dashboard->save();
+
+        $dashboard->users()->sync($this->users ?: []);
     }
 }

@@ -105,4 +105,14 @@ class User extends Authenticatable
     {
         return $this->hasRoleId(config('instances.roles.super_admin'));
     }
+
+    /**
+     * Get the user's dashboards
+     *
+     * @return bool
+     */
+    public function dashboards()
+    {
+        return $this->belongsToMany(Dashboard::class, 'tUserToDashboard', 'userId', 'dashboardId');
+    }
 }

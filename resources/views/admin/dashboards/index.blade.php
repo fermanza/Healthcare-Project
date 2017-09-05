@@ -32,7 +32,7 @@
                         <td>{{ $dashboard->url }}</td>
                         <td class="text-center">
                             @permission('admin.dashboards.edit')
-                                <a href="{{ route('admin.dashboards.edit', [$file]) }}" class="btn btn-xs btn-primary">
+                                <a href="{{ route('admin.dashboards.edit', [$dashboard]) }}" class="btn btn-xs btn-primary">
                                     <i class="fa fa-pencil"></i>
                                 </a>
                             @endpermission
@@ -41,9 +41,8 @@
                                 <a 
                                     href="javascript:;"
                                     class="btn btn-xs btn-danger deletes-record"
-                                    data-action="{{ route('admin.dashboards.destroy', [$file]) }}"
-                                    data-record="{{ $file->fileLogId }}"
-                                    data-name="{{ $file->name }}"
+                                    data-action="{{ route('admin.dashboards.destroy', [$dashboard]) }}"
+                                    data-name="{{ $dashboard->name }}"
                                 >
                                     <i class="fa fa-trash"></i>
                                 </a>
