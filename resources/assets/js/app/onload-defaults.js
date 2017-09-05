@@ -32,10 +32,25 @@ $(() => {
                 [10, 25, 50, 100, 'All']
             ]
         };
+
+        window.defaultDTOptionsWithAll = {
+            bStateSave: true,
+            aLengthMenu: [
+                [10, 25, 50, 100, -1],
+                [10, 25, 50, 100, 'All']
+            ],
+            iDisplayLength: -1
+        };
         
         $('.datatable').each(function () {
             let options = $(this).data('datatable-config') || {};
             options = $.extend({}, defaultDTOptions, options);
+            $(this).dataTable(options);
+        });
+
+        $('.summary-datatable').each(function () {
+            let options = $(this).data('datatable-config') || {};
+            options = $.extend({}, defaultDTOptionsWithAll, options);
             $(this).dataTable(options);
         });
     })();

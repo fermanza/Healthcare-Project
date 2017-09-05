@@ -432,7 +432,7 @@
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered datatable">
+                    <table class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw100">@lang('Chief')</th>
@@ -560,7 +560,7 @@
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
                 <div class="table-responsive">
-                    <table class="table table-bordered datatable">
+                    <table class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -665,7 +665,7 @@
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered datatable">
+                    <table class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -774,7 +774,7 @@
             <h4 class="pipeline-green-title">@lang('Recruiting Pipeline')</h4>
             <form @submit.prevent="addRecruiting">
                 <div class="table-responsive">
-                    <table class="table table-bordered datatable">
+                    <table class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('MD/APP')</th>
@@ -889,7 +889,7 @@
             <h4 class="pipeline-green-title">@lang('Locums Pipeline')</h4>
             <form @submit.prevent="addLocum">
                 <div class="table-responsive">
-                    <table class="table table-bordered datatable">
+                    <table class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('MD/APP')</th>
@@ -1001,7 +1001,7 @@
         <div class="no-break-inside">
             <h4 class="pipeline-orange-title">@lang('Declined List')</h4>
             <div class="table-responsive">
-                <table class="table table-bordered datatable">
+                <table class="table table-bordered summary-datatable">
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw200">@lang('Name')</th>
@@ -1098,7 +1098,7 @@
         <div class="no-break-inside">
             <h4 class="pipeline-orange-title">@lang('Resigned List')</h4>
             <div class="table-responsive">
-                <table class="table table-bordered datatable">
+                <table class="table table-bordered summary-datatable">
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw60">@lang('MD/APP')</th>

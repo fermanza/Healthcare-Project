@@ -37,7 +37,11 @@ return [
         'rmd' => 9,
         'other' => 10,
         'credentialer' => 11,
-        'vp_of_operations' => 12
+        'vp_of_operations' => 12,
+        'dcs' => 13,
+        'scheduler' => 14,
+        'enrollment' => 15,
+        'payroll' => 16
     ],
 
 ];

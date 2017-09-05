@@ -693,7 +693,7 @@ class AccountsPipelineController extends Controller
                     $cell->setValue($account->pipeline->dca);
                 });
                 $sheet->cell('I8', function($cell) use ($account) {
-                    $cell->setValue('');
+                    $cell->setValue($account->dcs ? $account->dcs->fullName() : '');
                 });
                 $sheet->cell('I9', function($cell) use ($account) {
                     $cell->setValue($account->recruiter ? $account->recruiter->fullName() : '');
@@ -702,13 +702,13 @@ class AccountsPipelineController extends Controller
                     $cell->setValue($account->credentialer ? $account->credentialer->fullName() : '');
                 });
                 $sheet->cell('I11', function($cell) use ($account) {
-                    $cell->setValue('');
+                    $cell->setValue($account->scheduler ? $account->scheduler->fullName() : '');
                 });
                 $sheet->cell('I12', function($cell) use ($account) {
-                    $cell->setValue('');
+                    $cell->setValue($account->enrollment ? $account->enrollment->fullName() : '');
                 });
                 $sheet->cell('I13', function($cell) use ($account) {
-                    $cell->setValue('');
+                    $cell->setValue($account->payroll ? $account->payroll->fullName() : '');
                 });
                 $sheet->cell('I14', function($cell) use ($account) {
                     $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);

@@ -71,6 +71,39 @@ class Account extends Model
     }
 
     /**
+     * Get the Scheduler (AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function scheduler()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.scheduler'));
+    }
+
+    /**
+     * Get the Enrollment (AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function enrollment()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.enrollment'));
+    }
+
+    /**
+     * Get the Payroll (AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function payroll()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.payroll'));
+    }
+
+    /**
      * Get the Credentialer (AccountEmployee) for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -90,6 +123,17 @@ class Account extends Model
     {
         return $this->hasOne(AccountEmployee::class, 'accountId')
             ->where('positionTypeId', config('instances.position_types.dca'));
+    }
+
+    /**
+     * Get the DCS role ((AccountEmployee) for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function dcs()
+    {
+        return $this->hasOne(AccountEmployee::class, 'accountId')
+            ->where('positionTypeId', config('instances.position_types.dcs'));
     }
 
     /**

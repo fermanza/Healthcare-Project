@@ -130,6 +130,65 @@
 
     <div class="row">
         <div class="col-md-3">
+            <div class="form-group{{ $errors->has('DCSId') ? ' has-error' : '' }}">
+                <label for="DCSId">@lang('DCS')</label>
+                <select class="form-control select2" id="DCSId" name="DCSId">
+                    <option value="" disabled selected></option>
+                    @foreach ($dcss as $dcs)
+                        <option value="{{ $dcs->id }}" {{ (old('DCSId') == $dcs->id ?: ($account->dcs && $account->dcs->employeeId == $dcs->id)) ? 'selected': '' }}>{{ $dcs->fullName() }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('DCSId'))
+                    <span class="help-block"><strong>{{ $errors->first('DCSId') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('schedulerId') ? ' has-error' : '' }}">
+                <label for="schedulerId">@lang('Scheduler')</label>
+                <select class="form-control select2" id="schedulerId" name="schedulerId">
+                    <option value="" disabled selected></option>
+                    @foreach ($schedulers as $scheduler)
+                        <option value="{{ $scheduler->id }}" {{ (old('schedulerId') == $scheduler->id ?: ($account->scheduler && $account->scheduler->employeeId == $scheduler->id)) ? 'selected': '' }}>{{ $scheduler->fullName() }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('schedulerId'))
+                    <span class="help-block"><strong>{{ $errors->first('schedulerId') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('enrollmentId') ? ' has-error' : '' }}">
+                <label for="enrollmentId">@lang('Enrollment')</label>
+                <select class="form-control select2" id="enrollmentId" name="enrollmentId">
+                    <option value="" disabled selected></option>
+                    @foreach ($enrollments as $enrollment)
+                        <option value="{{ $enrollment->id }}" {{ (old('enrollmentId') == $enrollment->id ?: ($account->enrollment && $account->enrollment->employeeId == $enrollment->id)) ? 'selected': '' }}>{{ $enrollment->fullName() }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('enrollmentId'))
+                    <span class="help-block"><strong>{{ $errors->first('enrollmentId') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('payrollId') ? ' has-error' : '' }}">
+                <label for="payrollId">@lang('Payroll')</label>
+                <select class="form-control select2" id="payrollId" name="payrollId">
+                    <option value="" disabled selected></option>
+                    @foreach ($payrolls as $payroll)
+                        <option value="{{ $payroll->id }}" {{ (old('payrollId') == $payroll->id ?: ($account->payroll && $account->payroll->employeeId == $payroll->id)) ? 'selected': '' }}>{{ $payroll->fullName() }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('payrollId'))
+                    <span class="help-block"><strong>{{ $errors->first('payrollId') }}</strong></span>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
             <div class="form-group{{ $errors->has('RSCId') ? ' has-error' : '' }}">
                 <label for="RSCId">@lang('Regional Support Center')</label>
                 <select class="form-control select2" id="RSCId" name="RSCId">

@@ -25,6 +25,10 @@ class AccountRequest extends FormRequest
             'photoPath' => '',
             'recruiterId' => 'exists:tEmployee,id',
             'credentialerId' => 'exists:tEmployee,id',
+            'RSCId' => 'exists:tEmployee,id',
+            'schedulerId' => 'exists:tEmployee,id',
+            'enrollmentId' => 'exists:tEmployee,id',
+            'payrollId' => 'exists:tEmployee,id',
             'recruiters' => 'nullable|array|exists:tEmployee,id',
             'managerId' => 'exists:tEmployee,id',
             'practiceId' => 'exists:tPractice,id',
@@ -144,6 +148,22 @@ class AccountRequest extends FormRequest
             $this->associateCredentialer($account);
         }
 
+        if ($this->DCSId) {
+            $this->associateDCS($account);
+        }
+
+        if ($this->schedulerId) {
+            $this->associateScheduler($account);
+        }
+
+        if ($this->enrollmentId) {
+            $this->associateEnrollment($account);
+        }
+
+        if ($this->payrollId) {
+            $this->associatePayroll($account);
+        }
+
         $this->associateRecruiters($account);
 
         if ($this->managerId) {
@@ -208,6 +228,82 @@ class AccountRequest extends FormRequest
             'isPrimary' => true,
         ], [
             'employeeId' => $this->credentialerId,
+        ]);
+        AccountEmployee::reguard();
+    }
+
+    /**
+     * Associates a DCS to the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function associateDCS($account)
+    {
+        AccountEmployee::unguard();
+        AccountEmployee::updateOrCreate([
+            'accountId' => $account->id,
+            'positionTypeId' => config('instances.position_types.dcs'),
+            'isPrimary' => true,
+        ], [
+            'employeeId' => $this->DCSId,
+        ]);
+        AccountEmployee::reguard();
+    }
+
+    /**
+     * Associates a Scheduler to the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function associateScheduler($account)
+    {
+        AccountEmployee::unguard();
+        AccountEmployee::updateOrCreate([
+            'accountId' => $account->id,
+            'positionTypeId' => config('instances.position_types.scheduler'),
+            'isPrimary' => true,
+        ], [
+            'employeeId' => $this->schedulerId,
+        ]);
+        AccountEmployee::reguard();
+    }
+
+    /**
+     * Associates an Enrollment to the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function associateEnrollment($account)
+    {
+        AccountEmployee::unguard();
+        AccountEmployee::updateOrCreate([
+            'accountId' => $account->id,
+            'positionTypeId' => config('instances.position_types.enrollment'),
+            'isPrimary' => true,
+        ], [
+            'employeeId' => $this->enrollmentId,
+        ]);
+        AccountEmployee::reguard();
+    }
+
+    /**
+     * Associates a Payroll to the Account.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model  $account
+     * @return null
+     */
+    protected function associatePayroll($account)
+    {
+        AccountEmployee::unguard();
+        AccountEmployee::updateOrCreate([
+            'accountId' => $account->id,
+            'positionTypeId' => config('instances.position_types.payroll'),
+            'isPrimary' => true,
+        ], [
+            'employeeId' => $this->payrollId,
         ]);
         AccountEmployee::reguard();
     }

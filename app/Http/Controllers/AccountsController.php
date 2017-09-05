@@ -146,6 +146,10 @@ class AccountsController extends Controller
         $recruiters =  $employees->filter->hasPosition(config('instances.position_types.recruiter'));
         $managers =  $employees->filter->hasPosition(config('instances.position_types.manager'));
         $credentialers = $employees->filter->hasPosition(config('instances.position_types.credentialer'));
+        $dcss = $employees->filter->hasPosition(config('instances.position_types.dcs'));
+        $schedulers = $employees->filter->hasPosition(config('instances.position_types.scheduler'));
+        $enrollments = $employees->filter->hasPosition(config('instances.position_types.enrollment'));
+        $payrolls = $employees->filter->hasPosition(config('instances.position_types.payroll'));
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
@@ -155,7 +159,7 @@ class AccountsController extends Controller
 
         $params = compact('account', 'recruiters', 'managers', 'practices', 
             'divisions', 'RSCs', 'regions', 'action', 'states', 'credentialers',
-            'affiliations'
+            'dcss', 'schedulers', 'enrollments', 'payrolls', 'affiliations'
         );
 
         return view($view, $params);

@@ -194,7 +194,7 @@ class PipelineRosterBenchController extends Controller
                 }
             }
 
-            if($oldRoster){
+            if(isset($oldRoster)){
                 $oldRoster->save();
             }
         }
