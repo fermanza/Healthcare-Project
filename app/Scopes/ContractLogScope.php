@@ -52,16 +52,22 @@ class ContractLogScope implements Scope
 
     private function validate($builder, $user, $role, $employeeType) {
         if ($user->RSCId && $user->operatingUnitId) {
-            $builder->where('acccount.RSCId', $user->RSCId)
+            $builder->whereHas('account', function($query) use ($user) {
+                $query->where('account.RSCId', $user->RSCId)
                 ->where('account.operatingUnitId', $user->operatingUnitId)
                 ->whereNotNull('RSCId')
                 ->whereNotNull('operatingUnitId');
+            });
         } else if ($user->RSCId && !$user->operatingUnitId) {
-            $builder->where('account.RSCId', $user->RSCId)
+            $builder->whereHas('account', function($query) use ($user) {
+                $query->where('RSCId', $user->RSCId)
                 ->whereNotNull('RSCId');
+            });
         } else if (!$user->RSCId && $user->operatingUnitId) {
-            $builder->where('account.operatingUnitId', $user->operatingUnitId)
+            $builder->whereHas('account', function($query) use ($user) {
+                $query->where('operatingUnitId', $user->operatingUnitId)
                 ->whereNotNull('operatingUnitId');
+            });
         } else {
             if($role == 'account.recruiter') {
                 $builder->whereHas($role, function ($query) use ($user, $employeeType) {
