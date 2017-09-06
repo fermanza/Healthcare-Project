@@ -436,6 +436,9 @@
     <hr />
 
     <div class="row">
+        <div class="col-md-12">
+            <h3>Credentialing Account Requirements</h3>
+        </div>
         <div class="col-md-3">
             <div class="form-group{{ $errors->has('requirements') ? ' has-error' : '' }}">
                 <label for="requirements">@lang('Requirements')</label>
@@ -483,9 +486,7 @@
         </div>
     </div>
 
-    <hr />
-
-    <div class="internal-plan-checkboxes">
+    {{-- <div class="internal-plan-checkboxes">
         <div class="row">
             <div class="col-md-6">
                 <div class="checkbox icheck">
@@ -656,9 +657,9 @@
                 
             </div>
         </div>
-    </div>
+    </div> --}}
     
-    @if ($action == 'edit')
+    {{-- @if ($action == 'edit')
         <div class="row">
             <div class="col-md-12 text-center">
                 @permission('admin.accounts.internalPlan')
@@ -669,7 +670,7 @@
             </div>
         </div>
 
-       {{--  <hr />
+        <hr />
         
         <div class="row text-center">
             <div class="col-md-6">
@@ -680,8 +681,8 @@
             <div class="col-md-6">
                 <a href="javascript:;" class="btn btn-primary">@lang('Email Marketing Slick')</a>
             </div>
-        </div> --}}
-    @endif
+        </div>
+    @endif --}}
 
     <hr />
     

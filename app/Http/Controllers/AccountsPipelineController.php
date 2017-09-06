@@ -1060,7 +1060,7 @@ class AccountsPipelineController extends Controller
                 $sheet->mergeCells('B'.($requirementsTableStart+5).':I'.($requirementsTableStart+5));
 
                 $sheet->cell('A'.$requirementsTableStart, function($cell) use ($account) {
-                    $cell->setValue('Account Requirements');
+                    $cell->setValue('Credentialing Account Requirements');
                     $cell->setBackground('#b5c7e6');
                     $cell->setFontFamily('Calibri (Body)');
                     $cell->setFontSize(14);
