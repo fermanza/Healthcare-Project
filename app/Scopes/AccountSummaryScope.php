@@ -45,15 +45,15 @@ class AccountSummaryScope implements Scope
 
     private function validate($builder, $user, $role, $employeeType) {
         if ($user->RSCId && $user->operatingUnitId) {
-            $builder->where('RSCId', $user->RSCId)
-                ->where('operatingUnitId', $user->operatingUnitId)
+            $builder->where('account.RSCId', $user->RSCId)
+                ->where('account.operatingUnitId', $user->operatingUnitId)
                 ->whereNotNull('RSCId')
                 ->whereNotNull('operatingUnitId');
         } else if ($user->RSCId && !$user->operatingUnitId) {
-            $builder->where('RSCId', $user->RSCId)
+            $builder->where('account.RSCId', $user->RSCId)
                 ->whereNotNull('RSCId');
         } else if (!$user->RSCId && $user->operatingUnitId) {
-            $builder->where('operatingUnitId', $user->operatingUnitId)
+            $builder->where('account.operatingUnitId', $user->operatingUnitId)
                 ->whereNotNull('operatingUnitId');
         } else {
             if($role == 'account.recruiter') {
