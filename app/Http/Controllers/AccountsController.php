@@ -52,6 +52,9 @@ class AccountsController extends Controller
     public function create()
     {
         $account = new Account;
+        $account->hasSMD = 1;
+        $account->hasAMD = 1;
+        
         $action = 'create';
         $view = 'admin.accounts.create';
 

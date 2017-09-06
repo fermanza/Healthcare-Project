@@ -65,6 +65,8 @@ class AccountRequest extends FormRequest
             'searchFirmsNotified' => 'boolean',
             'departmentsCoordinated' => 'boolean',
             'isIC' => 'boolean',
+            'hasSMD' => 'boolean',
+            'hasAMD' => 'boolean',
         ];
 
         if ($this->isCreate()) {
@@ -101,6 +103,8 @@ class AccountRequest extends FormRequest
         $account->operatingUnitId = $this->operatingUnitId;
         $account->systemAffiliationId = $this->systemAffiliationId;
         $account->isIC = $this->isIC ?: false;
+        $account->hasSMD = $this->hasSMD ?: false;
+        $account->hasAMD = $this->hasAMD ?: false;
         $account->googleAddress = $this->googleAddress;
         $account->street = $this->street;
         $account->number = $this->number;

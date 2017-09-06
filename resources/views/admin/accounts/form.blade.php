@@ -243,6 +243,31 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('hasSMD') ? ' has-error' : '' }}">
+                <label for="hasSMD">@lang('Has SMD')</label>
+                <div>
+                    <input type="checkbox" name="hasSMD" value="1" {{ $account->hasSMD ? 'checked' : '' }}>
+                </div>
+                @if ($errors->has('hasSMD'))
+                    <span class="help-block"><strong>{{ $errors->first('hasSMD') }}</strong></span>
+                @endif
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('hasAMD') ? ' has-error' : '' }}">
+                <label for="hasAMD">@lang('Has AMD')</label>
+                <div>
+                    <input type="checkbox" name="hasAMD" value="1" {{ $account->hasAMD ? 'checked' : '' }}>
+                </div>
+                @if ($errors->has('hasAMD'))
+                    <span class="help-block"><strong>{{ $errors->first('hasAMD') }}</strong></span>
+                @endif
+            </div>
+        </div>
+    </div>
+
     <hr />
     
     <div class="row">

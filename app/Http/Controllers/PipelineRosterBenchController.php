@@ -74,6 +74,16 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contract = $request->contract;
 
         if($rosterBench->save()) {
+            if($rosterBench->isSMD) {
+                $account->hasSMD = 1;
+            }
+
+            if($rosterBench->isAMD) {
+                $account->hasAMD = 1;
+            }
+
+            $account->save();
+            
             if($request->isSMD && $request->oldSMD != '') {
                 $oldRoster = PipelineRosterBench::find($request->oldSMD);
                 $oldRoster->isSMD = 0;
@@ -176,6 +186,16 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->place = $request->place;
 
         if($rosterBench->save()) {
+            if($rosterBench->isSMD) {
+                $account->hasSMD = 1;
+            }
+
+            if($rosterBench->isAMD) {
+                $account->hasAMD = 1;
+            }
+
+            $account->save();
+
             if ($request->type == 'SMD') {
                 if($oldRoster = PipelineRosterBench::find($request->oldSMD)) {
                     $oldRoster->isSMD = 0;
