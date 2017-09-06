@@ -203,11 +203,11 @@ class AccountsPipelineController extends Controller
 
         // Creating the new document...
         $word = new \PhpOffice\PhpWord\PhpWord();
-        $documentName = 'Short Form.docx';
+        $documentName = $account->name.', '.$account->siteCode.'.docx';
 
-        $boldFontStyle = array('name' => 'Cambria(Body)', 'size' => 9, 'bold' => true);
-        $boldUnderlinedFontStyle = array('name' => 'Cambria(Body)', 'size' => 9, 'bold' => true, 'underline' => 'single');
-        $normalFontStyle = array('name' => 'Cambria(Body)', 'size' => 9);
+        $boldFontStyle = array('name' => 'Cambria(Body)', 'size' => 8, 'bold' => true);
+        $boldUnderlinedFontStyle = array('name' => 'Cambria(Body)', 'size' => 8, 'bold' => true, 'underline' => 'single');
+        $normalFontStyle = array('name' => 'Cambria(Body)', 'size' => 8);
         $paragraphCenterStyle = array('align' => 'center');
         $footerStyle = array('name' => 'ArialMT', 'size' => 8);
 
@@ -234,7 +234,7 @@ class AccountsPipelineController extends Controller
         );
 
         $section->addText(
-            '<w:br/><w:br/><w:br/>'.$account->name.' '.($account->practices->count() ? $account->practices->first()->name : '').'<w:br/>'.
+            '<w:br/>'.$account->name.' '.($account->practices->count() ? $account->practices->first()->name : '').'<w:br/>'.
             $account->city.','.$account->state.'<w:br/>'.
             Carbon::today()->format('F d, Y').'<w:br/>',
             $boldFontStyle,
@@ -251,6 +251,8 @@ class AccountsPipelineController extends Controller
             return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
         });
 
+        $currentRosterPhysicians = $currentRosterPhysicians->values();
+
         $currentBenchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->place == 'bench' && $rosterBench->activity == 'physician';
         })->reject(function($rosterBench){
@@ -259,11 +261,15 @@ class AccountsPipelineController extends Controller
             return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
         });
 
+        $currentBenchPhysicians = $currentBenchPhysicians->values();
+
         $locumsMD = $account->pipeline->locums->filter(function($locum) {
             return $locum->type == 'md';
         })->reject(function($locum){
             return $locum->declined;
         })->sortBy('name');
+
+        $locumsMD = $locumsMD->values();
 
         $currentRosterAPP = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->place == 'roster' && $rosterBench->activity == 'app';
@@ -271,17 +277,23 @@ class AccountsPipelineController extends Controller
             return $rosterBench->resigned;
         })->sortBy('name');
 
+        $currentRosterAPP = $currentRosterAPP->values();
+
         $currentBenchAPP = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->place == 'bench' && $rosterBench->activity == 'app';
         })->reject(function($rosterBench){
             return $rosterBench->resigned;
         })->sortBy('name');
 
+        $currentBenchAPP = $currentBenchAPP->values();
+
         $locumsAPP = $account->pipeline->locums->filter(function($locum) {
             return $locum->type == 'app';
         })->reject(function($locum){
             return $locum->declined;
         })->sortBy('name');
+
+        $locumsAPP = $locumsAPP->values();
 
         $futureRosters = $account->pipeline->rostersBenchs->filter(function($rosterBench) use ($today) {
             if($rosterBench->firstShift) {
@@ -291,6 +303,8 @@ class AccountsPipelineController extends Controller
             }
         });
 
+        $futureRosters = $futureRosters->values();
+
         $futureLocums = $account->pipeline->locums->filter(function($locum) use ($today) {
             if($locum->startDate) {
                 $startDate = Carbon::parse($locum->startDate);
@@ -298,57 +312,95 @@ class AccountsPipelineController extends Controller
                 return $startDate->gte($today);
             }
         });
+
+        $futureLocums = $futureLocums->values();
         /////// End of Elements for lists /////////
 
 
         /////// Lists ///////////
         $currentRosterPhysiciansList = '';
-        foreach ($currentRosterPhysicians as $rosterPhysician) {
+        foreach ($currentRosterPhysicians as $key => $rosterPhysician) {
             $currentRosterPhysiciansList.= $rosterPhysician->name.' '.
-            ($rosterPhysician->isAMD && $rosterPhysician->isSMD ? 'MD, SMD ' : ($rosterPhysician->isAMD ? 'AMD ' : ($rosterPhysician->isSMD ? 'SMD ' : ''))).'('.$rosterPhysician->hours.')<w:br/>';
+            ($rosterPhysician->isAMD && $rosterPhysician->isSMD ? 'MD, SMD ' : ($rosterPhysician->isAMD ? 'AMD ' : ($rosterPhysician->isSMD ? 'SMD ' : ''))).'('.$rosterPhysician->hours.')';
+
+            if($key != (count($currentRosterPhysicians)-1)) {
+                $currentRosterPhysiciansList.= '<w:br/>';
+            }
         }
 
         $currentBenchPhysiciansList = '';
-        foreach ($currentBenchPhysicians as $benchPhysician) {
+        foreach ($currentBenchPhysicians as $key => $benchPhysician) {
             $currentBenchPhysiciansList.= $benchPhysician->name.' '.
-            ($benchPhysician->isAMD && $benchPhysician->isSMD ? 'MD, SMD ' : ($benchPhysician->isAMD ? 'AMD ' : ($benchPhysician->isSMD ? 'SMD ' : ''))).'('.$benchPhysician->hours.')<w:br/>';
+            ($benchPhysician->isAMD && $benchPhysician->isSMD ? 'MD, SMD ' : ($benchPhysician->isAMD ? 'AMD ' : ($benchPhysician->isSMD ? 'SMD ' : ''))).'('.$benchPhysician->hours.')';
+
+            if($key != (count($currentBenchPhysicians)-1)) {
+                $currentBenchPhysiciansList.= '<w:br/>';
+            }
         }
 
         $locumsMDList = '';
-        foreach ($locumsMD as $locumMD) {
-            $locumsMDList.= $locumMD->name.' MD '.'('.$locumMD->agency.')<w:br/>';
+        foreach ($locumsMD as $key => $locumMD) {
+            $locumsMDList.= $locumMD->name.' MD '.'('.$locumMD->agency.')';
+
+            if($key != (count($locumsMD)-1)) {
+                $locumsMDList.= '<w:br/>';
+            }
         }
 
         $currentRosterAPPList = '';
-        foreach ($currentRosterAPP as $rosterAPP) {
+        foreach ($currentRosterAPP as $key => $rosterAPP) {
             $currentRosterAPPList.= $rosterAPP->name.' '.
-            ($rosterAPP->isAMD && $rosterAPP->isSMD ? 'MD, SMD ' : ($rosterAPP->isAMD ? 'AMD ' : ($rosterAPP->isSMD ? 'SMD ' : ''))).'('.$rosterAPP->hours.')<w:br/>';
+            ($rosterAPP->isAMD && $rosterAPP->isSMD ? 'MD, SMD ' : ($rosterAPP->isAMD ? 'AMD ' : ($rosterAPP->isSMD ? 'SMD ' : ''))).'('.$rosterAPP->hours.')';
+
+            if($key != (count($currentRosterAPP)-1)) {
+                $currentRosterAPPList.= '<w:br/>';
+            }
         }
 
         $currentBenchAPPList = '';
-        foreach ($currentBenchAPP as $benchAPP) {
+        foreach ($currentBenchAPP as $key => $benchAPP) {
             $currentBenchAPPList.= $benchAPP->name.' '.
-            ($benchAPP->isAMD && $benchAPP->isSMD ? 'MD, SMD ' : ($benchAPP->isAMD ? 'AMD ' : ($benchAPP->isSMD ? 'SMD ' : ''))).'('.$benchAPP->hours.')<w:br/>';
+            ($benchAPP->isAMD && $benchAPP->isSMD ? 'MD, SMD ' : ($benchAPP->isAMD ? 'AMD ' : ($benchAPP->isSMD ? 'SMD ' : ''))).'('.$benchAPP->hours.')';
+
+            if($key != (count($currentBenchAPP)-1)) {
+                $currentBenchAPPList.= '<w:br/>';
+            }
         }
 
         $locumsAPPList = '';
-        foreach ($locumsAPP as $locumAPP) {
-            $locumsAPPList.= $locumAPP->name.' MD '.'('.$locumAPP->agency.')<w:br/>';
+        foreach ($locumsAPP as $key => $locumAPP) {
+            $locumsAPPList.= $locumAPP->name.' MD '.'('.$locumAPP->agency.')';
+
+            if($key != (count($locumsAPP)-1)) {
+                $locumsAPPList.= '<w:br/>';
+            }
         }
 
         $futureRostersList = '';
-        foreach ($futureRosters as $futureRoster) {
-            $futureRostersList .= $futureRoster->name.' - '.$futureRoster->notes.'<w:br/>';
+        foreach ($futureRosters as $key => $futureRoster) {
+            $futureRostersList .= $futureRoster->name.' - '.$futureRoster->notes;
+
+            if($key != (count($futureRosters)-1)) {
+                $futureRostersList.= '<w:br/>';
+            }
         }
 
         $futureLocumsList = '';
-        foreach ($futureLocums as $futureLocum) {
-            $futureLocumsList .= $futureLocum->name.' - '.$futureLocum->notes.'<w:br/>';
+        foreach ($futureLocums as $key => $futureLocum) {
+            $futureLocumsList .= $futureLocum->name.' - '.$futureLocum->credentialingNotes;
+
+            if($key != (count($futureLocums)-1)) {
+                $futureLocumsList.= '<w:br/>';
+            }
         }
 
         $recruitingsList = '';
-        foreach ($account->pipeline->recruitings as $recruiting) {
-            $recruitingsList .= $recruiting->name.' - '.$recruiting->notes.'<w:br/>';
+        foreach ($account->pipeline->recruitings as $key => $recruiting) {
+            $recruitingsList .= $recruiting->name.' - '.$recruiting->notes;
+
+            if($key != (count($account->pipeline->recruitings)-1)) {
+                $recruitingsList.= '<w:br/>';
+            }
         }
         /////// End of Lists ///////////
 
@@ -360,8 +412,6 @@ class AccountsPipelineController extends Controller
         $word->addTableStyle('myOwnTableStyle', $styleTable);
         // Add table
         $table = $section->addTable('myOwnTableStyle');
-
-        //Line break -> <w:br/>
         
         // Add row
         $table->addRow(100);
@@ -412,16 +462,14 @@ class AccountsPipelineController extends Controller
         //$header->addText('ENVISION PHYSICIAN SERVICES', $normalFontStyle);
         $header->addPreserveText('ENVISION PHYSICIAN SERVICES           {PAGE}', $normalFontStyle, array('align' => 'right'));
 
-        $section2->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
-        $section2->addText($futureRostersList, $normalFontStyle);
+        $section->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
+        $section->addText($futureRostersList, $normalFontStyle);
 
-        $section2->addText('Locums who have not started', $boldUnderlinedFontStyle);
-        $section2->addText($futureLocumsList, $normalFontStyle);
+        $section->addText('Locums who have not started', $boldUnderlinedFontStyle);
+        $section->addText($futureLocumsList, $normalFontStyle);
 
-        $section2->addText('Pipeline/candidate update', $boldUnderlinedFontStyle);
-        $section2->addText($recruitingsList, $normalFontStyle);
-
-        $footer2 = $section2->addFooter();
+        $section->addText('Pipeline/candidate update', $boldUnderlinedFontStyle);
+        $section->addText($recruitingsList, $normalFontStyle);
 
         // Saving the document...
         $objWriter = IOFactory::createWriter($word, 'Word2007');

@@ -21,6 +21,19 @@ class PipelineLocum extends Model
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'application',
+        'interview',
+        'potentialStart',
+        'startDate',
+        'declined',
+    ];
+
+    /**
      * Accessor for instance attribute.
      *
      * @return string

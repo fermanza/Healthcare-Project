@@ -58,11 +58,13 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
 
     $router->post('accounts/{account}/pipeline/recruiting', 'PipelineRecruitingController@store')->name('accounts.pipeline.recruiting.store');
     $router->patch('accounts/{account}/pipeline/recruiting/{recruiting}/decline', 'PipelineRecruitingController@decline')->name('accounts.pipeline.recruiting.decline');
+     $router->patch('accounts/{account}/pipeline/recruiting/{recruiting}', 'PipelineRecruitingController@update')->name('accounts.pipeline.recruiting.update');
     $router->delete('accounts/{account}/pipeline/recruiting/{recruiting}', 'PipelineRecruitingController@destroy')->name('accounts.pipeline.recruiting.destroy');
     $router->post('accounts/{account}/pipeline/recruiting/{recruiting}/switch', 'PipelineRecruitingController@switch')->name('accounts.pipeline.recruiting.switch');
 
     $router->post('accounts/{account}/pipeline/locum', 'PipelineLocumController@store')->name('accounts.pipeline.locum.store');
     $router->patch('accounts/{account}/pipeline/locum/{locum}/decline', 'PipelineLocumController@decline')->name('accounts.pipeline.locum.decline');
+    $router->patch('accounts/{account}/pipeline/locum/{locum}', 'PipelineLocumController@update')->name('accounts.pipeline.locum.update');
     $router->delete('accounts/{account}/pipeline/locum/{locum}', 'PipelineLocumController@destroy')->name('accounts.pipeline.locum.destroy');
     $router->post('accounts/{account}/pipeline/locum/{locum}/switch', 'PipelineLocumController@switch')->name('accounts.pipeline.locum.switch');
 

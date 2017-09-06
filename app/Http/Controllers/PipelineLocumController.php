@@ -94,12 +94,38 @@ class PipelineLocumController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Account  $account
+     * @param  \App\PipelineLocum  $locum
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Account $account, PipelineLocum $locum)
     {
-        //
+        $this->validate($request, [
+            'type' => [
+                'required',
+                Rule::in(config('pipeline.recruiting_types')),
+            ],
+            'name' => 'required',
+            'agency' => 'required',
+            'potentialStart' => 'nullable|date_format:"m/d/Y"',
+            'credentialingNotes' => '',
+            'shiftsOffered' => 'nullable|integer|min:0',
+            'startDate' => 'nullable|date_format:"m/d/Y"',
+            'comments' => '',
+        ]);
+
+        $locum->pipelineId = $account->pipeline->id;
+        $locum->type = $request->type;
+        $locum->name = $request->name;
+        $locum->agency = $request->agency;
+        $locum->potentialStart = $request->potentialStart;
+        $locum->credentialingNotes = $request->credentialingNotes;
+        $locum->shiftsOffered = $request->shiftsOffered;
+        $locum->startDate = $request->startDate;
+        $locum->comments = $request->comments;
+        $locum->save();
+
+        return $locum->fresh();
     }
 
     /**

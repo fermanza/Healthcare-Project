@@ -1568,20 +1568,34 @@
 
 
                 addRecruiting: function () {
-                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting', this.newRecruiting)
-                        .then(function (response) {
-                            var recruiting = response.data;
-                            this.pipeline.recruitings.push(recruiting);
-                            this.newRecruiting = {};
+                    if(this.newRecruiting.id) {
+                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.newRecruiting.id;
+
+                        axios.patch(endpoint, this.newRecruiting)
+                            .then(function (response) {
+                                var recruiting = _.find(this.pipeline.recruitings, {id: response.data.id});
+                                _.assignIn(recruiting, response.data);
+                                this.newRecruiting = {};
                         }.bind(this));
+                    } else {
+                        axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting', this.newRecruiting)
+                            .then(function (response) {
+                                var recruiting = response.data;
+                                this.pipeline.recruitings.push(recruiting);
+                                this.newRecruiting = {};
+                            }.bind(this));
+                    }
                 },
 
                 editRecruiting: function (recruiting) {
-                    axios.delete('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id)
-                        .then(function (response) {
-                            _.assignIn(this.newRecruiting, recruiting);
-                            this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
-                        }.bind(this));
+                    recruiting.interview = this.moment(recruiting.interview);
+                    recruiting.application = this.moment(recruiting.application);
+                    recruiting.contractOut = this.moment(recruiting.contractOut);
+                    recruiting.declined = this.moment(recruiting.declined);
+                    recruiting.contractIn = this.moment(recruiting.contractIn);
+                    recruiting.firstShift = this.moment(recruiting.firstShift);
+
+                    _.assignIn(this.newRecruiting, recruiting);
                 },
 
                 deleteRecruiting: function (recruiting) {
@@ -1601,20 +1615,33 @@
 
 
                 addLocum: function () {
-                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum', this.newLocum)
-                        .then(function (response) {
-                            var locum = response.data;
-                            this.pipeline.locums.push(locum);
-                            this.newLocum = {};
+                    if(this.newLocum.id) {
+                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/locum/' + this.newLocum.id;
+
+                        axios.patch(endpoint, this.newLocum)
+                            .then(function (response) {
+                                var locum = _.find(this.pipeline.locums, {id: response.data.id});
+                                _.assignIn(locum, response.data);
+                                this.newLocum = {};
                         }.bind(this));
+                    } else {
+                        axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum', this.newLocum)
+                            .then(function (response) {
+                                var locum = response.data;
+                                this.pipeline.locums.push(locum);
+                                this.newLocum = {};
+                            }.bind(this));
+                    }
                 },
 
                 editLocum: function (locum) {
-                    axios.delete('/admin/accounts/' + this.account.id + '/pipeline/locum/' + locum.id)
-                        .then(function (response) {
-                            _.assignIn(this.newLocum, locum);
-                            this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': locum.id });
-                        }.bind(this));
+                    locum.potentialStart = this.moment(locum.potentialStart);
+                    locum.startDate = this.moment(locum.startDate);
+                    locum.declined = this.moment(locum.declined);
+                    locum.application = this.moment(locum.application);
+                    locum.interview = this.moment(locum.interview);
+
+                    _.assignIn(this.newLocum, locum);
                 },
 
                 deleteLocum: function (locum) {
@@ -1658,10 +1685,12 @@
 
 
                 setResigning: function (toResign) {
+                    toResign.resigned = this.moment(toResign.resigned);
                     toResign.interview = this.moment(toResign.interview);
                     toResign.contractIn = this.moment(toResign.contractIn);
                     toResign.contractOut = this.moment(toResign.contractOut);
                     toResign.firstShift = this.moment(toResign.firstShift);
+                    toResign.lastShift = this.moment(toResign.lastShift);
                     
                     this.resigning = _.cloneDeep(toResign);
                     this.toResign = toResign;

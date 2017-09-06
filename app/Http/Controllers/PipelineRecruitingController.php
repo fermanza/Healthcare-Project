@@ -97,12 +97,41 @@ class PipelineRecruitingController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Account  $account
+     * @param  \App\PipelineRecruiting  $recruiting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Account $account, PipelineRecruiting $recruiting)
     {
-        //
+        $this->validate($request, [
+            'type' => [
+                'required',
+                Rule::in(config('pipeline.recruiting_types')),
+            ],
+            'contract' => [
+                'required',
+                Rule::in(config('pipeline.contract_types')),
+            ],
+            'name' => 'required',
+            'interview' => 'nullable|date_format:"m/d/Y"',
+            'contractOut' => 'nullable|date_format:"m/d/Y"',
+            'contractIn' => 'nullable|date_format:"m/d/Y"',
+            'firstShift' => 'nullable|date_format:"m/d/Y"',
+            'notes' => '',
+        ]);
+
+        $recruiting->pipelineId = $account->pipeline->id;
+        $recruiting->type = $request->type;
+        $recruiting->contract = $request->contract;
+        $recruiting->name = $request->name;
+        $recruiting->interview = $request->interview;
+        $recruiting->contractOut = $request->contractOut;
+        $recruiting->contractIn = $request->contractIn;
+        $recruiting->firstShift = $request->firstShift;
+        $recruiting->notes = $request->notes;
+        $recruiting->save();
+
+        return $recruiting->fresh();
     }
 
     /**
