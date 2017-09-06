@@ -1522,7 +1522,7 @@
                             .then(function (response) {
                                 var rosterBench = response.data;
                                 this.pipeline.rostersBenchs.push(rosterBench);
-                                this[entity] = {};
+                                this.clearRosterBench(entity);
 
                                 if(response.data.isSMD) {
                                     this.oldSMD = [];
