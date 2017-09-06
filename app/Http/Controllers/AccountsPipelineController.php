@@ -247,6 +247,8 @@ class AccountsPipelineController extends Controller
             return $rosterBench->place == 'roster' && $rosterBench->activity == 'physician';
         })->reject(function($rosterBench){
             return $rosterBench->resigned;
+        })->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
         })->sortByDesc(function($rosterBench){
             return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
         });
@@ -257,6 +259,8 @@ class AccountsPipelineController extends Controller
             return $rosterBench->place == 'bench' && $rosterBench->activity == 'physician';
         })->reject(function($rosterBench){
             return $rosterBench->resigned;
+        })->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
         })->sortByDesc(function($rosterBench){
             return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
         });
@@ -274,6 +278,8 @@ class AccountsPipelineController extends Controller
         $currentRosterAPP = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->place == 'roster' && $rosterBench->activity == 'app';
         })->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->reject(function($rosterBench){
             return $rosterBench->resigned;
         })->sortBy('name');
 
@@ -281,6 +287,8 @@ class AccountsPipelineController extends Controller
 
         $currentBenchAPP = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->place == 'bench' && $rosterBench->activity == 'app';
+        })->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
         })->reject(function($rosterBench){
             return $rosterBench->resigned;
         })->sortBy('name');
@@ -314,6 +322,14 @@ class AccountsPipelineController extends Controller
         });
 
         $futureLocums = $futureLocums->values();
+
+        $credentialings = $account->pipeline->rostersBenchs->filter(function($locum) {
+            return $locum->signedNotStarted;
+        })->reject(function($locum){
+            return $locum->declined;
+        })->sortBy('name');
+
+        $credentialings = $credentialings->values();
         /////// End of Elements for lists /////////
 
 
@@ -380,27 +396,28 @@ class AccountsPipelineController extends Controller
         foreach ($futureRosters as $key => $futureRoster) {
             $futureRostersList .= $futureRoster->name.' - '.$futureRoster->notes;
 
-            if($key != (count($futureRosters)-1)) {
-                $futureRostersList.= '<w:br/>';
-            }
+            $futureRostersList.= '<w:br/>';
         }
 
         $futureLocumsList = '';
         foreach ($futureLocums as $key => $futureLocum) {
             $futureLocumsList .= $futureLocum->name.' - '.$futureLocum->credentialingNotes;
 
-            if($key != (count($futureLocums)-1)) {
-                $futureLocumsList.= '<w:br/>';
-            }
+            $futureLocumsList.= '<w:br/>';
         }
 
         $recruitingsList = '';
         foreach ($account->pipeline->recruitings as $key => $recruiting) {
             $recruitingsList .= $recruiting->name.' - '.$recruiting->notes;
 
-            if($key != (count($account->pipeline->recruitings)-1)) {
-                $recruitingsList.= '<w:br/>';
-            }
+            $recruitingsList.= '<w:br/>';
+        }
+
+        $credentialingsList = '';
+        foreach ($credentialings as $key => $credentialing) {
+            $credentialingsList .= $credentialing->name.' - '.$credentialing->notes;
+
+            $credentialingsList.= '<w:br/>';
         }
         /////// End of Lists ///////////
 
@@ -441,35 +458,42 @@ class AccountsPipelineController extends Controller
         $table->addCell(2000, $styleCell)->addText($currentBenchAPPList, $normalFontStyle);
         $table->addCell(2000, $styleCell)->addText($locumsAPPList, $normalFontStyle);
 
-        $section->addText('<w:br/>FTE Physicians required: '.$account->pipeline->staffPhysicianFTEOpenings.'<w:br/>'.
-            'Current need: '.$account->pipeline->staffPhysicianFTENeeds.'<w:br/><w:br/>',
+        $section->addText('<w:br/>FTE Physicians required: '.$account->pipeline->staffPhysicianFTENeeds.'<w:br/>'.
+            'Current need: '.$account->pipeline->staffPhysicianFTEOpenings.'<w:br/>',
             $normalFontStyle
         );
 
-        $section->addText('FTE Apps required: '.$account->pipeline->staffAppsFTEOpenings.'<w:br/>'.
-            'Current need: '.$account->pipeline->staffAppsFTENeeds,
+        $section->addText('FTE Apps required: '.$account->pipeline->staffAppsFTENeeds.'<w:br/>'.
+            'Current need: '.$account->pipeline->staffAppsFTEOpenings.'<w:br/>',
             $normalFontStyle
         );
 
         $footer = $section->addFooter();
         $footer->addText('3916 State Street | Suite 200 | Santa Barbara, CA 93105', $normalFontStyle, array('align' => 'right'));
 
-        $section->addPageBreak();
+        // $header = $section->addHeader();
+        // //$header->addText('ENVISION PHYSICIAN SERVICES', $normalFontStyle);
+        // $header->addPreserveText('ENVISION PHYSICIAN SERVICES           {PAGE}', $normalFontStyle, array('align' => 'right'));
 
-        $section2 = $word->addSection();
+        if($futureRostersList != '') {
+            $section->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
+            $section->addText($futureRostersList, $normalFontStyle);
+        }
 
-        $header = $section2->addHeader();
-        //$header->addText('ENVISION PHYSICIAN SERVICES', $normalFontStyle);
-        $header->addPreserveText('ENVISION PHYSICIAN SERVICES           {PAGE}', $normalFontStyle, array('align' => 'right'));
+        if($futureLocumsList != '') {
+            $section->addText('Locums who have not started', $boldUnderlinedFontStyle);
+            $section->addText($futureLocumsList, $normalFontStyle);
+        }
 
-        $section->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
-        $section->addText($futureRostersList, $normalFontStyle);
+        if($recruitingsList) {
+            $section->addText('Pipeline/candidate update', $boldUnderlinedFontStyle);
+            $section->addText($recruitingsList, $normalFontStyle);
+        }
 
-        $section->addText('Locums who have not started', $boldUnderlinedFontStyle);
-        $section->addText($futureLocumsList, $normalFontStyle);
-
-        $section->addText('Pipeline/candidate update', $boldUnderlinedFontStyle);
-        $section->addText($recruitingsList, $normalFontStyle);
+        if($credentialingsList) {
+            $section->addText('Credentialing', $boldUnderlinedFontStyle);
+            $section->addText($credentialingsList, $normalFontStyle);
+        }
 
         // Saving the document...
         $objWriter = IOFactory::createWriter($word, 'Word2007');
