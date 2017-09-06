@@ -1835,6 +1835,11 @@
                 },
 
                 switchRecruitingTo: function(recruiting, place) {
+                    recruiting.interview = this.moment(recruiting.interview);
+                    recruiting.contractIn = this.moment(recruiting.contractIn);
+                    recruiting.contractOut = this.moment(recruiting.contractOut);
+                    recruiting.firstShift = this.moment(recruiting.firstShift);
+
                     recruiting.place = place;
                     recruiting.activity = recruiting.type == 'md' ? 'physician' : 'app';
                     
@@ -1850,6 +1855,12 @@
                 },
 
                 switchLocumTo: function(locum, place) {
+                    locum.interview = this.moment(locum.interview);
+                    locum.declined = this.moment(locum.declined);
+                    locum.potentialStart = this.moment(locum.potentialStart);
+                    locum.application = this.moment(locum.application);
+                    locum.startDate = this.moment(locum.startDate);
+
                     locum.place = place;
                     locum.activity = locum.type == 'md' ? 'physician' : 'app';
 

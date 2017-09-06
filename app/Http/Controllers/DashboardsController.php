@@ -31,7 +31,7 @@ class DashboardsController extends Controller
     public function create()
     {
         $dashboard = new Dashboard;
-        $users = User::orderBy('name', 'desc')->get();
+        $users = User::orderBy('name')->get();
         $action = 'create';
 
         $params = compact('dashboard', 'users', 'action');
@@ -75,7 +75,7 @@ class DashboardsController extends Controller
     public function edit(Dashboard $dashboard)
     {
         $action = 'edit';
-        $users = User::orderBy('name', 'desc')->get();
+        $users = User::orderBy('name')->get();
         $params = compact('dashboard', 'users', 'action');
 
         return view('admin.dashboards.edit', $params);
