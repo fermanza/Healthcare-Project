@@ -1575,14 +1575,14 @@
                             .then(function (response) {
                                 var recruiting = _.find(this.pipeline.recruitings, {id: response.data.id});
                                 _.assignIn(recruiting, response.data);
-                                this.newRecruiting = {};
+                                this.clearNewRecruiting();
                         }.bind(this));
                     } else {
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting', this.newRecruiting)
                             .then(function (response) {
                                 var recruiting = response.data;
                                 this.pipeline.recruitings.push(recruiting);
-                                this.newRecruiting = {};
+                                this.clearNewRecruiting();
                             }.bind(this));
                     }
                 },
@@ -1622,14 +1622,14 @@
                             .then(function (response) {
                                 var locum = _.find(this.pipeline.locums, {id: response.data.id});
                                 _.assignIn(locum, response.data);
-                                this.newLocum = {};
+                                this.clearNewLocum();
                         }.bind(this));
                     } else {
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum', this.newLocum)
                             .then(function (response) {
                                 var locum = response.data;
                                 this.pipeline.locums.push(locum);
-                                this.newLocum = {};
+                                this.clearNewLocum();
                             }.bind(this));
                     }
                 },
@@ -1861,6 +1861,32 @@
                         };
                         break;
                     }
+                },
+
+                clearNewRecruiting: function(entity) {
+                    this.newRecruiting = {
+                        type: null,
+                        name: '',
+                        contract: null,
+                        interview: '',
+                        contractOut: '',
+                        contractIn: '',
+                        firstShift: '',
+                        notes: '',
+                    };
+                },
+
+                clearNewLocum: function() {
+                    this.newLocum = {
+                        type: null,
+                        name: '',
+                        agency: '',
+                        potentialStart: '',
+                        credentialingNotes: '',
+                        shiftsOffered: '',
+                        startDate: '',
+                        comments: '',
+                    };
                 },
 
                 switchRecruitingTo: function(recruiting, place) {
