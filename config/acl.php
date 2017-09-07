@@ -56,13 +56,15 @@ return [
         'admin.accounts.pipeline.rosterBench.resign' => 'Account Summary Roster/Bench Resign Action',
         'admin.accounts.pipeline.rosterBench.destroy' => 'Account Summary Delete Roster/Bench',
         'admin.accounts.pipeline.recruiting.store' => 'Account Summary Recruiting Create Action',
+        'admin.accounts.pipeline.recruiting.update' => 'Account Summary Recruiting Update Action',
         'admin.accounts.pipeline.recruiting.decline' => 'Account Summary Recruiting Decline Action',
         'admin.accounts.pipeline.recruiting.destroy' => 'Account Summary Delete Recruiting',
-        'admin.accounts.pipeline.recruiting.swtich' => 'Account Summary Switch Recruiting To RosterBench',
+        'admin.accounts.pipeline.recruiting.switch' => 'Account Summary Switch Recruiting To RosterBench',
         'admin.accounts.pipeline.locum.store' => 'Account Summary Locum Create Action',
+        'admin.accounts.pipeline.locum.update' => 'Account Summary Locum Update Action',
         'admin.accounts.pipeline.locum.decline' => 'Account Summary Locum Decline Action',
         'admin.accounts.pipeline.locum.destroy' => 'Account Summary Delete Locum',
-        'admin.accounts.pipeline.locum.swtich' => 'Account Summary Switch Locum To RosterBench',
+        'admin.accounts.pipeline.locum.switch' => 'Account Summary Switch Locum To RosterBench',
         'admin.accounts.pipeline.export.word' => 'Export Account Summary To Word',
         'admin.accounts.pipeline.export.excel' => 'Export Account Summary To Excel',
     ],
@@ -170,6 +172,7 @@ return [
 
     'Reports' => [
         'admin.reports.summary.index' => 'Summary Report',
+        'admin.reports.summary.excel' => 'Export Reports To Excel',
     ],
     
 ];
