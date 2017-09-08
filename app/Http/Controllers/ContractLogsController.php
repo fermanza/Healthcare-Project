@@ -174,7 +174,7 @@ class ContractLogsController extends Controller
             $contractLog->recruiter ? [$contractLog->recruiter] : []
         );
 
-        JavaScript::put(compact('statuses'));
+        JavaScript::put(compact('statuses', 'specialties'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',

@@ -21,7 +21,6 @@ class ContractLogRequest extends FormRequest
             'recruiterId' => 'required|exists:tEmployee,id',
             'managerId' => 'required|exists:tEmployee,id',
             'statusId' => 'required|exists:tContractStatus,id',
-            'providerDesignationId' => 'required|exists:tProviderDesignation,id',
             'accounts' => 'nullable|array|exists:tAccount,id',
             'recruiters' => 'nullable|array|exists:tEmployee,id',
             'value' => 'required|in:0,0.5,1',

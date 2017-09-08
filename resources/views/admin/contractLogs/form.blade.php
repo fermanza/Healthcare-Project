@@ -37,16 +37,16 @@
             </div>
 
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="form-group{{ $errors->has('providerDesignationId') ? ' has-error' : '' }}">
-                    <label for="providerDesignationId">@lang('Provider Designation')</label>
-                    <select class="form-control select2" id="providerDesignationId" name="providerDesignationId" required>
+                <div class="form-group{{ $errors->has('specialtyId') ? ' has-error' : '' }}">
+                    <label for="specialtyId">@lang('Specialty')</label>
+                    <select class="form-control select2" id="specialtyId" name="specialtyId" required>
                         <option value="" disabled selected></option>
-                        @foreach ($designations as $designation)
-                            <option value="{{ $designation->id }}" {{ (old('providerDesignationId') == $designation->id ?: $designation->id == $contractLog->providerDesignationId) ? 'selected': '' }}>{{ $designation->name }}</option>
+                        @foreach ($specialties as $specialty)
+                            <option value="{{ $specialty->id }}" {{ (old('specialtyId') == $specialty->id ?: $specialty->id == $contractLog->specialtyId) ? 'selected': '' }}>{{ $specialty->specialty }}</option>
                         @endforeach
                     </select>
-                    @if ($errors->has('providerDesignationId'))
-                        <span class="help-block"><strong>{{ $errors->first('providerDesignationId') }}</strong></span>
+                    @if ($errors->has('specialtyId'))
+                        <span class="help-block"><strong>{{ $errors->first('specialtyId') }}</strong></span>
                     @endif
                 </div>
             </div>
@@ -83,22 +83,8 @@
 
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group">
-                    <label for="division">@lang('Alliance OU Division')</label>
-                    <input type="text" class="form-control" id="division" name="division" value="{{ ($contractLog->account && $contractLog->account->division) ? $contractLog->account->division->name : '' }}" readonly />
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="form-group">
                     <label for="hospitalName">@lang('Hospital Name')</label>
                     <input type="text" class="form-control" id="hospitalName" name="hospitalName" value="{{ $contractLog->account ? $contractLog->account->name : '' }}" readonly />
-                </div>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="form-group">
-                    <label for="group">@lang('Group')</label>
-                    <input type="text" class="form-control" id="group" name="group" value="{{ ($contractLog->account && $contractLog->account->division && $contractLog->account->division->group) ? $contractLog->account->division->group->name : '' }}" readonly />
                 </div>
             </div>
 
@@ -274,21 +260,6 @@
                     @endif
                 </div>
             </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                <div class="form-group{{ $errors->has('specialtyId') ? ' has-error' : '' }}">
-                    <label for="specialtyId">@lang('Specialty')</label>
-                    <select class="form-control select2" id="specialtyId" name="specialtyId" required>
-                        <option value="" disabled selected></option>
-                        @foreach ($specialties as $specialty)
-                            <option value="{{ $specialty->id }}" {{ (old('specialtyId') == $specialty->id ?: $specialty->id == $contractLog->specialtyId) ? 'selected': '' }}>{{ $specialty->specialty }}</option>
-                        @endforeach
-                    </select>
-                    @if ($errors->has('specialtyId'))
-                        <span class="help-block"><strong>{{ $errors->first('specialtyId') }}</strong></span>
-                    @endif
-                </div>
-            </div>
             
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group{{ $errors->has('positionId') ? ' has-error' : '' }}">
@@ -445,6 +416,30 @@
                     $('#value').val(status.value);
                 } else {
                     $('#value').val('');
+                }
+            });
+
+            $('#accountId').on('change', function () {
+                var accountId = $(this).val();
+
+                $.get('/admin/accounts/' + accountId + '/manager', function( manager ) {
+                    if (manager) {
+                        console.log(manager.id);
+                        $('#managerId').select2("trigger", "select", {
+                            data: { id: manager.employeeId }
+                        });
+                    }
+                });
+            });
+
+            $('#specialtyId').on('change', function () {
+                var specialtyId = parseInt($(this).val());
+                var specialty = _.find(BackendVars.specialties, { id: specialtyId });
+
+                if(specialty) {
+                    $('#positionId').select2("trigger", "select", {
+                        data: { id: specialty.positionId }
+                    });
                 }
             });
 

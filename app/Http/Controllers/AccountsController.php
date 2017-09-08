@@ -283,4 +283,15 @@ class AccountsController extends Controller
 
         return back();
     }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Account  $account
+     * @return \Illuminate\Http\Response
+     */
+    public function findManager(Account $account)
+    {
+        return $account->manager;
+    }
 }
