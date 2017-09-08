@@ -132,4 +132,45 @@ class UsersController extends Controller
 
         return view($view, $params);
     }
+
+    function csvToArray($filename = '', $delimiter = ',')
+    {
+        if (!file_exists($filename) || !is_readable($filename))
+            return false;
+
+        $header = null;
+        $data = array();
+        if (($handle = fopen($filename, 'r')) !== false)
+        {
+            while (($row = fgetcsv($handle, 1000, $delimiter)) !== false)
+            {
+                if (!$header)
+                    $header = $row;
+                else
+                    $data[] = array_combine($header, $row);
+            }
+            fclose($handle);
+        }
+
+        return $data;
+    }
+
+    public function importCsv()
+    {
+        $file = public_path('new.csv');
+
+        $customerArr = $this->csvToArray($file);
+
+        for ($i = 0; $i < count($customerArr); $i ++)
+        {
+            $user = new User;
+
+            $user->name = $customerArr[$i]["name"];
+            $user->email = $customerArr[$i]["email"];
+            $user->password = bcrypt($customerArr[$i]["password"]);
+            $user->save();
+
+            $user->roles()->sync($customerArr[$i]["role"]);
+        }    
+    }
 }
