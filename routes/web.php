@@ -68,8 +68,6 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->delete('accounts/{account}/pipeline/locum/{locum}', 'PipelineLocumController@destroy')->name('accounts.pipeline.locum.destroy');
     $router->post('accounts/{account}/pipeline/locum/{locum}/switch', 'PipelineLocumController@switch')->name('accounts.pipeline.locum.switch');
 
-    $router->get('users/import', 'UsersController@importCsv')->name('users.import');
-
     $router->resource('users', 'UsersController', ['except' => 'show']);
     $router->resource('roles', 'RolesController', ['except' => 'show']);
     $router->resource('permissions', 'PermissionsController', ['except' => ['create', 'store', 'show', 'destroy']]);
