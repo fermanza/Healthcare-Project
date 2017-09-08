@@ -220,69 +220,85 @@
                             </tr>
                             <tr>
                                 <th>&nbsp;</th>
-                                <th class="text-center">@lang('Hours')</th>
-                                <th class="text-center">@lang('FTEs')</th>
+                                <th class="text-center">
+                                    <span v-if="pipeline.practiceTime == 'hours'">
+                                        @lang('Hours')
+                                    </span>
+                                </th>
+                                <th class="text-center">
+                                    <span v-if="pipeline.practiceTime == 'fte'">
+                                        @lang('FTEs')
+                                    </span>
+                                </th>
                                 <th>&nbsp;</th>
-                                <th class="text-center">@lang('Hours')</th>
-                                <th class="text-center">@lang('FTEs')</th>
+                                <th class="text-center">
+                                    <span v-if="pipeline.practiceTime == 'hours'">
+                                        @lang('Hours')
+                                    </span>
+                                </th>
+                                <th class="text-center">
+                                    <span v-if="pipeline.practiceTime == 'fte'">
+                                        @lang('FTEs')
+                                    </span>
+                                </th>
                             </tr>
                             <tr>
                                 <td>@lang('Haves')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianHaves" value="{{ old('staffPhysicianHaves') ?: $pipeline->staffPhysicianHaves }}" v-model="staffPhysicianHaves" readonly />
+                                    <input v-if="pipeline.practiceTime == 'hours'" type="text" class="form-control hidden-print" name="staffPhysicianHaves" value="{{ old('staffPhysicianHaves') ?: $pipeline->staffPhysicianHaves }}" v-model="staffPhysicianHaves" readonly />
                                     <span class="visible-print">@{{ staffPhysicianHaves }}</span>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianFTEHaves" value="{{ old('staffPhysicianFTEHaves') ?: $pipeline->staffPhysicianFTEHaves }}" v-model="staffPhysicianFTEHaves" readonly />
+                                    <input v-if="pipeline.practiceTime == 'fte'" type="text" class="form-control hidden-print" name="staffPhysicianFTEHaves" value="{{ old('staffPhysicianFTEHaves') ?: $pipeline->staffPhysicianFTEHaves }}" v-model="staffPhysicianFTEHaves" readonly />
                                     <span class="visible-print">@{{ staffPhysicianFTEHaves }}</span>
                                 </td>
                                 <td>@lang('Haves')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffAppsHaves" value="{{ old('staffAppsHaves') ?: $pipeline->staffAppsHaves }}" v-model="staffAppsHaves" readonly />
+                                    <input v-if="pipeline.practiceTime == 'hours'" type="text" class="form-control hidden-print" name="staffAppsHaves" value="{{ old('staffAppsHaves') ?: $pipeline->staffAppsHaves }}" v-model="staffAppsHaves" readonly />
                                     <span class="visible-print">@{{ staffAppsHaves }}</span>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffAppsFTEHaves" value="{{ old('staffAppsFTEHaves') ?: $pipeline->staffAppsFTEHaves }}" v-model="staffAppsFTEHaves" readonly />
+                                    <input v-if="pipeline.practiceTime == 'fte'" type="text" class="form-control hidden-print" name="staffAppsFTEHaves" value="{{ old('staffAppsFTEHaves') ?: $pipeline->staffAppsFTEHaves }}" v-model="staffAppsFTEHaves" readonly />
                                     <span class="visible-print">@{{ staffAppsFTEHaves }}</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>@lang('Needs')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianNeeds" value="{{ old('staffPhysicianNeeds') ?: $pipeline->staffPhysicianNeeds }}" v-model="staffPhysicianNeeds" />
+                                    <input v-if="pipeline.practiceTime == 'hours'" type="text" class="form-control hidden-print" name="staffPhysicianNeeds" value="{{ old('staffPhysicianNeeds') ?: $pipeline->staffPhysicianNeeds }}" v-model="staffPhysicianNeeds" />
                                     <span class="visible-print">@{{ pipeline.staffPhysicianNeeds }}</span>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianFTENeeds" value="{{ old('staffPhysicianFTENeeds') ?: $pipeline->staffPhysicianFTENeeds }}" v-model="staffPhysicianFTENeeds" readonly />
+                                    <input v-if="pipeline.practiceTime == 'fte'" type="text" class="form-control hidden-print" name="staffPhysicianFTENeeds" value="{{ old('staffPhysicianFTENeeds') ?: $pipeline->staffPhysicianFTENeeds }}" v-model="staffPhysicianFTENeeds" readonly />
                                     <span class="visible-print">@{{ staffPhysicianFTENeeds }}</span>
                                 </td>
                                 <td>@lang('Needs')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffAppsNeeds" value="{{ old('staffAppsNeeds') ?: $pipeline->staffAppsNeeds }}" v-model="staffAppsNeeds" />
+                                    <input v-if="pipeline.practiceTime == 'hours'" type="text" class="form-control hidden-print" name="staffAppsNeeds" value="{{ old('staffAppsNeeds') ?: $pipeline->staffAppsNeeds }}" v-model="staffAppsNeeds" />
                                     <span class="visible-print">@{{ pipeline.staffAppsNeeds }}</span>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffAppsFTENeeds" value="{{ old('staffAppsFTENeeds') ?: $pipeline->staffAppsFTENeeds }}" v-model="staffAppsFTENeeds" readonly />
+                                    <input v-if="pipeline.practiceTime == 'fte'" type="text" class="form-control hidden-print" name="staffAppsFTENeeds" value="{{ old('staffAppsFTENeeds') ?: $pipeline->staffAppsFTENeeds }}" v-model="staffAppsFTENeeds" readonly />
                                     <span class="visible-print">@{{ staffAppsFTENeeds }}</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>@lang('Openings')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianOpenings" value="{{ old('staffPhysicianOpenings') ?: $pipeline->staffPhysicianOpenings }}" v-model="staffPhysicianOpenings" readonly />
+                                    <input v-if="pipeline.practiceTime == 'hours'" type="text" class="form-control hidden-print" name="staffPhysicianOpenings" value="{{ old('staffPhysicianOpenings') ?: $pipeline->staffPhysicianOpenings }}" v-model="staffPhysicianOpenings" readonly />
                                     <span class="visible-print">@{{ staffPhysicianOpenings }}</span>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianFTEOpenings" value="{{ old('staffPhysicianFTEOpenings') ?: $pipeline->staffPhysicianFTEOpenings }}" v-model="staffPhysicianFTEOpenings" readonly />
+                                    <input v-if="pipeline.practiceTime == 'fte'" type="text" class="form-control hidden-print" name="staffPhysicianFTEOpenings" value="{{ old('staffPhysicianFTEOpenings') ?: $pipeline->staffPhysicianFTEOpenings }}" v-model="staffPhysicianFTEOpenings" readonly />
                                     <span class="visible-print">@{{ staffPhysicianFTEOpenings }}</span>
                                 </td>
                                 <td>@lang('Openings')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffAppsOpenings" value="{{ old('staffAppsOpenings') ?: $pipeline->staffAppsOpenings }}" v-model="staffAppsOpenings" readonly />
+                                    <input v-if="pipeline.practiceTime == 'hours'" type="text" class="form-control hidden-print" name="staffAppsOpenings" value="{{ old('staffAppsOpenings') ?: $pipeline->staffAppsOpenings }}" v-model="staffAppsOpenings" readonly />
                                     <span class="visible-print">@{{ staffAppsOpenings }}</span>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffAppsFTEOpenings" value="{{ old('staffAppsFTEOpenings') ?: $pipeline->staffAppsFTEOpenings }}" v-model="staffAppsFTEOpenings" readonly />
+                                    <input v-if="pipeline.practiceTime == 'fte'" type="text" class="form-control hidden-print" name="staffAppsFTEOpenings" value="{{ old('staffAppsFTEOpenings') ?: $pipeline->staffAppsFTEOpenings }}" v-model="staffAppsFTEOpenings" readonly />
                                     <span class="visible-print">@{{ staffAppsFTEOpenings }}</span>
                                 </td>
                             </tr>
