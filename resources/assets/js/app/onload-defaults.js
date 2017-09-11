@@ -1,7 +1,7 @@
 $(() => {
 
     $(document).on('focus', '.select2', function() {
-        if(! $(this).siblings('select.select2').is("[multiple]")) {
+        if(! $(this).siblings('select.select2').is("[multiple]") && $(this).siblings('select.select2').attr('name') != 'monthEndDate')  {
             $(this).siblings('select.select2').select2('open');
         }
     });
