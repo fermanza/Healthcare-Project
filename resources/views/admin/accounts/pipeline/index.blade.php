@@ -303,7 +303,7 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tbody v-show="pipeline.practiceTime == 'fte'">
+                        <tbody v-show="pipeline.practiceTime == 'fte'" v-cloak>
                             <tr>
                                 <td class="w15">@lang('Full Time Hours')</td>
                                 <td class="w15">&nbsp;</td>
