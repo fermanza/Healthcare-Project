@@ -2,6 +2,8 @@
 
 namespace App\Filters;
 
+use Carbon\Carbon;
+
 class ContractLogsFilter extends Filter
 {
     /**
@@ -130,6 +132,9 @@ class ContractLogsFilter extends Filter
         $startDate = $dates[0];
         $endDate = $dates[1];
 
+        $startDate = Carbon::parse($startDate)->format('Y-m-d');
+        $endDate = Carbon::parse($endDate)->format('Y-m-d');
+
         $this->query->whereBetween('tContractLogs.contractOutDate', array($startDate, $endDate));
     }
 
@@ -145,7 +150,28 @@ class ContractLogsFilter extends Filter
         $startDate = $dates[0];
         $endDate = $dates[1];
 
+        $startDate = Carbon::parse($startDate)->format('Y-m-d');
+        $endDate = Carbon::parse($endDate)->format('Y-m-d');
+
         $this->query->whereBetween('tContractLogs.contractInDate', array($startDate, $endDate));
+    }
+
+    /**
+     * Apply signedNotStarted filter.
+     *
+     * @param  string  $date
+     * @return void
+     */
+    public function signedNotStarted($date)
+    {
+        $dates = explode(" - ", $date);
+        $startDate = $dates[0];
+        $endDate = $dates[1];
+
+        $startDate = Carbon::parse($startDate)->format('Y-m-d');
+        $endDate = Carbon::parse($endDate)->format('Y-m-d');
+
+        $this->query->whereBetween('tContractLogs.ProjectedStartDate', array($startDate, $endDate))->whereNotNull('tContractLogs.contractInDate');
     }
 
     /**

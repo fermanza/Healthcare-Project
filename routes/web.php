@@ -38,6 +38,8 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
 
     $router->resource('dashboards', 'DashboardsController');
 
+    $router->resource('affiliations', 'AffiliationsController');
+
     $router->post('accounts/image', 'AccountsController@image')->name('accounts.image');
     $router->patch('accounts/merge', 'AccountsController@merge')->name('accounts.merge');
     $router->patch('accounts/parent', 'AccountsController@parent')->name('accounts.parent');

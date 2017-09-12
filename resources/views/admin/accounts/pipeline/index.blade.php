@@ -302,6 +302,46 @@
                                     <span class="visible-print">@{{ staffAppsFTEOpenings }}</span>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>@lang('Percent Recruited Actual')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: number_format($summary->{'Percent Recruited - Phys'}*100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: number_format($summary->{'Percent Recruited - Phys'}*100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                </td>
+                                <td>@lang('Percent Recruited Actual')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: number_format($summary->{'Percent Recruited - APP'}*100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: number_format($summary->{'Percent Recruited - APP'}*100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>@lang('Percent Recruited Reported')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' : number_format($summary->{'Percent Recruited - Phys'} * 100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' : number_format($summary->{'Percent Recruited - Phys'} * 100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                </td>
+                                <td>@lang('Percent Recruited Reported')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' :  number_format($summary->{'Percent Recruited - APP'} * 100, 1)}}%" readonly />
+                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' :  number_format($summary->{'Percent Recruited - APP'} * 100, 1)}}%" readonly />
+                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                </td>
+                            </tr>
                         </tbody>
                         <tbody v-show="pipeline.practiceTime == 'fte'" v-cloak>
                             <tr>
@@ -380,6 +420,34 @@
                                 <td>
                                     <input type="text" class="form-control hidden-print" name="staffAppsOpenings" value="{{ old('staffAppsOpenings') ?: $pipeline->staffAppsOpenings }}" v-model="staffAppsOpenings" readonly />
                                     <span class="visible-print">@{{ staffAppsOpenings }}</span>
+                                </td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>@lang('Percent Recruited Actual')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: number_format($summary->{'Percent Recruited - Phys'}*100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>@lang('Percent Recruited Actual')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: number_format($summary->{'Percent Recruited - APP'}*100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                </td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>@lang('Percent Recruited Reported')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' : number_format($summary->{'Percent Recruited - Phys'} * 100,1) }}%" readonly />
+                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>@lang('Percent Recruited Reported')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' : number_format($summary->{'Percent Recruited - APP'} * 100, 1)}}%" readonly />
+                                    <span class="visible-print">@{{ recruitedApp }}</span>
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
@@ -1298,6 +1366,7 @@
             data: {
                 account: BackendVars.account,
                 pipeline: BackendVars.pipeline,
+                summary: BackendVars.summary,
 
                 staffPhysicianNeeds: BackendVars.pipeline.staffPhysicianNeeds,
                 staffAppsNeeds: BackendVars.pipeline.staffAppsNeeds,

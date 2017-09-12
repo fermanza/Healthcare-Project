@@ -262,6 +262,16 @@ class Account extends Model
     }
 
     /**
+     * Get the Summary for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function summary()
+    {
+        return $this->hasOne(AccountSummary::class, 'accountId');
+    }
+
+    /**
      * Determines if start date is less than 7 months ago.
      *
      * @return boolean

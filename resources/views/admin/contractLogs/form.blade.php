@@ -299,7 +299,7 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group{{ $errors->has('value') ? ' has-error' : '' }}">
                     <label for="value">@lang('Value')</label>
-                    <input type="number" class="form-control" id="value" name="value" min="0" max="1" step="0.5" value="{{ old('value') ?: $contractLog->value }}" required />
+                    <input type="number" class="form-control" id="value" name="value" min="0" max="1.5" step="0.5" value="{{ old('value') ?: $contractLog->value }}" required />
                     @if ($errors->has('value'))
                         <span class="help-block"><strong>{{ $errors->first('value') }}</strong></span>
                     @endif
@@ -452,6 +452,10 @@
                         $('#hospitalName').val(account.name);
                         $('#group').val(account.division && account.division.group && account.division.group.name || 'NO GROUP ASSOCIATED');
                         $('#practice').val(account.practices.length && account.practices[0].name || 'NO PRACTICE ASSOCIATED');
+
+                        if ($('#numOfHours').val() >= 150 && (account.practices.length && account.practices[0].name == 'ED')) {
+                            $('#value').val(1.5);
+                        } 
                     });
                 } else {
                     $('#division').val('');

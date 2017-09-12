@@ -33,9 +33,10 @@ class AccountsPipelineController extends Controller
                 $query->with('person', 'manager.person');
             },
             'division.group.region',
-            'practices',
+            'practices', 'summary',
         ]);
         $pipeline = $account->pipeline;
+        $summary = $account->summary;
         $region = $account->region;
         $practice = $account->practices->count() ? $account->practices->first() : null;
         $practiceTimes = config('pipeline.practice_times');
@@ -53,7 +54,7 @@ class AccountsPipelineController extends Controller
 
         $params = compact(
             'account', 'pipeline', 'region', 'practice', 'practiceTimes',
-            'recruitingTypes', 'contractTypes', 'accounts'
+            'recruitingTypes', 'contractTypes', 'accounts', 'summary'
         );
 
         JavaScript::put($params);

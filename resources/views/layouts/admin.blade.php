@@ -215,6 +215,15 @@
                         </li>
                     @endpermission
 
+                    @permission('admin.affiliations.index')
+                        <li class="{{ route_starts_with('admin.affiliations') }}">
+                            <a href="{{ route('admin.affiliations.index') }}">
+                                <i class="fa fa-handshake-o"></i>
+                                <span>@lang('System Affiliations')</span>
+                            </a>
+                        </li>
+                    @endpermission
+
                 </ul>
             </section>
         </aside>

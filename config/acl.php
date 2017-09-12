@@ -89,6 +89,16 @@ return [
         'admin.dashboards.destroy' => 'Delete Dashboard',
     ],
 
+    'Affiliations' => [
+        'admin.affiliations.index' => 'Affiliation List',
+        'admin.affiliations.create' => 'Affiliation Create View',
+        'admin.affiliations.store' => 'Affiliation Create Action',
+        'admin.affiliations.show' => 'View Affiliation',
+        'admin.affiliations.edit' => 'Affiliation Edit View',
+        'admin.affiliations.update' => 'Affiliation Edit Action',
+        'admin.affiliations.destroy' => 'Delete Affiliation',
+    ],
+
     'Operating Units' => [
         'admin.regions.index' => 'Operating Units List',
         'admin.regions.create' => 'Operating Unit Create View',
