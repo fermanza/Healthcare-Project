@@ -305,41 +305,65 @@
                             <tr>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: number_format($summary->{'Percent Recruited - Phys'}*100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                    @if($summary)
+                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: number_format($summary->{'Percent Recruited - Phys'}*100,1) }}%" readonly />
+                                    @else
+                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" readonly />
+                                    @endif
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: number_format($summary->{'Percent Recruited - Phys'}*100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                    @if($summary)
+                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: number_format($summary->{'Percent Recruited - Phys'}*100,1) }}%" readonly />
+                                    @else
+                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" readonly />
+                                    @endif
                                 </td>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: number_format($summary->{'Percent Recruited - APP'}*100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                    @if($summary)
+                                        <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: number_format($summary->{'Percent Recruited - APP'}*100,1) }}%" readonly />
+                                    @else
+                                        <input type="text" class="form-control hidden-print" name="recruitedApp" readonly />
+                                    @endif
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: number_format($summary->{'Percent Recruited - APP'}*100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                    @if($summary)
+                                        <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: number_format($summary->{'Percent Recruited - APP'}*100,1) }}%" readonly />
+                                    @else
+                                        <input type="text" class="form-control hidden-print" name="recruitedApp" readonly />
+                                    @endif
                                 </td>
                             </tr>
                             <tr>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
+                                    @if($summary)
                                     <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' : number_format($summary->{'Percent Recruited - Phys'} * 100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                    @else
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" readonly />
+                                    @endif
                                 </td>
                                 <td>
+                                    @if($summary)
                                     <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' : number_format($summary->{'Percent Recruited - Phys'} * 100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                    @else
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" readonly />
+                                    @endif
                                 </td>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
+                                    @if($summary)
                                     <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' :  number_format($summary->{'Percent Recruited - APP'} * 100, 1)}}%" readonly />
-                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                    @else
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" readonly />
+                                    @endif
                                 </td>
                                 <td>
+                                    @if($summary)
                                     <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' :  number_format($summary->{'Percent Recruited - APP'} * 100, 1)}}%" readonly />
-                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                    @else
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" readonly />
+                                    @endif
                                 </td>
                             </tr>
                         </tbody>
@@ -426,28 +450,40 @@
                             <tr>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
+                                    @if($summary)
                                     <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: number_format($summary->{'Percent Recruited - Phys'}*100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                    @else
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" readonly />
+                                    @endif
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
+                                    @if($summary)
                                     <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: number_format($summary->{'Percent Recruited - APP'}*100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                    @else
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" readonly />
+                                    @endif
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
+                                    @if($summary)
                                     <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ old('recruitedPhys') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' : number_format($summary->{'Percent Recruited - Phys'} * 100,1) }}%" readonly />
-                                    <span class="visible-print">@{{ recruitedPhys }}</span>
+                                    @else
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" readonly />
+                                    @endif
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
+                                    @if($summary)
                                     <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ old('recruitedApp') ?: ($summary->{'Percent Recruited - APP'} > 100) ? '100' : number_format($summary->{'Percent Recruited - APP'} * 100, 1)}}%" readonly />
-                                    <span class="visible-print">@{{ recruitedApp }}</span>
+                                    @else
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" readonly />
+                                    @endif
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
