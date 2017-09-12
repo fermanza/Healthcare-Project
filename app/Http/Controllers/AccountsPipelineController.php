@@ -52,9 +52,23 @@ class AccountsPipelineController extends Controller
             $pipeline->fullTimeHoursApps = $pipeline->fullTimeHoursApps == 0 ? 120 : $pipeline->fullTimeHoursApps;
         }
 
+        $percentRecruitedPhys = 0;
+        $percentRecruitedApp = 0;
+        $percentRecruitedPhysReport = 0;
+        $percentRecruitedAppReport = 0;
+
+        if ($summary) {
+            $percentRecruitedPhys = ($summary->{'Current Staff - Phys'} / $summary->{'Complete Staff - Phys'}) * 100;
+            $percentRecruitedApp = ($summary->{'Current Staff - APP'} / $summary->{'Complete Staff - APP'}) * 100;
+
+            $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;
+            $percentRecruitedAppReport = $percentRecruitedApp > 100 ? 100 : $percentRecruitedApp;
+        }
+
         $params = compact(
             'account', 'pipeline', 'region', 'practice', 'practiceTimes',
-            'recruitingTypes', 'contractTypes', 'accounts', 'summary'
+            'recruitingTypes', 'contractTypes', 'accounts', 'percentRecruitedPhys',
+            'percentRecruitedApp', 'percentRecruitedPhysReport', 'percentRecruitedAppReport'
         );
 
         JavaScript::put($params);
