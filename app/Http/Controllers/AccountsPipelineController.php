@@ -414,28 +414,28 @@ class AccountsPipelineController extends Controller
 
         $futureRostersList = '';
         foreach ($futureRosters as $key => $futureRoster) {
-            $futureRostersList .= $futureRoster->name.' - '.$futureRoster->notes;
+            $futureRostersList .= $futureRoster->name.' - '.htmlspecialchars($futureRoster->notes);
 
             $futureRostersList.= '<w:br/>';
         }
 
         $futureLocumsList = '';
         foreach ($futureLocums as $key => $futureLocum) {
-            $futureLocumsList .= $futureLocum->name.' - '.$futureLocum->credentialingNotes;
+            $futureLocumsList .= $futureLocum->name.' - '.htmlspecialchars($futureLocum->credentialingNotes);
 
             $futureLocumsList.= '<w:br/>';
         }
 
         $recruitingsList = '';
         foreach ($account->pipeline->recruitings as $key => $recruiting) {
-            $recruitingsList .= $recruiting->name.' - '.$recruiting->notes;
+            $recruitingsList .= $recruiting->name.' - '.htmlspecialchars($recruiting->notes);
 
             $recruitingsList.= '<w:br/>';
         }
 
         $credentialingsList = '';
         foreach ($credentialings as $key => $credentialing) {
-            $credentialingsList .= $credentialing->name.' - '.$credentialing->notes;
+            $credentialingsList .= $credentialing->name.' - '.htmlspecialchars($credentialing->notes);
 
             $credentialingsList.= '<w:br/>';
         }
