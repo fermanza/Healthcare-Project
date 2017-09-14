@@ -180,7 +180,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         'Maatwebsite\Excel\ExcelServiceProvider',
-        Rinvex\Repository\Providers\RepositoryServiceProvider::class,
     ],
 
     /*
