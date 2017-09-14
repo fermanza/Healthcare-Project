@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Repositories\AccountRepository;
 
 class AccountsController extends Controller
 {
@@ -26,11 +27,11 @@ class AccountsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, AccountFilter $filter)
+    public function index(Request $request, AccountFilter $filter, AccountRepository $accounts)
     {
         $termed = $request->exists('termed');
 
-        $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode')
+        $accounts = $accounts->setCacheLifetime(30)->select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','operatingUnitId','RSCId')
             ->withGlobalScope('role', new AccountScope)
             ->with([
                 'rsc',
