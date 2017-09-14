@@ -325,9 +325,9 @@ class Account extends Model
     public function scopeTermed(Builder $query, $termed)
     {
         return $termed == true 
-            ? $query->whereNotNull('endDate')->whereDate('endDate', '<=', Carbon::now()) 
+            ? $query->whereNotNull('endDate')->whereDate('endDate', '<=', Carbon::today()->format('Y-m-d')) 
             : $query->where(function($query){ 
-                $query->whereNull('endDate')->orWhere('endDate', '>', Carbon::now()); 
+                $query->whereNull('endDate')->orWhere('endDate', '>', Carbon::today()->format('Y-m-d')); 
             });
     }
 }
