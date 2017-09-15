@@ -49,7 +49,7 @@ class AccountsController extends Controller
             Cache::put('filters', $request->all(), 10);
         }
 
-        $accounts = Cache::remember('accounts', 720, function () use ($filter) {
+        $accounts = Cache::remember('accounts', 60, function () use ($filter) {
             return Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
             ->withGlobalScope('role', new AccountScope)
             ->with([
