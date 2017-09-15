@@ -17,6 +17,7 @@ use App\Filters\AccountFilter;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 
 class AccountsController extends Controller
@@ -28,9 +29,28 @@ class AccountsController extends Controller
      */
     public function index(Request $request, AccountFilter $filter)
     {
-        $termed = $request->exists('termed');
+        // $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode')
+        //     ->withGlobalScope('role', new AccountScope)
+        //     ->with([
+        //         'rsc',
+        //         'region',
+        //         'recruiter.employee.person',
+        //         'manager.employee.person',
+        //     ])
+        //     ->where('active', true)
+        //     ->filter($filter)->termed($termed)->get();
 
-        $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode')
+        $cachedFilters = Cache::get('filters');
+
+        if ($cachedFilters != $request->all()) {
+            Cache::put('filters', $request->all(), 10);
+            Cache::forget('accounts');
+        } else {
+            Cache::put('filters', $request->all(), 10);
+        }
+
+        $accounts = Cache::remember('accounts', 720, function () use ($filter) {
+            return Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
             ->withGlobalScope('role', new AccountScope)
             ->with([
                 'rsc',
@@ -39,7 +59,32 @@ class AccountsController extends Controller
                 'manager.employee.person',
             ])
             ->where('active', true)
-            ->filter($filter)->termed($termed)->get();
+            ->termed(false)
+            ->filter($filter)->get();
+        });
+
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
+
+        return view('admin.accounts.index', compact('accounts', 'RSCs'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function termed(Request $request, AccountFilter $filter)
+    {
+        $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
+            ->withGlobalScope('role', new AccountScope)
+            ->with([
+                'rsc',
+                'region',
+                'recruiter.employee.person',
+                'manager.employee.person',
+            ])
+            ->where('active', true)
+            ->filter($filter)->termed(true)->get();
 
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
 
@@ -73,6 +118,8 @@ class AccountsController extends Controller
     {
         $account = new Account;
         $request->save($account);
+
+        Cache::forget('accounts');
 
         flash(__('Account created.'));
 
@@ -115,6 +162,8 @@ class AccountsController extends Controller
     {
         $request->save($account);
 
+        Cache::forget('accounts');
+
         flash(__('Account updated.'));
 
         return back();
@@ -130,6 +179,8 @@ class AccountsController extends Controller
     {
         $account->active = false;
         $account->save();
+
+        Cache::forget('accounts');
 
         flash(__('Account deleted.'));
 
@@ -225,6 +276,8 @@ class AccountsController extends Controller
 
         flash(__('Account Merged.'));
 
+        Cache::forget('accounts');
+
         return back();
     }
 
@@ -253,6 +306,8 @@ class AccountsController extends Controller
 
         flash(__('Parent Site Code has been set.'));
 
+        Cache::forget('accounts');
+
         return back();
     }
 
@@ -269,6 +324,8 @@ class AccountsController extends Controller
 
         flash(__('Parent Site Code has been unset.'));
 
+        Cache::forget('accounts');
+
         return back();
     }
 
@@ -282,6 +339,8 @@ class AccountsController extends Controller
         $ignore = session('ignore-account-role-scope', false);
 
         session(['ignore-account-role-scope' => ! $ignore]);
+
+        Cache::forget('accounts');
 
         return back();
     }

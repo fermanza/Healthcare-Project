@@ -45,7 +45,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->patch('accounts/parent', 'AccountsController@parent')->name('accounts.parent');
     $router->patch('accounts/{account}/remove-parent', 'AccountsController@removeParent')->name('accounts.removeParent');
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
-    $router->get('accounts/termed', 'AccountsController@index')->name('termedSites.index');
+    $router->get('accounts/termed', 'AccountsController@termed')->name('termedSites.index');
     $router->get('accounts/{account}/manager', 'AccountsController@findManager')->name('accounts.find');
     $router->resource('accounts', 'AccountsController');
 
