@@ -29,17 +29,6 @@ class AccountsController extends Controller
      */
     public function index(Request $request, AccountFilter $filter)
     {
-        // $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode')
-        //     ->withGlobalScope('role', new AccountScope)
-        //     ->with([
-        //         'rsc',
-        //         'region',
-        //         'recruiter.employee.person',
-        //         'manager.employee.person',
-        //     ])
-        //     ->where('active', true)
-        //     ->filter($filter)->termed($termed)->get();
-
         $cachedFilters = Cache::get('filters');
 
         if ($cachedFilters != $request->all()) {

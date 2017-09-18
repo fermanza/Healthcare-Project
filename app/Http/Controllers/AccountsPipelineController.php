@@ -219,7 +219,18 @@ class AccountsPipelineController extends Controller
             'practices',
         ]);
 
-        $today = Carbon::today();
+        $lists = $this->getWordLists($account);
+
+        $currentRosterPhysiciansList = $lists['currentRosterPhysiciansList'];
+        $currentBenchPhysiciansList = $lists['currentBenchPhysiciansList'];
+        $locumsMDList = $lists['locumsMDList'];
+        $currentRosterAPPList = $lists['currentRosterAPPList'];
+        $currentBenchAPPList = $lists['currentBenchAPPList'];
+        $locumsAPPList = $lists['locumsAPPList'];
+        $futureRostersList = $lists['futureRostersList'];
+        $futureLocumsList = $lists['futureLocumsList'];
+        $recruitingsList = $lists['recruitingsList'];
+        $credentialingsList = $lists['credentialingsList'];
 
         // Creating the new document...
         $word = new \PhpOffice\PhpWord\PhpWord();
@@ -261,6 +272,315 @@ class AccountsPipelineController extends Controller
             $paragraphCenterStyle
         );
 
+        // Define table style arrays
+        $styleTable = array('borderSize'=>6, 'borderColor'=>'000000', 'cellMargin'=>80);
+        // Define cell style arrays
+        $styleCell = array('valign'=>'top');
+        // Add table style
+        $word->addTableStyle('myOwnTableStyle', $styleTable);
+        // Add table
+        $table = $section->addTable('myOwnTableStyle');
+        
+        // Add row
+        $table->addRow(100);
+        // Add cells
+        $table->addCell(5690, $styleCell)->addText('FT Physicians', $boldFontStyle);
+        $table->addCell(5690, $styleCell)->addText('PT Physicians', $boldFontStyle);
+        $table->addCell(5690, $styleCell)->addText('Locums', $boldFontStyle);
+
+        // Add row
+        $table->addRow();
+        // Add cells
+        $table->addCell(5690, $styleCell)->addText($currentRosterPhysiciansList, $normalFontStyle);
+        $table->addCell(5690, $styleCell)->addText($currentBenchPhysiciansList, $normalFontStyle);
+        $table->addCell(5690, $styleCell)->addText($locumsMDList, $normalFontStyle);
+
+        // Add row
+        $table->addRow(100);
+        // Add cells
+        $table->addCell(2000, $styleCell)->addText('FT APP', $boldFontStyle);
+        $table->addCell(2000, $styleCell)->addText('PT APP', $boldFontStyle);
+        $table->addCell(2000, $styleCell)->addText('Locums APP', $boldFontStyle);
+
+        // Add row
+        $table->addRow();
+        // Add cells
+        $table->addCell(2000, $styleCell)->addText($currentRosterAPPList, $normalFontStyle);
+        $table->addCell(2000, $styleCell)->addText($currentBenchAPPList, $normalFontStyle);
+        $table->addCell(2000, $styleCell)->addText($locumsAPPList, $normalFontStyle);
+
+        $section->addText('<w:br/>FTE Physicians required: '.$account->pipeline->staffPhysicianFTENeeds.'<w:br/>'.
+            'Current need: '.$account->pipeline->staffPhysicianFTEOpenings.'<w:br/>',
+            $normalFontStyle
+        );
+
+        $section->addText('FTE Apps required: '.$account->pipeline->staffAppsFTENeeds.'<w:br/>'.
+            'Current need: '.$account->pipeline->staffAppsFTEOpenings.'<w:br/>',
+            $normalFontStyle
+        );
+
+        $footer = $section->addFooter();
+        $footer->addText('3916 State Street | Suite 200 | Santa Barbara, CA 93105', $normalFontStyle, array('align' => 'right'));
+
+        if($futureRostersList != '') {
+            $section->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
+            $section->addText($futureRostersList, $normalFontStyle);
+        }
+
+        if($futureLocumsList != '') {
+            $section->addText('Locums who have not started', $boldUnderlinedFontStyle);
+            $section->addText($futureLocumsList, $normalFontStyle);
+        }
+
+        if($recruitingsList) {
+            $section->addText('Pipeline/candidate update', $boldUnderlinedFontStyle);
+            $section->addText($recruitingsList, $normalFontStyle);
+        }
+
+        if($credentialingsList) {
+            $section->addText('Credentialing', $boldUnderlinedFontStyle);
+            $section->addText($credentialingsList, $normalFontStyle);
+        }
+
+        // Saving the document...
+        $objWriter = IOFactory::createWriter($word, 'Word2007');
+        $objWriter->save($documentName);
+
+        return response()->download($documentName)->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Export to excel file.
+     *
+     * @param  \App\Account  $account
+     * @return \Illuminate\Http\Response
+     */
+    public function exportExcel(Account $account) {
+        $account->load([
+            'pipeline' => function ($query) {
+                $query->with([
+                    'rostersBenchs', 'recruitings', 'locums',
+                ]);
+            },
+            'recruiter.employee' => function ($query) {
+                $query->with('person', 'manager.person');
+            },
+            'division.group.region',
+            'practices',
+        ]);
+
+        $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
+        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+        ->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->sortBy('name');
+
+        $activeRosterPhysicians = $activeRosterPhysicians->values();
+
+        $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
+        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+        ->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->sortBy('name');
+
+        $benchPhysicians = $benchPhysicians->values();
+
+        $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
+        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+        ->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->sortBy('name');
+
+        $activeRosterAPPs = $activeRosterAPPs->values();
+
+        $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
+        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+        ->reject(function($rosterBench){
+            return $rosterBench->signedNotStarted;
+        })->sortBy('name');
+
+        $benchAPPs = $benchAPPs->values();
+
+        $credentialers = $account->pipeline->rostersBenchs
+        ->reject(function($rosterBench) { 
+            return !is_null($rosterBench->resigned); 
+        })
+        ->reject(function($rosterBench){
+            return !$rosterBench->signedNotStarted;
+        })->sortBy('name');
+
+        $recruitings = $account->pipeline->recruitings
+        ->reject(function($rosterBench) { 
+            return !is_null($rosterBench->declined); 
+        })
+        ->sortBy('name');
+
+        $accountPrevMonthIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+
+        $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+
+        $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
+
+        Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
+            $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
+                
+                $rosterBenchRow = $this->createRosterBenchTable($sheet, $account, $activeRosterPhysicians, $activeRosterAPPs);
+
+                ///////// Team Members //////////
+                $this->createMembersTable($sheet, $account, $accountPrevMonthIncComp, $accountYTDIncComp);
+                ///////// Team Members //////////
+
+
+                /////// Bench Table ////////
+                $benchTable = $this->createBenchTable($sheet, $account, $rosterBenchRow, $benchPhysicians, $benchAPPs);
+                /////// Bench Table ////////
+
+                /////// Recruiting Table /////////
+                $recruitingTable = $this->createRecruitingTable($sheet, $account, $benchTable[1], $recruitings);
+                /////// Recruiting Table /////////
+
+                ////// Credentialing Table ////////
+                $credentialingTable = $this->createCredentialingTable($sheet, $account, $recruitingTable, $credentialers);
+                ////// Credentialing Recruiting Table ////////
+
+                ////// Requirements Table ////////
+                $requirementsTable = $this->createRequirementsTable($sheet, $account, $credentialingTable);
+                ////// Requirements Table ////////
+
+                $sheet->cells('A4:F4', function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setBackground('#b5c7e6');
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+                $sheet->cells('A4:F'.($rosterBenchRow+1), function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+                $sheet->cells('A'.($benchTable[0]+1).':F'.($benchTable[1]), function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+                $sheet->cells('A'.($recruitingTable[0]+1).':D'.($recruitingTable[1]), function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+                $sheet->cells('A'.($credentialingTable[0]+1).':H'.($credentialingTable[1]), function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+                $sheet->cells('A'.($requirementsTable[0]+1).':F'.($requirementsTable[0]+5), function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+                $sheet->cell('A4', function($cells) {
+                    $cells->setFontSize(14);
+                });
+
+                $sheet->cell('D4', function($cells) {
+                    $cells->setFontSize(14);
+                });
+
+                $sheet->cell('C4', function($cells) {
+                    $cells->setFontSize(11);
+                });
+
+                $sheet->cell('F4', function($cells) {
+                    $cells->setFontSize(11);
+                });
+
+                $tableStyle = array(
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                        'inside' => array(
+                            'style' => 'thin',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                    ),
+                );
+
+                $headersStyle = array(
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                        'inside' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                    ),
+                );
+
+                $sheet->setAutoSize(true);
+
+                $sheet->setWidth(array(
+                    'A'     => 12,
+                    'C'     => 10,
+                    'D'     => 12,
+                    'F'     => 10,
+                    'G'     => 1,
+                    'H'     => 18,
+                    'I'     => 18,
+                ));
+
+                $sheet->setColumnFormat(array(
+                    'I16:I17' => '"$"#,##0.00_-',
+                ));
+
+                $heights = array();
+
+                for($x = $recruitingTable[0]; $x <= ($credentialingTable[1]); $x++) {
+                        $heights[$x] = 25;
+                }
+
+                $sheet->setHeight($heights);
+                $sheet->setHeight(array($rosterBenchRow => 3));
+
+                $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
+                $sheet->getStyle('H4:I13')->applyFromArray($tableStyle);
+                $sheet->getStyle('H14:I17')->applyFromArray($tableStyle);
+                $sheet->getStyle('A4:F'.($rosterBenchRow+1))->applyFromArray($tableStyle);
+                $sheet->getStyle('A'.$benchTable[0].':F'.($benchTable[1]))->applyFromArray($tableStyle);
+                $sheet->getStyle('A'.$recruitingTable[0].':I'.$recruitingTable[1])->applyFromArray($tableStyle);
+                $sheet->getStyle('A'.$credentialingTable[0].':I'.$credentialingTable[1])->applyFromArray($tableStyle);
+                $sheet->getStyle('A'.$requirementsTable[0].':I'.($requirementsTable[0]+5))->applyFromArray($tableStyle);
+
+                $sheet->getStyle('D'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
+                $sheet->getStyle('E'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
+                $sheet->getStyle('F'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
+                $sheet->getStyle('E'.($recruitingTable[0]+2).':I'.$recruitingTable[1])->getAlignment()->setWrapText(true);
+                $sheet->getStyle('I'.($credentialingTable[0]+2).':I'.$credentialingTable[1])->getAlignment()->setWrapText(true);
+            });
+        })->download('xlsx'); 
+    }
+
+    public function getWordLists($account) {
+        $today = Carbon::today();
 
         ////// Elements for lists /////////
         $currentRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
@@ -441,819 +761,557 @@ class AccountsPipelineController extends Controller
         }
         /////// End of Lists ///////////
 
-        // Define table style arrays
-        $styleTable = array('borderSize'=>6, 'borderColor'=>'000000', 'cellMargin'=>80);
-        // Define cell style arrays
-        $styleCell = array('valign'=>'top');
-        // Add table style
-        $word->addTableStyle('myOwnTableStyle', $styleTable);
-        // Add table
-        $table = $section->addTable('myOwnTableStyle');
-        
-        // Add row
-        $table->addRow(100);
-        // Add cells
-        $table->addCell(5690, $styleCell)->addText('FT Physicians', $boldFontStyle);
-        $table->addCell(5690, $styleCell)->addText('PT Physicians', $boldFontStyle);
-        $table->addCell(5690, $styleCell)->addText('Locums', $boldFontStyle);
-
-        // Add row
-        $table->addRow();
-        // Add cells
-        $table->addCell(5690, $styleCell)->addText($currentRosterPhysiciansList, $normalFontStyle);
-        $table->addCell(5690, $styleCell)->addText($currentBenchPhysiciansList, $normalFontStyle);
-        $table->addCell(5690, $styleCell)->addText($locumsMDList, $normalFontStyle);
-
-        // Add row
-        $table->addRow(100);
-        // Add cells
-        $table->addCell(2000, $styleCell)->addText('FT APP', $boldFontStyle);
-        $table->addCell(2000, $styleCell)->addText('PT APP', $boldFontStyle);
-        $table->addCell(2000, $styleCell)->addText('Locums APP', $boldFontStyle);
-
-        // Add row
-        $table->addRow();
-        // Add cells
-        $table->addCell(2000, $styleCell)->addText($currentRosterAPPList, $normalFontStyle);
-        $table->addCell(2000, $styleCell)->addText($currentBenchAPPList, $normalFontStyle);
-        $table->addCell(2000, $styleCell)->addText($locumsAPPList, $normalFontStyle);
-
-        $section->addText('<w:br/>FTE Physicians required: '.$account->pipeline->staffPhysicianFTENeeds.'<w:br/>'.
-            'Current need: '.$account->pipeline->staffPhysicianFTEOpenings.'<w:br/>',
-            $normalFontStyle
+        return array(
+            'currentRosterPhysiciansList' => $currentRosterPhysiciansList,
+            'currentBenchPhysiciansList' => $currentBenchPhysiciansList,
+            'locumsMDList' => $locumsMDList,
+            'currentRosterAPPList' => $currentRosterAPPList,
+            'currentBenchAPPList' => $currentBenchAPPList,
+            'locumsAPPList' => $locumsAPPList,
+            'futureRostersList' => $futureRostersList,
+            'futureLocumsList' => $futureLocumsList,
+            'recruitingsList' => $recruitingsList,
+            'credentialingsList' => $credentialingsList
         );
-
-        $section->addText('FTE Apps required: '.$account->pipeline->staffAppsFTENeeds.'<w:br/>'.
-            'Current need: '.$account->pipeline->staffAppsFTEOpenings.'<w:br/>',
-            $normalFontStyle
-        );
-
-        $footer = $section->addFooter();
-        $footer->addText('3916 State Street | Suite 200 | Santa Barbara, CA 93105', $normalFontStyle, array('align' => 'right'));
-
-        // $header = $section->addHeader();
-        // //$header->addText('ENVISION PHYSICIAN SERVICES', $normalFontStyle);
-        // $header->addPreserveText('ENVISION PHYSICIAN SERVICES           {PAGE}', $normalFontStyle, array('align' => 'right'));
-
-        if($futureRostersList != '') {
-            $section->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
-            $section->addText($futureRostersList, $normalFontStyle);
-        }
-
-        if($futureLocumsList != '') {
-            $section->addText('Locums who have not started', $boldUnderlinedFontStyle);
-            $section->addText($futureLocumsList, $normalFontStyle);
-        }
-
-        if($recruitingsList) {
-            $section->addText('Pipeline/candidate update', $boldUnderlinedFontStyle);
-            $section->addText($recruitingsList, $normalFontStyle);
-        }
-
-        if($credentialingsList) {
-            $section->addText('Credentialing', $boldUnderlinedFontStyle);
-            $section->addText($credentialingsList, $normalFontStyle);
-        }
-
-        // Saving the document...
-        $objWriter = IOFactory::createWriter($word, 'Word2007');
-        $objWriter->save($documentName);
-
-        return response()->download($documentName)->deleteFileAfterSend(true);
     }
 
-    /**
-     * Export to excel file.
-     *
-     * @param  \App\Account  $account
-     * @return \Illuminate\Http\Response
-     */
-    public function exportExcel(Account $account) {
-        $account->load([
-            'pipeline' => function ($query) {
-                $query->with([
-                    'rostersBenchs', 'recruitings', 'locums',
-                ]);
-            },
-            'recruiter.employee' => function ($query) {
-                $query->with('person', 'manager.person');
-            },
-            'division.group.region',
-            'practices',
-        ]);
-
-        $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-            return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
-        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-        ->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->sortBy('name');
-
-        $activeRosterPhysicians = $activeRosterPhysicians->values();
-
-        $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-            return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
-        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-        ->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->sortBy('name');
-
-        $benchPhysicians = $benchPhysicians->values();
-
-        $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-            return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
-        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-        ->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->sortBy('name');
-
-        $activeRosterAPPs = $activeRosterAPPs->values();
-
-        $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-            return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
-        })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-        ->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->sortBy('name');
-
-        $benchAPPs = $benchAPPs->values();
-
-        $credentialers = $account->pipeline->rostersBenchs
-        ->reject(function($rosterBench) { 
-            return !is_null($rosterBench->resigned); 
-        })
-        ->reject(function($rosterBench){
-            return !$rosterBench->signedNotStarted;
-        })->sortBy('name');
-
-        $recruitings = $account->pipeline->recruitings
-        ->reject(function($rosterBench) { 
-            return !is_null($rosterBench->declined); 
-        })
-        ->sortBy('name');
-
-        $accountPrevMonthIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
-
-        $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
-
-        $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
-
-        Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
-            $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
-                $sheet->mergeCells('A1:I1');
-                $sheet->mergeCells('A2:E2');
-                $sheet->mergeCells('A4:B4');
-                $sheet->mergeCells('D4:E4');
-                $sheet->mergeCells('H4:I4');
-
-                $sheet->cell('A1', function($cell) use ($account) {
-                    $cell->setValue($account->name);
-                    $cell->setFontColor('#FFFFFF');
-                    $cell->setBackground('#325694');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(16);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cells('A2:I2', function($cells) {
-                    $cells->setFontColor('#000000');
-                    $cells->setBackground('#b5c7e6');
-                    $cells->setFontFamily('Calibri (Body)');
-                    $cells->setFontSize(13);
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                $sheet->cell('A2', function($cell) use ($account) {
-                    $cell->setValue($account->googleAddress);
-                });
-
-                $sheet->cell('F2', function($cell) use ($account) {
-                    $cell->setValue('IC');
-                });
-
-                $sheet->cell('H2', function($cell) use ($account) {
-                    $cell->setValue($account->siteCode);
-                });
-
-                $sheet->cell('I2', function($cell) use ($account) {
-                    $cell->setValue('RTI Site Code');
-                });
-
-                $sheet->cell('A4', function($cell) use ($account, $activeRosterPhysicians) {
-                    $cell->setValue('FT Roster MD ('.count($activeRosterPhysicians).')');
-                });
-
-                $sheet->cell('C4', function($cell) use ($account) {
-                    $cell->setValue('Start Date');
-                });
-
-                $sheet->cell('D4', function($cell) use ($account, $activeRosterAPPs) {
-                    $cell->setValue('FT Roster APP ('.count($activeRosterAPPs).')');
-                });
-
-                $sheet->cell('F4', function($cell) use ($account) {
-                    $cell->setValue('Start Date');
-                });
-
-                $rosterBenchRow = 5;
-                $rosterBenchCount = 1;
-
-                if(count($activeRosterPhysicians) >= count($activeRosterAPPs)) {
-                    $countUntil = count($activeRosterPhysicians) < 17 ? 17 : count($activeRosterPhysicians);
-
-                    for ($i = 0; $i < $countUntil; $i++) { 
-                        $row = [
-                            $rosterBenchCount,
-                            isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
-                            isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
-                            $rosterBenchCount,
-                            isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]->name : '',
-                            isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
-                        ];
-
-                        $sheet->row($rosterBenchRow, $row);
-
-                        $rosterBenchRow++;
-                        $rosterBenchCount++;
-                    }
-                } else {
-                    $countUntil = count($activeRosterAPPs) < 17 ? 17 : count($activeRosterAPPs);
-
-                    for ($i = 0; $i < $countUntil; $i++) { 
-                        $row = [
-                            $rosterBenchCount,
-                            isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
-                            isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
-                            $rosterBenchCount,
-                            isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]->name : '',
-                            isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
-                        ];
-
-                        $sheet->row($rosterBenchRow, $row);
-
-                        $rosterBenchRow++;
-                        $rosterBenchCount++;
-                    }
-                }
-
-                $sheet->mergeCells('A'.$rosterBenchRow.':F'.$rosterBenchRow);
-
-                $sheet->row(($rosterBenchRow+1), array(
-                    'Open/Proactive',
-                    '',
-                    '',
-                    'Open/Proactive',
-                    '',
-                    ''
-                ));
-
-                ///////// Team Members //////////
-                $sheet->cell('H4', function($cell) use ($account) {
-                    $cell->setBackground('#b5c7e6');
-                    $cell->setValue('Team Members');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(14);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cells('H5:H13', function($cells) {
-                    $cells->setBackground('#fff1ce');
-                });
-
-                $sheet->cells('H14:I17', function($cells) {
-                    $cells->setBackground('#b5c7e6');
-                });
-
-                $sheet->cells('H5:I17', function($cells) {
-                    $cells->setFontFamily('Calibri (Body)');
-                    $cells->setFontSize(11);
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                $sheet->cell('H5', function($cell) use ($account) {
-                    $cell->setValue('SVP');
-                });
-                $sheet->cell('H6', function($cell) use ($account) {
-                    $cell->setValue('RMD');
-                });
-                $sheet->cell('H7', function($cell) use ($account) {
-                    $cell->setValue('DOO');
-                });
-                $sheet->cell('H8', function($cell) use ($account) {
-                    $cell->setValue('DCS');
-                });
-                $sheet->cell('H9', function($cell) use ($account) {
-                    $cell->setValue('Recruiter');
-                });
-                $sheet->cell('H10', function($cell) use ($account) {
-                    $cell->setValue('Credentialer');
-                });
-                $sheet->cell('H11', function($cell) use ($account) {
-                    $cell->setValue('Scheduler');
-                });
-                $sheet->cell('H12', function($cell) use ($account) {
-                    $cell->setValue('Enrollment');
-                });
-                $sheet->cell('H13', function($cell) use ($account) {
-                    $cell->setValue('Payroll');
-                });
-                $sheet->cell('H14', function($cell) use ($account) {
-                    $cell->setValue('Physician Opens');
-                });
-                $sheet->cell('H15', function($cell) use ($account) {
-                    $cell->setValue('APP Opens');
-                });
-                $sheet->cell('H16', function($cell) use ($account) {
-                    $cell->setValue('Prev Month - Inc Comp');
-                });
-                $sheet->cell('H17', function($cell) use ($account) {
-                    $cell->setValue('YTD - Inc Comp');
-                });
-
-                $sheet->cell('I5', function($cell) use ($account) {
-                    $cell->setValue($account->pipeline->svp);
-                });
-                $sheet->cell('I6', function($cell) use ($account) {
-                    $cell->setValue($account->pipeline->rmd);
-                });
-                $sheet->cell('I7', function($cell) use ($account) {
-                    $cell->setValue($account->pipeline->dca);
-                });
-                $sheet->cell('I8', function($cell) use ($account) {
-                    $cell->setValue($account->dcs ? $account->dcs->fullName() : '');
-                });
-                $sheet->cell('I9', function($cell) use ($account) {
-                    $cell->setValue($account->recruiter ? $account->recruiter->fullName() : '');
-                });
-                $sheet->cell('I10', function($cell) use ($account) {
-                    $cell->setValue($account->credentialer ? $account->credentialer->fullName() : '');
-                });
-                $sheet->cell('I11', function($cell) use ($account) {
-                    $cell->setValue($account->scheduler ? $account->scheduler->fullName() : '');
-                });
-                $sheet->cell('I12', function($cell) use ($account) {
-                    $cell->setValue($account->enrollment ? $account->enrollment->fullName() : '');
-                });
-                $sheet->cell('I13', function($cell) use ($account) {
-                    $cell->setValue($account->payroll ? $account->payroll->fullName() : '');
-                });
-                $sheet->cell('I14', function($cell) use ($account) {
-                    $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
-                });
-                $sheet->cell('I15', function($cell) use ($account) {
-                    $cell->setValue($account->pipeline->staffAppsFTEOpenings);
-                });
-                $sheet->cell('I16', function($cell) use ($accountPrevMonthIncComp) {
-                    $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
-                });
-                $sheet->cell('I17', function($cell) use ($accountYTDIncComp) {
-                    $cell->setValue($accountYTDIncComp->{'YTD - Inc Comp'});
-                });
-                ///////// Team Members //////////
-
-
-                /////// Bench Table ////////
-                $benchTableStart = $rosterBenchRow+3;
-
-                $sheet->mergeCells('A'.$benchTableStart.':C'.$benchTableStart);
-                $sheet->mergeCells('D'.$benchTableStart.':F'.$benchTableStart);
-
-                $sheet->cell('A'.$benchTableStart, function($cell) use ($account) {
-                    $cell->setValue('PT/Locums MD');
-                    $cell->setBackground('#b5c7e6');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(11);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cell('D'.$benchTableStart, function($cell) use ($account) {
-                    $cell->setValue('PT/Locums APP');
-                    $cell->setBackground('#b5c7e6');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(11);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->row(($benchTableStart+1), array(
-                    'Type/Shifts', 'Name', 'Start/Source',
-                    'Type/Shifts', 'Name', 'Start/Source'
-                ));
-
-                $benchTableStartData = $benchTableStart+2;
-
-                if(count($benchPhysicians) >= count($benchAPPs)) {
-                    for ($i = 0; $i < count($benchPhysicians); $i++) { 
-                        $row = [
-                            'MD/PRN',
-                            $benchPhysicians[$i]->name,
-                            $benchPhysicians[$i]->firstShift ? Carbon::parse($benchPhysicians[$i]->firstShift)->format('m-d-Y') : '',
-                            isset($benchAPPs[$i]) ? 'APP/4' : '',
-                            isset($benchAPPs[$i]) ? $benchAPPs[$i]->name : '',
-                            isset($benchAPPs[$i]) ? ($benchAPPs[$i]->firstShift ? Carbon::parse($benchAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
-                        ];
-
-                        $sheet->row($benchTableStartData, $row);
-
-                        $benchTableStartData++;
-                    }
-                } else {
-                    for ($i = 0; $i < count($benchAPPs); $i++) { 
-                        $row = [
-                            isset($benchPhysicians[$i]) ? 'MD/PRN' : '',
-                            isset($benchPhysicians[$i]) ? $benchPhysicians[$i]->name : '',
-                            isset($benchPhysicians[$i]) ? ($benchPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
-                            'APP/4',
-                            $benchAPPs[$i]->name,
-                            $benchAPPs[$i]->firstShift ? Carbon::parse($benchAPPs[$i]->firstShift)->format('m-d-Y') : ''
-                        ];
-
-                        $sheet->row($benchTableStartData, $row);
-
-                        $benchTableStartData++;
-                    }
-                }
-                /////// Bench Table ////////
-
-                /////// Recruiting Table /////////
-                $recruitingTableStart = $benchTableStartData+2;
-
-                $sheet->mergeCells('A'.$recruitingTableStart.':F'.$recruitingTableStart);
-                $sheet->mergeCells('G'.$recruitingTableStart.':H'.$recruitingTableStart);
-                $sheet->mergeCells('E'.($recruitingTableStart+1).':I'.($recruitingTableStart+1));
-
-                $sheet->cell('A'.$recruitingTableStart, function($cell) use ($account) {
-                    $cell->setValue('Recruiting Pipeline');
-                    $cell->setBackground('#b5c7e6');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(14);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cell('G'.$recruitingTableStart, function($cell) use ($account) {
-                    $cell->setValue('Candidates');
-                    $cell->setBackground('#b5c7e6');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(14);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cell('I'.$recruitingTableStart, function($cell) use ($account) {
-                    $cell->setBackground('#c1e7c9');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(11);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cell('A'.($recruitingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('FT/PT');
-                });
-
-                $sheet->cell('B'.($recruitingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Provider');
-                });
-
-                $sheet->cell('C'.($recruitingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('MD\APP');
-                });
-
-                $sheet->cell('D'.($recruitingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Stage');
-                });
-
-                $sheet->cell('E'.($recruitingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Notes');
-                });
-
-                $sheet->cell('A'.($recruitingTableStart+1).':E'.($recruitingTableStart+1), function($cell) use ($account) {
-                    $cell->setBackground('#fff1ce');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(11);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $recruitingTableDataStart = $recruitingTableStart+2;
-
-                foreach ($recruitings as $recruiting) {
-                    $sheet->mergeCells('E'.$recruitingTableDataStart.':I'.$recruitingTableDataStart);
-
-                    $row = [
-                        strtoupper($recruiting->contract),
-                        $recruiting->name,
-                        strtoupper($recruiting->type),
-                        '',
-                        $recruiting->notes
-                    ];
-
-                    $sheet->row($recruitingTableDataStart, $row);
-
-                    $recruitingTableDataStart++;
-                }
-
-                $sheet->cell('E'.($recruitingTableStart+2).':E'.($recruitingTableDataStart), function($cell) use ($account) {
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(8);
-                    $cell->setAlignment('left');
-                    $cell->setValignment('center');
-                });
-                /////// Recruiting Table /////////
-
-                ////// Credentialing Table ////////
-                $credentialingTableStart = $recruitingTableDataStart+2;
-
-                $sheet->mergeCells('A'.$credentialingTableStart.':F'.$credentialingTableStart);
-                $sheet->mergeCells('G'.$credentialingTableStart.':H'.$credentialingTableStart);
-                $sheet->mergeCells('F'.($credentialingTableStart+1).':G'.($credentialingTableStart+1));
-
-                $sheet->cell('A'.$credentialingTableStart, function($cell) use ($account) {
-                    $cell->setValue('Credentialing Pipeline');
-                    $cell->setBackground('#b5c7e6');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(14);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cell('G'.$credentialingTableStart, function($cell) use ($account) {
-                    $cell->setValue('Candidates');
-                    $cell->setBackground('#b5c7e6');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(14);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cell('I'.$credentialingTableStart, function($cell) use ($account) {
-                    $cell->setBackground('#c1e7c9');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(11);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cell('A'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('FT/PT/Locums');
-                });
-
-                $sheet->cell('B'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Provider');
-                });
-
-                $sheet->cell('C'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('MD\APP');
-                });
-
-                $sheet->cell('D'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Contract Received');
-                });
-
-                $sheet->cell('E'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('File to Credentialing');
-                });
-
-                $sheet->cell('F'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('APP to Hospital');
-                });
-
-                $sheet->cell('H'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Privilege Goal');
-                });
-
-                $sheet->cell('I'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Notes');
-                });
-
-                $sheet->cell('A'.($credentialingTableStart+1).':I'.($credentialingTableStart+1), function($cell) use ($account) {
-                    $cell->setBackground('#fff1ce');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(11);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $credentialingTableDataStart = $credentialingTableStart+2;
-
-                foreach ($credentialers as $credentialer) {
-                    $sheet->mergeCells('F'.$credentialingTableDataStart.':G'.$credentialingTableDataStart);
-
-                    $row = [
-                        strtoupper($credentialer->contract),
-                        $credentialer->name,
-                        strtoupper($credentialer->type),
-                        '',
-                        '',
-                        '',
-                        '',
-                        $credentialer->notes
-                    ];
-
-                    $sheet->row($credentialingTableDataStart, $row);
-
-                    $credentialingTableDataStart++;
-                }
-
-                $sheet->cell('I'.($credentialingTableStart+2).':I'.($credentialingTableDataStart), function($cell) use ($account) {
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(8);
-                    $cell->setAlignment('left');
-                    $cell->setValignment('center');
-                });
-                ////// Credentialing Recruiting Table ////////
-
-                ////// Requirements Table ////////
-                $requirementsTableStart = $credentialingTableDataStart+2;
-
-                $sheet->mergeCells('A'.$requirementsTableStart.':I'.$requirementsTableStart);
-                $sheet->mergeCells('B'.($requirementsTableStart+1).':I'.($requirementsTableStart+1));
-                $sheet->mergeCells('B'.($requirementsTableStart+2).':I'.($requirementsTableStart+2));
-                $sheet->mergeCells('B'.($requirementsTableStart+3).':I'.($requirementsTableStart+3));
-                $sheet->mergeCells('B'.($requirementsTableStart+4).':I'.($requirementsTableStart+4));
-                $sheet->mergeCells('B'.($requirementsTableStart+5).':I'.($requirementsTableStart+5));
-
-                $sheet->cell('A'.$requirementsTableStart, function($cell) use ($account) {
-                    $cell->setValue('Credentialing Account Requirements');
-                    $cell->setBackground('#b5c7e6');
-                    $cell->setFontFamily('Calibri (Body)');
-                    $cell->setFontSize(14);
-                    $cell->setAlignment('center');
-                    $cell->setValignment('center');
-                });
-
-                $sheet->cell('A'.($requirementsTableStart+1), function($cell) use ($account) {
-                    $cell->setValue('Requirements');
-                });
-
-                $sheet->cell('A'.($requirementsTableStart+2), function($cell) use ($account) {
-                    $cell->setValue('Fees');
-                });
-
-                $sheet->cell('A'.($requirementsTableStart+3), function($cell) use ($account) {
-                    $cell->setValue('Application');
-                });
-
-                $sheet->cell('A'.($requirementsTableStart+4), function($cell) use ($account) {
-                    $cell->setValue('Meetings');
-                });
-
-                $sheet->cell('A'.($requirementsTableStart+5), function($cell) use ($account) {
-                    $cell->setValue('Other');
-                });
-
-                $sheet->cell('B'.($requirementsTableStart+1), function($cell) use ($account) {
-                    $cell->setValue($account->requirements);
-                });
-
-                $sheet->cell('B'.($requirementsTableStart+2), function($cell) use ($account) {
-                    $cell->setValue($account->fees);
-                });
-
-                $sheet->cell('B'.($requirementsTableStart+3), function($cell) use ($account) {
-                    $cell->setValue($account->applications);
-                });
-
-                $sheet->cell('B'.($requirementsTableStart+4), function($cell) use ($account) {
-                    $cell->setValue($account->meetings);
-                });
-
-                $sheet->cell('B'.($requirementsTableStart+5), function($cell) use ($account) {
-                    $cell->setValue($account->other);
-                });
-                ////// Requirements Table ////////
-
-                $sheet->cells('A4:F4', function($cells) {
-                    $cells->setFontColor('#000000');
-                    $cells->setBackground('#b5c7e6');
-                    $cells->setFontFamily('Calibri (Body)');
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                $sheet->cells('A4:F'.($rosterBenchRow+1), function($cells) {
-                    $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Calibri (Body)');
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                $sheet->cells('A'.($benchTableStart+1).':F'.($benchTableStartData), function($cells) {
-                    $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Calibri (Body)');
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                $sheet->cells('A'.($recruitingTableStart+1).':D'.($recruitingTableDataStart), function($cells) {
-                    $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Calibri (Body)');
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                $sheet->cells('A'.($credentialingTableStart+1).':H'.($credentialingTableDataStart), function($cells) {
-                    $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Calibri (Body)');
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                $sheet->cells('A'.($requirementsTableStart+1).':F'.($requirementsTableStart+5), function($cells) {
-                    $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Calibri (Body)');
-                    $cells->setAlignment('center');
-                    $cells->setValignment('center');
-                });
-
-                $sheet->cell('A4', function($cells) {
-                    $cells->setFontSize(14);
-                });
-
-                $sheet->cell('D4', function($cells) {
-                    $cells->setFontSize(14);
-                });
-
-                $sheet->cell('C4', function($cells) {
-                    $cells->setFontSize(11);
-                });
-
-                $sheet->cell('F4', function($cells) {
-                    $cells->setFontSize(11);
-                });
-
-                $tableStyle = array(
-                    'borders' => array(
-                        'outline' => array(
-                            'style' => 'medium',
-                            'color' => array('rgb' => '000000'),
-                        ),
-                        'inside' => array(
-                            'style' => 'thin',
-                            'color' => array('rgb' => '000000'),
-                        ),
-                    ),
-                );
-
-                $headersStyle = array(
-                    'borders' => array(
-                        'outline' => array(
-                            'style' => 'medium',
-                            'color' => array('rgb' => '000000'),
-                        ),
-                        'inside' => array(
-                            'style' => 'medium',
-                            'color' => array('rgb' => '000000'),
-                        ),
-                    ),
-                );
-
-                $sheet->setAutoSize(true);
-
-                $sheet->setWidth(array(
-                    'A'     => 12,
-                    'C'     => 10,
-                    'D'     => 12,
-                    'F'     => 10,
-                    'G'     => 1,
-                    'H'     => 18,
-                    'I'     => 18,
-                ));
-
-                $sheet->setColumnFormat(array(
-                    'I16:I17' => '"$"#,##0.00_-',
-                ));
-
-                $heights = array();
-
-                for($x = $recruitingTableStart; $x <= ($credentialingTableDataStart); $x++) {
-                        $heights[$x] = 25;
-                }
-
-                $sheet->setHeight($heights);
-                $sheet->setHeight(array($rosterBenchRow => 3));
-
-                $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
-                $sheet->getStyle('H4:I13')->applyFromArray($tableStyle);
-                $sheet->getStyle('H14:I17')->applyFromArray($tableStyle);
-                $sheet->getStyle('A4:F'.($rosterBenchRow+1))->applyFromArray($tableStyle);
-                $sheet->getStyle('A'.$benchTableStart.':F'.($benchTableStartData))->applyFromArray($tableStyle);
-                $sheet->getStyle('A'.$recruitingTableStart.':I'.$recruitingTableDataStart)->applyFromArray($tableStyle);
-                $sheet->getStyle('A'.$credentialingTableStart.':I'.$credentialingTableDataStart)->applyFromArray($tableStyle);
-                $sheet->getStyle('A'.$requirementsTableStart.':I'.($requirementsTableStart+5))->applyFromArray($tableStyle);
-
-                $sheet->getStyle('D'.($credentialingTableStart+1))->getAlignment()->setWrapText(true);
-                $sheet->getStyle('E'.($credentialingTableStart+1))->getAlignment()->setWrapText(true);
-                $sheet->getStyle('F'.($credentialingTableStart+1))->getAlignment()->setWrapText(true);
-                $sheet->getStyle('E'.($recruitingTableStart+2).':I'.$recruitingTableDataStart)->getAlignment()->setWrapText(true);
-                $sheet->getStyle('I'.($credentialingTableStart+2).':I'.$credentialingTableDataStart)->getAlignment()->setWrapText(true);
-            });
-        })->download('xlsx'); 
+    public function createRecruitingTable($sheet, $account, $benchTableStartData, $recruitings) {
+        $recruitingTableStart = $benchTableStartData+2;
+
+        $sheet->mergeCells('A'.$recruitingTableStart.':F'.$recruitingTableStart);
+        $sheet->mergeCells('G'.$recruitingTableStart.':H'.$recruitingTableStart);
+        $sheet->mergeCells('E'.($recruitingTableStart+1).':I'.($recruitingTableStart+1));
+
+        $sheet->cell('A'.$recruitingTableStart, function($cell) use ($account) {
+            $cell->setValue('Recruiting Pipeline');
+            $cell->setBackground('#b5c7e6');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(14);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cell('G'.$recruitingTableStart, function($cell) use ($account) {
+            $cell->setValue('Candidates');
+            $cell->setBackground('#b5c7e6');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(14);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cell('I'.$recruitingTableStart, function($cell) use ($account) {
+            $cell->setBackground('#c1e7c9');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(11);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cell('A'.($recruitingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('FT/PT');
+        });
+
+        $sheet->cell('B'.($recruitingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('Provider');
+        });
+
+        $sheet->cell('C'.($recruitingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('MD\APP');
+        });
+
+        $sheet->cell('D'.($recruitingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('Stage');
+        });
+
+        $sheet->cell('E'.($recruitingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('Notes');
+        });
+
+        $sheet->cell('A'.($recruitingTableStart+1).':E'.($recruitingTableStart+1), function($cell) use ($account) {
+            $cell->setBackground('#fff1ce');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(11);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $recruitingTableDataStart = $recruitingTableStart+2;
+
+        foreach ($recruitings as $recruiting) {
+            $sheet->mergeCells('E'.$recruitingTableDataStart.':I'.$recruitingTableDataStart);
+
+            $row = [
+                strtoupper($recruiting->contract),
+                $recruiting->name,
+                strtoupper($recruiting->type),
+                '',
+                $recruiting->notes
+            ];
+
+            $sheet->row($recruitingTableDataStart, $row);
+
+            $recruitingTableDataStart++;
+        }
+
+        $sheet->cell('E'.($recruitingTableStart+2).':E'.($recruitingTableDataStart), function($cell) use ($account) {
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(8);
+            $cell->setAlignment('left');
+            $cell->setValignment('center');
+        });
+
+        return array($recruitingTableStart, $recruitingTableDataStart);
+    }
+
+    public function createMembersTable($sheet, $account, $accountPrevMonthIncComp, $accountYTDIncComp) {
+        $sheet->cell('H4', function($cell) use ($account) {
+            $cell->setBackground('#b5c7e6');
+            $cell->setValue('Team Members');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(14);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cells('H5:H13', function($cells) {
+            $cells->setBackground('#fff1ce');
+        });
+
+        $sheet->cells('H14:I17', function($cells) {
+            $cells->setBackground('#b5c7e6');
+        });
+
+        $sheet->cells('H5:I17', function($cells) {
+            $cells->setFontFamily('Calibri (Body)');
+            $cells->setFontSize(11);
+            $cells->setAlignment('center');
+            $cells->setValignment('center');
+        });
+
+        $sheet->cell('H5', function($cell) use ($account) {
+            $cell->setValue('SVP');
+        });
+        $sheet->cell('H6', function($cell) use ($account) {
+            $cell->setValue('RMD');
+        });
+        $sheet->cell('H7', function($cell) use ($account) {
+            $cell->setValue('DOO');
+        });
+        $sheet->cell('H8', function($cell) use ($account) {
+            $cell->setValue('DCS');
+        });
+        $sheet->cell('H9', function($cell) use ($account) {
+            $cell->setValue('Recruiter');
+        });
+        $sheet->cell('H10', function($cell) use ($account) {
+            $cell->setValue('Credentialer');
+        });
+        $sheet->cell('H11', function($cell) use ($account) {
+            $cell->setValue('Scheduler');
+        });
+        $sheet->cell('H12', function($cell) use ($account) {
+            $cell->setValue('Enrollment');
+        });
+        $sheet->cell('H13', function($cell) use ($account) {
+            $cell->setValue('Payroll');
+        });
+        $sheet->cell('H14', function($cell) use ($account) {
+            $cell->setValue('Physician Opens');
+        });
+        $sheet->cell('H15', function($cell) use ($account) {
+            $cell->setValue('APP Opens');
+        });
+        $sheet->cell('H16', function($cell) use ($account) {
+            $cell->setValue('Prev Month - Inc Comp');
+        });
+        $sheet->cell('H17', function($cell) use ($account) {
+            $cell->setValue('YTD - Inc Comp');
+        });
+
+        $sheet->cell('I5', function($cell) use ($account) {
+            $cell->setValue($account->pipeline->svp);
+        });
+        $sheet->cell('I6', function($cell) use ($account) {
+            $cell->setValue($account->pipeline->rmd);
+        });
+        $sheet->cell('I7', function($cell) use ($account) {
+            $cell->setValue($account->pipeline->dca);
+        });
+        $sheet->cell('I8', function($cell) use ($account) {
+            $cell->setValue($account->dcs ? $account->dcs->fullName() : '');
+        });
+        $sheet->cell('I9', function($cell) use ($account) {
+            $cell->setValue($account->recruiter ? $account->recruiter->fullName() : '');
+        });
+        $sheet->cell('I10', function($cell) use ($account) {
+            $cell->setValue($account->credentialer ? $account->credentialer->fullName() : '');
+        });
+        $sheet->cell('I11', function($cell) use ($account) {
+            $cell->setValue($account->scheduler ? $account->scheduler->fullName() : '');
+        });
+        $sheet->cell('I12', function($cell) use ($account) {
+            $cell->setValue($account->enrollment ? $account->enrollment->fullName() : '');
+        });
+        $sheet->cell('I13', function($cell) use ($account) {
+            $cell->setValue($account->payroll ? $account->payroll->fullName() : '');
+        });
+        $sheet->cell('I14', function($cell) use ($account) {
+            $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
+        });
+        $sheet->cell('I15', function($cell) use ($account) {
+            $cell->setValue($account->pipeline->staffAppsFTEOpenings);
+        });
+        $sheet->cell('I16', function($cell) use ($accountPrevMonthIncComp) {
+            $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
+        });
+        $sheet->cell('I17', function($cell) use ($accountYTDIncComp) {
+            $cell->setValue($accountYTDIncComp->{'YTD - Inc Comp'});
+        });
+    }
+
+    public function createRosterBenchTable($sheet, $account, $activeRosterPhysicians, $activeRosterAPPs) {
+        $sheet->mergeCells('A1:I1');
+        $sheet->mergeCells('A2:E2');
+        $sheet->mergeCells('A4:B4');
+        $sheet->mergeCells('D4:E4');
+        $sheet->mergeCells('H4:I4');
+
+        $sheet->cell('A1', function($cell) use ($account) {
+            $cell->setValue($account->name);
+            $cell->setFontColor('#FFFFFF');
+            $cell->setBackground('#325694');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(16);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cells('A2:I2', function($cells) {
+            $cells->setFontColor('#000000');
+            $cells->setBackground('#b5c7e6');
+            $cells->setFontFamily('Calibri (Body)');
+            $cells->setFontSize(13);
+            $cells->setAlignment('center');
+            $cells->setValignment('center');
+        });
+
+        $sheet->cell('A2', function($cell) use ($account) {
+            $cell->setValue($account->googleAddress);
+        });
+
+        $sheet->cell('F2', function($cell) use ($account) {
+            $cell->setValue('IC');
+        });
+
+        $sheet->cell('H2', function($cell) use ($account) {
+            $cell->setValue($account->siteCode);
+        });
+
+        $sheet->cell('I2', function($cell) use ($account) {
+            $cell->setValue('RTI Site Code');
+        });
+
+        $sheet->cell('A4', function($cell) use ($account, $activeRosterPhysicians) {
+            $cell->setValue('FT Roster MD ('.count($activeRosterPhysicians).')');
+        });
+
+        $sheet->cell('C4', function($cell) use ($account) {
+            $cell->setValue('Start Date');
+        });
+
+        $sheet->cell('D4', function($cell) use ($account, $activeRosterAPPs) {
+            $cell->setValue('FT Roster APP ('.count($activeRosterAPPs).')');
+        });
+
+        $sheet->cell('F4', function($cell) use ($account) {
+            $cell->setValue('Start Date');
+        });
+
+        $rosterBenchRow = 5;
+        $rosterBenchCount = 1;
+
+        if(count($activeRosterPhysicians) >= count($activeRosterAPPs)) {
+            $countUntil = count($activeRosterPhysicians) < 17 ? 17 : count($activeRosterPhysicians);
+
+            for ($i = 0; $i < $countUntil; $i++) { 
+                $row = [
+                    $rosterBenchCount,
+                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
+                    isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
+                    $rosterBenchCount,
+                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]->name : '',
+                    isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
+                ];
+
+                $sheet->row($rosterBenchRow, $row);
+
+                $rosterBenchRow++;
+                $rosterBenchCount++;
+            }
+        } else {
+            $countUntil = count($activeRosterAPPs) < 17 ? 17 : count($activeRosterAPPs);
+
+            for ($i = 0; $i < $countUntil; $i++) { 
+                $row = [
+                    $rosterBenchCount,
+                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
+                    isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
+                    $rosterBenchCount,
+                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]->name : '',
+                    isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
+                ];
+
+                $sheet->row($rosterBenchRow, $row);
+
+                $rosterBenchRow++;
+                $rosterBenchCount++;
+            }
+        }
+
+        $sheet->mergeCells('A'.$rosterBenchRow.':F'.$rosterBenchRow);
+
+        $sheet->row(($rosterBenchRow+1), array(
+            'Open/Proactive',
+            '',
+            '',
+            'Open/Proactive',
+            '',
+            ''
+        ));
+
+        return $rosterBenchRow;
+    }
+
+    public function createBenchTable($sheet, $account, $rosterBenchRow, $benchPhysicians, $benchAPPs) {
+        $benchTableStart = $rosterBenchRow+3;
+
+        $sheet->mergeCells('A'.$benchTableStart.':C'.$benchTableStart);
+        $sheet->mergeCells('D'.$benchTableStart.':F'.$benchTableStart);
+
+        $sheet->cell('A'.$benchTableStart, function($cell) use ($account) {
+            $cell->setValue('PT/Locums MD');
+            $cell->setBackground('#b5c7e6');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(11);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cell('D'.$benchTableStart, function($cell) use ($account) {
+            $cell->setValue('PT/Locums APP');
+            $cell->setBackground('#b5c7e6');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(11);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->row(($benchTableStart+1), array(
+            'Type/Shifts', 'Name', 'Start/Source',
+            'Type/Shifts', 'Name', 'Start/Source'
+        ));
+
+        $benchTableStartData = $benchTableStart+2;
+
+        if(count($benchPhysicians) >= count($benchAPPs)) {
+            for ($i = 0; $i < count($benchPhysicians); $i++) { 
+                $row = [
+                    'MD/PRN',
+                    $benchPhysicians[$i]->name,
+                    $benchPhysicians[$i]->firstShift ? Carbon::parse($benchPhysicians[$i]->firstShift)->format('m-d-Y') : '',
+                    isset($benchAPPs[$i]) ? 'APP/4' : '',
+                    isset($benchAPPs[$i]) ? $benchAPPs[$i]->name : '',
+                    isset($benchAPPs[$i]) ? ($benchAPPs[$i]->firstShift ? Carbon::parse($benchAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
+                ];
+
+                $sheet->row($benchTableStartData, $row);
+
+                $benchTableStartData++;
+            }
+        } else {
+            for ($i = 0; $i < count($benchAPPs); $i++) { 
+                $row = [
+                    isset($benchPhysicians[$i]) ? 'MD/PRN' : '',
+                    isset($benchPhysicians[$i]) ? $benchPhysicians[$i]->name : '',
+                    isset($benchPhysicians[$i]) ? ($benchPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
+                    'APP/4',
+                    $benchAPPs[$i]->name,
+                    $benchAPPs[$i]->firstShift ? Carbon::parse($benchAPPs[$i]->firstShift)->format('m-d-Y') : ''
+                ];
+
+                $sheet->row($benchTableStartData, $row);
+
+                $benchTableStartData++;
+            }
+        }
+
+        return array($benchTableStart, $benchTableStartData);
+    }
+
+    public function createCredentialingTable($sheet, $account, $recruitingTable, $credentialers) {
+        $credentialingTableStart = $recruitingTable[1]+2;
+
+        $sheet->mergeCells('A'.$credentialingTableStart.':F'.$credentialingTableStart);
+        $sheet->mergeCells('G'.$credentialingTableStart.':H'.$credentialingTableStart);
+        $sheet->mergeCells('F'.($credentialingTableStart+1).':G'.($credentialingTableStart+1));
+
+        $sheet->cell('A'.$credentialingTableStart, function($cell) use ($account) {
+            $cell->setValue('Credentialing Pipeline');
+            $cell->setBackground('#b5c7e6');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(14);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cell('G'.$credentialingTableStart, function($cell) use ($account) {
+            $cell->setValue('Candidates');
+            $cell->setBackground('#b5c7e6');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(14);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cell('I'.$credentialingTableStart, function($cell) use ($account) {
+            $cell->setBackground('#c1e7c9');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(11);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cell('A'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('FT/PT/Locums');
+        });
+
+        $sheet->cell('B'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('Provider');
+        });
+
+        $sheet->cell('C'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('MD\APP');
+        });
+
+        $sheet->cell('D'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('Contract Received');
+        });
+
+        $sheet->cell('E'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('File to Credentialing');
+        });
+
+        $sheet->cell('F'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('APP to Hospital');
+        });
+
+        $sheet->cell('H'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('Privilege Goal');
+        });
+
+        $sheet->cell('I'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setValue('Notes');
+        });
+
+        $sheet->cell('A'.($credentialingTableStart+1).':I'.($credentialingTableStart+1), function($cell) use ($account) {
+            $cell->setBackground('#fff1ce');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(11);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $credentialingTableDataStart = $credentialingTableStart+2;
+
+        foreach ($credentialers as $credentialer) {
+            $sheet->mergeCells('F'.$credentialingTableDataStart.':G'.$credentialingTableDataStart);
+
+            $row = [
+                strtoupper($credentialer->contract),
+                $credentialer->name,
+                strtoupper($credentialer->type),
+                '',
+                '',
+                '',
+                '',
+                $credentialer->notes
+            ];
+
+            $sheet->row($credentialingTableDataStart, $row);
+
+            $credentialingTableDataStart++;
+        }
+
+        $sheet->cell('I'.($credentialingTableStart+2).':I'.($credentialingTableDataStart), function($cell) use ($account) {
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(8);
+            $cell->setAlignment('left');
+            $cell->setValignment('center');
+        });
+
+        return array($credentialingTableStart, $credentialingTableDataStart);
+    }
+
+    public function createRequirementsTable($sheet, $account, $credentialingTable) {
+        $requirementsTableStart = $credentialingTable[1]+2;
+
+        $sheet->mergeCells('A'.$requirementsTableStart.':I'.$requirementsTableStart);
+        $sheet->mergeCells('B'.($requirementsTableStart+1).':I'.($requirementsTableStart+1));
+        $sheet->mergeCells('B'.($requirementsTableStart+2).':I'.($requirementsTableStart+2));
+        $sheet->mergeCells('B'.($requirementsTableStart+3).':I'.($requirementsTableStart+3));
+        $sheet->mergeCells('B'.($requirementsTableStart+4).':I'.($requirementsTableStart+4));
+        $sheet->mergeCells('B'.($requirementsTableStart+5).':I'.($requirementsTableStart+5));
+
+        $sheet->cell('A'.$requirementsTableStart, function($cell) use ($account) {
+            $cell->setValue('Credentialing Account Requirements');
+            $cell->setBackground('#b5c7e6');
+            $cell->setFontFamily('Calibri (Body)');
+            $cell->setFontSize(14);
+            $cell->setAlignment('center');
+            $cell->setValignment('center');
+        });
+
+        $sheet->cell('A'.($requirementsTableStart+1), function($cell) use ($account) {
+            $cell->setValue('Requirements');
+        });
+
+        $sheet->cell('A'.($requirementsTableStart+2), function($cell) use ($account) {
+            $cell->setValue('Fees');
+        });
+
+        $sheet->cell('A'.($requirementsTableStart+3), function($cell) use ($account) {
+            $cell->setValue('Application');
+        });
+
+        $sheet->cell('A'.($requirementsTableStart+4), function($cell) use ($account) {
+            $cell->setValue('Meetings');
+        });
+
+        $sheet->cell('A'.($requirementsTableStart+5), function($cell) use ($account) {
+            $cell->setValue('Other');
+        });
+
+        $sheet->cell('B'.($requirementsTableStart+1), function($cell) use ($account) {
+            $cell->setValue($account->requirements);
+        });
+
+        $sheet->cell('B'.($requirementsTableStart+2), function($cell) use ($account) {
+            $cell->setValue($account->fees);
+        });
+
+        $sheet->cell('B'.($requirementsTableStart+3), function($cell) use ($account) {
+            $cell->setValue($account->applications);
+        });
+
+        $sheet->cell('B'.($requirementsTableStart+4), function($cell) use ($account) {
+            $cell->setValue($account->meetings);
+        });
+
+        $sheet->cell('B'.($requirementsTableStart+5), function($cell) use ($account) {
+            $cell->setValue($account->other);
+        });
+
+        return array($requirementsTableStart);
     }
 }
