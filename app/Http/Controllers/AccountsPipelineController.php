@@ -1031,17 +1031,60 @@ class AccountsPipelineController extends Controller
         $rosterBenchRow = 5;
         $rosterBenchCount = 1;
 
+        $physicianOpenings = $account->pipeline->staffPhysicianFTEOpenings;
+        $appOpenings = $account->pipeline->staffAppsFTEOpenings;
+
+        $physicianNegative = $physicianOpenings < 0 ? true : false;
+        $appNegative = $appOpenings < 0 ? true : false;
+
+        $physicianDecimal = $physicianOpenings - floor($physicianOpenings);
+        $appDecimal = $appOpenings - floor($appOpenings);
+
+        $normalizedPhyOpenings = $physicianNegative ? (ceil($physicianOpenings * -1)) : ceil($physicianOpenings);
+        $normalizedAppOpenings = $appNegative ? (ceil($appOpenings * -1)) : ceil($appOpenings);
+
+        $activeRosterPhysicians = $activeRosterPhysicians->toArray();
+        $activeRosterAPPs = $activeRosterAPPs->toArray();
+
+        for ($x = 1; $x <= (int) $normalizedPhyOpenings; $x++) {
+            $tempArray = array();
+
+            if ($x == $normalizedPhyOpenings) {
+                $tempArray["name"] = $physicianDecimal == 0.5 ? ($physicianNegative ? "Open: -0.5" : "Open: 0.5") : ($physicianNegative ? "Open: -1.0" : "Open: 1.0");
+                $tempArray["firstShift"] = '';
+            } else {
+                $tempArray["name"] = $physicianNegative ? "Open: -1.0" : "Open: 1.0";
+                $tempArray["firstShift"] = '';
+            }
+
+            array_push($activeRosterPhysicians, $tempArray);   
+        }
+
+        for ($x = 1; $x <= (int) $normalizedAppOpenings; $x++) {
+            $tempArray = array();
+
+            if ($x == $normalizedAppOpenings) {
+                $tempArray["name"] = $appDecimal == 0.5 ? ($appNegative ? "Open: -0.5" : "Open: 0.5") : ($appNegative ? "Open: -1.0" : "Open: 1.0");
+                $tempArray["firstShift"] = '';
+            } else {
+                $tempArray["name"] = $appNegative ? "Open: -1.0" : "Open: 1.0";
+                $tempArray["firstShift"] = '';
+            }
+
+            array_push($activeRosterAPPs, $tempArray);   
+        }
+
         if(count($activeRosterPhysicians) >= count($activeRosterAPPs)) {
             $countUntil = count($activeRosterPhysicians) < 17 ? 17 : count($activeRosterPhysicians);
 
             for ($i = 0; $i < $countUntil; $i++) { 
                 $row = [
                     $rosterBenchCount,
-                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
-                    isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
+                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"] : '',
+                    isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
                     $rosterBenchCount,
-                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]->name : '',
-                    isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
+                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"] : '',
+                    isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
                 ];
 
                 $sheet->row($rosterBenchRow, $row);
@@ -1055,11 +1098,11 @@ class AccountsPipelineController extends Controller
             for ($i = 0; $i < $countUntil; $i++) { 
                 $row = [
                     $rosterBenchCount,
-                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]->name : '',
-                    isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
+                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"] : '',
+                    isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
                     $rosterBenchCount,
-                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]->name : '',
-                    isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]->firstShift ? Carbon::parse($activeRosterAPPs[$i]->firstShift)->format('m-d-Y') : '') : ''
+                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"] : '',
+                    isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
                 ];
 
                 $sheet->row($rosterBenchRow, $row);
