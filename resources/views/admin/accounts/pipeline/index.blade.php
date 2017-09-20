@@ -1950,6 +1950,11 @@
                 },
 
                 updateHighLight: function(roster) {
+                    roster.interview = this.moment(roster.interview);
+                    roster.contractIn = this.moment(roster.contractIn);
+                    roster.contractOut = this.moment(roster.contractOut);
+                    roster.firstShift = this.moment(roster.firstShift);
+                    
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
                     axios.patch(endpoint, roster)
