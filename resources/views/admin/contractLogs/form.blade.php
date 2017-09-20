@@ -316,6 +316,26 @@
                 </div>
             </div>
 
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group{{ $errors->has('declined') ? ' has-error' : '' }}">
+                    <label for="declined">@lang('Declined')</label><br>
+                    <input type="checkbox" id="declined" value="1" name="declined" {{ $contractLog->declined ? 'checked' : '' }}>
+                    @if ($errors->has('declined'))
+                        <span class="help-block"><strong>{{ $errors->first('declined') }}</strong></span>
+                    @endif
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="form-group{{ $errors->has('neverReturned') ? ' has-error' : '' }}">
+                    <label for="neverReturned">@lang('Never Returned')</label><br>
+                    <input type="checkbox" id="neverReturned" value="1" name="neverReturned" {{ $contractLog->neverReturned ? 'checked' : '' }}>
+                    @if ($errors->has('neverReturned'))
+                        <span class="help-block"><strong>{{ $errors->first('neverReturned') }}</strong></span>
+                    @endif
+                </div>
+            </div>
+
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group{{ $errors->has('comments') ? ' has-error' : '' }}">
                     <label for="comments">@lang('Comments')</label>
@@ -455,7 +475,13 @@
 
                         if ($('#numOfHours').val() >= 150 && (account.practices.length && account.practices[0].name == 'ED')) {
                             $('#value').val(1.5);
-                        } 
+                        }
+
+                        if (account.practices[0].contractLogHoursRequired == 1) {
+                            $("#numOfHours").attr('required', '');
+                        } else {
+                            $("#numOfHours").removeAttr('required')
+                        }
                     });
                 } else {
                     $('#division').val('');

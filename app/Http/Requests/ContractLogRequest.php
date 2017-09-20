@@ -95,6 +95,8 @@ class ContractLogRequest extends FormRequest
         $contractLog->positionId = $this->positionId;
         $contractLog->value = $status->value;
         $contractLog->inactive = $this->inactive ? $this->inactive : 0;
+        $contractLog->declined = $this->declined ? $this->declined : 0;
+        $contractLog->neverReturned = $this->neverReturned ? $this->neverReturned : 0;
         $contractLog->lastUpdated = Carbon::now();
         $contractLog->lastUpdatedBy = \Auth::id();
         $contractLog->save();

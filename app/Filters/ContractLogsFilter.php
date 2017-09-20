@@ -9,15 +9,13 @@ class ContractLogsFilter extends Filter
     /**
      * Apply practices filter.
      *
-     * @param  array  $names
+     * @param  array  $ids
      * @return void
      */
-    public function practices($names)
+    public function practices($ids)
     {
-        $this->query->where(function ($query) use ($names) {
-            foreach ($names as $name) {
-                $query->orWhere('tPractice.name', 'like', "{$name}%");
-            }
+        $this->query->whereHas('account.practices', function($query) use ($ids) {
+            $query->whereIn('practiceId', $ids);
         });
     }
 
@@ -51,7 +49,22 @@ class ContractLogsFilter extends Filter
      */
     public function recruiters($ids)
     {
-        $this->query->whereIn('tContractLogs.recruiterId', $ids);
+        $this->query->whereHas('account.recruiter', function($query) use ($ids) {
+            $query->whereIn('employeeId', $ids);
+        });
+    }
+
+    /**
+     * Apply managers filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function managers($ids)
+    {
+        $this->query->whereHas('account.manager', function($query) use ($ids) {
+            $query->whereIn('employeeId', $ids);
+        });
     }
 
     /**
@@ -95,7 +108,9 @@ class ContractLogsFilter extends Filter
      */
     public function regions($ids)
     {
-        $this->query->whereIn('tGroup.regionId', $ids);
+        $this->query->whereHas('account', function($query) use ($ids) {
+            $query->whereIn('operatingUnitId', $ids);
+        });
     }
     
     /**
@@ -106,9 +121,11 @@ class ContractLogsFilter extends Filter
      */
     public function RSCs($ids)
     {
-        $this->query->whereIn('tAccount.RSCId', $ids);
+        $this->query->whereHas('account', function($query) use ($ids) {
+            $query->whereIn('RSCId', $ids);
+        });
     }
-    
+
     /**
      * Apply provider filter.
      *

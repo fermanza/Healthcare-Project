@@ -40,7 +40,7 @@
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="practices[]" data-placeholder="@lang('Service Lines')" multiple>
                         @foreach ($practiceTypes as $practice)
-                            <option value="{{ $practice }}" {{ in_array($practice, Request::input('practices') ?: []) ? 'selected' : '' }}>{{ $practice }}</option>
+                            <option value="{{ $practice->id }}" {{ in_array($practice->id, Request::input('practices') ?: []) ? 'selected' : '' }}>{{ $practice->name }}</option>
                         @endforeach
                     </select>
                 </div>

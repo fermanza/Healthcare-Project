@@ -17,6 +17,7 @@ use App\ContractStatus;
 use App\AccountEmployee;
 use App\EmployementStatus;
 use App\ProviderDesignation;
+use App\Practice;
 use App\Scopes\ContractLogScope;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class ContractLogsController extends Controller
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
         $owners =  $employees->filter->hasPosition(config('instances.position_types.contract_coordinator'));
-        $practiceTypes = ['ED', 'IPS'];
+        $practiceTypes = Practice::all();
         $positions = Position::orderBy('position')->get();
         $statuses = ContractStatus::orderBy('contractStatus')->get();
         $accounts = Account::where('active', true)->orderBy('name')->get();
