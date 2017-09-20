@@ -268,7 +268,7 @@ class Account extends Model
      */
     public function summary()
     {
-        return $this->hasOne(AccountSummary::class, 'accountId');
+        return $this->hasOne(AccountSummary::class, 'accountId')->latest('MonthEndDate');
     }
 
     /**
