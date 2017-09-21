@@ -1695,6 +1695,11 @@
                 switchRosterBenchTo: function (rosterBench, place) {
                     rosterBench.place = place;
 
+                    rosterBench.interview = this.moment(rosterBench.interview);
+                    rosterBench.contractIn = this.moment(rosterBench.contractIn);
+                    rosterBench.contractOut = this.moment(rosterBench.contractOut);
+                    rosterBench.firstShift = this.moment(rosterBench.firstShift);
+
                     axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, rosterBench
                     )
                         .then(function (response) {
