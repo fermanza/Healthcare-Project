@@ -53,6 +53,7 @@ class PipelineRosterBenchController extends Controller
             'contractOut' => 'nullable|date_format:"m/d/Y"',
             'contractIn' => 'nullable|date_format:"m/d/Y"',
             'firstShift' => 'nullable|date_format:"m/d/Y"',
+            'fileToCredentialing' => 'nullable|date_format:"m/d/Y"',
             'notes' => 'nullable',
         ]);
 
@@ -66,6 +67,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contractOut = $request->contractOut;
         $rosterBench->contractIn = $request->contractIn;
         $rosterBench->firstShift = $request->firstShift;
+        $rosterBench->fileToCredentialing = $request->fileToCredentialing;
         $rosterBench->isSMD = $request->isSMD ? 1 : 0;
         $rosterBench->isAMD = $request->isAMD ? 1 : 0;
         $rosterBench->isChief = $request->isChief;
@@ -161,6 +163,7 @@ class PipelineRosterBenchController extends Controller
             'contractOut' => 'nullable|date_format:"m/d/Y"',
             'contractIn' => 'nullable|date_format:"m/d/Y"',
             'firstShift' => 'nullable|date_format:"m/d/Y"',
+            'fileToCredentialing' => 'nullable|date_format:"m/d/Y"',
             'notes' => 'nullable',
         ]);
 
@@ -173,6 +176,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contractOut = $request->contractOut;
         $rosterBench->contractIn = $request->contractIn;
         $rosterBench->firstShift = $request->firstShift;
+        $rosterBench->fileToCredentialing = $request->fileToCredentialing;
         $rosterBench->isSMD = $request->isSMD ? 1 : 0;
         $rosterBench->isAMD = $request->isAMD ? 1 : 0;
         $rosterBench->isChief = $request->isChief;

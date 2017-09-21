@@ -460,6 +460,7 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw150">@lang('File To Credentialing')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -485,6 +486,7 @@
                                     <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)">
                                     <span class="hidden">@{{roster.signedNotStarted}}</span>
                                 </td>
+                                <td>@{{ moment(roster.fileToCredentialing) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -559,6 +561,9 @@
                                 <td>
                                     <input type="checkbox" v-model="rosterPhysician.signedNotStarted">
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.fileToCredentialing" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -590,6 +595,7 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw150">@lang('File To Credentialing')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -611,6 +617,7 @@
                                     <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)">
                                     <span class="hidden">@{{roster.signedNotStarted}}</span>
                                 </td>
+                                <td>@{{ moment(roster.fileToCredentialing) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -682,6 +689,9 @@
                                 <td>
                                     <input type="checkbox" v-model="rosterApps.signedNotStarted">
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.fileToCredentialing" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -716,6 +726,7 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw150">@lang('File To Credentialing')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -732,6 +743,7 @@
                                     <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
+                                <td>@{{ moment(bench.fileToCredentialing) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -792,6 +804,9 @@
                                 <td>
                                     <input type="checkbox" v-model="benchPhysician.signedNotStarted">
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.fileToCredentialing" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -821,6 +836,7 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw150">@lang('File To Credentialing')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -837,6 +853,7 @@
                                     <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
+                                <td>@{{ moment(bench.fileToCredentialing) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -896,6 +913,9 @@
                                 </td>
                                 <td>
                                     <input type="checkbox" v-model="benchApps.signedNotStarted">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.fileToCredentialing" />
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -1688,6 +1708,7 @@
                     rosterBench.contractIn = this.moment(rosterBench.contractIn);
                     rosterBench.contractOut = this.moment(rosterBench.contractOut);
                     rosterBench.firstShift = this.moment(rosterBench.firstShift);
+                    rosterBench.fileToCredentialing = this.moment(rosterBench.fileToCredentialing);
 
                     _.assignIn(this[object], rosterBench);
                 },
@@ -1954,6 +1975,7 @@
                     roster.contractIn = this.moment(roster.contractIn);
                     roster.contractOut = this.moment(roster.contractOut);
                     roster.firstShift = this.moment(roster.firstShift);
+                    roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 

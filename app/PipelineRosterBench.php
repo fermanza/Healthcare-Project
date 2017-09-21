@@ -28,6 +28,7 @@ class PipelineRosterBench extends Model
         'contractOut',
         'firstShift',
         'resigned',
-        'lastShift'
+        'lastShift',
+        'fileToCredentialing'
     ];
 }

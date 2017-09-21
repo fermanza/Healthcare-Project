@@ -458,15 +458,6 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="form-group{{ $errors->has('applications') ? ' has-error' : '' }}">
-                <label for="applications">@lang('Applications')</label>
-                <input type="text" class="form-control" id="applications" name="applications" value="{{ old('applications') ?: $account->applications }}" />
-                @if ($errors->has('applications'))
-                    <span class="help-block"><strong>{{ $errors->first('applications') }}</strong></span>
-                @endif
-            </div>
-        </div>
-        <div class="col-md-3">
             <div class="form-group{{ $errors->has('meetings') ? ' has-error' : '' }}">
                 <label for="meetings">@lang('Meetings')</label>
                 <input type="text" class="form-control" id="meetings" name="meetings" value="{{ old('meetings') ?: $account->meetings }}" />

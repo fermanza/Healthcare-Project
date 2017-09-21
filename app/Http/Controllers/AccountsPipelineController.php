@@ -1273,8 +1273,9 @@ class AccountsPipelineController extends Controller
             $row = [
                 strtoupper($credentialer->contract),
                 $credentialer->name,
-                strtoupper($credentialer->type),
-                '',
+                $credentialer->activity ? ($credentialer->activity == 'physician' ? 'MD' : 'APP') : '',
+                $credentialer->contractIn ? $credentialer->contractIn->format('m-d-Y') : '',
+                $credentialer->fileToCredentialing ? $credentialer->fileToCredentialing->format('m-d-Y') : '',
                 '',
                 '',
                 '',
