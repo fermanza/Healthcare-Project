@@ -204,14 +204,11 @@ class ContractLogsController extends Controller
     public function exportToExcel(ContractLogsFilter $filter) {
         $dataToExport = $this->getContractLogsData($filter, 5000);
         
-        $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "Division", "Group",
+        $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "System", "Operating Unit", "RSC",
             "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
             "Sent to Q/A Date", "Counter Sig Date", "Sent To Payroll Date", "# of Days (Contract Out to Payroll)",
             "Provider Start Date", "# of Hours", "Recruiter", "Manager", "Contract Coordinator", "Contract",
-            "(# of times) Revised/Resent", "Comments", "# of Total Files", "# of FT Contracts Out",
-            "# of FT Contracts In", "Pending", "# of FT to PT", "# of Attrition", "# of Contracts w/ Site Termed",
-            "Phys/MLP", "Contract Out Month", "Contract In Month", "PROJECT START Month", "# of Amendments In",
-            "RSC", "Operating Unit"
+            "(# of times) Revised/Resent", "Comments"
         ];
 
 
@@ -242,8 +239,9 @@ class ContractLogsController extends Controller
                         $contractLog->providerLastName.', '.$contractLog->providerFirstName.', '.($contractLog->designation ? $contractLog->designation->name : ''),
                         $contractLog->specialty ? $contractLog->specialty->specialty : '',
                         $contractLog->account ? $contractLog->account->name : '',
-                        ($contractLog->account && $contractLog->account->division) ? $contractLog->account->division->name : '',
-                        ($contractLog->division && $contractLog->division->group) ? $contractLog->division->group->name : '',
+                        ($contractLog->account && $contractLog->account->systemAffiliation) ? $contractLog->account->systemAffiliation->name : '',
+                        ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : '',
+                        ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '',
                         $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m-d-Y') : '',
                         $contractLog->contractInDate ? $contractLog->contractInDate->format('m-d-Y') : '',
                         $contractLog->contractInDate ? $contractLog->contractInDate->diffInDays($contractLog->contractOutDate) : 'Contract Pending',
@@ -258,22 +256,7 @@ class ContractLogsController extends Controller
                         $contractLog->coordinator ? $contractLog->coordinator->fullName() : '',
                         $contractLog->type ? $contractLog->type->contractType : '',
                         '',
-                        $contractLog->comments,
-                        1,
-                        $FTContractsOut,
-                        $FTContractsIn,
-                        $FTContractsOut == 0 ? '' : ($FTContractsOut-$FTContractsIn),
-                        $contractStatus == "FT to PT" ? 1 : '',
-                        $contractStatus == "Attrition - FT" ? 1 : '',
-                        '',
-                        $contractLog->position ? $contractLog->position->position : '',
-                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m-01-Y') : '',
-                        $contractLog->contractInDate ? $contractLog->contractInDate->format('m-01-Y') : '',
-                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m-01-Y') : '',
-                        '',
-                        ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '',
-                        ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : ''
-
+                        $contractLog->comments
                     ];
 
                     $sheet->row($rowNumber, $row);
@@ -344,10 +327,9 @@ class ContractLogsController extends Controller
                 ));
 
                 $sheet->setColumnFormat(array(
-                    'H2:I'.$rowNumber      => 'mm-dd-yy',
-                    'K2:M'.$rowNumber      => 'mm-dd-yy',
-                    'O2:O'.$rowNumber      => 'mm-dd-yy',
-                    'AE2:AG'.$rowNumber      => 'mm-dd-yy',
+                    'I2:J'.$rowNumber      => 'mm-dd-yy',
+                    'L2:N'.$rowNumber      => 'mm-dd-yy',
+                    'P2:P'.$rowNumber      => 'mm-dd-yy',
                 ));
 
                 $tableStyle = array(

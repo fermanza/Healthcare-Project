@@ -272,6 +272,16 @@ class Account extends Model
     }
 
     /**
+     * Get the Affiliation for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function systemAffiliation()
+    {
+        return $this->belongsTo(SystemAffiliation::class, 'systemAffiliationId');
+    }
+
+    /**
      * Determines if start date is less than 7 months ago.
      *
      * @return boolean
