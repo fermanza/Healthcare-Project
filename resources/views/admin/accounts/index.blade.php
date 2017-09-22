@@ -63,7 +63,7 @@
                     <th class="mw100">@lang('Operating Unit')</th>
                     <th class="mw100">@lang('Recruiter')</th>
                     <th class="mw110">@lang('Manager')</th>
-                    <th class="mw110">@lang('Recruiter')</th>
+                    <th class="mw110">@lang('Credentialer')</th>
                     <th class="mw140">@lang('Actions')</th>
                 </tr>
             </thead>
@@ -106,7 +106,7 @@
                         <td>{{ $account->region ? $account->region->name : '' }}</td>
                         <td>{{ $account->recruiter ? $account->recruiter->fullName() : '' }}</td>
                         <td>{{ $account->manager ? $account->manager->fullName() : '' }}</td>
-                        <td>{{ $account->recruiter ? $account->recruiter->fullName() : '' }}</td>
+                        <td>{{ $account->credentialer ? $account->credentialer->fullName() : '' }}</td>
                         <td class="text-center">
                             @permission('admin.accounts.merge')
                                 <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 

@@ -41,13 +41,6 @@ class AccountScope implements Scope
         } else if ($user->hasRoleId(config('instances.roles.vp_of_operations'))) {
             $builder = $this->validate($builder, $user, 'vp', 'employeeId');
         }
-
-        // if ($user->hasRoleId(config('instances.roles.director'))) {
-        //     $builder->whereHas('manager.employee', function ($query) use ($user) {
-        //         $query->where('managerId', $user->employeeId)
-        //             ->whereNotNull('managerId');
-        //     });
-        // }
     }
 
     private function validate($builder, $user, $role, $employeeType) {
@@ -64,12 +57,14 @@ class AccountScope implements Scope
                 ->whereNotNull('operatingUnitId');
         } else {
             if($role == 'recruiter') {
-                $builder->whereHas($role, function ($query) use ($user, $employeeType) {
-                    $query->where($employeeType, $user->employeeId)
-                        ->whereNotNull($employeeType);
-                })->orWhereHas('recruiters', function($query) use ($user, $employeeType) {
-                    $query->where($employeeType, $user->employeeId)
-                        ->whereNotNull($employeeType);
+                $builder->where(function ($query) use ($role, $user, $employeeType) {
+                    $query->whereHas($role, function ($query) use ($user, $employeeType) {
+                        $query->where($employeeType, $user->employeeId)
+                            ->whereNotNull($employeeType);
+                    })->orWhereHas('recruiters', function($query) use ($user, $employeeType) {
+                        $query->where($employeeType, $user->employeeId)
+                            ->whereNotNull($employeeType);
+                    });
                 });
             } else {
                 $builder->whereHas($role, function ($query) use ($user, $employeeType) {

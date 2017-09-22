@@ -63,12 +63,14 @@ class AccountSummaryScope implements Scope
             });
         } else {
             if($role == 'account.recruiter') {
-                $builder->whereHas($role, function ($query) use ($user, $employeeType) {
-                    $query->where($employeeType, $user->employeeId)
-                        ->whereNotNull($employeeType);
-                })->orWhereHas('account.recruiters', function($query) use ($user, $employeeType) {
-                    $query->where($employeeType, $user->employeeId)
-                        ->whereNotNull($employeeType);
+                $builder->where(function ($query) use ($role, $user, $employeeType) {
+                    $query->whereHas($role, function ($query) use ($user, $employeeType) {
+                        $query->where($employeeType, $user->employeeId)
+                            ->whereNotNull($employeeType);
+                    })->orWhereHas('account.recruiters', function($query) use ($user, $employeeType) {
+                        $query->where($employeeType, $user->employeeId)
+                            ->whereNotNull($employeeType);
+                    });
                 });
             } else {
                 $builder->whereHas($role, function ($query) use ($user, $employeeType) {
