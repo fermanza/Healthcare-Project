@@ -170,8 +170,8 @@
                     <th class="mw100">{{ sort_column_link('practice', __('Service Line')) }}</th>
                     <th class="mw200">{{ sort_column_link('hospital_name', __('Hospital Name')) }}</th>
                     <th class="mw80">{{ sort_column_link('site_code', __('Site Code')) }}</th>
-                    <th class="mw100">{{ sort_column_link('group', __('Group')) }}</th>
-                    <th class="mw110">{{ sort_column_link('division', __('Alliance OU Division')) }}</th>
+                    <th class="mw100">{{ sort_column_link('operating_unit', __('Operating Unit')) }}</th>
+                    <th class="mw110">{{ sort_column_link('rsc', __('RSC')) }}</th>
                     <th class="mw100">{{ sort_column_link('contract_out', __('Contract Out')) }}</th>
                     <th class="mw100">{{ sort_column_link('contract_in', __('Contract In')) }}</th>
                     <th class="mw100">{{ sort_column_link('inactive', __('Inactive')) }}</th>
@@ -218,8 +218,8 @@
                         <td>{{ $contractLog->practice ? $contractLog->practice->name : '' }}</td>
                         <td>{{ $contractLog->account ? $contractLog->account->name : '' }}</td>
                         <td>{{ $contractLog->account ? $contractLog->account->siteCode : '' }}</td>
-                        <td>{{ ($contractLog->division && $contractLog->division->group) ? $contractLog->division->group->name : '' }}</td>
-                        <td>{{ $contractLog->division ? $contractLog->division->name : '' }}</td>
+                        <td>{{ ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : '' }}</td>
+                        <td>{{ ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '' }}</td>
                         <td>{{ $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m/d/Y') : '' }}</td>
                         <td>{{ $contractLog->contractInDate ? $contractLog->contractInDate->format('m/d/Y') : '' }}</td>
                         <td> 
