@@ -29,16 +29,16 @@ class AccountsController extends Controller
      */
     public function index(Request $request, AccountFilter $filter)
     {
-        $cachedFilters = Cache::get('filters');
+        $cachedFilters = Cache::get('filters'.$request->user()->id);
 
         if ($cachedFilters != $request->all()) {
-            Cache::put('filters', $request->all(), 10);
-            Cache::forget('accounts');
+            Cache::put('filters'.$request->user()->id, $request->all(), 10);
+            Cache::forget('accounts'.$request->user()->id);
         } else {
-            Cache::put('filters', $request->all(), 10);
+            Cache::put('filters'.$request->user()->id, $request->all(), 10);
         }
 
-        $accounts = Cache::remember('accounts', 60, function () use ($filter) {
+        $accounts = Cache::remember('accounts'.$request->user()->id, 30, function () use ($filter) {
             return Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
             ->withGlobalScope('role', new AccountScope)
             ->with([
@@ -108,7 +108,7 @@ class AccountsController extends Controller
         $account = new Account;
         $request->save($account);
 
-        Cache::forget('accounts');
+        Cache::forget('accounts'.$request->user()->id);
 
         flash(__('Account created.'));
 
@@ -151,7 +151,7 @@ class AccountsController extends Controller
     {
         $request->save($account);
 
-        Cache::forget('accounts');
+        Cache::forget('accounts'.$request->user()->id);
 
         flash(__('Account updated.'));
 
@@ -169,7 +169,7 @@ class AccountsController extends Controller
         $account->active = false;
         $account->save();
 
-        Cache::forget('accounts');
+        Cache::forget('accounts'.$request->user()->id);
 
         flash(__('Account deleted.'));
 
@@ -265,7 +265,7 @@ class AccountsController extends Controller
 
         flash(__('Account Merged.'));
 
-        Cache::forget('accounts');
+        Cache::forget('accounts'.$request->user()->id);
 
         return back();
     }
@@ -295,7 +295,7 @@ class AccountsController extends Controller
 
         flash(__('Parent Site Code has been set.'));
 
-        Cache::forget('accounts');
+        Cache::forget('accounts'.$request->user()->id);
 
         return back();
     }
@@ -313,7 +313,7 @@ class AccountsController extends Controller
 
         flash(__('Parent Site Code has been unset.'));
 
-        Cache::forget('accounts');
+        Cache::forget('accounts'.$request->user()->id);
 
         return back();
     }
@@ -329,7 +329,7 @@ class AccountsController extends Controller
 
         session(['ignore-account-role-scope' => ! $ignore]);
 
-        Cache::forget('accounts');
+        Cache::forget('accounts'.$request->user()->id);
 
         return back();
     }
