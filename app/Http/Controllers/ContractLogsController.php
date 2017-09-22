@@ -263,7 +263,7 @@ class ContractLogsController extends Controller
                 };
 
                 $sheet->setFreeze('A2');
-                $sheet->setAutoFilter('A1:AH1');
+                $sheet->setAutoFilter('A1:W1');
 
                 $sheet->cell('A2:A'.$rowNumber, function($cell) {
                     $cell->setBackground('#f5964f');
@@ -310,20 +310,7 @@ class ContractLogsController extends Controller
                     'T'     => 12,
                     'U'     => 8,
                     'V'     => 17,
-                    'W'     => 8,
-                    'X'     => 8,
-                    'Y'     => 8,
-                    'Z'     => 8,
-                    'AA'    => 7,
-                    'AB'    => 8,
-                    'AC'    => 8,
-                    'AD'    => 9,
-                    'AE'    => 8,
-                    'AF'    => 8,
-                    'AG'    => 11,
-                    'AH'    => 13,
-                    'AI'    => 8,
-                    'AJ'    => 8,
+                    'W'     => 8
                 ));
 
                 $sheet->setColumnFormat(array(
@@ -341,8 +328,8 @@ class ContractLogsController extends Controller
                     ),
                 );
 
-                $sheet->getStyle('A1:AH'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A1:AJ1')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('A1:W'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A1:W1')->getAlignment()->setWrapText(true);
             });
         })->download('xlsx'); 
     }
