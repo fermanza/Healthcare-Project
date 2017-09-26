@@ -68,15 +68,8 @@ class AccountRequest extends FormRequest
             'hasSMD' => 'boolean',
             'hasAMD' => 'boolean',
         ];
-
-        if ($this->isCreate()) {
-            $methodRules = [];
-        } else {
-            $methodRules = [
-                'physicianAppsChangeDate' => ($this->physiciansOrAppsChanged() ? 'required|date_format:"m/d/Y"' : ''),
-                'physicianAppsChangeReason' => ($this->physiciansOrAppsChanged() ? 'required' : ''),
-            ];
-        }
+        
+        $methodRules = [];
 
         return array_merge($commonRules, $methodRules);
     }
@@ -396,8 +389,6 @@ class AccountRequest extends FormRequest
         $physiciansApps->appsNeeded = $this->account->appsNeeded != $this->appsNeeded ? $this->appsNeeded : null;
         $physiciansApps->physicianHoursPerMonth = $this->account->physicianHoursPerMonth != $this->physicianHoursPerMonth ? $this->physicianHoursPerMonth : null;
         $physiciansApps->appHoursPerMonth = $this->account->appHoursPerMonth != $this->appHoursPerMonth ? $this->appHoursPerMonth : null;
-        $physiciansApps->physicianAppsChangeDate = $this->physicianAppsChangeDate;
-        $physiciansApps->physicianAppsChangeReason = $this->physicianAppsChangeReason;
         $physiciansApps->save();
     }
 
