@@ -389,8 +389,6 @@ class AccountRequest extends FormRequest
         $physiciansApps->appsNeeded = $this->account->appsNeeded != $this->appsNeeded ? $this->appsNeeded : null;
         $physiciansApps->physicianHoursPerMonth = $this->account->physicianHoursPerMonth != $this->physicianHoursPerMonth ? $this->physicianHoursPerMonth : null;
         $physiciansApps->appHoursPerMonth = $this->account->appHoursPerMonth != $this->appHoursPerMonth ? $this->appHoursPerMonth : null;
-        $physiciansApps->physicianAppsChangeDate = $this->physicianAppsChangeDate ? $this->physicianAppsChangeDate : null;
-        $physiciansApps->physicianAppsChangeReason = $this->physicianAppsChangeReason ? $this->physicianAppsChangeReason : null;
         $physiciansApps->save();
     }
 
