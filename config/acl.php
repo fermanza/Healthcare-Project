@@ -46,6 +46,7 @@ return [
         'admin.accounts.edit' => 'Account Edit View',
         'admin.accounts.update' => 'Account Edit Action',
         'admin.accounts.destroy' => 'Delete Account',
+        'admin.accounts.export.pdf' => 'Bulk export account summary',
     ],
 
     'Account Summary' => [

@@ -5,6 +5,15 @@ namespace App\Http\Controllers;
 use JavaScript;
 use App\Account;
 use App\AccountSummary;
+use App\RSC;
+use App\Region;
+use App\Division;
+use App\Employee;
+use App\Practice;
+use App\SystemAffiliation;
+use Illuminate\Filesystem\Filesystem;
+use App\Filters\AccountFilter;
+use App\Scopes\AccountScope;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use PhpOffice\PhpWord\PhpWord;
@@ -1357,5 +1366,304 @@ class AccountsPipelineController extends Controller
         });
 
         return array($requirementsTableStart);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \App\Account  $account
+     * @param  \App\Filters\AccountFilter  $filter
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function exportIndex(Account $account, AccountFilter $filter, Request $request)
+    {
+        $queryString = $request->query();
+
+        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+        $practices = Practice::where('active', true)->orderBy('name')->get();
+        $divisions = Division::where('active', true)->orderBy('name')->get();
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
+        $regions = Region::where('active', true)->orderBy('name')->get();
+        $affiliations = SystemAffiliation::all();
+
+        if(count($queryString) == 0) {
+            $accounts = [];
+        } else {
+            $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
+                ->withGlobalScope('role', new AccountScope)
+                ->with([
+                    'rsc',
+                    'region',
+                    'recruiter.employee.person',
+                    'manager.employee.person',
+                ])
+                ->where('active', true)
+                ->termed(false)
+                ->filter($filter)->get();
+        }
+
+        return view('admin.accounts.export.index', compact('accounts', 'employees', 'practices', 'divisions', 'regions', 'RSCs', 'affiliations'));
+    }
+
+    /**
+     * Export to pdf multiple accounts.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function bulkExport(Request $request) {
+        if ($request->ids) {
+            $accounts = Account::whereIn('id', $request->ids)->get();
+
+            if ($accounts) {
+                $this->exportPDF($accounts, 'pdf');
+
+                $zipper = new \Chumper\Zipper\Zipper;
+
+                $files = glob(public_path('exports/*'));
+                $zipper->make('reports.zip')->add($files)->close();
+
+                $file = new Filesystem;
+
+                $file->deleteDirectory(public_path('exports'));
+
+                return response()->download(public_path('reports.zip'))->deleteFileAfterSend(true);
+            }
+        } else {
+            flash(__('Use the filters to get data first.'));
+            return back();
+        }
+    }
+
+    /**
+     * Export to PDF.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function exportPDF($accounts) {
+        foreach ($accounts as $account) {
+            $account->load([
+                'pipeline' => function ($query) {
+                    $query->with([
+                        'rostersBenchs', 'recruitings', 'locums',
+                    ]);
+                },
+                'recruiter.employee' => function ($query) {
+                    $query->with('person', 'manager.person');
+                },
+                'division.group.region',
+                'practices',
+            ]);
+
+            $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
+            })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+            ->reject(function($rosterBench){
+                return $rosterBench->signedNotStarted;
+            })->sortBy('name');
+
+            $activeRosterPhysicians = $activeRosterPhysicians->values();
+
+            $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
+            })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+            ->reject(function($rosterBench){
+                return $rosterBench->signedNotStarted;
+            })->sortBy('name');
+
+            $benchPhysicians = $benchPhysicians->values();
+
+            $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
+            })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+            ->reject(function($rosterBench){
+                return $rosterBench->signedNotStarted;
+            })->sortBy('name');
+
+            $activeRosterAPPs = $activeRosterAPPs->values();
+
+            $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
+            })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+            ->reject(function($rosterBench){
+                return $rosterBench->signedNotStarted;
+            })->sortBy('name');
+
+            $benchAPPs = $benchAPPs->values();
+
+            $credentialers = $account->pipeline->rostersBenchs
+            ->reject(function($rosterBench) { 
+                return !is_null($rosterBench->resigned); 
+            })
+            ->reject(function($rosterBench){
+                return !$rosterBench->signedNotStarted;
+            })->sortBy('name');
+
+            $recruitings = $account->pipeline->recruitings
+            ->reject(function($rosterBench) { 
+                return !is_null($rosterBench->declined); 
+            })
+            ->sortBy('name');
+
+            $accountPrevMonthIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+
+            $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+
+            $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
+
+            $fileInfo = Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
+                $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
+                    
+                    $rosterBenchRow = $this->createRosterBenchTable($sheet, $account, $activeRosterPhysicians, $activeRosterAPPs);
+
+                    ///////// Team Members //////////
+                    $this->createMembersTable($sheet, $account, $accountPrevMonthIncComp, $accountYTDIncComp);
+                    ///////// Team Members //////////
+
+
+                    /////// Bench Table ////////
+                    $benchTable = $this->createBenchTable($sheet, $account, $rosterBenchRow, $benchPhysicians, $benchAPPs);
+                    /////// Bench Table ////////
+
+                    /////// Recruiting Table /////////
+                    $recruitingTable = $this->createRecruitingTable($sheet, $account, $benchTable[1], $recruitings);
+                    /////// Recruiting Table /////////
+
+                    ////// Credentialing Table ////////
+                    $credentialingTable = $this->createCredentialingTable($sheet, $account, $recruitingTable, $credentialers);
+                    ////// Credentialing Recruiting Table ////////
+
+                    ////// Requirements Table ////////
+                    $requirementsTable = $this->createRequirementsTable($sheet, $account, $credentialingTable);
+                    ////// Requirements Table ////////
+
+                    $sheet->cells('A4:F4', function($cells) {
+                        $cells->setFontColor('#000000');
+                        $cells->setBackground('#b5c7e6');
+                        $cells->setFontFamily('Calibri (Body)');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                    $sheet->cells('A4:F'.($rosterBenchRow+1), function($cells) {
+                        $cells->setFontColor('#000000');
+                        $cells->setFontFamily('Calibri (Body)');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                    $sheet->cells('A'.($benchTable[0]+1).':F'.($benchTable[1]), function($cells) {
+                        $cells->setFontColor('#000000');
+                        $cells->setFontFamily('Calibri (Body)');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                    $sheet->cells('A'.($recruitingTable[0]+1).':D'.($recruitingTable[1]), function($cells) {
+                        $cells->setFontColor('#000000');
+                        $cells->setFontFamily('Calibri (Body)');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                    $sheet->cells('A'.($credentialingTable[0]+1).':H'.($credentialingTable[1]), function($cells) {
+                        $cells->setFontColor('#000000');
+                        $cells->setFontFamily('Calibri (Body)');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                    $sheet->cells('A'.($requirementsTable[0]+1).':F'.($requirementsTable[0]+5), function($cells) {
+                        $cells->setFontColor('#000000');
+                        $cells->setFontFamily('Calibri (Body)');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                    $sheet->cell('A4', function($cells) {
+                        $cells->setFontSize(14);
+                    });
+
+                    $sheet->cell('D4', function($cells) {
+                        $cells->setFontSize(14);
+                    });
+
+                    $sheet->cell('C4', function($cells) {
+                        $cells->setFontSize(11);
+                    });
+
+                    $sheet->cell('F4', function($cells) {
+                        $cells->setFontSize(11);
+                    });
+
+                    $tableStyle = array(
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => 'medium',
+                                'color' => array('rgb' => '000000'),
+                            ),
+                            'inside' => array(
+                                'style' => 'thin',
+                                'color' => array('rgb' => '000000'),
+                            ),
+                        ),
+                    );
+
+                    $headersStyle = array(
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => 'medium',
+                                'color' => array('rgb' => '000000'),
+                            ),
+                            'inside' => array(
+                                'style' => 'medium',
+                                'color' => array('rgb' => '000000'),
+                            ),
+                        ),
+                    );
+
+                    $sheet->setAutoSize(true);
+
+                    $sheet->setWidth(array(
+                        'A'     => 12,
+                        'C'     => 10,
+                        'D'     => 12,
+                        'F'     => 10,
+                        'G'     => 1,
+                        'H'     => 18,
+                        'I'     => 18,
+                    ));
+
+                    $sheet->setColumnFormat(array(
+                        'I16:I17' => '"$"#,##0.00_-',
+                    ));
+
+                    $heights = array();
+
+                    for($x = $recruitingTable[0]; $x <= ($credentialingTable[1]); $x++) {
+                            $heights[$x] = 25;
+                    }
+
+                    $sheet->setHeight($heights);
+                    $sheet->setHeight(array($rosterBenchRow => 3));
+
+                    $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
+                    $sheet->getStyle('H4:I13')->applyFromArray($tableStyle);
+                    $sheet->getStyle('H14:I17')->applyFromArray($tableStyle);
+                    $sheet->getStyle('A4:F'.($rosterBenchRow+1))->applyFromArray($tableStyle);
+                    $sheet->getStyle('A'.$benchTable[0].':F'.($benchTable[1]))->applyFromArray($tableStyle);
+                    $sheet->getStyle('A'.$recruitingTable[0].':I'.$recruitingTable[1])->applyFromArray($tableStyle);
+                    $sheet->getStyle('A'.$credentialingTable[0].':I'.$credentialingTable[1])->applyFromArray($tableStyle);
+                    $sheet->getStyle('A'.$requirementsTable[0].':I'.($requirementsTable[0]+5))->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('D'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E'.($recruitingTable[0]+2).':I'.$recruitingTable[1])->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('I'.($credentialingTable[0]+2).':I'.$credentialingTable[1])->getAlignment()->setWrapText(true);
+                });
+            })->store('pdf', public_path('exports'), true);
+        }
     }
 }

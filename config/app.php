@@ -167,7 +167,6 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         Laratrust\LaratrustServiceProvider::class,
 
@@ -180,6 +179,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         'Maatwebsite\Excel\ExcelServiceProvider',
+        'Chumper\Zipper\ZipperServiceProvider',
     ],
 
     /*
@@ -232,8 +232,8 @@ return [
         /*
          * Package Aliases...
          */
-        'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
+        'Zipper' => 'Chumper\Zipper\Zipper',
     ],
 
 ];

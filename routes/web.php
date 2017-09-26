@@ -47,6 +47,10 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->get('accounts/{account}/internal-plan', 'AccountsController@internalPlan')->name('accounts.internalPlan');
     $router->get('accounts/termed', 'AccountsController@termed')->name('termedSites.index');
     $router->get('accounts/{account}/manager', 'AccountsController@findManager')->name('accounts.find');
+    
+    $router->get('accounts/export', 'AccountsPipelineController@exportIndex')->name('accounts.export');
+    $router->post('accounts/export/pdf', 'AccountsPipelineController@bulkExport')->name('accounts.export.pdf');
+    
     $router->resource('accounts', 'AccountsController');
 
     $router->get('accounts/{account}/pipeline', 'AccountsPipelineController@index')->name('accounts.pipeline.index');
