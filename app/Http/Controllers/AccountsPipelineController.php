@@ -1662,6 +1662,15 @@ class AccountsPipelineController extends Controller
                     $sheet->getStyle('F'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
                     $sheet->getStyle('E'.($recruitingTable[0]+2).':I'.$recruitingTable[1])->getAlignment()->setWrapText(true);
                     $sheet->getStyle('I'.($credentialingTable[0]+2).':I'.$credentialingTable[1])->getAlignment()->setWrapText(true);
+
+                    $sheet->setBorder("A3:I3", 'none');
+                    $sheet->setBorder("A".($benchTable[0]-1).":I".($benchTable[0]-1), 'none');
+                    $sheet->setBorder("A".($recruitingTable[0]-1).":I".($recruitingTable[0]-1), 'none');
+                    $sheet->setBorder("A".($recruitingTable[0]-2).":I".($recruitingTable[0]-2), 'none');
+                    $sheet->setBorder("A".($credentialingTable[0]-1).":I".($credentialingTable[0]-1), 'none');
+                    $sheet->setBorder("A".($requirementsTable[0]-1).":I".($requirementsTable[0]-1), 'none');
+                    $sheet->setBorder("H18:I".($recruitingTable[0]-1), 'none');
+                    $sheet->setBorder("G3:G".($recruitingTable[0]-1), 'none');
                 });
             })->store('pdf', public_path('exports'), true);
         }

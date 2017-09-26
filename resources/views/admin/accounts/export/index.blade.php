@@ -12,6 +12,7 @@
 @endsection
 
 @section('content')
+    <span>Use the filters first in order to get accounts information</span>
     <form class="box-body">
         <div class="flexboxgrid">
             <div class="row">
