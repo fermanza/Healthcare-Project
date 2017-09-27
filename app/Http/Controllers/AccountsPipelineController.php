@@ -241,6 +241,8 @@ class AccountsPipelineController extends Controller
         $recruitingsList = $lists['recruitingsList'];
         $credentialingsList = $lists['credentialingsList'];
 
+        $address = $account->googleAddress.' | '.$account->city.', '.$account->state.' '.$account->zipCode;
+
         // Creating the new document...
         $word = new \PhpOffice\PhpWord\PhpWord();
         $documentName = $account->name.', '.$account->siteCode.'.docx';
@@ -257,7 +259,7 @@ class AccountsPipelineController extends Controller
             'swoosh.png',
             array(
                 'width'            => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(21.59),
-                'height'           => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(6),
+                'height'           => \PhpOffice\PhpWord\Shared\Converter::cmToPixel(5),
                 'positioning'      => \PhpOffice\PhpWord\Style\Image::POSITION_ABSOLUTE,
                 'posHorizontal'    => \PhpOffice\PhpWord\Style\Image::POSITION_HORIZONTAL_LEFT,
                 'posHorizontalRel' => \PhpOffice\PhpWord\Style\Image::POSITION_RELATIVE_TO_PAGE,
@@ -329,7 +331,7 @@ class AccountsPipelineController extends Controller
         );
 
         $footer = $section->addFooter();
-        $footer->addText('3916 State Street | Suite 200 | Santa Barbara, CA 93105', $normalFontStyle, array('align' => 'right'));
+        $footer->addText($address, $normalFontStyle, array('align' => 'right'));
 
         if($futureRostersList != '') {
             $section->addText('Providers Hired who have not started', $boldUnderlinedFontStyle);
