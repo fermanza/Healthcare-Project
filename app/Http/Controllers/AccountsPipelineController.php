@@ -1174,7 +1174,7 @@ class AccountsPipelineController extends Controller
                 $row = [
                     isset($benchPhysicians[$i]) ? 'MD/PRN' : '',
                     isset($benchPhysicians[$i]) ? $benchPhysicians[$i]->name : '',
-                    isset($benchPhysicians[$i]) ? ($benchPhysicians[$i]->firstShift ? Carbon::parse($activeRosterPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
+                    isset($benchPhysicians[$i]) ? ($benchPhysicians[$i]->firstShift ? Carbon::parse($benchPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
                     'APP/4',
                     $benchAPPs[$i]->name,
                     $benchAPPs[$i]->firstShift ? Carbon::parse($benchAPPs[$i]->firstShift)->format('m-d-Y') : ''
