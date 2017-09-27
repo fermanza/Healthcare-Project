@@ -28,4 +28,9 @@ return [
         'EMB' => 'emb',
     ],
 
+    'bench_contract_types' => [
+        'PRN' => 'prn',
+        'Locum' => 'locum',
+    ],
+
 ];

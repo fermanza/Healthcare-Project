@@ -45,12 +45,12 @@ class AccountsPipelineController extends Controller
             'practices', 'summary',
         ]);
         $pipeline = $account->pipeline;
-        $summary = $account->summary;
         $region = $account->region;
         $practice = $account->practices->count() ? $account->practices->first() : null;
         $practiceTimes = config('pipeline.practice_times');
         $recruitingTypes = config('pipeline.recruiting_types');
         $contractTypes = config('pipeline.contract_types');
+        $benchContractTypes = config('pipeline.bench_contract_types');
         $accounts = Account::where('active', true)->orderBy('name')->get();
 
         if ($practice && $practice->isIPS() && $pipeline->practiceTime == 'hours') {
@@ -66,23 +66,9 @@ class AccountsPipelineController extends Controller
         $percentRecruitedPhysReport = 0;
         $percentRecruitedAppReport = 0;
 
-        if ($summary) {
-            if($summary->{'Complete Staff - Phys'}) {
-                $percentRecruitedPhys = ($summary->{'Current Staff - Phys'} / $summary->{'Complete Staff - Phys'}) * 100;
-            }
-
-            if($summary->{'Complete Staff - APP'}) {
-                $percentRecruitedApp = ($summary->{'Current Staff - APP'} / $summary->{'Complete Staff - APP'}) * 100;
-            }
-
-            $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;
-            $percentRecruitedAppReport = $percentRecruitedApp > 100 ? 100 : $percentRecruitedApp;
-        }
-
         $params = compact(
             'account', 'pipeline', 'region', 'practice', 'practiceTimes',
-            'recruitingTypes', 'contractTypes', 'accounts', 'percentRecruitedPhys',
-            'percentRecruitedApp', 'percentRecruitedPhysReport', 'percentRecruitedAppReport'
+            'recruitingTypes', 'contractTypes', 'benchContractTypes', 'accounts'
         );
 
         JavaScript::put($params);
@@ -1287,9 +1273,9 @@ class AccountsPipelineController extends Controller
                 $credentialer->activity ? ($credentialer->activity == 'physician' ? 'MD' : 'APP') : '',
                 $credentialer->contractIn ? $credentialer->contractIn->format('m-d-Y') : '',
                 $credentialer->fileToCredentialing ? $credentialer->fileToCredentialing->format('m-d-Y') : '',
+                $credentialer->appToHospital ? $credentialer->appToHospital->format('m-d-Y') : '',
                 '',
-                '',
-                '',
+                $credentialer->privilegeGoal ? $credentialer->privilegeGoal->format('m-d-Y') : '',
                 $credentialer->notes
             ];
 

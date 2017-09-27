@@ -29,6 +29,8 @@ class PipelineRosterBench extends Model
         'firstShift',
         'resigned',
         'lastShift',
-        'fileToCredentialing'
+        'fileToCredentialing',
+        'privilegeGoal',
+        'appToHospital'
     ];
 }

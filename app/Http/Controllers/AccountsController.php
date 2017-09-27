@@ -164,7 +164,7 @@ class AccountsController extends Controller
      * @param  \App\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Account $account)
+    public function destroy(Request $request, Account $account)
     {
         $account->active = false;
         $account->save();
@@ -306,7 +306,7 @@ class AccountsController extends Controller
      * @param  \App\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function removeParent(Account $account)
+    public function removeParent(Request $request, Account $account)
     {
         $account->parentSiteCode = null;
         $account->save();
@@ -323,7 +323,7 @@ class AccountsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function toggleScope()
+    public function toggleScope(Request $request)
     {
         $ignore = session('ignore-account-role-scope', false);
 

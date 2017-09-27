@@ -184,6 +184,11 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->notes = $request->notes;
         $rosterBench->contract = $request->contract;
 
+        $rosterBench->privilegeGoal = $request->privilegeGoal;
+        $rosterBench->appToHospital = $request->appToHospital;
+        $rosterBench->stage = $request->stage;
+        $rosterBench->enrollmentStatus = $request->enrollmentStatus;
+
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->contract = $request->contract;
 

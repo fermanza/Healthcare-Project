@@ -305,24 +305,24 @@
                             <tr>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ number_format($percentRecruitedPhys, 1) }}%" readonly />
+                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" v-model="staffPhysicianRecruitedActual" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                        <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedApp, 1) }}%" readonly />
+                                        <input type="text" class="form-control hidden-print" name="recruitedApp" v-model="staffAppsRecruitedActual" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ number_format($percentRecruitedPhysReport, 1) }}%" readonly />
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" v-model="staffPhysicianRecruitedReported" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedAppReport, 1) }}%" readonly />
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" v-model="staffAppsRecruitedReported" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
@@ -410,24 +410,24 @@
                             <tr>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ number_format($percentRecruitedPhys, 1) }}%" readonly />
+                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" v-model="staffPhysicianRecruitedActual" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedApp, 1) }}%" readonly />
+                                        <input type="text" class="form-control hidden-print" name="recruitedApp" v-model="staffAppsRecruitedActual" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ number_format($percentRecruitedPhysReport, 1) }}%" readonly />
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" v-model="staffPhysicianRecruitedReported" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedAppReport, 1) }}%" readonly />
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" v-model="staffAppsRecruitedReported" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
@@ -439,6 +439,200 @@
 
 
         <hr />
+
+
+        @if (Auth::user()->hasRoleId(11))
+            <div class="no-break-inside">
+                <h4 class="pipeline-blue-title">@lang('Credentialing Pipeline')</h4>
+                <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
+                <form @submit.prevent="addCredentialing('credentialingPhysician')">
+                    <div class="table-responsive">
+                        <table class="table table-bordered summary-datatable">
+                            <thead class="bg-gray">
+                                <tr>
+                                    <th class="mw200">@lang('Name')</th>
+                                    <th class="mw70">@lang('Hours')</th>
+                                    <th class="mw100">@lang('FT/PT/EMB')</th>
+                                    <th class="mw150">@lang('File To Credentialing')</th>
+                                    <th class="mw150">@lang('Privilege Goal')</th>
+                                    <th class="mw150">@lang('APP To Hospital')</th>
+                                    <th class="mw70">@lang('Stage')</th>
+                                    <th class="mw150">@lang('Enrollment Status')</th>
+                                    <th class="mw150">@lang('Notes')</th>
+                                    <th class="mw70 text-center hidden-print">@lang('Actions')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="credentialing in credentialingPhysicians">
+                                    <td>@{{ credentialing.name }}</td>
+                                    <td>@{{ credentialing.hours }}</td>
+                                    <td class="text-uppercase">@{{ credentialing.contract }}</td>
+                                    <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
+                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
+                                    <td>@{{ moment(credentialing.appToHospital) }}</td>
+                                    <td>@{{ credentialing.stage }}</td>
+                                    <td>@{{ credentialing.enrollmentStatus }}</td>
+                                    <td>@{{ credentialing.notes }}</td>
+                                    <td class="text-center hidden-print">
+                                        @permission('admin.accounts.pipeline.rosterBench.store')
+                                            <button type="button" class="btn btn-xs btn-info"
+                                                @click="editCredentialing(credentialing, 'credentialingPhysician')"
+                                            >
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                        @endpermission
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="hidden-print" v-show="credentialingPhysician.id">
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.name" required />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" v-model="credentialingPhysician.hours" min="0" required />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" v-model="credentialingPhysician.contract" required>
+                                            <option :value="null" disabled selected></option>
+                                            @foreach ($contractTypes as $name => $contractType)
+                                                <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.fileToCredentialing" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.privilegeGoal" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.appToHospital" />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" v-model="credentialingPhysician.stage">
+                                            <option :value="null" disabled selected></option>
+                                            @for($x = 1; $x <= 12; $x++);
+                                                <option value="{{$x}}">{{$x}}</option>
+                                            @endfor
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentStatus" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.notes" />
+                                    </td>
+                                    <td class="text-center">
+                                        @permission('admin.accounts.pipeline.rosterBench.store')
+                                            <button type="submit" class="btn btn-xs btn-success">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        @endpermission
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </form>
+            </div>
+
+            <div class="no-break-inside">
+                <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
+                <form @submit.prevent="addCredentialing('credentialingApp')">
+                    <div class="table-responsive">
+                        <table class="table table-bordered summary-datatable">
+                            <thead class="bg-gray">
+                                <tr>
+                                    <th class="mw200">@lang('Name')</th>
+                                    <th class="mw70">@lang('Hours')</th>
+                                    <th class="mw100">@lang('FT/PT/EMB')</th>
+                                    <th class="mw150">@lang('File To Credentialing')</th>
+                                    <th class="mw150">@lang('Privilege Goal')</th>
+                                    <th class="mw150">@lang('APP To Hospital')</th>
+                                    <th class="mw70">@lang('Stage')</th>
+                                    <th class="mw150">@lang('Enrollment Status')</th>
+                                    <th class="mw150">@lang('Notes')</th>
+                                    <th class="mw70 text-center hidden-print">@lang('Actions')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="credentialing in credentialingApps">
+                                    <td>@{{ credentialing.name }}</td>
+                                    <td>@{{ credentialing.hours }}</td>
+                                    <td class="text-uppercase">@{{ credentialing.contract }}</td>
+                                    <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
+                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
+                                    <td>@{{ moment(credentialing.appToHospital) }}</td>
+                                    <td>@{{ credentialing.stage }}</td>
+                                    <td>@{{ credentialing.enrollmentStatus }}</td>
+                                    <td>@{{ credentialing.notes }}</td>
+                                    <td class="text-center hidden-print">
+                                        @permission('admin.accounts.pipeline.rosterBench.store')
+                                            <button type="button" class="btn btn-xs btn-info"
+                                                @click="editCredentialing(credentialing, 'credentialingApp')"
+                                            >
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                        @endpermission
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="hidden-print" v-show="credentialingApp.id">
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingApp.name" required />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" v-model="credentialingApp.hours" min="0" required />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" v-model="credentialingApp.contract" required>
+                                            <option :value="null" disabled selected></option>
+                                            @foreach ($contractTypes as $name => $contractType)
+                                                <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.fileToCredentialing" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.privilegeGoal" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.appToHospital" />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" v-model="credentialingApp.stage">
+                                            <option :value="null" disabled selected></option>
+                                            @for($x = 1; $x <= 12; $x++);
+                                                <option value="{{$x}}">{{$x}}</option>
+                                            @endfor
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingApp.enrollmentStatus" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingApp.notes" />
+                                    </td>
+                                    <td class="text-center">
+                                        @permission('admin.accounts.pipeline.rosterBench.store')
+                                            <button type="submit" class="btn btn-xs btn-success">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        @endpermission
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </form>
+            </div>
+
+            <hr />
+        @endif
 
 
         <div class="no-break-inside">
@@ -453,7 +647,7 @@
                                 <th class="mw50">@lang('AMD')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
-                                <th class="mw60">@lang('FT/PT/EMB')</th>
+                                <th class="mw60">@lang('FT/PTG/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -539,7 +733,11 @@
                                     <select class="form-control" v-model="rosterPhysician.contract" required>
                                         <option :value="null" disabled selected></option>
                                         @foreach ($contractTypes as $name => $contractType)
-                                            <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @if($name == 'PT')
+                                                <option value="ptg">PTG</option>
+                                            @else
+                                                <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </td>
@@ -588,7 +786,7 @@
                                 <th class="mw100">@lang('Chief')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
-                                <th class="mw60">@lang('FT/PT/EMB')</th>
+                                <th class="mw60">@lang('FT/PTG/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -667,7 +865,11 @@
                                     <select class="form-control" v-model="rosterApps.contract" required>
                                         <option :value="null" disabled selected></option>
                                         @foreach ($contractTypes as $name => $contractType)
-                                            <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @if($name == 'PT')
+                                                <option value="ptg">PTG</option>
+                                            @else
+                                                <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </td>
@@ -720,6 +922,7 @@
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
+                                <th class="mw100">@lang('PRN/Locum')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -734,6 +937,7 @@
                             <tr v-for="bench in activeBenchPhysicians" :class="{'highlight': bench.signedNotStarted}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
+                                <td class="text-uppercase">@{{ bench.contract }}</td>
                                 <td>@{{ moment(bench.interview) }}</td>
                                 <td>@{{ moment(bench.contractOut) }}</td>
                                 <td>@{{ moment(bench.contractIn) }}</td>
@@ -787,6 +991,14 @@
                                     <input type="number" class="form-control" v-model="benchPhysician.hours" min="0" required />
                                 </td>
                                 <td>
+                                    <select class="form-control" v-model="benchPhysician.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($benchContractTypes as $name => $benchContractType)
+                                            <option value="{{ $benchContractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
                                     <input type="text" class="form-control datepicker" v-model="benchPhysician.interview" />
                                 </td>
                                 <td>
@@ -830,6 +1042,7 @@
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
+                                <th class="mw100">@lang('PRN/Locum')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -844,6 +1057,7 @@
                             <tr v-for="bench in activeBenchApps" :class="{'highlight': bench.signedNotStarted}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
+                                <td class="text-uppercase">@{{ bench.contract }}</td>
                                 <td>@{{ moment(bench.interview) }}</td>
                                 <td>@{{ moment(bench.contractOut) }}</td>
                                 <td>@{{ moment(bench.contractIn) }}</td>
@@ -895,6 +1109,14 @@
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="benchApps.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <select class="form-control" v-model="benchApps.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($benchContractTypes as $name => $benchContractType)
+                                            <option value="{{ $benchContractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="benchApps.interview" />
@@ -1343,6 +1565,199 @@
             </div>
         </div>
 
+        @if (!Auth::user()->hasRoleId(11))
+            <hr />
+
+            <div class="no-break-inside">
+                <h4 class="pipeline-blue-title">@lang('Credentialing Pipeline')</h4>
+                <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
+                <form @submit.prevent="addCredentialing('credentialingPhysician')">
+                    <div class="table-responsive">
+                        <table class="table table-bordered summary-datatable">
+                            <thead class="bg-gray">
+                                <tr>
+                                    <th class="mw200">@lang('Name')</th>
+                                    <th class="mw70">@lang('Hours')</th>
+                                    <th class="mw100">@lang('FT/PT/EMB')</th>
+                                    <th class="mw150">@lang('File To Credentialing')</th>
+                                    <th class="mw150">@lang('Privilege Goal')</th>
+                                    <th class="mw150">@lang('APP To Hospital')</th>
+                                    <th class="mw70">@lang('Stage')</th>
+                                    <th class="mw150">@lang('Enrollment Status')</th>
+                                    <th class="mw150">@lang('Notes')</th>
+                                    <th class="mw70 text-center hidden-print">@lang('Actions')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="credentialing in credentialingPhysicians">
+                                    <td>@{{ credentialing.name }}</td>
+                                    <td>@{{ credentialing.hours }}</td>
+                                    <td class="text-uppercase">@{{ credentialing.contract }}</td>
+                                    <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
+                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
+                                    <td>@{{ moment(credentialing.appToHospital) }}</td>
+                                    <td>@{{ credentialing.stage }}</td>
+                                    <td>@{{ credentialing.enrollmentStatus }}</td>
+                                    <td>@{{ credentialing.notes }}</td>
+                                    <td class="text-center hidden-print">
+                                        @permission('admin.accounts.pipeline.rosterBench.store')
+                                            <button type="button" class="btn btn-xs btn-info"
+                                                @click="editCredentialing(credentialing, 'credentialingPhysician')"
+                                            >
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                        @endpermission
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="hidden-print" v-show="credentialingPhysician.id">
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.name" required />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" v-model="credentialingPhysician.hours" min="0" required />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" v-model="credentialingPhysician.contract" required>
+                                            <option :value="null" disabled selected></option>
+                                            @foreach ($contractTypes as $name => $contractType)
+                                                <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.fileToCredentialing" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.privilegeGoal" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.appToHospital" />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" v-model="credentialingPhysician.stage">
+                                            <option :value="null" disabled selected></option>
+                                            @for($x = 1; $x <= 12; $x++);
+                                                <option value="{{$x}}">{{$x}}</option>
+                                            @endfor
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentStatus" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.notes" />
+                                    </td>
+                                    <td class="text-center">
+                                        @permission('admin.accounts.pipeline.rosterBench.store')
+                                            <button type="submit" class="btn btn-xs btn-success">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        @endpermission
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </form>
+            </div>
+
+            <div class="no-break-inside">
+                <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
+                <form @submit.prevent="addCredentialing('credentialingApp')">
+                    <div class="table-responsive">
+                        <table class="table table-bordered summary-datatable">
+                            <thead class="bg-gray">
+                                <tr>
+                                    <th class="mw200">@lang('Name')</th>
+                                    <th class="mw70">@lang('Hours')</th>
+                                    <th class="mw100">@lang('FT/PT/EMB')</th>
+                                    <th class="mw150">@lang('File To Credentialing')</th>
+                                    <th class="mw150">@lang('Privilege Goal')</th>
+                                    <th class="mw150">@lang('APP To Hospital')</th>
+                                    <th class="mw70">@lang('Stage')</th>
+                                    <th class="mw150">@lang('Enrollment Status')</th>
+                                    <th class="mw150">@lang('Notes')</th>
+                                    <th class="mw70 text-center hidden-print">@lang('Actions')</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="credentialing in credentialingApps">
+                                    <td>@{{ credentialing.name }}</td>
+                                    <td>@{{ credentialing.hours }}</td>
+                                    <td class="text-uppercase">@{{ credentialing.contract }}</td>
+                                    <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
+                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
+                                    <td>@{{ moment(credentialing.appToHospital) }}</td>
+                                    <td>@{{ credentialing.stage }}</td>
+                                    <td>@{{ credentialing.enrollmentStatus }}</td>
+                                    <td>@{{ credentialing.notes }}</td>
+                                    <td class="text-center hidden-print">
+                                        @permission('admin.accounts.pipeline.rosterBench.store')
+                                            <button type="button" class="btn btn-xs btn-info"
+                                                @click="editCredentialing(credentialing, 'credentialingApp')"
+                                            >
+                                                <i class="fa fa-pencil"></i>
+                                            </button>
+                                        @endpermission
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="hidden-print" v-show="credentialingApp.id">
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingApp.name" required />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" v-model="credentialingApp.hours" min="0" required />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" v-model="credentialingApp.contract" required>
+                                            <option :value="null" disabled selected></option>
+                                            @foreach ($contractTypes as $name => $contractType)
+                                                <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.fileToCredentialing" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.privilegeGoal" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.appToHospital" />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" v-model="credentialingApp.stage">
+                                            <option :value="null" disabled selected></option>
+                                            @for($x = 1; $x <= 12; $x++);
+                                                <option value="{{$x}}">{{$x}}</option>
+                                            @endfor
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingApp.enrollmentStatus" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingApp.notes" />
+                                    </td>
+                                    <td class="text-center">
+                                        @permission('admin.accounts.pipeline.rosterBench.store')
+                                            <button type="submit" class="btn btn-xs btn-success">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        @endpermission
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        @endif
+
     </div>
 @endsection
 
@@ -1400,6 +1815,27 @@
                     notes: '',
                 },
 
+                credentialingPhysician: {
+                    id: null,
+                    name: '',
+                    hours: '',
+                    fileToCredentialing: '',
+                    privilegeGoal: '',
+                    appToHospital: '',
+                    stage: '',
+                    notes: '',
+                },
+
+                credentialingApp: {
+                    id: null,
+                    name: '',
+                    hours: '',
+                    fileToCredentialing: '',
+                    privilegeGoal: '',
+                    appToHospital: '',
+                    stage: '',
+                    notes: '',
+                },
 
                 benchPhysician: {
                     name: '',
@@ -1590,6 +2026,55 @@
                     return this.roundStep(result, 0.5);
                 },
 
+                staffPhysicianRecruitedActual: function() {
+                    var result = (this.staffPhysicianFTEHaves / this.staffPhysicianFTENeeds) * 100;
+                    
+                    if (this.staffPhysicianFTENeeds < 1) {
+                        result = 0;
+                    }
+
+                    return result.toFixed(1) + '%';
+                },
+
+                staffPhysicianRecruitedReported: function() {
+                    var result = (this.staffPhysicianFTEHaves / this.staffPhysicianFTENeeds) * 100;
+
+                    if (this.staffPhysicianFTENeeds < 1) {
+                        result = 0;
+                    }
+
+                    if (result > 100) {
+                        result = 100;
+                    }
+                    
+                    return result.toFixed(1) + '%';
+                },
+
+                staffAppsRecruitedActual: function() {
+                    var result = (this.staffAppsFTEHaves / this.staffAppsFTENeeds) * 100;
+
+                    if (this.staffAppsFTENeeds < 1) {
+                        result = 0;
+                    }
+
+                    return result.toFixed(1) + '%';
+                },
+
+                staffAppsRecruitedReported: function() {
+                    var result = (this.staffAppsFTEHaves / this.staffAppsFTENeeds) * 100;
+
+                    if (this.staffAppsFTENeeds < 1) {
+                        result = 0;
+                    }
+                    
+                    if (result > 100) {
+                        result = 100;
+                        return result.toFixed(1) + '%';
+                    }
+
+                    return result.toFixed(1) + '%';
+                },
+
                 activeRosterPhysicians: function () {
                     return _.chain(this.pipeline.rostersBenchs)
                         .filter({ place: 'roster', activity: 'physician' })
@@ -1616,6 +2101,20 @@
                 activeBenchApps: function () {
                     return _.chain(this.pipeline.rostersBenchs)
                         .filter({ place: 'bench', activity: 'app' })
+                        .reject('resigned')
+                        .value();
+                },
+
+                credentialingPhysicians: function () {
+                    return _.chain(this.pipeline.rostersBenchs)
+                        .filter({ activity: 'physician', signedNotStarted: 1 })
+                        .reject('resigned')
+                        .value();
+                },
+
+                credentialingApps: function () {
+                    return _.chain(this.pipeline.rostersBenchs)
+                        .filter({ activity: 'app', signedNotStarted: 1 })
                         .reject('resigned')
                         .value();
                 },
@@ -1703,14 +2202,42 @@
                         }
                 },
 
+                addCredentialing: function (entity) {
+                    if(this[entity].id) {
+                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
+
+                        axios.patch(endpoint, this[entity])
+                            .then(function (response) {
+                                var credentialing = _.find(this.pipeline.rostersBenchs, {id: response.data.id});
+                                _.assignIn(credentialing, response.data);
+                                this.clearCredentialing(entity);
+                        }.bind(this));
+                    }
+                },
+
                 editRosterBench: function (rosterBench, object) {
                     rosterBench.interview = this.moment(rosterBench.interview);
                     rosterBench.contractIn = this.moment(rosterBench.contractIn);
                     rosterBench.contractOut = this.moment(rosterBench.contractOut);
                     rosterBench.firstShift = this.moment(rosterBench.firstShift);
                     rosterBench.fileToCredentialing = this.moment(rosterBench.fileToCredentialing);
+                    rosterBench.privilegeGoal = this.moment(rosterBench.privilegeGoal);
+                    rosterBench.appToHospital = this.moment(rosterBench.appToHospital);
 
                     _.assignIn(this[object], rosterBench);
+                },
+
+                editCredentialing: function (credentialing, object) {
+                    credentialing.interview = this.moment(credentialing.interview);
+                    credentialing.contractIn = this.moment(credentialing.contractIn);
+                    credentialing.contractOut = this.moment(credentialing.contractOut);
+                    credentialing.firstShift = this.moment(credentialing.firstShift);
+                    credentialing.fileToCredentialing = this.moment(credentialing.fileToCredentialing);
+                    credentialing.privilegeGoal = this.moment(credentialing.privilegeGoal);
+                    credentialing.appToHospital = this.moment(credentialing.appToHospital);
+
+
+                    _.assignIn(this[object], credentialing);
                 },
 
                 switchRosterBenchTo: function (rosterBench, place) {
@@ -2035,6 +2562,34 @@
                             contractOut: '',
                             contractIn: '',
                             firstShift: '',
+                            notes: '',
+                        };
+                        break;
+                    }
+                },
+
+                clearCredentialing: function(entity) {
+                    switch(entity) {
+                        case 'credentialingPhysician': this[entity] = {
+                            id: null,
+                            name: '',
+                            hours: '',
+                            fileToCredentialing: '',
+                            privilegeGoal: '',
+                            appToHospital: '',
+                            stage: '',
+                            notes: '',
+                        };
+                        break;
+
+                        case 'credentialingApp': this[entity] = {
+                            id: null,
+                            name: '',
+                            hours: '',
+                            fileToCredentialing: '',
+                            privilegeGoal: '',
+                            appToHospital: '',
+                            stage: '',
                             notes: '',
                         };
                         break;
