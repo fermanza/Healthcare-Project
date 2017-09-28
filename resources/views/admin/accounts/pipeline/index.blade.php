@@ -487,13 +487,13 @@
                             <tfoot class="hidden-print" v-show="credentialingPhysician.id">
                                 <tr>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingApp.name" required readonly />
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.name" required readonly />
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" v-model="credentialingApp.hours" min="0" required readonly />
+                                        <input type="number" class="form-control" v-model="credentialingPhysician.hours" min="0" required readonly />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingApp.contract" required readonly />
+                                        <input type="text" class="form-control text-uppercase" v-model="credentialingPhysician.contract" required readonly />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control datepicker" v-model="credentialingPhysician.fileToCredentialing" />
@@ -582,7 +582,7 @@
                                         <input type="number" class="form-control" v-model="credentialingApp.hours" min="0" required readonly />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingApp.contract" required readonly />
+                                        <input type="text" class="form-control text-uppercase" v-model="credentialingApp.contract" required readonly />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control datepicker" v-model="credentialingApp.fileToCredentialing" />
@@ -1603,18 +1603,13 @@
                             <tfoot class="hidden-print" v-show="credentialingPhysician.id">
                                 <tr>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingPhysician.name" required />
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.name" required readonly />
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" v-model="credentialingPhysician.hours" min="0" required />
+                                        <input type="number" class="form-control" v-model="credentialingPhysician.hours" min="0" required readonly />
                                     </td>
                                     <td>
-                                        <select class="form-control" v-model="credentialingPhysician.contract" required>
-                                            <option :value="null" disabled selected></option>
-                                            @foreach ($contractTypes as $name => $contractType)
-                                                <option value="{{ $contractType }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" class="form-control text-uppercase" v-model="credentialingPhysician.contract" required readonly />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control datepicker" v-model="credentialingPhysician.fileToCredentialing" />
@@ -1697,18 +1692,13 @@
                             <tfoot class="hidden-print" v-show="credentialingApp.id">
                                 <tr>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingApp.name" required />
+                                        <input type="text" class="form-control" v-model="credentialingApp.name" required readonly />
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" v-model="credentialingApp.hours" min="0" required />
+                                        <input type="number" class="form-control" v-model="credentialingApp.hours" min="0" required readonly />
                                     </td>
                                     <td>
-                                        <select class="form-control" v-model="credentialingApp.contract" required>
-                                            <option :value="null" disabled selected></option>
-                                            @foreach ($contractTypes as $name => $contractType)
-                                                <option value="{{ $contractType }}">{{ $name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" class="form-control text-uppercase" v-model="credentialingApp.contract" required readonly />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control datepicker" v-model="credentialingApp.fileToCredentialing" />
