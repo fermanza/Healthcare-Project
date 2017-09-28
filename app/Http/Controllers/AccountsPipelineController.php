@@ -1415,9 +1415,16 @@ class AccountsPipelineController extends Controller
      */
     public function bulkExport(Request $request) {
         if ($request->ids) {
-            $accounts = Account::whereIn('id', $request->ids)->get();
 
             set_time_limit(600);
+
+            $ids = $request->ids;
+
+            if(count($ids) > 100) {
+                $ids = array_slice($ids, 0, 100);
+            }
+
+            $accounts = Account::whereIn('id', $ids)->get();
 
             if ($accounts) {
                 $this->exportPDF($accounts, 'pdf');
