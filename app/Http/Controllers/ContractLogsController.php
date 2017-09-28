@@ -271,8 +271,8 @@ class ContractLogsController extends Controller
 
                 $sheet->cells('A1:AJ1', function($cells) {
                     $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Tahoma');
-                    $cells->setFontSize(9.5);
+                    $cells->setFontFamily('Calibri');
+                    $cells->setFontSize(10);
                     $cells->setFontWeight('bold');
                     $cells->setAlignment('center');
                     $cells->setValignment('bottom');
@@ -280,8 +280,8 @@ class ContractLogsController extends Controller
 
                 $sheet->cells('A2:AJ'.$rowNumber, function($cells) {
                     $cells->setFontColor('#000000');
-                    $cells->setFontFamily('Tahoma');
-                    $cells->setFontSize(9.5);
+                    $cells->setFontFamily('Calibri');
+                    $cells->setFontSize(10);
                     $cells->setFontWeight('bold');
                     $cells->setAlignment('center');
                     $cells->setValignment('bottom');
@@ -310,7 +310,7 @@ class ContractLogsController extends Controller
                     'T'     => 12,
                     'U'     => 8,
                     'V'     => 17,
-                    'W'     => 8
+                    'W'     => 50
                 ));
 
                 $sheet->setColumnFormat(array(
@@ -330,6 +330,7 @@ class ContractLogsController extends Controller
 
                 $sheet->getStyle('A1:W'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('A1:W1')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('W2:W'.$rowNumber)->getAlignment()->setWrapText(true);
             });
         })->download('xlsx'); 
     }

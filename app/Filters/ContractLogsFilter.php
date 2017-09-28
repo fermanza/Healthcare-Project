@@ -49,9 +49,7 @@ class ContractLogsFilter extends Filter
      */
     public function recruiters($ids)
     {
-        $this->query->whereHas('account.recruiter', function($query) use ($ids) {
-            $query->whereIn('employeeId', $ids);
-        });
+        $this->query->whereIn('tContractLogs.recruiterId', $ids);
     }
 
     /**
@@ -62,9 +60,7 @@ class ContractLogsFilter extends Filter
      */
     public function managers($ids)
     {
-        $this->query->whereHas('account.manager', function($query) use ($ids) {
-            $query->whereIn('employeeId', $ids);
-        });
+        $this->query->whereIn('tContractLogs.managerId', $ids);
     }
 
     /**
