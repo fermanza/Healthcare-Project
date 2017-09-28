@@ -45,6 +45,7 @@ class AccountsPipelineController extends Controller
             'practices', 'summary',
         ]);
         $pipeline = $account->pipeline;
+        $summary = $account->summary;
         $region = $account->region;
         $practice = $account->practices->count() ? $account->practices->first() : null;
         $practiceTimes = config('pipeline.practice_times');
@@ -65,10 +66,22 @@ class AccountsPipelineController extends Controller
         $percentRecruitedApp = 0;
         $percentRecruitedPhysReport = 0;
         $percentRecruitedAppReport = 0;
+        
+        if ($summary) {
+            if($summary->{'Complete Staff - Phys'}) {
+                $percentRecruitedPhys = ($summary->{'Current Staff - Phys'} / $summary->{'Complete Staff - Phys'}) * 100;
+            }
+            if($summary->{'Complete Staff - APP'}) {
+                $percentRecruitedApp = ($summary->{'Current Staff - APP'} / $summary->{'Complete Staff - APP'}) * 100;
+            }
+            $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;
+            $percentRecruitedAppReport = $percentRecruitedApp > 100 ? 100 : $percentRecruitedApp;
+        }
 
         $params = compact(
             'account', 'pipeline', 'region', 'practice', 'practiceTimes',
-            'recruitingTypes', 'contractTypes', 'benchContractTypes', 'accounts'
+            'recruitingTypes', 'contractTypes', 'benchContractTypes', 'accounts', 'percentRecruitedPhys',
+            'percentRecruitedApp', 'percentRecruitedPhysReport', 'percentRecruitedAppReport'
         );
 
         JavaScript::put($params);
@@ -1403,6 +1416,8 @@ class AccountsPipelineController extends Controller
     public function bulkExport(Request $request) {
         if ($request->ids) {
             $accounts = Account::whereIn('id', $request->ids)->get();
+
+            set_time_limit(600);
 
             if ($accounts) {
                 $this->exportPDF($accounts, 'pdf');

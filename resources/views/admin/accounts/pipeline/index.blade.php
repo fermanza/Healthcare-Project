@@ -305,24 +305,24 @@
                             <tr>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" v-model="staffPhysicianRecruitedActual" readonly />
+                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ number_format($percentRecruitedPhys, 1) }}%" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                        <input type="text" class="form-control hidden-print" name="recruitedApp" v-model="staffAppsRecruitedActual" readonly />
+                                        <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedApp, 1) }}%" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" v-model="staffPhysicianRecruitedReported" readonly />
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ number_format($percentRecruitedPhysReport, 1) }}%" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedApp" v-model="staffAppsRecruitedReported" readonly />
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedAppReport, 1) }}%" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
@@ -410,24 +410,24 @@
                             <tr>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" v-model="staffPhysicianRecruitedActual" readonly />
+                                        <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ number_format($percentRecruitedPhys, 1) }}%" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Actual')</td>
                                 <td>
-                                        <input type="text" class="form-control hidden-print" name="recruitedApp" v-model="staffAppsRecruitedActual" readonly />
+                                        <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedApp, 1) }}%" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
                             <tr>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" v-model="staffPhysicianRecruitedReported" readonly />
+                                    <input type="text" class="form-control hidden-print" name="recruitedPhys" value="{{ number_format($percentRecruitedPhysReport, 1) }}%" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Percent Recruited Reported')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="recruitedApp" v-model="staffAppsRecruitedReported" readonly />
+                                    <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedAppReport, 1) }}%" readonly />
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
