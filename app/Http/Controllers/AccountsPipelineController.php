@@ -1085,7 +1085,7 @@ class AccountsPipelineController extends Controller
         }
 
         if(count($activeRosterPhysicians) >= count($activeRosterAPPs)) {
-            $countUntil = count($activeRosterPhysicians) < 17 ? 17 : count($activeRosterPhysicians);
+            $countUntil = count($activeRosterPhysicians) < 13 ? 13 : count($activeRosterPhysicians);
 
             for ($i = 0; $i < $countUntil; $i++) { 
                 $row = [
@@ -1103,7 +1103,7 @@ class AccountsPipelineController extends Controller
                 $rosterBenchCount++;
             }
         } else {
-            $countUntil = count($activeRosterAPPs) < 17 ? 17 : count($activeRosterAPPs);
+            $countUntil = count($activeRosterAPPs) < 13 ? 13 : count($activeRosterAPPs);
 
             for ($i = 0; $i < $countUntil; $i++) { 
                 $row = [

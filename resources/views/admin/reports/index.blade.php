@@ -90,8 +90,8 @@
             </div>
         </div>
     </form>
-	<div class="reports-summary">
-		<div class="table-responsive mh400">
+	<div class="reports-summary maxh100vh">
+		<div class="table-responsive overflow-hidden">
 	        <table id="datatableSummary" class="table table-hover table-bordered">
 	            <thead>
                     <tr>
@@ -273,7 +273,7 @@
     <script>
         $(document).ready(function() {
             var summary = $('#datatableSummary').DataTable($.extend({}, defaultDTOptions, {
-                scrollY:        300,
+                scrollY:        $('.reports-summary').height()-180,
                 scrollX:        true,
                 scrollCollapse: true,
                 fixedColumns:   {

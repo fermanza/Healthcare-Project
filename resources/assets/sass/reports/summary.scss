@@ -123,6 +123,9 @@
 			color: #ffffff;
 		}
 	}
+	.table-responsive.overflow-hidden {
+		overflow: hidden;
+	}
 	.table-bordered {
 		td {
 			border-bottom: 1px solid #000000;
@@ -185,4 +188,8 @@
 			display: none;
 		}
 	}
+}
+
+.reports-summary.maxh100vh {
+	max-height:100vh;
 }
