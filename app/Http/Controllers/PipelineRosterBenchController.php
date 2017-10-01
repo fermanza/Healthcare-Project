@@ -6,6 +6,7 @@ use App\Account;
 use App\PipelineRosterBench;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 class PipelineRosterBenchController extends Controller
 {
@@ -74,6 +75,8 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->notes = $request->notes;
         $rosterBench->contract = $request->contract;
+        $rosterBench->lastUpdated = Carbon::now();
+        $rosterBench->lastUpdatedBy = \Auth::id();
 
         if($rosterBench->save()) {
             if($rosterBench->isSMD) {
@@ -193,6 +196,9 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contract = $request->contract;
 
         $rosterBench->place = $request->place;
+
+        $rosterBench->lastUpdated = Carbon::now();
+        $rosterBench->lastUpdatedBy = \Auth::id();
 
         if($rosterBench->save()) {
             if($rosterBench->isSMD) {

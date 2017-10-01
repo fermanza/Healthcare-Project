@@ -7,6 +7,7 @@ use App\PipelineRecruiting;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\PipelineRosterBench;
+use Carbon\Carbon;
 
 class PipelineRecruitingController extends Controller
 {
@@ -66,6 +67,8 @@ class PipelineRecruitingController extends Controller
         $recruiting->contractIn = $request->contractIn;
         $recruiting->firstShift = $request->firstShift;
         $recruiting->notes = $request->notes;
+        $recruiting->lastUpdated = Carbon::now();
+        $recruiting->lastUpdatedBy = \Auth::id();
         $recruiting->save();
 
         return $recruiting->fresh();
@@ -129,6 +132,8 @@ class PipelineRecruitingController extends Controller
         $recruiting->contractIn = $request->contractIn;
         $recruiting->firstShift = $request->firstShift;
         $recruiting->notes = $request->notes;
+        $recruiting->lastUpdated = Carbon::now();
+        $recruiting->lastUpdatedBy = \Auth::id();
         $recruiting->save();
 
         return $recruiting->fresh();

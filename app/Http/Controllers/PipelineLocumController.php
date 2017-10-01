@@ -7,6 +7,7 @@ use App\PipelineLocum;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\PipelineRosterBench;
+use Carbon\Carbon;
 
 class PipelineLocumController extends Controller
 {
@@ -63,6 +64,8 @@ class PipelineLocumController extends Controller
         $locum->shiftsOffered = $request->shiftsOffered;
         $locum->startDate = $request->startDate;
         $locum->comments = $request->comments;
+        $locum->lastUpdated = Carbon::now();
+        $locum->lastUpdatedBy = \Auth::id();
         $locum->save();
 
         return $locum->fresh();
@@ -123,6 +126,8 @@ class PipelineLocumController extends Controller
         $locum->shiftsOffered = $request->shiftsOffered;
         $locum->startDate = $request->startDate;
         $locum->comments = $request->comments;
+        $locum->lastUpdated = Carbon::now();
+        $locum->lastUpdatedBy = \Auth::id();
         $locum->save();
 
         return $locum->fresh();
