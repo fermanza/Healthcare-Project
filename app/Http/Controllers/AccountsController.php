@@ -89,7 +89,6 @@ class AccountsController extends Controller
     {
         $account = new Account;
         $account->hasSMD = 1;
-        $account->hasAMD = 1;
         
         $action = 'create';
         $view = 'admin.accounts.create';
