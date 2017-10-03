@@ -70,11 +70,20 @@ class ContractLogScope implements Scope
             });
         } else {
             if($role == 'account.recruiter') {
-                $builder->where(function ($query) use ($role, $user, $employeeType) {
+                $builder->where('recruiterId', $user->employeeId)
+                ->orWhere(function ($query) use ($role, $user, $employeeType) {
                     $query->whereHas($role, function ($query) use ($user, $employeeType) {
                         $query->where($employeeType, $user->employeeId)
                             ->whereNotNull($employeeType);
                     })->orWhereHas('account.recruiters', function($query) use ($user, $employeeType) {
+                        $query->where($employeeType, $user->employeeId)
+                            ->whereNotNull($employeeType);
+                    });
+                });
+            } elseif ($role == 'account.manager') {
+                $builder->where('managerId', $user->employeeId)
+                ->orWhere(function ($query) use ($role, $user, $employeeType) {
+                    $query->whereHas($role, function ($query) use ($user, $employeeType) {
                         $query->where($employeeType, $user->employeeId)
                             ->whereNotNull($employeeType);
                     });
