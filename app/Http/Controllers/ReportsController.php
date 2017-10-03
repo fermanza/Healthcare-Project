@@ -1012,7 +1012,7 @@ class ReportsController extends Controller
 
                 $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
 
-                $sheetName = $account->name.', '.$account->siteCode;
+                $sheetName = $account->name;
 
                 $excel->sheet($sheetName, function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
                     
