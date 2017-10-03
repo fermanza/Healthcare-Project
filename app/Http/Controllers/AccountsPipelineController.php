@@ -68,10 +68,10 @@ class AccountsPipelineController extends Controller
         $percentRecruitedAppReport = 0;
         
         if ($summary) {
-            if($summary->{'Complete Staff - Phys'}) {
+            if($summary->{'Complete Staff - Phys'} && $summary->{'Complete Staff - Phys'} > 0) {
                 $percentRecruitedPhys = ($summary->{'Current Staff - Phys'} / $summary->{'Complete Staff - Phys'}) * 100;
             }
-            if($summary->{'Complete Staff - APP'}) {
+            if($summary->{'Complete Staff - APP'} && $summary->{'Complete Staff - APP'} > 0) {
                 $percentRecruitedApp = ($summary->{'Current Staff - APP'} / $summary->{'Complete Staff - APP'}) * 100;
             }
             $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;

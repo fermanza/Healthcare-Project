@@ -3,6 +3,10 @@
 @section('content-header', __('Summary Report'))
 
 @section('tools')
+    <a href="{{ route('admin.reports.summary.excel.details', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
+        <i class="fa fa-file-excel-o"></i>
+        @lang('Detailed Export')
+    </a>
     <a href="{{ route('admin.reports.summary.excel', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
         <i class="fa fa-file-excel-o"></i>
         @lang('Export to Excel')

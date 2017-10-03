@@ -86,15 +86,15 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
-                    <div class="input-group date">
-                        <input type="text" class="form-control rangedatepicker" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
+                    <div class="input-group date rangedatepicker">
+                        <input type="text" class="form-control" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
-                    <div class="input-group date">
-                        <input type="text" class="form-control rangedatepicker" name="contractInDate" value="{{ Request::input('contractInDate') ? Request::input('contractInDate') : '' }}" placeholder="@lang('Contract In Date')" />
+                    <div class="input-group date rangedatepicker">
+                        <input type="text" class="form-control" name="contractInDate" value="{{ Request::input('contractInDate') ? Request::input('contractInDate') : '' }}" placeholder="@lang('Contract In Date')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
@@ -124,8 +124,8 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
-                    <div class="input-group date">
-                        <input type="text" class="form-control rangedatepicker" name="signedNotStarted" value="{{ Request::input('signedNotStarted') ? Request::input('signedNotStarted') : '' }}" placeholder="@lang('Signed Not Started')" />
+                    <div class="input-group date rangedatepicker">
+                        <input type="text" class="form-control" name="signedNotStarted" value="{{ Request::input('signedNotStarted') ? Request::input('signedNotStarted') : '' }}" placeholder="@lang('Signed Not Started')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
