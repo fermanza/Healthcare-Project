@@ -46,7 +46,7 @@ Artisan::command('export-contract-logs', function () {
             "(# of times) Revised/Resent", "Comments"
         ];
 
-        Maatwebsite\Excel\Facades\Excel::create('Contract Logs - '.$count, function($excel) use ($contractLogs, $headers, &$count){
+        Maatwebsite\Excel\Facades\Excel::create('Contract_Logs_'.$count, function($excel) use ($contractLogs, $headers, &$count){
             $excel->sheet('Summary', function($sheet) use ($contractLogs, $headers, &$count){
                 
                 $rowNumber = 1;
@@ -166,20 +166,20 @@ Artisan::command('export-contract-logs', function () {
                 $sheet->getStyle('A1:W1')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('W2:W'.$rowNumber)->getAlignment()->setWrapText(true);
             });
-        })->store('xlsx', public_path('contractLogs'), true);
+        })->store('xlsx', public_path('contract_logs'), true);
 
         $count++;
     });
 
     $zipper = new \Chumper\Zipper\Zipper;
 
-    $files = glob(public_path('contractLogs/*'));
-    $zipper->make('contractLogs.zip')->add($files)->close();
+    $files = glob(public_path('contract_logs/*'));
+    $zipper->make(public_path('contract_logs.zip'))->add($files)->close();
 
     $this->line('Zip Created');
 
-    // $file = new Illuminate\Filesystem\Filesystem;
-    // $file->deleteDirectory(public_path('contractLogs'));
+    $file = new Illuminate\Filesystem\Filesystem;
+    $file->deleteDirectory(public_path('contract_logs'));
     
 })->describe('Download an excel file with all contract logs');
 
