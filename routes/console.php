@@ -174,7 +174,7 @@ Artisan::command('export-contract-logs', function () {
     $zipper = new \Chumper\Zipper\Zipper;
 
     $files = glob(public_path('contractLogs/*'));
-    $zipper->make('contractLogs.zip')->add($files)->close();
+    $zipper->make('contractLogs.zip')->add($files);
 
     $file = new Illuminate\Filesystem\Filesystem;
     $file->deleteDirectory(public_path('contractLogs'));
