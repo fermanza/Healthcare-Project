@@ -1110,7 +1110,6 @@ class AccountsPipelineController extends Controller
             $countUntil = count($activeRosterAPPs) < 13 ? 13 : count($activeRosterAPPs);
 
             for ($i = 0; $i < $countUntil; $i++) {
-                dd($activeRosterPhysicians[$i]);
 
                 $row = [
                     $rosterBenchCount,
