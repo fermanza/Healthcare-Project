@@ -86,6 +86,14 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="states[]" data-placeholder="@lang('State')" multiple>
+                        @foreach ($states as $state)
+                            <option value="{{ $state->abbreviation }}" {{ in_array($state->abbreviation, Request::input('states') ?: []) ? 'selected' : '' }}>{{ $state->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         
             <div class="row">
@@ -285,7 +293,7 @@
     <script>
         $(document).ready(function() {
             var summary = $('#datatableSummary').DataTable($.extend({}, defaultDTOptions, {
-                scrollY:        $('.reports-summary').height()-180,
+                scrollY:        $('.reports-summary').height() > 400 ? $('.reports-summary').height()-180 : 400,
                 scrollX:        true,
                 scrollCollapse: true,
                 fixedColumns:   {

@@ -201,12 +201,25 @@ class ContractLogsFilter extends Filter
     /**
      * Apply placements filter.
      *
-     * @param  string  $date
+     * @param  string  $value
      * @return void
      */
     public function placements($value)
     {
         $this->query->where('tContractLogs.value', '>', 0);
+    }
+
+    /**
+     * Apply promos filter.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function promos($value)
+    {
+        $this->query->whereHas('status', function($query) {
+            $query->where('contractStatus', 'like', 'Leadership Promos');
+        });
     }
 
     /**

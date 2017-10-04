@@ -75,6 +75,19 @@ class SummaryFilter extends Filter
     }
 
     /**
+     * Apply states filter.
+     *
+     * @param  array  $states
+     * @return void
+     */
+    public function states($states)
+    {
+        $this->query->whereHas('account', function($query) use ($states) {
+            $query->whereIn('state', $states);
+        });
+    }
+
+    /**
      * Apply contractOutDate filter.
      *
      * @param  string  $date

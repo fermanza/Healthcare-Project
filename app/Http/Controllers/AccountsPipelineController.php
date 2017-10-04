@@ -387,7 +387,7 @@ class AccountsPipelineController extends Controller
         ->reject(function($rosterBench){
             return $rosterBench->signedNotStarted;
         })->sortByDesc(function($rosterBench){
-            return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
+            return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->name);
         });
 
         $activeRosterPhysicians = $activeRosterPhysicians->values();
@@ -971,10 +971,10 @@ class AccountsPipelineController extends Controller
             $cell->setValue($account->payroll ? $account->payroll->fullName() : '');
         });
         $sheet->cell('I14', function($cell) use ($account) {
-            $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
+            $cell->setValue($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves);
         });
         $sheet->cell('I15', function($cell) use ($account) {
-            $cell->setValue($account->pipeline->staffAppsFTEOpenings);
+            $cell->setValue($account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves);
         });
         $sheet->cell('I16', function($cell) use ($accountPrevMonthIncComp) {
             $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
@@ -1094,7 +1094,7 @@ class AccountsPipelineController extends Controller
             for ($i = 0; $i < $countUntil; $i++) { 
                 $row = [
                     $rosterBenchCount,
-                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
+                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].((isset($activeRosterPhysicians[$i]["isSMD"]) && $activeRosterPhysicians[$i]["isSMD"] == 1) ? " (SMD)" : '').(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
                     isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
                     $rosterBenchCount,
                     isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"].(isset($activeRosterAPPs[$i]["hours"]) ? " (".$activeRosterAPPs[$i]["hours"].")" : '') : '',
@@ -1113,7 +1113,7 @@ class AccountsPipelineController extends Controller
 
                 $row = [
                     $rosterBenchCount,
-                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
+                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].((isset($activeRosterPhysicians[$i]["isSMD"]) && $activeRosterPhysicians[$i]["isSMD"] == 1) ? " (SMD)" : '').(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
                     isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
                     $rosterBenchCount,
                     isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"].(isset($activeRosterAPPs[$i]["hours"]) ? " (".$activeRosterAPPs[$i]["hours"].")" : '') : '',
@@ -1477,7 +1477,7 @@ class AccountsPipelineController extends Controller
             ->reject(function($rosterBench){
                 return $rosterBench->signedNotStarted;
             })->sortByDesc(function($rosterBench){
-                return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
+                return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->name);
             });
 
             $activeRosterPhysicians = $activeRosterPhysicians->values();

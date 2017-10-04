@@ -10,6 +10,7 @@ use App\Division;
 use App\Employee;
 use App\Practice;
 use App\SystemAffiliation;
+use App\StateAbbreviation;
 use App\Scopes\AccountSummaryScope;
 use App\Filters\SummaryFilter;
 use Maatwebsite\Excel\Facades\Excel;
@@ -44,10 +45,11 @@ class ReportsController extends Controller
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $affiliations = SystemAffiliation::all();
         $regions = Region::where('active', true)->orderBy('name')->get();
+        $states = StateAbbreviation::all();
         
         $dates = AccountSummary::select('MonthEndDate')->get()->unique('MonthEndDate');
 
-        $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'action');
+        $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'action');
 
         return view('admin.reports.index', $params);
     }

@@ -179,6 +179,7 @@ return [
         'admin.contractLogs.update' => 'Contract Log Edit Action',
         'admin.contractLogs.destroy' => 'Delete Contract Log',
         'admin.contractLogs.excel' => 'Export to excel',
+        'admin.contractLogs.all' => 'Export all records to excel',
     ],
 
     'Reports' => [

@@ -41,7 +41,8 @@ return [
         'dcs' => 13,
         'scheduler' => 14,
         'enrollment' => 15,
-        'payroll' => 16
+        'payroll' => 16,
+        'contract_manager' => 17
     ],
 
 ];
