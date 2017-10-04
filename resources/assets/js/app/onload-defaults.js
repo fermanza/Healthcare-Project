@@ -132,6 +132,12 @@ $(() => {
     require('./image-upload')
 
 
+    // Make rangedatepicker icon work
+    $('div.date > .input-group-addon').on('click', function() {
+        $(this).parent().children('input').click();
+    });
+
+
     // Delete Records
     $('.deletes-record').on('click', function(e) {
         e.preventDefault();
