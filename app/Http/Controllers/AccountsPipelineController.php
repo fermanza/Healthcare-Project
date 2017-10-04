@@ -386,7 +386,9 @@ class AccountsPipelineController extends Controller
         })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
         ->reject(function($rosterBench){
             return $rosterBench->signedNotStarted;
-        })->sortBy('name');
+        })->sortByDesc(function($rosterBench){
+            return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
+        });
 
         $activeRosterPhysicians = $activeRosterPhysicians->values();
 
@@ -1092,10 +1094,10 @@ class AccountsPipelineController extends Controller
             for ($i = 0; $i < $countUntil; $i++) { 
                 $row = [
                     $rosterBenchCount,
-                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"] : '',
+                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
                     isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
                     $rosterBenchCount,
-                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"] : '',
+                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"].(isset($activeRosterAPPs[$i]["hours"]) ? " (".$activeRosterAPPs[$i]["hours"].")" : '') : '',
                     isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
                 ];
 
@@ -1107,13 +1109,15 @@ class AccountsPipelineController extends Controller
         } else {
             $countUntil = count($activeRosterAPPs) < 13 ? 13 : count($activeRosterAPPs);
 
-            for ($i = 0; $i < $countUntil; $i++) { 
+            for ($i = 0; $i < $countUntil; $i++) {
+                dd($activeRosterPhysicians[$i]);
+
                 $row = [
                     $rosterBenchCount,
-                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"] : '',
+                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
                     isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
                     $rosterBenchCount,
-                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"] : '',
+                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"].(isset($activeRosterAPPs[$i]["hours"]) ? " (".$activeRosterAPPs[$i]["hours"].")" : '') : '',
                     isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
                 ];
 
@@ -1473,7 +1477,9 @@ class AccountsPipelineController extends Controller
             })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
             ->reject(function($rosterBench){
                 return $rosterBench->signedNotStarted;
-            })->sortBy('name');
+            })->sortByDesc(function($rosterBench){
+                return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
+            });
 
             $activeRosterPhysicians = $activeRosterPhysicians->values();
 

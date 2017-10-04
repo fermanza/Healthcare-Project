@@ -32,6 +32,7 @@ class PipelineRecruiting extends Model
         'contractOut',
         'firstShift',
         'declined',
+        'lastUpdated'
     ];
 
     /**

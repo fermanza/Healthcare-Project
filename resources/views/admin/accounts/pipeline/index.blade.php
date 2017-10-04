@@ -2496,6 +2496,8 @@
                     roster.contractOut = this.moment(roster.contractOut);
                     roster.firstShift = this.moment(roster.firstShift);
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
+                    roster.privilegeGoal = this.moment(roster.privilegeGoal);
+                    roster.appToHospital = this.moment(roster.appToHospital);
                     
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 

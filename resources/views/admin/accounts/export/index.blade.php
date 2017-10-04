@@ -17,7 +17,7 @@
         <div class="flexboxgrid">
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="affiliations[]" data-placeholder="@lang('System Affiliation')" multiple>
+                    <select class="form-control select2" name="affiliations[]" data-placeholder="@lang('Affiliation')" multiple>
                         @foreach ($affiliations as $affiliation)
                             <option value="{{ $affiliation->id }}" {{ in_array($affiliation->id, Request::input('affiliations') ?: []) ? 'selected' : '' }}>{{ $affiliation->name }}</option>
                         @endforeach

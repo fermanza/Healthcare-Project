@@ -20,12 +20,12 @@ class SummaryFilter extends Filter
     /**
      * Apply affiliation filter.
      *
-     * @param  string  $name
+     * @param  array  $names
      * @return void
      */
-    public function affiliation($name)
+    public function affiliations($names)
     {
-        $this->query->where('System Affiliation', 'like', '%'.$name.'%');
+        $this->query->whereIn('System Affiliation', $names);
     }
 
     /**
@@ -93,11 +93,11 @@ class SummaryFilter extends Filter
     /**
      * Apply DOO filter.
      *
-     * @param  string  $date
+     * @param  array  $names
      * @return void
      */
-    public function DOO($name)
+    public function DOO($names)
     {
-        $this->query->where('DOO', 'like', '%'.$name.'%');
+        $this->query->whereIn('DOO', $names);
     }
 }

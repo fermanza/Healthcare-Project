@@ -21,7 +21,11 @@
         <div class="flexboxgrid">
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <input type="text" class="form-control" name="affiliation" value="{{ Request::input('provider') }}" placeholder="@lang('System Affiliation')">
+                    <select class="form-control select2" name="affiliations[]" data-placeholder="@lang('Affiliation')" multiple>
+                        @foreach ($affiliations as $affiliation)
+                            <option value="{{ $affiliation->name }}" {{ in_array($affiliation->name, Request::input('affiliations') ?: []) ? 'selected' : '' }}>{{ $affiliation->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
@@ -76,7 +80,11 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <input type="text" class="form-control" name="DOO" value="{{ Request::input('DOO') }}" placeholder="@lang('DOO')">
+                    <select class="form-control select2" name="DOO[]" data-placeholder="@lang('DOO')" multiple>
+                        @foreach ($employees as $employee)
+                            <option value="{{ $employee->fullName() }}" {{ in_array($employee->fullName(), Request::input('DOO') ?: []) ? 'selected' : '' }}>{{ $employee->fullName() }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         
