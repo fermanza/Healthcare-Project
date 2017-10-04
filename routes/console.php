@@ -46,8 +46,8 @@ Artisan::command('set-new-routes', function () {
             "(# of times) Revised/Resent", "Comments"
         ];
 
-        Maatwebsite\Excel\Facades\Excel::create('Contract Logs - '.$count, function($excel) use ($contractLogs, $headers){
-            $excel->sheet('Summary', function($sheet) use ($contractLogs, $headers){
+        Maatwebsite\Excel\Facades\Excel::create('Contract Logs - '.$count, function($excel) use ($contractLogs, $headers, $count){
+            $excel->sheet('Summary', function($sheet) use ($contractLogs, $headers, $count){
                 
                 $rowNumber = 1;
 
