@@ -46,7 +46,7 @@ Artisan::command('export-contract-logs', function () {
             "(# of times) Revised/Resent", "Comments"
         ];
 
-        Maatwebsite\Excel\Facades\Excel::create('Contract Logs - '.$this->count, function($excel) use ($contractLogs, $headers){
+        Maatwebsite\Excel\Facades\Excel::create('Contract Logs - '.$self->count, function($excel) use ($contractLogs, $headers){
             $excel->sheet('Summary', function($sheet) use ($contractLogs, $headers){
                 
                 $rowNumber = 1;
@@ -168,7 +168,7 @@ Artisan::command('export-contract-logs', function () {
             });
         })->store('xlsx', public_path('contractLogs'), true);
 
-        $this->count++;
+        $self->count++;
     });
     
 })->describe('Download an excel file with all contract logs');
