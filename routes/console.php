@@ -38,7 +38,7 @@ Artisan::command('export-contract-logs', function () {
     ->select('tContractLogs.*')
     ->with('status', 'position', 'practice', 'division.group', 'note', 'account', 'designation',
         'specialty', 'recruiter', 'manager', 'coordinator', 'type', 'status')
-    ->where('tContractLogs.active', true)->chunk(2500, function($contractLogs) {
+    ->where('tContractLogs.active', true)->chunk(2500, function($contractLogs) use (&$count) {
         $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "System", "Operating Unit", "RSC",
             "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
             "Sent to Q/A Date", "Counter Sig Date", "Sent To Payroll Date", "# of Days (Contract Out to Payroll)",
@@ -46,8 +46,8 @@ Artisan::command('export-contract-logs', function () {
             "(# of times) Revised/Resent", "Comments"
         ];
 
-        Maatwebsite\Excel\Facades\Excel::create('Contract Logs - '.$self->count, function($excel) use ($contractLogs, $headers){
-            $excel->sheet('Summary', function($sheet) use ($contractLogs, $headers){
+        Maatwebsite\Excel\Facades\Excel::create('Contract Logs - '.$count, function($excel) use ($contractLogs, $headers, &$count){
+            $excel->sheet('Summary', function($sheet) use ($contractLogs, $headers, &$count){
                 
                 $rowNumber = 1;
 
@@ -168,7 +168,7 @@ Artisan::command('export-contract-logs', function () {
             });
         })->store('xlsx', public_path('contractLogs'), true);
 
-        $self->count++;
+        $count++;
     });
     
 })->describe('Download an excel file with all contract logs');
