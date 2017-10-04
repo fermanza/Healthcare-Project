@@ -174,10 +174,12 @@ Artisan::command('export-contract-logs', function () {
     $zipper = new \Chumper\Zipper\Zipper;
 
     $files = glob(public_path('contractLogs/*'));
-    $zipper->make('contractLogs.zip')->add($files);
+    $zipper->make('contractLogs.zip')->add($files)->close();
 
-    $file = new Illuminate\Filesystem\Filesystem;
-    $file->deleteDirectory(public_path('contractLogs'));
+    $this->line('Zip Created');
+
+    // $file = new Illuminate\Filesystem\Filesystem;
+    // $file->deleteDirectory(public_path('contractLogs'));
     
 })->describe('Download an excel file with all contract logs');
 
