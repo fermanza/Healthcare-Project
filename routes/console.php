@@ -38,7 +38,7 @@ Artisan::command('set-new-routes', function () {
     ->select('tContractLogs.*')
     ->with('status', 'position', 'practice', 'division.group', 'note', 'account', 'designation',
         'specialty', 'recruiter', 'manager', 'coordinator', 'type', 'status')
-    ->where('tContractLogs.active', true)->chunk(2500, function($contractLogs) {
+    ->where('tContractLogs.active', true)->chunk(2500, function($contractLogs) use ($count) {
         $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "System", "Operating Unit", "RSC",
             "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
             "Sent to Q/A Date", "Counter Sig Date", "Sent To Payroll Date", "# of Days (Contract Out to Payroll)",
