@@ -971,10 +971,18 @@ class AccountsPipelineController extends Controller
             $cell->setValue($account->payroll ? $account->payroll->fullName() : '');
         });
         $sheet->cell('I14', function($cell) use ($account) {
-            $cell->setValue($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves);
+            if ($account->pipeline->practiceTime == 'hours') {
+                $cell->setValue($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves);
+            } else {
+                $cell->setValue($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves);
+            }
         });
         $sheet->cell('I15', function($cell) use ($account) {
-            $cell->setValue($account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves);
+            if ($account->pipeline->practiceTime == 'hours') {
+                $cell->setValue($account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves);
+            } else {
+                $cell->setValue($account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves);
+            }
         });
         $sheet->cell('I16', function($cell) use ($accountPrevMonthIncComp) {
             $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
