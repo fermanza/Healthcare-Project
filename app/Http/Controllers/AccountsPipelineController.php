@@ -1045,8 +1045,13 @@ class AccountsPipelineController extends Controller
         $rosterBenchRow = 5;
         $rosterBenchCount = 1;
 
-        $physicianOpenings = $account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves;
-        $appOpenings = $account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves;
+        if ($account->pipeline->practiceTime == 'hours') {
+            $physicianOpenings = $account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves;
+            $appOpenings = $account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves;
+        } else {
+            $physicianOpenings = $account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves;
+            $appOpenings = $account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves;
+        }
 
         $physicianNegative = $physicianOpenings < 0 ? true : false;
         $appNegative = $appOpenings < 0 ? true : false;
