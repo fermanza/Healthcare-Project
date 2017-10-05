@@ -217,9 +217,7 @@ class ContractLogsFilter extends Filter
      */
     public function promos($value)
     {
-        $this->query->whereHas('status', function($query) {
-            $query->where('contractStatus', 'like', 'Leadership Promos');
-        });
+        $this->query->where('statusId', 7);
     }
 
     /**
