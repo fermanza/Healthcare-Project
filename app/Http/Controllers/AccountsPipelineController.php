@@ -622,7 +622,7 @@ class AccountsPipelineController extends Controller
         $currentBenchPhysicians = $currentBenchPhysicians->values();
 
         $locumsMD = $account->pipeline->locums->filter(function($locum) {
-            return $locum->type == 'md';
+            return $locum->type == 'phys';
         })->reject(function($locum){
             return $locum->declined;
         })->sortBy('name');
@@ -691,7 +691,7 @@ class AccountsPipelineController extends Controller
         $currentRosterPhysiciansList = '';
         foreach ($currentRosterPhysicians as $key => $rosterPhysician) {
             $currentRosterPhysiciansList.= $rosterPhysician->name.' '.
-            ($rosterPhysician->isAMD && $rosterPhysician->isSMD ? 'MD, SMD ' : ($rosterPhysician->isAMD ? 'AMD ' : ($rosterPhysician->isSMD ? 'SMD ' : ''))).'('.$rosterPhysician->hours.')';
+            ($rosterPhysician->isAMD && $rosterPhysician->isSMD ? 'AMD, SMD ' : ($rosterPhysician->isAMD ? 'AMD ' : ($rosterPhysician->isSMD ? 'SMD ' : ''))).'('.$rosterPhysician->hours.')';
 
             if($key != (count($currentRosterPhysicians)-1)) {
                 $currentRosterPhysiciansList.= '<w:br/>';
@@ -701,7 +701,7 @@ class AccountsPipelineController extends Controller
         $currentBenchPhysiciansList = '';
         foreach ($currentBenchPhysicians as $key => $benchPhysician) {
             $currentBenchPhysiciansList.= $benchPhysician->name.' '.
-            ($benchPhysician->isAMD && $benchPhysician->isSMD ? 'MD, SMD ' : ($benchPhysician->isAMD ? 'AMD ' : ($benchPhysician->isSMD ? 'SMD ' : ''))).'('.$benchPhysician->hours.')';
+            ($benchPhysician->isAMD && $benchPhysician->isSMD ? 'AMD, SMD ' : ($benchPhysician->isAMD ? 'AMD ' : ($benchPhysician->isSMD ? 'SMD ' : ''))).'('.$benchPhysician->hours.')';
 
             if($key != (count($currentBenchPhysicians)-1)) {
                 $currentBenchPhysiciansList.= '<w:br/>';
@@ -720,7 +720,7 @@ class AccountsPipelineController extends Controller
         $currentRosterAPPList = '';
         foreach ($currentRosterAPP as $key => $rosterAPP) {
             $currentRosterAPPList.= $rosterAPP->name.' '.
-            ($rosterAPP->isAMD && $rosterAPP->isSMD ? 'MD, SMD ' : ($rosterAPP->isAMD ? 'AMD ' : ($rosterAPP->isSMD ? 'SMD ' : ''))).'('.$rosterAPP->hours.')';
+            ($rosterAPP->isAMD && $rosterAPP->isSMD ? 'AMD, SMD ' : ($rosterAPP->isAMD ? 'AMD ' : ($rosterAPP->isSMD ? 'SMD ' : ''))).'('.$rosterAPP->hours.')';
 
             if($key != (count($currentRosterAPP)-1)) {
                 $currentRosterAPPList.= '<w:br/>';
@@ -730,7 +730,7 @@ class AccountsPipelineController extends Controller
         $currentBenchAPPList = '';
         foreach ($currentBenchAPP as $key => $benchAPP) {
             $currentBenchAPPList.= $benchAPP->name.' '.
-            ($benchAPP->isAMD && $benchAPP->isSMD ? 'MD, SMD ' : ($benchAPP->isAMD ? 'AMD ' : ($benchAPP->isSMD ? 'SMD ' : ''))).'('.$benchAPP->hours.')';
+            ($benchAPP->isAMD && $benchAPP->isSMD ? 'AMD, SMD ' : ($benchAPP->isAMD ? 'AMD ' : ($benchAPP->isSMD ? 'SMD ' : ''))).'('.$benchAPP->hours.')';
 
             if($key != (count($currentBenchAPP)-1)) {
                 $currentBenchAPPList.= '<w:br/>';
@@ -1027,7 +1027,7 @@ class AccountsPipelineController extends Controller
         });
 
         $sheet->cell('A4', function($cell) use ($account, $activeRosterPhysicians) {
-            $cell->setValue('FT Roster MD ('.count($activeRosterPhysicians).')');
+            $cell->setValue('FT Roster PHYS ('.count($activeRosterPhysicians).')');
         });
 
         $sheet->cell('C4', function($cell) use ($account) {
