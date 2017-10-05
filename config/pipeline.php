@@ -18,7 +18,7 @@ return [
     ],
     
     'recruiting_types' => [
-        'MD' => 'md',
+        'PHYS' => 'phys',
         'APP' => 'app',
     ],
 

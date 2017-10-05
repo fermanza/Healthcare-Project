@@ -32,7 +32,7 @@ class ContractLogsController extends Controller
      * @param  \App\Filters\ContractLogsFilter
      * @return \Illuminate\Http\Response
      */
-    public function index(ContractLogsFilter $filter)
+    public function index(Request $request, ContractLogsFilter $filter)
     {
         $user = auth()->user();
         $divisions = Division::where('active', true)->orderBy('name')->get();
@@ -60,6 +60,8 @@ class ContractLogsController extends Controller
             'positions', 'statuses', 'accounts', 'regions',
             'RSCs', 'employees', 'coordinators'
         );
+
+        \Session::put('contractLogFilters', $request->query());
 
         return view('admin.contractLogs.index', $params);
     }
@@ -112,7 +114,7 @@ class ContractLogsController extends Controller
      * @param  \App\ContractLog  $contractLog
      * @return \Illuminate\Http\Response
      */
-    public function edit(ContractLog $contractLog)
+    public function edit(Request $request, ContractLog $contractLog)
     {
         $action = 'edit';
         $view = 'admin.contractLogs.edit';
@@ -129,11 +131,13 @@ class ContractLogsController extends Controller
      */
     public function update(ContractLogRequest $request, ContractLog $contractLog)
     {
+        $contractLogFilters = \Session::get('contractLogFilters');
+
         $request->save($contractLog);
 
         flash(__('ContractLog updated.'));
 
-        return redirect()->route('admin.contractLogs.index');
+        return redirect()->route('admin.contractLogs.index', $contractLogFilters);
     }
 
     /**
@@ -216,8 +220,8 @@ class ContractLogsController extends Controller
         $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "System", "Operating Unit", "RSC",
             "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
             "Sent to Q/A Date", "Counter Sig Date", "Sent To Payroll Date", "# of Days (Contract Out to Payroll)",
-            "Provider Start Date", "# of Hours", "Recruiter", "Manager", "Contract Coordinator", "Contract",
-            "(# of times) Revised/Resent", "Comments"
+            "Provider Start Date", "# of Hours", "Recruiter", "Recruiters", "Manager", "Contract Coordinator", "Contract",
+            "(# of times) Revised/Resent", "Phys\MLP", "Value", "Comments"
         ];
 
 
@@ -238,6 +242,18 @@ class ContractLogsController extends Controller
                     $contractStatus = $contractLog->status ? $contractLog->status->contractStatus : '';
                     $numOfHours = $contractLog->numOfHours;
                     $val = 1;
+                    $additionalRecruiters = '';
+                    $recruiters = $contractLog->recruiters->diff(
+                        $contractLog->recruiter ? [$contractLog->recruiter] : []
+                    );
+
+                    foreach ($recruiters as $key => $recruiter) {
+                        if (($key+1) == count($recruiters)) {
+                            $additionalRecruiters .= $recruiter->fullName();
+                        } else {
+                            $additionalRecruiters .= $recruiter->fullName().', ';
+                        }
+                    }
 
                     $FTContractsOut = $contractLog->contractOutDate ? ($contractStatus == "Guaranteed Shifts" ? $val+0.5 : ($contractStatus == "PT to FT" ? ($numOfHours>=150 ? $val+0.5 : $val) : ($contractStatus == "New-Full Time" ? ($numOfHours>=150 ? $val+0.5 : $val) : 0))) : '';
                     $FTContractsIn = $contractLog->contractInDate == "Inactive" ? "Inactive" : (!$contractLog->contractInDate ? 0 : ($contractStatus == "Guaranteed Shifts" ? $val+0.5 : ($contractStatus == "PT to FT" ? ($numOfHours>=150 ? $val+0.5 : $val) : ($contractStatus == "New-Full Time" ? ($numOfHours>=150 ? $val+0.5 : $val) : 0))));
@@ -261,10 +277,13 @@ class ContractLogsController extends Controller
                         $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('d/m/Y') : '',
                         $contractLog->numOfHours,
                         $contractLog->recruiter ? $contractLog->recruiter->fullName() : '',
+                        $additionalRecruiters,
                         $contractLog->manager ? $contractLog->manager->fullName() : '',
                         $contractLog->coordinator ? $contractLog->coordinator->fullName() : '',
                         $contractLog->type ? $contractLog->type->contractType : '',
                         '',
+                        $contractLog->position ? $contractLog->position->position : '',
+                        $contractLog->value,
                         $contractLog->comments
                     ];
 
@@ -272,7 +291,7 @@ class ContractLogsController extends Controller
                 };
 
                 $sheet->setFreeze('A2');
-                $sheet->setAutoFilter('A1:W1');
+                $sheet->setAutoFilter('A1:Z1');
 
                 $sheet->cell('A2:A'.$rowNumber, function($cell) {
                     $cell->setBackground('#f5964f');
@@ -317,9 +336,12 @@ class ContractLogsController extends Controller
                     'R'     => 8,
                     'S'     => 16,
                     'T'     => 12,
-                    'U'     => 8,
-                    'V'     => 17,
-                    'W'     => 50
+                    'U'     => 20,
+                    'V'     => 8,
+                    'W'     => 17,
+                    'X'     => 10,
+                    'Y'     => 10,
+                    'Z'     => 50
                 ));
 
                 $sheet->setColumnFormat(array(
@@ -337,9 +359,9 @@ class ContractLogsController extends Controller
                     ),
                 );
 
-                $sheet->getStyle('A1:W'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A1:W1')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('W2:W'.$rowNumber)->getAlignment()->setWrapText(true);
+                $sheet->getStyle('A1:Z'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A1:Z1')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('Z2:Z'.$rowNumber)->getAlignment()->setWrapText(true);
             });
         })->download('xlsx'); 
     }

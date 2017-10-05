@@ -644,7 +644,6 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
-                                <th class="mw150">@lang('File To Credentialing')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -670,7 +669,6 @@
                                     <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)">
                                     <span class="hidden">@{{roster.signedNotStarted}}</span>
                                 </td>
-                                <td>@{{ moment(roster.fileToCredentialing) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -749,9 +747,6 @@
                                 <td>
                                     <input type="checkbox" v-model="rosterPhysician.signedNotStarted">
                                 </td>
-                                <td>
-                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.fileToCredentialing" />
-                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -783,7 +778,6 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
-                                <th class="mw150">@lang('File To Credentialing')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -805,7 +799,6 @@
                                     <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)">
                                     <span class="hidden">@{{roster.signedNotStarted}}</span>
                                 </td>
-                                <td>@{{ moment(roster.fileToCredentialing) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -881,9 +874,6 @@
                                 <td>
                                     <input type="checkbox" v-model="rosterApps.signedNotStarted">
                                 </td>
-                                <td>
-                                    <input type="text" class="form-control datepicker" v-model="rosterApps.fileToCredentialing" />
-                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -919,7 +909,6 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
-                                <th class="mw150">@lang('File To Credentialing')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -937,7 +926,6 @@
                                     <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
-                                <td>@{{ moment(bench.fileToCredentialing) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -1006,9 +994,6 @@
                                 <td>
                                     <input type="checkbox" v-model="benchPhysician.signedNotStarted">
                                 </td>
-                                <td>
-                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.fileToCredentialing" />
-                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -1039,7 +1024,6 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
-                                <th class="mw150">@lang('File To Credentialing')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -1057,7 +1041,6 @@
                                     <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
-                                <td>@{{ moment(bench.fileToCredentialing) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
@@ -1126,9 +1109,6 @@
                                 <td>
                                     <input type="checkbox" v-model="benchApps.signedNotStarted">
                                 </td>
-                                <td>
-                                    <input type="text" class="form-control datepicker" v-model="benchApps.fileToCredentialing" />
-                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -1154,7 +1134,7 @@
                     <table class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
-                                <th class="mw60">@lang('MD/APP')</th>
+                                <th class="mw60">@lang('PHYS/APP')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw60">@lang('FT/PT/EMB')</th>
                                 <th class="mw100">@lang('Interview')</th>
@@ -1269,7 +1249,7 @@
                     <table class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
-                                <th class="mw60">@lang('MD/APP')</th>
+                                <th class="mw60">@lang('PHYS/APP')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw100">@lang('Agency')</th>
                                 <th class="mw100">@lang('Potential Start')</th>
@@ -1478,7 +1458,7 @@
                 <table class="table table-bordered summary-datatable">
                     <thead class="bg-gray">
                         <tr>
-                            <th class="mw60">@lang('MD/APP')</th>
+                            <th class="mw60">@lang('PHYS/APP')</th>
                             <th class="mw200">@lang('Name')</th>
                             <th class="mw100">@lang('Resigned')</th>
                             <th class="mw200 w100">@lang('Reason')</th>
@@ -1570,9 +1550,9 @@
                                     <th class="mw70">@lang('Hours')</th>
                                     <th class="mw100">@lang('FT/PT/EMB')</th>
                                     <th class="mw150">@lang('File To Credentialing')</th>
-                                    <th class="mw150">@lang('Privilege Goal')</th>
                                     <th class="mw150">@lang('APP To Hospital')</th>
                                     <th class="mw70">@lang('Stage')</th>
+                                    <th class="mw150">@lang('Privilege Goal')</th>
                                     <th class="mw150">@lang('Enrollment Status')</th>
                                     <th class="mw150">@lang('Notes')</th>
                                     <th class="mw70 text-center hidden-print">@lang('Actions')</th>
@@ -1584,9 +1564,9 @@
                                     <td>@{{ credentialing.hours }}</td>
                                     <td class="text-uppercase">@{{ credentialing.contract }}</td>
                                     <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
-                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ moment(credentialing.appToHospital) }}</td>
                                     <td>@{{ credentialing.stage }}</td>
+                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ credentialing.enrollmentStatus }}</td>
                                     <td>@{{ credentialing.notes }}</td>
                                     <td class="text-center hidden-print">
@@ -1659,9 +1639,9 @@
                                     <th class="mw70">@lang('Hours')</th>
                                     <th class="mw100">@lang('FT/PT/EMB')</th>
                                     <th class="mw150">@lang('File To Credentialing')</th>
-                                    <th class="mw150">@lang('Privilege Goal')</th>
                                     <th class="mw150">@lang('APP To Hospital')</th>
                                     <th class="mw70">@lang('Stage')</th>
+                                    <th class="mw150">@lang('Privilege Goal')</th>
                                     <th class="mw150">@lang('Enrollment Status')</th>
                                     <th class="mw150">@lang('Notes')</th>
                                     <th class="mw70 text-center hidden-print">@lang('Actions')</th>
@@ -1673,9 +1653,9 @@
                                     <td>@{{ credentialing.hours }}</td>
                                     <td class="text-uppercase">@{{ credentialing.contract }}</td>
                                     <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
-                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ moment(credentialing.appToHospital) }}</td>
                                     <td>@{{ credentialing.stage }}</td>
+                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ credentialing.enrollmentStatus }}</td>
                                     <td>@{{ credentialing.notes }}</td>
                                     <td class="text-center hidden-print">

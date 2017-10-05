@@ -831,7 +831,7 @@ class AccountsPipelineController extends Controller
         });
 
         $sheet->cell('C'.($recruitingTableStart+1), function($cell) use ($account) {
-            $cell->setValue('MD\APP');
+            $cell->setValue('PHYS\APP');
         });
 
         $sheet->cell('D'.($recruitingTableStart+1), function($cell) use ($account) {
@@ -1092,14 +1092,25 @@ class AccountsPipelineController extends Controller
             $countUntil = count($activeRosterPhysicians) < 13 ? 13 : count($activeRosterPhysicians);
 
             for ($i = 0; $i < $countUntil; $i++) { 
-                $row = [
-                    $rosterBenchCount,
-                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].((isset($activeRosterPhysicians[$i]["isSMD"]) && $activeRosterPhysicians[$i]["isSMD"] == 1) ? " (SMD)" : '').(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
-                    isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
-                    $rosterBenchCount,
-                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"].(isset($activeRosterAPPs[$i]["hours"]) ? " (".$activeRosterAPPs[$i]["hours"].")" : '') : '',
-                    isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
-                ];
+                if ($account->pipeline->practiceTime == 'hours') {
+                    $row = [
+                        $rosterBenchCount,
+                        isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].((isset($activeRosterPhysicians[$i]["isSMD"]) && $activeRosterPhysicians[$i]["isSMD"] == 1) ? " (SMD)" : '').(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
+                        isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
+                        $rosterBenchCount,
+                        isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"].(isset($activeRosterAPPs[$i]["hours"]) ? " (".$activeRosterAPPs[$i]["hours"].")" : '') : '',
+                        isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
+                    ];
+                } else {
+                    $row = [
+                        $rosterBenchCount,
+                        isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].((isset($activeRosterPhysicians[$i]["isSMD"]) && $activeRosterPhysicians[$i]["isSMD"] == 1) ? " (SMD)" : '') : '',
+                        isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
+                        $rosterBenchCount,
+                        isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"] : '',
+                        isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
+                    ];
+                }
 
                 $sheet->row($rosterBenchRow, $row);
 
@@ -1110,15 +1121,25 @@ class AccountsPipelineController extends Controller
             $countUntil = count($activeRosterAPPs) < 13 ? 13 : count($activeRosterAPPs);
 
             for ($i = 0; $i < $countUntil; $i++) {
-
-                $row = [
-                    $rosterBenchCount,
-                    isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].((isset($activeRosterPhysicians[$i]["isSMD"]) && $activeRosterPhysicians[$i]["isSMD"] == 1) ? " (SMD)" : '').(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
-                    isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
-                    $rosterBenchCount,
-                    isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"].(isset($activeRosterAPPs[$i]["hours"]) ? " (".$activeRosterAPPs[$i]["hours"].")" : '') : '',
-                    isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
-                ];
+                if ($account->pipeline->practiceTime == 'hours') {
+                    $row = [
+                        $rosterBenchCount,
+                        isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].((isset($activeRosterPhysicians[$i]["isSMD"]) && $activeRosterPhysicians[$i]["isSMD"] == 1) ? " (SMD)" : '').(isset($activeRosterPhysicians[$i]["hours"]) ? " (".$activeRosterPhysicians[$i]["hours"].")" : '') : '',
+                        isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
+                        $rosterBenchCount,
+                        isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"].(isset($activeRosterAPPs[$i]["hours"]) ? " (".$activeRosterAPPs[$i]["hours"].")" : '') : '',
+                        isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
+                    ];
+                } else {
+                    $row = [
+                        $rosterBenchCount,
+                        isset($activeRosterPhysicians[$i]) ? $activeRosterPhysicians[$i]["name"].((isset($activeRosterPhysicians[$i]["isSMD"]) && $activeRosterPhysicians[$i]["isSMD"] == 1) ? " (SMD)" : '') : '',
+                        isset($activeRosterPhysicians[$i]) ? ($activeRosterPhysicians[$i]["firstShift"] ? Carbon::parse($activeRosterPhysicians[$i]["firstShift"])->format('m-d-Y') : '') : '',
+                        $rosterBenchCount,
+                        isset($activeRosterAPPs[$i]) ? $activeRosterAPPs[$i]["name"] : '',
+                        isset($activeRosterAPPs[$i]) ? ($activeRosterAPPs[$i]["firstShift"] ? Carbon::parse($activeRosterAPPs[$i]["firstShift"])->format('m-d-Y') : '') : ''
+                    ];
+                }
 
                 $sheet->row($rosterBenchRow, $row);
 
@@ -1175,7 +1196,7 @@ class AccountsPipelineController extends Controller
         if(count($benchPhysicians) >= count($benchAPPs)) {
             for ($i = 0; $i < count($benchPhysicians); $i++) { 
                 $row = [
-                    'MD/PRN',
+                    'PHYS/PRN',
                     $benchPhysicians[$i]->name,
                     $benchPhysicians[$i]->firstShift ? Carbon::parse($benchPhysicians[$i]->firstShift)->format('m-d-Y') : '',
                     isset($benchAPPs[$i]) ? 'APP/4' : '',
@@ -1190,7 +1211,7 @@ class AccountsPipelineController extends Controller
         } else {
             for ($i = 0; $i < count($benchAPPs); $i++) { 
                 $row = [
-                    isset($benchPhysicians[$i]) ? 'MD/PRN' : '',
+                    isset($benchPhysicians[$i]) ? 'PHYS/PRN' : '',
                     isset($benchPhysicians[$i]) ? $benchPhysicians[$i]->name : '',
                     isset($benchPhysicians[$i]) ? ($benchPhysicians[$i]->firstShift ? Carbon::parse($benchPhysicians[$i]->firstShift)->format('m-d-Y') : '') : '',
                     'APP/4',
@@ -1249,7 +1270,7 @@ class AccountsPipelineController extends Controller
         });
 
         $sheet->cell('C'.($credentialingTableStart+1), function($cell) use ($account) {
-            $cell->setValue('MD\APP');
+            $cell->setValue('PHYS\APP');
         });
 
         $sheet->cell('D'.($credentialingTableStart+1), function($cell) use ($account) {
@@ -1288,7 +1309,7 @@ class AccountsPipelineController extends Controller
             $row = [
                 strtoupper($credentialer->contract),
                 $credentialer->name,
-                $credentialer->activity ? ($credentialer->activity == 'physician' ? 'MD' : 'APP') : '',
+                $credentialer->activity ? ($credentialer->activity == 'physician' ? 'PHYS' : 'APP') : '',
                 $credentialer->contractIn ? $credentialer->contractIn->format('m-d-Y') : '',
                 $credentialer->fileToCredentialing ? $credentialer->fileToCredentialing->format('m-d-Y') : '',
                 $credentialer->appToHospital ? $credentialer->appToHospital->format('m-d-Y') : '',

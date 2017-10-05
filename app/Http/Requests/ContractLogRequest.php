@@ -23,7 +23,7 @@ class ContractLogRequest extends FormRequest
             'statusId' => 'required|exists:tContractStatus,id',
             'accounts' => 'nullable|array|exists:tAccount,id',
             'recruiters' => 'nullable|array|exists:tEmployee,id',
-            'value' => 'required|in:0,0.5,1',
+            'value' => 'required|in:0,0.5,1,1.5',
             'providerFirstName' => 'required',
             'providerMiddleInitial' => 'nullable',
             'providerLastName' => 'required',
