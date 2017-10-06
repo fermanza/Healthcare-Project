@@ -1595,9 +1595,6 @@
                                         <input type="text" class="form-control datepicker" v-model="credentialingPhysician.fileToCredentialing" />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.privilegeGoal" />
-                                    </td>
-                                    <td>
                                         <input type="text" class="form-control datepicker" v-model="credentialingPhysician.appToHospital" />
                                     </td>
                                     <td>
@@ -1607,6 +1604,9 @@
                                                 <option value="{{$x}}">{{$x}}</option>
                                             @endfor
                                         </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.privilegeGoal" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentStatus" />
@@ -1684,9 +1684,6 @@
                                         <input type="text" class="form-control datepicker" v-model="credentialingApp.fileToCredentialing" />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.privilegeGoal" />
-                                    </td>
-                                    <td>
                                         <input type="text" class="form-control datepicker" v-model="credentialingApp.appToHospital" />
                                     </td>
                                     <td>
@@ -1696,6 +1693,9 @@
                                                 <option value="{{$x}}">{{$x}}</option>
                                             @endfor
                                         </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.privilegeGoal" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" v-model="credentialingApp.enrollmentStatus" />
