@@ -29,6 +29,7 @@ class PipelineLocum extends Model
         'application',
         'interview',
         'potentialStart',
+        'contractOut',
         'startDate',
         'declined',
     ];

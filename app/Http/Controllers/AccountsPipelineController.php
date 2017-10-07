@@ -789,7 +789,7 @@ class AccountsPipelineController extends Controller
         );
     }
 
-    public function createRecruitingTable($sheet, $account, $benchTableStartData, $recruitings) {
+    private function createRecruitingTable($sheet, $account, $benchTableStartData, $recruitings) {
         $recruitingTableStart = $benchTableStartData+2;
 
         $sheet->mergeCells('A'.$recruitingTableStart.':F'.$recruitingTableStart);
@@ -878,7 +878,7 @@ class AccountsPipelineController extends Controller
         return array($recruitingTableStart, $recruitingTableDataStart);
     }
 
-    public function createMembersTable($sheet, $account, $accountPrevMonthIncComp, $accountYTDIncComp) {
+    private function createMembersTable($sheet, $account, $accountPrevMonthIncComp, $accountYTDIncComp) {
         $sheet->cell('H4', function($cell) use ($account) {
             $cell->setBackground('#b5c7e6');
             $cell->setValue('Team Members');
@@ -992,7 +992,7 @@ class AccountsPipelineController extends Controller
         });
     }
 
-    public function createRosterBenchTable($sheet, $account, $activeRosterPhysicians, $activeRosterAPPs) {
+    private function createRosterBenchTable($sheet, $account, $activeRosterPhysicians, $activeRosterAPPs) {
         $sheet->mergeCells('A1:I1');
         $sheet->mergeCells('A2:E2');
         $sheet->mergeCells('A4:B4');
@@ -1175,7 +1175,7 @@ class AccountsPipelineController extends Controller
         return $rosterBenchRow;
     }
 
-    public function createBenchTable($sheet, $account, $rosterBenchRow, $benchPhysicians, $benchAPPs) {
+    private function createBenchTable($sheet, $account, $rosterBenchRow, $benchPhysicians, $benchAPPs) {
         $benchTableStart = $rosterBenchRow+3;
 
         $sheet->mergeCells('A'.$benchTableStart.':C'.$benchTableStart);
@@ -1241,7 +1241,7 @@ class AccountsPipelineController extends Controller
         return array($benchTableStart, $benchTableStartData);
     }
 
-    public function createCredentialingTable($sheet, $account, $recruitingTable, $credentialers) {
+    private function createCredentialingTable($sheet, $account, $recruitingTable, $credentialers) {
         $credentialingTableStart = $recruitingTable[1]+2;
 
         $sheet->mergeCells('A'.$credentialingTableStart.':F'.$credentialingTableStart);
@@ -1346,7 +1346,7 @@ class AccountsPipelineController extends Controller
         return array($credentialingTableStart, $credentialingTableDataStart);
     }
 
-    public function createRequirementsTable($sheet, $account, $credentialingTable) {
+    private function createRequirementsTable($sheet, $account, $credentialingTable) {
         $requirementsTableStart = $credentialingTable[1]+2;
 
         $sheet->mergeCells('A'.$requirementsTableStart.':I'.$requirementsTableStart);
@@ -1502,8 +1502,26 @@ class AccountsPipelineController extends Controller
                     $query->with('person', 'manager.person');
                 },
                 'division.group.region',
-                'practices',
+                'practices', 'summary',
             ]);
+
+            $summary = $account->summary;
+
+            $percentRecruitedPhys = 0;
+            $percentRecruitedApp = 0;
+            $percentRecruitedPhysReport = 0;
+            $percentRecruitedAppReport = 0;
+        
+            if ($summary) {
+                if($summary->{'Complete Staff - Phys'} && $summary->{'Complete Staff - Phys'} > 0) {
+                    $percentRecruitedPhys = ($summary->{'Current Staff - Phys'} / $summary->{'Complete Staff - Phys'}) * 100;
+                }
+                if($summary->{'Complete Staff - APP'} && $summary->{'Complete Staff - APP'} > 0) {
+                    $percentRecruitedApp = ($summary->{'Current Staff - APP'} / $summary->{'Complete Staff - APP'}) * 100;
+                }
+                $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;
+                $percentRecruitedAppReport = $percentRecruitedApp > 100 ? 100 : $percentRecruitedApp;
+            }
 
             $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
@@ -1514,16 +1532,14 @@ class AccountsPipelineController extends Controller
                 return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->name);
             });
 
-            $activeRosterPhysicians = $activeRosterPhysicians->values();
-
             $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
             })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
             ->reject(function($rosterBench){
                 return $rosterBench->signedNotStarted;
-            })->sortBy('name');
-
-            $benchPhysicians = $benchPhysicians->values();
+            })->sortByDesc(function($rosterBench){
+                return sprintf('%-12s%s', $rosterBench->isChief, $rosterBench->name);
+            });
 
             $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
@@ -1532,8 +1548,6 @@ class AccountsPipelineController extends Controller
                 return $rosterBench->signedNotStarted;
             })->sortBy('name');
 
-            $activeRosterAPPs = $activeRosterAPPs->values();
-
             $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
             })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
@@ -1541,117 +1555,945 @@ class AccountsPipelineController extends Controller
                 return $rosterBench->signedNotStarted;
             })->sortBy('name');
 
-            $benchAPPs = $benchAPPs->values();
-
-            $credentialers = $account->pipeline->rostersBenchs
-            ->reject(function($rosterBench) { 
-                return !is_null($rosterBench->resigned); 
-            })
-            ->reject(function($rosterBench){
-                return !$rosterBench->signedNotStarted;
+            $recruitings = $account->pipeline->recruitings->reject(function($recruiting) { 
+                return !is_null($recruiting->declined); 
             })->sortBy('name');
 
-            $recruitings = $account->pipeline->recruitings
-            ->reject(function($rosterBench) { 
-                return !is_null($rosterBench->declined); 
-            })
-            ->sortBy('name');
+            $locums = $account->pipeline->locums->reject(function($locum) { 
+                return !is_null($locum->declined); 
+            })->sortBy('name');
 
-            $accountPrevMonthIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+            $declines = $account->pipeline->recruitings->concat($account->pipeline->locums)
+            ->filter(function($locum) { 
+                return !is_null($locum->declined); 
+            })->sortBy('name');
 
-            $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+            $resigneds = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                return !is_null($rosterBench->resigned);
+            })->sortBy('name');
+
+            $credentialersPhys = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                return $rosterBench->activity == 'physician' && $rosterBench->signedNotStarted;
+            })->reject(function($rosterBench){
+                return $rosterBench->resigned;
+            })->sortBy('name');
+
+            $credentialersAPP = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                return $rosterBench->activity == 'app' && $rosterBench->signedNotStarted;
+            })->reject(function($rosterBench){
+                return $rosterBench->resigned;
+            })->sortBy('name');
 
             $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
 
-            $fileInfo = Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
-                $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
-                    
-                    $rosterBenchRow = $this->createRosterBenchTable($sheet, $account, $activeRosterPhysicians, $activeRosterAPPs);
+            $fileInfo = Excel::create($sheetName, function($excel) use ($account, $percentRecruitedPhys, $percentRecruitedApp, $percentRecruitedPhysReport, $percentRecruitedAppReport, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $recruitings, $locums, $declines, $resigneds, $credentialersPhys, $credentialersAPP){
+                $excel->sheet('Summary', function($sheet) use ($account, $percentRecruitedPhys, $percentRecruitedApp, $percentRecruitedPhysReport, $percentRecruitedAppReport, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $recruitings, $locums, $declines, $resigneds, $credentialersPhys, $credentialersAPP){
 
-                    ///////// Team Members //////////
-                    $this->createMembersTable($sheet, $account, $accountPrevMonthIncComp, $accountYTDIncComp);
-                    ///////// Team Members //////////
+                    $accountInfo = $account->name.', '.$account->siteCode.' '.$account->address.' '.($account->recruiter ? $account->recruiter->fullName() : '').', '.($account->manager ? $account->manager->fullName() : '');
 
+                    $sheet->mergeCells('A26:K26');
+                    $sheet->mergeCells('A27:K27');
+                    $sheet->mergeCells('B4:J6');
+                    $sheet->mergeCells('C13:I13');
+                    $sheet->mergeCells('C17:E17');
+                    $sheet->mergeCells('G17:I17');
+                    $sheet->mergeCells('C18:D18');
+                    $sheet->mergeCells('G18:H18');
 
-                    /////// Bench Table ////////
-                    $benchTable = $this->createBenchTable($sheet, $account, $rosterBenchRow, $benchPhysicians, $benchAPPs);
-                    /////// Bench Table ////////
+                    $sheet->cell('B2', function($cell) {
+                        $cell->setValue('Summary');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
 
-                    /////// Recruiting Table /////////
-                    $recruitingTable = $this->createRecruitingTable($sheet, $account, $benchTable[1], $recruitings);
-                    /////// Recruiting Table /////////
+                    $sheet->cell('B4', function($cell) use ($accountInfo) {
+                        $cell->setValue($accountInfo);
+                        $cell->setBackground('#d0cece');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
 
-                    ////// Credentialing Table ////////
-                    $credentialingTable = $this->createCredentialingTable($sheet, $account, $recruitingTable, $credentialers);
-                    ////// Credentialing Recruiting Table ////////
+                    $sheet->cells('B8:B10', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
 
-                    ////// Requirements Table ////////
-                    $requirementsTable = $this->createRequirementsTable($sheet, $account, $credentialingTable);
-                    ////// Requirements Table ////////
+                    $sheet->cells('E8:E10', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
 
-                    $sheet->cells('A4:F4', function($cells) {
-                        $cells->setFontColor('#000000');
-                        $cells->setBackground('#b5c7e6');
+                    $sheet->cells('H8:H9', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('C13:I17', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('C18:C24', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('D19:E19', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('G18:G24', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('H19:I19', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cell('B8', function($cell) {
+                        $cell->setValue('Medical Director');
+                    });
+
+                    $sheet->cell('C8', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->medicalDirector);
+                    });
+
+                    $sheet->cell('B9', function($cell) {
+                        $cell->setValue('SVP');
+                    });
+
+                    $sheet->cell('C9', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->svp);
+                    });
+
+                    $sheet->cell('B10', function($cell) {
+                        $cell->setValue('Service Line');
+                    });
+
+                    $sheet->cell('C10', function($cell) use ($account) {
+                        $cell->setValue($account->practices->count() ? $account->practices->first()->name : '');
+                    });
+
+                    $sheet->cell('E8', function($cell) {
+                        $cell->setValue('RMD');
+                    });
+
+                    $sheet->cell('F8', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->rmd);
+                    });
+
+                    $sheet->cell('E9', function($cell) {
+                        $cell->setValue('DOO');
+                    });
+
+                    $sheet->cell('F9', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->dca);
+                    });
+
+                    $sheet->cell('E10', function($cell) {
+                        $cell->setValue('Service Line Time');
+                    });
+
+                    $sheet->cell('F10', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->practiceTime);
+                    });
+
+                    $sheet->cell('H8', function($cell) {
+                        $cell->setValue('RSC');
+                    });
+
+                    $sheet->cell('I8', function($cell) use ($account) {
+                        $cell->setValue($account->rsc ? $account->rsc->name : '');
+                    });
+
+                    $sheet->cell('H9', function($cell) {
+                        $cell->setValue('Operating Unit');
+                    });
+
+                    $sheet->cell('I9', function($cell) use ($account) {
+                        $cell->setValue($account->region ? $account->region->name : '');
+                    });
+
+                    $sheet->cell('C13', function($cell) {
+                        $cell->setValue('Complete Staffing and Current Openings');
+                        $cell->setFontFamily('Calibri (Body)');
+                        $cell->setFontSize(11);
+                        $cell->setFontWeight('bold');
+                    });
+
+                    $sheet->cell('C15', function($cell) {
+                        $cell->setValue('SMD');
+                        $cell->setFontFamily('Calibri (Body)');
+                        $cell->setFontSize(11);
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->cell('E15', function($cell) {
+                        $cell->setValue('AMD');
+                        $cell->setFontFamily('Calibri (Body)');
+                        $cell->setFontSize(11);
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->cell('G15', function($cell) {
+                        $cell->setValue('PHYS');
+                        $cell->setFontFamily('Calibri (Body)');
+                        $cell->setFontSize(11);
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->cell('I15', function($cell) {
+                        $cell->setValue('APP');
+                        $cell->setFontFamily('Calibri (Body)');
+                        $cell->setFontSize(11);
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->cells('C17:G17', function($cells) {
                         $cells->setFontFamily('Calibri (Body)');
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
-                    });
-
-                    $sheet->cells('A4:F'.($rosterBenchRow+1), function($cells) {
-                        $cells->setFontColor('#000000');
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
-                    });
-
-                    $sheet->cells('A'.($benchTable[0]+1).':F'.($benchTable[1]), function($cells) {
-                        $cells->setFontColor('#000000');
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
-                    });
-
-                    $sheet->cells('A'.($recruitingTable[0]+1).':D'.($recruitingTable[1]), function($cells) {
-                        $cells->setFontColor('#000000');
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
-                    });
-
-                    $sheet->cells('A'.($credentialingTable[0]+1).':H'.($credentialingTable[1]), function($cells) {
-                        $cells->setFontColor('#000000');
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
-                    });
-
-                    $sheet->cells('A'.($requirementsTable[0]+1).':F'.($requirementsTable[0]+5), function($cells) {
-                        $cells->setFontColor('#000000');
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
-                    });
-
-                    $sheet->cell('A4', function($cells) {
-                        $cells->setFontSize(14);
-                    });
-
-                    $sheet->cell('D4', function($cells) {
-                        $cells->setFontSize(14);
-                    });
-
-                    $sheet->cell('C4', function($cells) {
                         $cells->setFontSize(11);
+                        $cells->setFontWeight('bold');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
                     });
 
-                    $sheet->cell('F4', function($cells) {
+                    $sheet->cell('C17', function($cell) {
+                        $cell->setValue('Physician');
+                    });
+
+                    $sheet->cell('G17', function($cell) {
+                        $cell->setValue('APPs');
+                    });
+
+                    $sheet->cell('C18', function($cell) {
+                        $cell->setValue('Full Time Hours');
+                    });
+                    $sheet->cell('G18', function($cell) {
+                        $cell->setValue('Full Time Hours');
+                    });
+
+                    $sheet->cell('E18', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->fullTimeHoursPhys);
+                    });
+                    $sheet->cell('I18', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->fullTimeHoursApps);
+                    });
+
+                    $sheet->cell('D19', function($cell) {
+                        $cell->setValue('Hours');
+                    });
+                    $sheet->cell('E19', function($cell) {
+                        $cell->setValue('FTEs');
+                    });
+
+                    $sheet->cell('H19', function($cell) {
+                        $cell->setValue('Hours');
+                    });
+                    $sheet->cell('I19', function($cell) {
+                        $cell->setValue('FTEs');
+                    });
+
+                    $sheet->cell('C20', function($cell) {
+                        $cell->setValue('Haves');
+                    });
+                    $sheet->cell('C21', function($cell) {
+                        $cell->setValue('Needs');
+                    });
+                    $sheet->cell('C22', function($cell) {
+                        $cell->setValue('Openings');
+                    });
+                    $sheet->cell('C23', function($cell) {
+                        $cell->setValue('Percent Recruited Actual');
+                    });
+                    $sheet->cell('C24', function($cell) {
+                        $cell->setValue('Percent Recruited Reported');
+                    });
+
+                    $sheet->cell('D20', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffPhysicianHaves);
+                    });
+                    $sheet->cell('D21', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffPhysicianNeeds);
+                    });
+                    $sheet->cell('D22', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffPhysicianOpenings);
+                    });
+                    $sheet->cell('D23', function($cell) use ($percentRecruitedPhys) {
+                        $cell->setValue(number_format($percentRecruitedPhys, 1).'%');
+                    });
+                    $sheet->cell('D24', function($cell) use ($percentRecruitedPhysReport) {
+                        $cell->setValue(number_format($percentRecruitedPhysReport, 1).'%');
+                    });
+
+                    $sheet->cell('E20', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffPhysicianFTEHaves);
+                    });
+                    $sheet->cell('E21', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffPhysicianFTENeeds);
+                    });
+                    $sheet->cell('E22', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
+                    });
+
+                    $sheet->cell('G20', function($cell) {
+                        $cell->setValue('Haves');
+                    });
+                    $sheet->cell('G21', function($cell) {
+                        $cell->setValue('Needs');
+                    });
+                    $sheet->cell('G22', function($cell) {
+                        $cell->setValue('Openings');
+                    });
+                    $sheet->cell('G23', function($cell) {
+                        $cell->setValue('Percent Recruited Actual');
+                    });
+                    $sheet->cell('G24', function($cell) {
+                        $cell->setValue('Percent Recruited Reported');
+                    });
+
+                    $sheet->cell('H20', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffAppsHaves);
+                    });
+                    $sheet->cell('H21', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffAppsNeeds);
+                    });
+                    $sheet->cell('H22', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffAppsOpenings);
+                    });
+                    $sheet->cell('H23', function($cell) use ($percentRecruitedApp) {
+                        $cell->setValue(number_format($percentRecruitedApp, 1).'%');
+                    });
+                    $sheet->cell('H24', function($cell) use ($percentRecruitedAppReport) {
+                        $cell->setValue(number_format($percentRecruitedAppReport, 1).'%');
+                    });
+
+                    $sheet->cell('I20', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffAppsFTEHaves);
+                    });
+                    $sheet->cell('I21', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffAppsFTENeeds);
+                    });
+                    $sheet->cell('I22', function($cell) use ($account) {
+                        $cell->setValue($account->pipeline->staffAppsFTEOpenings);
+                    });
+
+                    $sheet->cell('A26', function($cell) use ($accountInfo) {
+                        $cell->setValue('Current Roster');
+                        $cell->setBackground('#1eb1ed');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->cell('A27', function($cell) use ($accountInfo) {
+                        $cell->setValue('Physycian');
+                        $cell->setBackground('#d0cece');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->cells('A28:K28', function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                        $cells->setAlignment('center');
+                        $cells->setValignment('center');
+                    });
+
+                    $rosterPhysicianFields = [
+                        'SMD',
+                        'AMD',
+                        'Name',
+                        'Hours',
+                        'FT/PTG/EMB',
+                        'Interview',
+                        'Contract Out',
+                        'Contract In',
+                        'First Shift',
+                        'Last contact Date & Next Steps',
+                        'Signed Not Started'
+                    ];
+
+
+                    $rosterAppsFields = [
+                        'Chief',
+                        '',
+                        'Name',
+                        'Hours',
+                        'FT/PTG/EMB',
+                        'Interview',
+                        'Contract Out',
+                        'Contract In',
+                        'First Shift',
+                        'Last contact Date & Next Steps',
+                        'Signed Not Started'
+                    ];
+
+                    $benchFields = [
+                        'Name',
+                        '',
+                        '',
+                        'Hours',
+                        'PRN/Locum',
+                        'Interview',
+                        'Contract Out',
+                        'Contract In',
+                        'First Shift',
+                        'Last contact Date & Next Steps',
+                        'Signed Not Started'
+                    ];
+
+                    $recruitingFiedls = [
+                        'PHYS/APP',
+                        '',
+                        'Name',
+                        '',
+                        'FT/PT/EMB',
+                        'Interview',
+                        'Contract Out',
+                        'Contract In',
+                        'First Shift',
+                        'Last contact Date & Next Steps',
+                        ''
+                    ];
+
+                    $locumFiedls = [
+                        'PHYS/APP',
+                        '',
+                        'Name',
+                        'Agency',
+                        'Potential Start',
+                        'Credentialing Notes',
+                        '',
+                        'Shifts',
+                        'Start Date',
+                        'Comments',
+                        ''
+                    ];
+
+                    $declinedFields = [
+                        'Name',
+                        '',
+                        '',
+                        'FT/PT/EMB',
+                        'Interview',
+                        'Application',
+                        '',
+                        'Contract Out',
+                        'Declined',
+                        'Reason',
+                        ''
+                    ];
+
+                    $resignedFields = [
+                        'PHYS/APP',
+                        '',
+                        '',
+                        'Name',
+                        '',
+                        '',
+                        '',
+                        'Regigned',
+                        '',
+                        'Reason',
+                        ''
+                    ];
+
+                    $credentialingFields = [
+                        'Name',
+                        '',
+                        'Hours',
+                        'FT/PT/EMB',
+                        'File To Credentialing',
+                        'APP To Hospital',
+                        'Stage',
+                        'Privilege Goal',
+                        'Enrollment Status',
+                        'Notes',
+                        ''
+                    ];
+
+
+                    $sheet->row(28, $rosterPhysicianFields);
+
+                    $currentRosterPhysicianStart = 29;
+
+                    foreach ($activeRosterPhysicians as $rosterPhysician) {
+                        $row = [
+                            $rosterPhysician->isSMD,
+                            $rosterPhysician->isAMD,
+                            $rosterPhysician->name,
+                            $rosterPhysician->hours,
+                            strtoupper($rosterPhysician->contract),
+                            $rosterPhysician->interview ? $rosterPhysician->interview->format('m/d/Y') : '',
+                            $rosterPhysician->contractOut ? $rosterPhysician->contractOut->format('m/d/Y') : '',
+                            $rosterPhysician->contractIn ? $rosterPhysician->contractIn->format('m/d/Y') : '',
+                            $rosterPhysician->firstShift ? $rosterPhysician->firstShift->format('m/d/Y') : '',
+                            $rosterPhysician->notes,
+                            $rosterPhysician->signedNotStarted
+                        ];
+
+                        $sheet->row($currentRosterPhysicianStart, $row);
+
+                        $currentRosterPhysicianStart++;
+                    }
+
+                    $currentRosterAppStart = $currentRosterPhysicianStart+2;
+
+                    $sheet->mergeCells('A'.$currentRosterAppStart.':K'.$currentRosterAppStart);
+
+                    $sheet->cell('A'.$currentRosterAppStart, function($cell) use ($accountInfo) {
+                        $cell->setValue('APPs');
+                        $cell->setBackground('#d0cece');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($currentRosterAppStart+1).':B'.($currentRosterAppStart+1));
+                    $sheet->row($currentRosterAppStart+1, $rosterAppsFields);
+
+                    $sheet->cells('A'.($currentRosterAppStart+1).':K'.($currentRosterAppStart+1), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $currentRosterAppStartTable = $currentRosterAppStart+2;
+
+                    foreach ($activeRosterAPPs as $rosterAPP) {
+                        $sheet->mergeCells('A'.$currentRosterAppStartTable.':B'.$currentRosterAppStartTable);
+
+                        $row = [
+                            $rosterAPP->isChief,
+                            '',
+                            $rosterAPP->name,
+                            $rosterAPP->hours,
+                            strtoupper($rosterAPP->contract),
+                            $rosterAPP->interview ? $rosterAPP->interview->format('m/d/Y') : '',
+                            $rosterAPP->contractOut ? $rosterAPP->contractOut->format('m/d/Y') : '',
+                            $rosterAPP->contractIn ? $rosterAPP->contractIn->format('m/d/Y') : '',
+                            $rosterAPP->firstShift ? $rosterAPP->firstShift->format('m/d/Y') : '',
+                            $rosterAPP->notes,
+                            $rosterAPP->signedNotStarted
+                        ];
+
+                        $sheet->row($currentRosterAppStartTable, $row);
+
+                        $currentRosterAppStartTable++;
+                    }
+
+                    $currentBenchPhysicianStart = $currentRosterAppStartTable+2;
+
+                    $sheet->mergeCells('A'.$currentBenchPhysicianStart.':K'.$currentBenchPhysicianStart);
+
+                    $sheet->cell('A'.$currentBenchPhysicianStart, function($cell) use ($accountInfo) {
+                        $cell->setValue('Current Bench');
+                        $cell->setBackground('#1eb1ed');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($currentBenchPhysicianStart+1).':K'.($currentBenchPhysicianStart+1));
+
+                    $sheet->cell('A'.($currentBenchPhysicianStart+1), function($cell) use ($accountInfo) {
+                        $cell->setValue('Physician');
+                        $cell->setBackground('#d0cece');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($currentBenchPhysicianStart+2).':C'.($currentBenchPhysicianStart+2));
+                    $sheet->row($currentBenchPhysicianStart+2, $benchFields);
+
+                    $sheet->cells('A'.($currentBenchPhysicianStart+2).':K'.($currentBenchPhysicianStart+2), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $currentBenchPhysicianStartTable = $currentBenchPhysicianStart+3;
+
+                    foreach ($benchPhysicians as $benchPhysician) {
+                        $sheet->mergeCells('A'.$currentBenchPhysicianStartTable.':C'.$currentBenchPhysicianStartTable);
+
+                        $row = [
+                            $benchPhysician->name,
+                            '',
+                            '',
+                            $benchPhysician->hours,
+                            strtoupper($benchPhysician->contract),
+                            $benchPhysician->interview ? $benchPhysician->interview->format('m/d/Y') : '',
+                            $benchPhysician->contractOut ? $benchPhysician->contractOut->format('m/d/Y') : '',
+                            $benchPhysician->contractIn ? $benchPhysician->contractIn->format('m/d/Y') : '',
+                            $benchPhysician->firstShift ? $benchPhysician->firstShift->format('m/d/Y') : '',
+                            $benchPhysician->notes,
+                            $benchPhysician->signedNotStarted
+                        ];
+
+                        $sheet->row($currentBenchPhysicianStartTable, $row);
+
+                        $currentBenchPhysicianStartTable++;
+                    }
+
+                    $currentBenchAPPStart = $currentBenchPhysicianStartTable+2;
+
+                    $sheet->mergeCells('A'.$currentBenchAPPStart.':K'.$currentBenchAPPStart);
+
+                    $sheet->cell('A'.$currentBenchAPPStart, function($cell) use ($accountInfo) {
+                        $cell->setValue('APPs');
+                        $cell->setBackground('#d0cece');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($currentBenchAPPStart+1).':C'.($currentBenchAPPStart+1));
+                    $sheet->row($currentBenchAPPStart+1, $benchFields);
+
+                    $sheet->cells('A'.($currentBenchAPPStart+1).':K'.($currentBenchAPPStart+1), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $currentBenchAPPStartTable = $currentBenchAPPStart+2;
+
+                    foreach ($benchAPPs as $benchAPP) {
+                        $sheet->mergeCells('A'.$currentBenchAPPStartTable.':C'.$currentBenchAPPStartTable);
+
+                        $row = [
+                            $benchAPP->name,
+                            '',
+                            '',
+                            $benchAPP->hours,
+                            strtoupper($benchAPP->contract),
+                            $benchAPP->interview ? $benchAPP->interview->format('m/d/Y') : '',
+                            $benchAPP->contractOut ? $benchAPP->contractOut->format('m/d/Y') : '',
+                            $benchAPP->contractIn ? $benchAPP->contractIn->format('m/d/Y') : '',
+                            $benchAPP->firstShift ? $benchAPP->firstShift->format('m/d/Y') : '',
+                            $benchAPP->notes,
+                            $benchAPP->signedNotStarted
+                        ];
+
+                        $sheet->row($currentBenchAPPStartTable, $row);
+
+                        $currentBenchAPPStartTable++;
+                    }
+
+                    $recruitingPipelineStart = $currentBenchAPPStartTable+2;
+
+                    $sheet->mergeCells('A'.$recruitingPipelineStart.':K'.$recruitingPipelineStart);
+
+                    $sheet->cell('A'.$recruitingPipelineStart, function($cell) use ($accountInfo) {
+                        $cell->setValue('Rrecruiting Pipeline');
+                        $cell->setBackground('#00a65a');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($recruitingPipelineStart+1).':B'.($recruitingPipelineStart+1));
+                    $sheet->mergeCells('C'.($recruitingPipelineStart+1).':D'.($recruitingPipelineStart+1));
+                    $sheet->mergeCells('J'.($recruitingPipelineStart+1).':K'.($recruitingPipelineStart+1));
+
+                    $sheet->row($recruitingPipelineStart+1, $recruitingFiedls);
+
+                    $sheet->cells('A'.($recruitingPipelineStart+1).':K'.($recruitingPipelineStart+1), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $recruitingPipelineStartTable = $recruitingPipelineStart+2;
+
+                    foreach ($recruitings as $recruiting) {
+                        $sheet->mergeCells('A'.$recruitingPipelineStartTable.':B'.$recruitingPipelineStartTable);
+                        $sheet->mergeCells('C'.$recruitingPipelineStartTable.':D'.$recruitingPipelineStartTable);
+                        $sheet->mergeCells('J'.$recruitingPipelineStartTable.':K'.$recruitingPipelineStartTable);
+
+                        $row = [
+                            $recruiting->type,
+                            '',
+                            $recruiting->name,
+                            '',
+                            strtoupper($recruiting->contract),
+                            $recruiting->interview ? $recruiting->interview->format('m/d/Y') : '',
+                            $recruiting->contractOut ? $recruiting->contractOut->format('m/d/Y') : '',
+                            $recruiting->contractIn ? $recruiting->contractIn->format('m/d/Y') : '',
+                            $recruiting->firstShift ? $recruiting->firstShift->format('m/d/Y') : '',
+                            $recruiting->notes,
+                            ''
+                        ];
+
+                        $sheet->row($recruitingPipelineStartTable, $row);
+
+                        $recruitingPipelineStartTable++;
+                    }
+
+                    $locumsPipelineStart = $recruitingPipelineStartTable+2;
+
+                    $sheet->mergeCells('A'.$locumsPipelineStart.':K'.$locumsPipelineStart);
+
+                    $sheet->cell('A'.$locumsPipelineStart, function($cell) use ($accountInfo) {
+                        $cell->setValue('Locums Pipeline');
+                        $cell->setBackground('#00a65a');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($locumsPipelineStart+1).':B'.($locumsPipelineStart+1));
+                    $sheet->mergeCells('F'.($locumsPipelineStart+1).':G'.($locumsPipelineStart+1));
+                    $sheet->mergeCells('J'.($locumsPipelineStart+1).':K'.($locumsPipelineStart+1));
+
+                    $sheet->row($locumsPipelineStart+1, $locumFiedls);
+
+                    $sheet->cells('A'.($locumsPipelineStart+1).':K'.($locumsPipelineStart+1), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $locumsPipelineStartTable = $locumsPipelineStart+2;
+
+                    foreach ($locums as $locum) {
+                        $sheet->mergeCells('A'.$locumsPipelineStartTable.':B'.$locumsPipelineStartTable);
+                        $sheet->mergeCells('F'.$locumsPipelineStartTable.':G'.$locumsPipelineStartTable);
+                        $sheet->mergeCells('J'.$locumsPipelineStartTable.':K'.$locumsPipelineStartTable);
+
+                        $row = [
+                            $locum->type,
+                            '',
+                            $locum->name,
+                            $locum->agency,
+                            $locum->potentialStart ? $locum->potentialStart->format('m/d/Y') : '',
+                            $locum->credentialingNotes,
+                            '',
+                            $locum->shiftsOffered,
+                            $locum->startDate ? $locum->startDate->format('m/d/Y') : '',
+                            $locum->comments,
+                            ''
+                        ];
+
+                        $sheet->row($locumsPipelineStartTable, $row);
+
+                        $locumsPipelineStartTable++;
+                    }
+
+                    $declinedPipelineStart = $locumsPipelineStartTable+2;
+
+                    $sheet->mergeCells('A'.$declinedPipelineStart.':K'.$declinedPipelineStart);
+
+                    $sheet->cell('A'.$declinedPipelineStart, function($cell) use ($accountInfo) {
+                        $cell->setValue('Declined List');
+                        $cell->setBackground('#f39c12');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($declinedPipelineStart+1).':C'.($declinedPipelineStart+1));
+                    $sheet->mergeCells('F'.($declinedPipelineStart+1).':G'.($declinedPipelineStart+1));
+                    $sheet->mergeCells('J'.($declinedPipelineStart+1).':K'.($declinedPipelineStart+1));
+
+                    $sheet->row($declinedPipelineStart+1, $declinedFields);
+
+                    $sheet->cells('A'.($declinedPipelineStart+1).':K'.($declinedPipelineStart+1), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $declinedPipelineStartTable = $declinedPipelineStart+2;
+
+                    foreach ($declines as $decline) {
+                        $sheet->mergeCells('A'.$declinedPipelineStartTable.':C'.$declinedPipelineStartTable);
+                        $sheet->mergeCells('F'.$declinedPipelineStartTable.':G'.$declinedPipelineStartTable);
+                        $sheet->mergeCells('J'.$declinedPipelineStartTable.':K'.$declinedPipelineStartTable);
+
+                        $row = [
+                            $decline->name,
+                            '',
+                            '',
+                            strtoupper($decline->contract),
+                            $decline->interview ? $decline->interview->format('m/d/Y') : '',
+                            $decline->application ? $decline->application->format('m/d/Y') : '',
+                            '',
+                            $decline->contractOut ? $decline->contractOut->format('m/d/Y') : '',
+                            $decline->declined ? $decline->declined->format('m/d/Y') : '',
+                            $decline->declinedReason,
+                            ''
+                        ];
+
+                        $sheet->row($declinedPipelineStartTable, $row);
+
+                        $declinedPipelineStartTable++;
+                    }
+
+                    $resignedPipelineStart = $declinedPipelineStartTable+2;
+
+                    $sheet->mergeCells('A'.$resignedPipelineStart.':K'.$resignedPipelineStart);
+
+                    $sheet->cell('A'.$resignedPipelineStart, function($cell) use ($accountInfo) {
+                        $cell->setValue('Resigned List');
+                        $cell->setBackground('#f39c12');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($resignedPipelineStart+1).':C'.($resignedPipelineStart+1));
+                    $sheet->mergeCells('D'.($resignedPipelineStart+1).':G'.($resignedPipelineStart+1));
+                    $sheet->mergeCells('H'.($resignedPipelineStart+1).':I'.($resignedPipelineStart+1));
+                    $sheet->mergeCells('J'.($resignedPipelineStart+1).':K'.($resignedPipelineStart+1));
+
+                    $sheet->row($resignedPipelineStart+1, $resignedFields);
+
+                    $sheet->cells('A'.($resignedPipelineStart+1).':K'.($resignedPipelineStart+1), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $resignedPipelineStartTable = $resignedPipelineStart+2;
+
+                    foreach ($resigneds as $resigned) {
+                        $sheet->mergeCells('A'.$resignedPipelineStartTable.':C'.$resignedPipelineStartTable);
+                        $sheet->mergeCells('D'.$resignedPipelineStartTable.':G'.$resignedPipelineStartTable);
+                        $sheet->mergeCells('H'.$resignedPipelineStartTable.':I'.$resignedPipelineStartTable);
+                        $sheet->mergeCells('J'.$resignedPipelineStartTable.':K'.$resignedPipelineStartTable);
+
+                        $row = [
+                            strtoupper($resigned->type),
+                            '',
+                            '',
+                            $resigned->name,
+                            '',
+                            '',
+                            '',
+                            $resigned->resigned ? $resigned->resigned->format('m/d/Y') : '',
+                            '',
+                            $resigned->resignedReason,
+                            ''
+                        ];
+
+                        $sheet->row($resignedPipelineStartTable, $row);
+
+                        $resignedPipelineStartTable++;
+                    }
+
+                    $credentialingPipelineStart = $resignedPipelineStartTable+2;
+
+                    $sheet->mergeCells('A'.$credentialingPipelineStart.':K'.$credentialingPipelineStart);
+
+                    $sheet->cell('A'.$credentialingPipelineStart, function($cell) use ($accountInfo) {
+                        $cell->setValue('Credentialing Pipeline');
+                        $cell->setBackground('#1eb1ed');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($credentialingPipelineStart+1).':K'.($credentialingPipelineStart+1));
+
+                    $sheet->cell('A'.($credentialingPipelineStart+1), function($cell) use ($accountInfo) {
+                        $cell->setValue('Physician');
+                        $cell->setBackground('#d0cece');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($credentialingPipelineStart+2).':B'.($credentialingPipelineStart+2));
+                    $sheet->mergeCells('J'.($credentialingPipelineStart+2).':K'.($credentialingPipelineStart+2));
+
+                    $sheet->row($credentialingPipelineStart+2, $credentialingFields);
+
+                    $sheet->cells('A'.($credentialingPipelineStart+2).':K'.($credentialingPipelineStart+2), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $credentialingPipelinePhysicianStart = $credentialingPipelineStart+3;
+
+                    foreach ($credentialersPhys as $credentialer) {
+                        $sheet->mergeCells('A'.$credentialingPipelinePhysicianStart.':B'.$credentialingPipelinePhysicianStart);
+                        $sheet->mergeCells('J'.$credentialingPipelinePhysicianStart.':K'.$credentialingPipelinePhysicianStart);
+
+                        $row = [
+                            $credentialer->name,
+                            '',
+                            $credentialer->hours,
+                            strtoupper($credentialer->contract),
+                            $credentialer->fileToCredentialing ? $credentialer->fileToCredentialing->format('m/d/Y') : '',
+                            $credentialer->appToHospital ? $credentialer->appToHospital->format('m/d/Y') : '',
+                            $credentialer->stage,
+                            $credentialer->privilegeGoal ? $credentialer->privilegeGoal->format('m/d/Y') : '',
+                            $credentialer->enrollmentStatus,
+                            $credentialer->notes,
+                            ''
+                        ];
+
+                        $sheet->row($credentialingPipelinePhysicianStart, $row);
+
+                        $credentialingPipelinePhysicianStart++;
+                    }
+
+                    $sheet->mergeCells('A'.($credentialingPipelinePhysicianStart+2).':K'.($credentialingPipelinePhysicianStart+2));
+
+                    $sheet->cell('A'.($credentialingPipelinePhysicianStart+2), function($cell) use ($accountInfo) {
+                        $cell->setValue('APPs');
+                        $cell->setBackground('#d0cece');
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                    });
+
+                    $sheet->mergeCells('A'.($credentialingPipelinePhysicianStart+3).':B'.($credentialingPipelinePhysicianStart+3));
+                    $sheet->mergeCells('J'.($credentialingPipelinePhysicianStart+3).':K'.($credentialingPipelinePhysicianStart+3));
+
+                    $sheet->row($credentialingPipelinePhysicianStart+3, $credentialingFields);
+
+                    $sheet->cells('A'.($credentialingPipelinePhysicianStart+3).':K'.($credentialingPipelinePhysicianStart+3), function($cells) use ($accountInfo) {
+                        $cells->setBackground('#d0cece');
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $credentialingPipelineAPPStart = $credentialingPipelinePhysicianStart+4;
+
+                    foreach ($credentialersAPP as $credentialer) {
+                        $sheet->mergeCells('A'.$credentialingPipelineAPPStart.':B'.$credentialingPipelineAPPStart);
+                        $sheet->mergeCells('J'.$credentialingPipelineAPPStart.':K'.$credentialingPipelineAPPStart);
+
+                        $row = [
+                            $credentialer->name,
+                            '',
+                            $credentialer->hours,
+                            strtoupper($credentialer->contract),
+                            $credentialer->fileToCredentialing ? $credentialer->fileToCredentialing->format('m/d/Y') : '',
+                            $credentialer->appToHospital ? $credentialer->appToHospital->format('m/d/Y') : '',
+                            $credentialer->stage,
+                            $credentialer->privilegeGoal ? $credentialer->privilegeGoal->format('m/d/Y') : '',
+                            $credentialer->enrollmentStatus,
+                            $credentialer->notes,
+                            ''
+                        ];
+
+                        $sheet->row($credentialingPipelineAPPStart, $row);
+
+                        $credentialingPipelineAPPStart++;
+                    }
+
+                    $sheet->cells('A1:K'.$credentialingPipelineAPPStart, function($cells) {
+                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
                     });
 
                     $tableStyle = array(
                         'borders' => array(
                             'outline' => array(
-                                'style' => 'medium',
+                                'style' => 'thin',
                                 'color' => array('rgb' => '000000'),
                             ),
                             'inside' => array(
@@ -1661,67 +2503,132 @@ class AccountsPipelineController extends Controller
                         ),
                     );
 
-                    $headersStyle = array(
+                    $topBorder = array(
                         'borders' => array(
-                            'outline' => array(
-                                'style' => 'medium',
-                                'color' => array('rgb' => '000000'),
-                            ),
-                            'inside' => array(
+                            'top' => array(
                                 'style' => 'medium',
                                 'color' => array('rgb' => '000000'),
                             ),
                         ),
                     );
 
-                    $sheet->setAutoSize(true);
+                    $bottomBorder = array(
+                        'borders' => array(
+                            'bottom' => array(
+                                'style' => 'medium',
+                                'color' => array('rgb' => '000000'),
+                            ),
+                        ),
+                    );
+
+                    // $headersStyle = array(
+                    //     'borders' => array(
+                    //         'outline' => array(
+                    //             'style' => 'medium',
+                    //             'color' => array('rgb' => '000000'),
+                    //         ),
+                    //         'inside' => array(
+                    //             'style' => 'medium',
+                    //             'color' => array('rgb' => '000000'),
+                    //         ),
+                    //     ),
+                    // );
+
+                    // $sheet->setAutoSize(true);
 
                     $sheet->setWidth(array(
-                        'A'     => 12,
-                        'C'     => 10,
-                        'D'     => 12,
-                        'F'     => 10,
-                        'G'     => 1,
-                        'H'     => 18,
-                        'I'     => 18,
+                        'A'     => 9,
+                        'B'     => 15,
+                        'C'     => 20,
+                        'D'     => 15,
+                        'E'     => 16,
+                        'F'     => 18,
+                        'G'     => 20,
+                        'H'     => 14,
+                        'I'     => 10,
+                        'J'     => 28,
+                        'K'     => 17
                     ));
 
-                    $sheet->setColumnFormat(array(
-                        'I16:I17' => '"$"#,##0.00_-',
-                    ));
+                    $heights = array(
+                        4   => 35
+                    );
 
-                    $heights = array();
-
-                    for($x = $recruitingTable[0]; $x <= ($credentialingTable[1]); $x++) {
-                            $heights[$x] = 25;
-                    }
+                    // for($x = $recruitingTable[0]; $x <= ($credentialingTable[1]); $x++) {
+                    //         $heights[$x] = 25;
+                    // }
 
                     $sheet->setHeight($heights);
-                    $sheet->setHeight(array($rosterBenchRow => 3));
 
-                    $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
-                    $sheet->getStyle('H4:I13')->applyFromArray($tableStyle);
-                    $sheet->getStyle('H14:I17')->applyFromArray($tableStyle);
-                    $sheet->getStyle('A4:F'.($rosterBenchRow+1))->applyFromArray($tableStyle);
-                    $sheet->getStyle('A'.$benchTable[0].':F'.($benchTable[1]))->applyFromArray($tableStyle);
-                    $sheet->getStyle('A'.$recruitingTable[0].':I'.$recruitingTable[1])->applyFromArray($tableStyle);
-                    $sheet->getStyle('A'.$credentialingTable[0].':I'.$credentialingTable[1])->applyFromArray($tableStyle);
-                    $sheet->getStyle('A'.$requirementsTable[0].':I'.($requirementsTable[0]+5))->applyFromArray($tableStyle);
+                    $sheet->getStyle('A1:K1')->applyFromArray($topBorder);
+                    $sheet->getStyle('A'.($credentialingPipelineAPPStart+1).':K'.($credentialingPipelineAPPStart+1))->applyFromArray($bottomBorder);
 
-                    $sheet->getStyle('D'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
-                    $sheet->getStyle('E'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
-                    $sheet->getStyle('F'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
-                    $sheet->getStyle('E'.($recruitingTable[0]+2).':I'.$recruitingTable[1])->getAlignment()->setWrapText(true);
-                    $sheet->getStyle('I'.($credentialingTable[0]+2).':I'.$credentialingTable[1])->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('A27:K'.$currentRosterPhysicianStart)->applyFromArray($tableStyle);
+                    $sheet->getStyle('A'.$currentRosterAppStart.':K'.$currentRosterAppStartTable)->applyFromArray($tableStyle);
 
-                    $sheet->setBorder("A3:I3", 'none');
-                    $sheet->setBorder("A".($benchTable[0]-1).":I".($benchTable[0]-1), 'none');
-                    $sheet->setBorder("A".($recruitingTable[0]-1).":I".($recruitingTable[0]-1), 'none');
-                    $sheet->setBorder("A".($recruitingTable[0]-2).":I".($recruitingTable[0]-2), 'none');
-                    $sheet->setBorder("A".($credentialingTable[0]-1).":I".($credentialingTable[0]-1), 'none');
-                    $sheet->setBorder("A".($requirementsTable[0]-1).":I".($requirementsTable[0]-1), 'none');
-                    $sheet->setBorder("H18:I".($recruitingTable[0]-1), 'none');
-                    $sheet->setBorder("G3:G".($recruitingTable[0]-1), 'none');
+                    $sheet->getStyle('A'.($currentBenchPhysicianStart+1).':K'.$currentBenchPhysicianStartTable)->applyFromArray($tableStyle);
+                    $sheet->getStyle('A'.$currentBenchAPPStart.':K'.$currentBenchAPPStartTable)->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('A'.($recruitingPipelineStart+1).':K'.$recruitingPipelineStartTable)->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('A'.($locumsPipelineStart+1).':K'.$locumsPipelineStartTable)->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('A'.($declinedPipelineStart+1).':K'.$declinedPipelineStartTable)->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('A'.($resignedPipelineStart+1).':K'.$resignedPipelineStartTable)->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('A'.($credentialingPipelineStart+1).':K'.$credentialingPipelinePhysicianStart)->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('A'.($credentialingPipelinePhysicianStart+2).':K'.$credentialingPipelineAPPStart)->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('B8:C10')->applyFromArray($tableStyle);
+                    $sheet->getStyle('E8:F10')->applyFromArray($tableStyle);
+                    $sheet->getStyle('H8:I9')->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('C17:E18')->applyFromArray($tableStyle);
+                    $sheet->getStyle('D19:E19')->applyFromArray($tableStyle);
+                    $sheet->getStyle('C20:E24')->applyFromArray($tableStyle);
+
+                    $sheet->getStyle('G17:I18')->applyFromArray($tableStyle);
+                    $sheet->getStyle('H19:I19')->applyFromArray($tableStyle);
+                    $sheet->getStyle('G20:I24')->applyFromArray($tableStyle);
+
+                    $sheet->setBorder("A2:K7", 'none');
+                    $sheet->setBorder("A4:A6", 'none');
+                    $sheet->setBorder("A11:K16", 'none');
+                    $sheet->setBorder("A17:B24", 'none');
+                    $sheet->setBorder("F17:F24", 'none');
+                    $sheet->setBorder("J17:K24", 'none');
+                    $sheet->setBorder("K4:K6", 'none');
+
+                    $sheet->setBorder("A".$currentRosterPhysicianStart.":K".$currentRosterPhysicianStart, 'none');
+                    $sheet->setBorder("A".($currentRosterPhysicianStart+1).":K".($currentRosterPhysicianStart+1), 'none');
+
+                    $sheet->setBorder("A".$currentRosterAppStartTable.":K".$currentRosterAppStartTable, 'none');
+                    $sheet->setBorder("A".($currentRosterAppStartTable+1).":K".($currentRosterAppStartTable+1), 'none');
+
+                    $sheet->setBorder("A".$currentBenchPhysicianStartTable.":K".$currentBenchPhysicianStartTable, 'none');
+                    $sheet->setBorder("A".($currentBenchPhysicianStartTable+1).":K".($currentBenchPhysicianStartTable+1), 'none');
+
+                    $sheet->setBorder("A".$currentBenchAPPStartTable.":K".$currentBenchAPPStartTable, 'none');
+                    $sheet->setBorder("A".($currentBenchAPPStartTable+1).":K".($currentBenchAPPStartTable+1), 'none');
+
+                    $sheet->setBorder("A".$recruitingPipelineStartTable.":K".$recruitingPipelineStartTable, 'none');
+                    $sheet->setBorder("A".($recruitingPipelineStartTable+1).":K".($recruitingPipelineStartTable+1), 'none');
+
+                    $sheet->setBorder("A".$locumsPipelineStartTable.":K".$locumsPipelineStartTable, 'none');
+                    $sheet->setBorder("A".($locumsPipelineStartTable+1).":K".($locumsPipelineStartTable+1), 'none');
+
+                    $sheet->setBorder("A".$declinedPipelineStartTable.":K".$declinedPipelineStartTable, 'none');
+                    $sheet->setBorder("A".($declinedPipelineStartTable+1).":K".($declinedPipelineStartTable+1), 'none');
+
+                    $sheet->setBorder("A".$resignedPipelineStartTable.":K".$resignedPipelineStartTable, 'none');
+                    $sheet->setBorder("A".($resignedPipelineStartTable+1).":K".($resignedPipelineStartTable+1), 'none');
+
+                    $sheet->setBorder("A".$credentialingPipelinePhysicianStart.":K".$credentialingPipelinePhysicianStart, 'none');
+                    $sheet->setBorder("A".($credentialingPipelinePhysicianStart+1).":K".($credentialingPipelinePhysicianStart+1), 'none');
+
+                    $sheet->setBorder("A".$credentialingPipelineAPPStart.":K".$credentialingPipelineAPPStart, 'none');
                 });
             })->store('pdf', public_path('exports'), true);
         }
