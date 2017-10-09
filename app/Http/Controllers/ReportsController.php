@@ -54,6 +54,20 @@ class ReportsController extends Controller
         return view('admin.reports.index', $params);
     }
 
+    /**
+     * Toggle the global 'role' scope to current Session.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleScope(Request $request)
+    {
+        $ignore = session('ignore-summary-role-scope', false);
+
+        session(['ignore-summary-role-scope' => ! $ignore]);
+
+        return back();
+    }
+
     public function exportToExcel(SummaryFilter $filter) {
         set_time_limit(600);
 

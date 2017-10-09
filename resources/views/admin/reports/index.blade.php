@@ -11,6 +11,9 @@
         <i class="fa fa-file-excel-o"></i>
         @lang('Export to Excel')
     </a>
+    <a href="{{ route('admin.summaryReport.toggleScope') }}" class="btn btn-sm btn-success{{ session('ignore-summary-role-scope') ? ' active' : '' }}">
+        @lang('View All')
+    </a>
 @endsection
 
 @section('content')

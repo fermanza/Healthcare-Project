@@ -137,9 +137,7 @@ class AccountRequest extends FormRequest
             $this->createPipeline($account);
         }
 
-        if ($this->recruiterId) {
-            $this->associateRecruiter($account);
-        }
+        $this->associateRecruiter($account);
 
         if ($this->credentialerId) {
             $this->associateCredentialer($account);
@@ -162,10 +160,8 @@ class AccountRequest extends FormRequest
         }
 
         $this->associateRecruiters($account);
-
-        if ($this->managerId) {
-            $this->associateManager($account);
-        }
+       
+        $this->associateManager($account);
 
         $account->practices()->sync($this->practiceId ? [$this->practiceId] : []);
         
@@ -199,15 +195,20 @@ class AccountRequest extends FormRequest
      */
     protected function associateRecruiter($account)
     {
-        AccountEmployee::unguard();
-        AccountEmployee::updateOrCreate([
-            'accountId' => $account->id,
-            'positionTypeId' => config('instances.position_types.recruiter'),
-            'isPrimary' => true,
-        ], [
-            'employeeId' => $this->recruiterId,
-        ]);
-        AccountEmployee::reguard();
+        $employee = AccountEmployee::where('accountId', $account->id)->where('positionTypeId', config('instances.position_types.recruiter'))->where('isPrimary', true);
+        $employee->delete();
+        
+        if ($this->recruiterId) {
+            AccountEmployee::unguard();
+            AccountEmployee::updateOrCreate([
+                'accountId' => $account->id,
+                'positionTypeId' => config('instances.position_types.recruiter'),
+                'isPrimary' => true,
+            ], [
+                'employeeId' => $this->recruiterId,
+            ]);
+            AccountEmployee::reguard();
+        }
     }
 
     /**
@@ -339,14 +340,19 @@ class AccountRequest extends FormRequest
      */
     protected function associateManager($account)
     {
-        AccountEmployee::unguard();
-        AccountEmployee::updateOrCreate([
-            'accountId' => $account->id,
-            'positionTypeId' => config('instances.position_types.manager'),
-        ], [
-            'employeeId' => $this->managerId,
-        ]);
-        AccountEmployee::reguard();
+        $employee = AccountEmployee::where('accountId', $account->id)->where('positionTypeId', config('instances.position_types.manager'));
+        $employee->delete();
+
+        if ($this->managerId) {
+            AccountEmployee::unguard();
+            AccountEmployee::updateOrCreate([
+                'accountId' => $account->id,
+                'positionTypeId' => config('instances.position_types.manager'),
+            ], [
+                'employeeId' => $this->managerId,
+            ]);
+            AccountEmployee::reguard();
+        }
     }
 
     /**

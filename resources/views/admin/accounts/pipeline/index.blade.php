@@ -2599,7 +2599,7 @@
                     recruiting.firstShift = this.moment(recruiting.firstShift);
 
                     recruiting.place = place;
-                    recruiting.activity = recruiting.type == 'md' ? 'physician' : 'app';
+                    recruiting.activity = recruiting.type == 'phys' ? 'physician' : 'app';
                     
                     if(!recruiting.contractIn) {
                         alert('Please fill Contract In date before moving to Roster Or Bench.')
@@ -2620,7 +2620,7 @@
                     locum.startDate = this.moment(locum.startDate);
 
                     locum.place = place;
-                    locum.activity = locum.type == 'md' ? 'physician' : 'app';
+                    locum.activity = locum.type == 'phys' ? 'physician' : 'app';
 
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum/' + locum.id + '/switch', locum
                     ).then(function (response) {

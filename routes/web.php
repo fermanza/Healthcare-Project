@@ -23,6 +23,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
 
     $router->get('accounts/toggleScope', 'AccountsController@toggleScope')->name('accounts.toggleScope');
     $router->get('contractLogs/toggleScope', 'ContractLogsController@toggleScope')->name('contractLogs.toggleScope');
+    $router->get('reports/summary/toggleScope', 'ReportsController@toggleScope')->name('summaryReport.toggleScope');
 
     $router->get('sidebar-collapse', 'SidebarController@collapse');
     $router->get('sidebar-expand', 'SidebarController@expand');

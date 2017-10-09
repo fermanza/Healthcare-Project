@@ -306,7 +306,13 @@ class Account extends Model
         }
         
         $monthDays = 30;
-        $days = Carbon::now()->diffInDays($this->startDate);
+
+        if($this->startDate->gte(Carbon::now())) {
+            $days = 0;
+        } else {
+            $days = Carbon::now()->diffInDays($this->startDate);
+        }
+
         $months = $days / $monthDays;
 
         return number_format($months, 1);
