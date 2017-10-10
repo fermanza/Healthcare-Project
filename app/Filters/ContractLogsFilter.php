@@ -49,7 +49,13 @@ class ContractLogsFilter extends Filter
      */
     public function recruiters($ids)
     {
-        $this->query->whereIn('tContractLogs.recruiterId', $ids);
+
+        $this->query->where(function($query) use ($ids) {
+            $query->whereIn('tContractLogs.recruiterId', $ids)
+            ->orWhereHas('recruiters', function($query) use ($ids) {
+                $query->whereIn('employeeId', $ids);
+            });
+        });
     }
 
     /**
@@ -93,7 +99,12 @@ class ContractLogsFilter extends Filter
      */
     public function accounts($ids)
     {
-        $this->query->whereIn('tContractLogs.accountId', $ids);
+        $this->query->where(function($query) use ($ids) {
+            $query->whereIn('tContractLogs.accountId', $ids)
+            ->orWhereHas('accounts', function($query) use ($ids) {
+                $query->whereIn('accountId', $ids);
+            });
+        });
     }
 
     /**
@@ -195,7 +206,23 @@ class ContractLogsFilter extends Filter
      */
     public function pending($value)
     {
-        $this->query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate');
+        $filters = array_filter($this->request->all(), function($filter){
+            return !is_null($filter);
+        });
+        $filters = array_keys($filters);
+
+        $haystack = array('practices', 'divisions', 'statuses', 'recruiters', 'managers', 'owners',
+            'positions', 'accounts', 'regions', 'RSCs', 'provider', 'contractOutDate', 'contractInDate',
+            'signedNotStarted'
+        );
+
+        if(count(array_intersect($haystack, $filters)) > 0){
+            $this->query->orWhere(function($query) {
+                $query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate');
+            });
+        } else {
+            $this->query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate');
+        }
     }
 
     /**
@@ -206,7 +233,21 @@ class ContractLogsFilter extends Filter
      */
     public function placements($value)
     {
-        $this->query->where('tContractLogs.value', '>', 0);
+        $filters = array_filter($this->request->all(), function($filter){
+            return !is_null($filter);
+        });
+        $filters = array_keys($filters);
+
+        $haystack = array('practices', 'divisions', 'statuses', 'recruiters', 'managers', 'owners',
+            'positions', 'accounts', 'regions', 'RSCs', 'provider', 'contractOutDate', 'contractInDate',
+            'signedNotStarted'
+        );
+
+        if(count(array_intersect($haystack, $filters)) > 0){
+            $this->query->orWhere('tContractLogs.value', '>', 0);   
+        } else {
+            $this->query->where('tContractLogs.value', '>', 0);
+        }
     }
 
     /**
@@ -217,7 +258,21 @@ class ContractLogsFilter extends Filter
      */
     public function promos($value)
     {
-        $this->query->orWhere('statusId', 7);
+        $filters = array_filter($this->request->all(), function($filter){
+            return !is_null($filter);
+        });
+        $filters = array_keys($filters);
+
+        $haystack = array('practices', 'divisions', 'statuses', 'recruiters', 'managers', 'owners',
+            'positions', 'accounts', 'regions', 'RSCs', 'provider', 'contractOutDate', 'contractInDate',
+            'signedNotStarted'
+        );
+
+        if(count(array_intersect($haystack, $filters)) > 0){
+            $this->query->orWhere('statusId', 7);
+        } else {
+            $this->query->where('statusId', 7);
+        }
     }
 
     /**
