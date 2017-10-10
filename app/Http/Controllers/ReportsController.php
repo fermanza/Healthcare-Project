@@ -1030,23 +1030,19 @@ class ReportsController extends Controller
                         $query->with('person', 'manager.person');
                     },
                     'division.group.region',
-                    'practices', 'summary',
+                    'practices',
                 ]);
 
-                $summary = $account->summary;
+                if ($account->pipeline->practiceTime == "hours") {
+                    $percentRecruitedPhys = ($account->pipeline->staffPhysicianFTEHaves / $account->pipeline->staffPhysicianFTENeeds) * 100;
+                    $percentRecruitedApp = ($account->pipeline->staffAppsFTEHaves / $account->pipeline->staffAppsFTENeeds) * 100;
 
-                $percentRecruitedPhys = 0;
-                $percentRecruitedApp = 0;
-                $percentRecruitedPhysReport = 0;
-                $percentRecruitedAppReport = 0;
-            
-                if ($summary) {
-                    if($summary->{'Complete Staff - Phys'} && $summary->{'Complete Staff - Phys'} > 0) {
-                        $percentRecruitedPhys = ($summary->{'Current Staff - Phys'} / $summary->{'Complete Staff - Phys'}) * 100;
-                    }
-                    if($summary->{'Complete Staff - APP'} && $summary->{'Complete Staff - APP'} > 0) {
-                        $percentRecruitedApp = ($summary->{'Current Staff - APP'} / $summary->{'Complete Staff - APP'}) * 100;
-                    }
+                    $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;
+                    $percentRecruitedAppReport = $percentRecruitedApp > 100 ? 100 : $percentRecruitedApp;
+                } else {
+                    $percentRecruitedPhys = ($account->pipeline->staffPhysicianFTEHaves / $account->pipeline->staffPhysicianNeeds) * 100;
+                    $percentRecruitedApp = ($account->pipeline->staffAppsFTEHaves / $account->pipeline->staffAppsNeeds) * 100;
+
                     $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;
                     $percentRecruitedAppReport = $percentRecruitedApp > 100 ? 100 : $percentRecruitedApp;
                 }
@@ -1067,6 +1063,10 @@ class ReportsController extends Controller
                 $AMD = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                     return $rosterBench->isAMD;
                 });
+
+                $SMDOpen = $account->hasSMD ? ($SMD->isEmpty() ? 1 : 0) : 0;
+
+                $AMDOpen = $account->hasAMD ? ($AMD->isEmpty() ? 1 : 0) : 0;
 
                 $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                     return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
@@ -1123,7 +1123,7 @@ class ReportsController extends Controller
 
                 $sheetName = (strlen($account->name) > 31) ? substr($account->name,0,28).'...' : $account->name;
 
-                $excel->sheet($sheetName, function($sheet) use ($account, $percentRecruitedPhys, $percentRecruitedApp, $percentRecruitedPhysReport, $percentRecruitedAppReport, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $recruitings, $locums, $declines, $resigneds, $credentialersPhys, $credentialersAPP, $SMD, $AMD){
+                $excel->sheet($sheetName, function($sheet) use ($account, $percentRecruitedPhys, $percentRecruitedApp, $percentRecruitedPhysReport, $percentRecruitedAppReport, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $recruitings, $locums, $declines, $resigneds, $credentialersPhys, $credentialersAPP, $SMDOpen, $AMDOpen){
 
                     $accountInfo = $account->name.', '.$account->siteCode.' '.$account->address.' '.($account->recruiter ? $account->recruiter->fullName() : '').', '.($account->manager ? $account->manager->fullName() : '');
 
@@ -1257,8 +1257,9 @@ class ReportsController extends Controller
                         $cell->setValignment('center');
                     });
 
-                    $sheet->cell('D12', function($cell) use ($SMD) {
-                        $cell->setValue($SMD->isEmpty() ? '' : $SMD->first()->name);
+                    $sheet->cell('D12', function($cell) use ($SMDOpen) {
+                        $cell->setValue($SMDOpen);
+                        $cell->setBackground('#FFFF00');
                         $cell->setFontFamily('Calibri (Body)');
                         $cell->setFontSize(11);
                         $cell->setAlignment('center');
@@ -1274,8 +1275,9 @@ class ReportsController extends Controller
                         $cell->setValignment('center');
                     });
 
-                    $sheet->cell('F12', function($cell) use ($AMD) {
-                        $cell->setValue($AMD->isEmpty() ? '' : $AMD->first()->name);
+                    $sheet->cell('F12', function($cell) use ($AMDOpen) {
+                        $cell->setValue($AMDOpen);
+                        $cell->setBackground('#FFFF00');
                         $cell->setFontFamily('Calibri (Body)');
                         $cell->setFontSize(11);
                         $cell->setAlignment('center');
@@ -1292,7 +1294,12 @@ class ReportsController extends Controller
                     });
 
                     $sheet->cell('H12', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
+                        if ($account->pipeline->practiceTime == "hours") {
+                            $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
+                        } else {
+                            $cell->setValue($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves);
+                        }
+                        $cell->setBackground('#FFFF00');
                         $cell->setFontFamily('Calibri (Body)');
                         $cell->setFontSize(11);
                         $cell->setAlignment('center');
@@ -1309,7 +1316,12 @@ class ReportsController extends Controller
                     });
 
                     $sheet->cell('J12', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffAppsFTEOpenings);
+                        if ($account->pipeline->practiceTime == "hours") {
+                            $cell->setValue($account->pipeline->staffAppsFTEOpenings);
+                        } else {
+                            $cell->setValue($account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves);
+                        }
+                        $cell->setBackground('#FFFF00');
                         $cell->setFontFamily('Calibri (Body)');
                         $cell->setFontSize(11);
                         $cell->setAlignment('center');
@@ -1346,19 +1358,29 @@ class ReportsController extends Controller
                         $cell->setValue($account->pipeline->fullTimeHoursApps);
                     });
 
-                    $sheet->cell('D16', function($cell) {
-                        $cell->setValue('Hours');
-                    });
-                    $sheet->cell('E16', function($cell) {
-                        $cell->setValue('FTEs');
-                    });
+                    if ($account->pipeline->practiceTime == "hours") {
+                        $sheet->cell('D16', function($cell) {
+                            $cell->setValue('Hours');
+                        });
+                        $sheet->cell('E16', function($cell) {
+                            $cell->setValue('FTEs');
+                        });
 
-                    $sheet->cell('H16', function($cell) {
-                        $cell->setValue('Hours');
-                    });
-                    $sheet->cell('I16', function($cell) {
-                        $cell->setValue('FTEs');
-                    });
+                        $sheet->cell('H16', function($cell) {
+                            $cell->setValue('Hours');
+                        });
+                        $sheet->cell('I16', function($cell) {
+                            $cell->setValue('FTEs');
+                        });
+                    } else {
+                        $sheet->cell('D16', function($cell) {
+                            $cell->setValue('FTEs');
+                        });
+
+                        $sheet->cell('H16', function($cell) {
+                            $cell->setValue('FTEs');
+                        });
+                    }
 
                     $sheet->cell('C17', function($cell) {
                         $cell->setValue('Haves');
@@ -1376,31 +1398,49 @@ class ReportsController extends Controller
                         $cell->setValue('Percent Recruited Reported');
                     });
 
-                    $sheet->cell('D17', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffPhysicianHaves);
-                    });
-                    $sheet->cell('D18', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffPhysicianNeeds);
-                    });
-                    $sheet->cell('D19', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffPhysicianOpenings);
-                    });
-                    $sheet->cell('D20', function($cell) use ($percentRecruitedPhys) {
-                        $cell->setValue(number_format($percentRecruitedPhys, 1).'%');
-                    });
-                    $sheet->cell('D21', function($cell) use ($percentRecruitedPhysReport) {
-                        $cell->setValue(number_format($percentRecruitedPhysReport, 1).'%');
-                    });
+                    if ($account->pipeline->practiceTime == "hours") {
+                        $sheet->cell('D17', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianHaves);
+                        });
+                        $sheet->cell('D18', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianNeeds);
+                        });
+                        $sheet->cell('D19', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianOpenings);
+                        });
+                        $sheet->cell('D20', function($cell) use ($percentRecruitedPhys) {
+                            $cell->setValue(number_format($percentRecruitedPhys, 1).'%');
+                        });
+                        $sheet->cell('D21', function($cell) use ($percentRecruitedPhysReport) {
+                            $cell->setValue(number_format($percentRecruitedPhysReport, 1).'%');
+                        });
 
-                    $sheet->cell('E17', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffPhysicianFTEHaves);
-                    });
-                    $sheet->cell('E18', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffPhysicianFTENeeds);
-                    });
-                    $sheet->cell('E19', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
-                    });
+                        $sheet->cell('E17', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianFTEHaves);
+                        });
+                        $sheet->cell('E18', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianFTENeeds);
+                        });
+                        $sheet->cell('E19', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
+                        });
+                    } else {
+                        $sheet->cell('D17', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianFTEHaves);
+                        });
+                        $sheet->cell('D18', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianNeeds);
+                        });
+                        $sheet->cell('D19', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves);
+                        });
+                        $sheet->cell('D20', function($cell) use ($percentRecruitedPhys) {
+                            $cell->setValue(number_format($percentRecruitedPhys, 1).'%');
+                        });
+                        $sheet->cell('D21', function($cell) use ($percentRecruitedPhysReport) {
+                            $cell->setValue(number_format($percentRecruitedPhysReport, 1).'%');
+                        });
+                    }
 
                     $sheet->cell('G17', function($cell) {
                         $cell->setValue('Haves');
@@ -1418,31 +1458,49 @@ class ReportsController extends Controller
                         $cell->setValue('Percent Recruited Reported');
                     });
 
-                    $sheet->cell('H17', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffAppsHaves);
-                    });
-                    $sheet->cell('H18', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffAppsNeeds);
-                    });
-                    $sheet->cell('H19', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffAppsOpenings);
-                    });
-                    $sheet->cell('H20', function($cell) use ($percentRecruitedApp) {
-                        $cell->setValue(number_format($percentRecruitedApp, 1).'%');
-                    });
-                    $sheet->cell('H21', function($cell) use ($percentRecruitedAppReport) {
-                        $cell->setValue(number_format($percentRecruitedAppReport, 1).'%');
-                    });
+                    if ($account->pipeline->practiceTime == "hours") {
+                        $sheet->cell('H17', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsHaves);
+                        });
+                        $sheet->cell('H18', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsNeeds);
+                        });
+                        $sheet->cell('H19', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsOpenings);
+                        });
+                        $sheet->cell('H20', function($cell) use ($percentRecruitedApp) {
+                            $cell->setValue(number_format($percentRecruitedApp, 1).'%');
+                        });
+                        $sheet->cell('H21', function($cell) use ($percentRecruitedAppReport) {
+                            $cell->setValue(number_format($percentRecruitedAppReport, 1).'%');
+                        });
 
-                    $sheet->cell('I17', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffAppsFTEHaves);
-                    });
-                    $sheet->cell('I18', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffAppsFTENeeds);
-                    });
-                    $sheet->cell('I19', function($cell) use ($account) {
-                        $cell->setValue($account->pipeline->staffAppsFTEOpenings);
-                    });
+                        $sheet->cell('I17', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsFTEHaves);
+                        });
+                        $sheet->cell('I18', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsFTENeeds);
+                        });
+                        $sheet->cell('I19', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsFTEOpenings);
+                        });
+                    } else {
+                        $sheet->cell('H17', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsFTEHaves);
+                        });
+                        $sheet->cell('H18', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsNeeds);
+                        });
+                        $sheet->cell('H19', function($cell) use ($account) {
+                            $cell->setValue($account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves);
+                        });
+                        $sheet->cell('H20', function($cell) use ($percentRecruitedApp) {
+                            $cell->setValue(number_format($percentRecruitedApp, 1).'%');
+                        });
+                        $sheet->cell('H21', function($cell) use ($percentRecruitedAppReport) {
+                            $cell->setValue(number_format($percentRecruitedAppReport, 1).'%');
+                        });
+                    }
 
                     $sheet->cell('A23', function($cell) use ($accountInfo) {
                         $cell->setValue('Current Roster');
@@ -2309,11 +2367,11 @@ class ReportsController extends Controller
                     $sheet->setWidth(array(
                         'A'     => 9,
                         'B'     => 15,
-                        'C'     => 20,
+                        'C'     => 22,
                         'D'     => 15,
                         'E'     => 18,
                         'F'     => 18,
-                        'G'     => 20,
+                        'G'     => 22,
                         'H'     => 14,
                         'I'     => 18,
                         'J'     => 30,
