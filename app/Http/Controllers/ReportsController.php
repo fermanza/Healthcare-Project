@@ -576,7 +576,7 @@ class ReportsController extends Controller
             $accountIds = array_values($accountIds->toArray());
 
             if(count($accountIds) > 100) {
-                $accountIds = array_slice($accountIds, 0, 100);
+                $accountIds = array_slice($accountIds, 0, 50);
             }
 
             $accounts = Account::whereIn('id', $accountIds)->get();
