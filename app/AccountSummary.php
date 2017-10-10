@@ -54,9 +54,15 @@ class AccountSummary extends Model
         if (! $this->{'Start Date'}) {
             return INF;
         }
-        
+
         $monthDays = 30;
-        $days = Carbon::now()->diffInDays($this->{'Start Date'});
+
+        if($this->{'Start Date'}->gte(Carbon::now())) {
+            $days = 0;
+        } else {
+            $days = Carbon::now()->diffInDays($this->{'Start Date'});
+        }
+        
         $months = $days / $monthDays;
 
         return $months;
