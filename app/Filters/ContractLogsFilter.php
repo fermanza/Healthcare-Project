@@ -217,7 +217,7 @@ class ContractLogsFilter extends Filter
      */
     public function promos($value)
     {
-        $this->query->where('statusId', 7);
+        $this->query->orWhere('statusId', 7);
     }
 
     /**

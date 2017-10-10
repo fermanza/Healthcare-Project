@@ -1529,7 +1529,7 @@ class ReportsController extends Controller
                     });
 
                     $sheet->cell('A24', function($cell) use ($accountInfo) {
-                        $cell->setValue('Physycian');
+                        $cell->setValue('Physician');
                         $cell->setBackground('#d0cece');
                         $cell->setFontWeight('bold');
                         $cell->setAlignment('center');

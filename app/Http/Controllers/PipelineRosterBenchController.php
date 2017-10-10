@@ -73,6 +73,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->isAMD = $request->isAMD ? 1 : 0;
         $rosterBench->isChief = $request->isChief;
         $rosterBench->signedNotStarted = $request->signedNotStarted;
+        $rosterBench->noc = $request->noc;
         $rosterBench->notes = $request->notes;
         $rosterBench->contract = $request->contract;
         $rosterBench->lastUpdated = Carbon::now();
@@ -194,6 +195,8 @@ class PipelineRosterBenchController extends Controller
 
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->contract = $request->contract;
+
+        $rosterBench->noc = $request->noc;
 
         $rosterBench->place = $request->place;
 

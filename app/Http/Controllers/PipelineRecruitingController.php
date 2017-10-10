@@ -66,6 +66,7 @@ class PipelineRecruitingController extends Controller
         $recruiting->contractOut = $request->contractOut;
         $recruiting->contractIn = $request->contractIn;
         $recruiting->firstShift = $request->firstShift;
+        $recruiting->noc = $request->noc;
         $recruiting->notes = $request->notes;
         $recruiting->lastUpdated = Carbon::now();
         $recruiting->lastUpdatedBy = \Auth::id();
@@ -132,6 +133,7 @@ class PipelineRecruitingController extends Controller
         $recruiting->contractIn = $request->contractIn;
         $recruiting->firstShift = $request->firstShift;
         $recruiting->notes = $request->notes;
+        $recruiting->noc = $request->noc;
         $recruiting->lastUpdated = Carbon::now();
         $recruiting->lastUpdatedBy = \Auth::id();
         $recruiting->save();
@@ -209,6 +211,7 @@ class PipelineRecruitingController extends Controller
         $rosterBench->contractIn = $request->contractIn;
         $rosterBench->firstShift = $request->firstShift;
         $rosterBench->notes = $request->notes;
+        $rosterBench->noc = $request->noc;
 
         if ($rosterBench->save()) {
             $recruiting->delete();

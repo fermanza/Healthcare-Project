@@ -78,6 +78,14 @@
                                         </a>
                                     </li>
                                 @endpermission
+                                @permission('admin.accounts.export')
+                                    <li class="{{ route_starts_with('admin.accounts.export') }}">
+                                        <a href="{{ route('admin.accounts.export') }}">
+                                            <i class="fa fa-file-pdf-o"></i>
+                                            <span>@lang('Accounts Batch Print')</span>
+                                        </a>
+                                    </li>
+                                @endpermission
                                 @foreach(Auth::user()->dashboards as $dashboard)
                                     <li>
                                         <a href="{{ 'http://'.$dashboard->url }}" target="_blank">
@@ -86,15 +94,6 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        </li>
-                    @endpermission
-
-                    @permission('admin.accounts.export')
-                        <li class="{{ route_starts_with('admin.accounts.export') }}">
-                            <a href="{{ route('admin.accounts.export') }}">
-                                <i class="fa fa-file-excel-o"></i>
-                                <span>@lang('Accounts Batch Print')</span>
-                            </a>
                         </li>
                     @endpermission
 

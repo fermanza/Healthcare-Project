@@ -563,7 +563,7 @@ class AccountsPipelineController extends Controller
                 ));
 
                 $sheet->setColumnFormat(array(
-                    'I16:I17' => '"$"#,##0.00_-',
+                    'I17:I18' => '"$"#,##0.00_-',
                 ));
 
                 $heights = array();
@@ -576,8 +576,8 @@ class AccountsPipelineController extends Controller
                 $sheet->setHeight(array($rosterBenchRow => 3));
 
                 $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
-                $sheet->getStyle('H4:I13')->applyFromArray($tableStyle);
-                $sheet->getStyle('H14:I17')->applyFromArray($tableStyle);
+                $sheet->getStyle('H4:I14')->applyFromArray($tableStyle);
+                $sheet->getStyle('H15:I18')->applyFromArray($tableStyle);
                 $sheet->getStyle('A4:F'.($rosterBenchRow+1))->applyFromArray($tableStyle);
                 $sheet->getStyle('A'.$benchTable[0].':F'.($benchTable[1]))->applyFromArray($tableStyle);
                 $sheet->getStyle('A'.$recruitingTable[0].':I'.$recruitingTable[1])->applyFromArray($tableStyle);
@@ -879,6 +879,10 @@ class AccountsPipelineController extends Controller
     }
 
     private function createMembersTable($sheet, $account, $accountPrevMonthIncComp, $accountYTDIncComp) {
+        $SMD = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->isSMD;
+        });
+
         $sheet->cell('H4', function($cell) use ($account) {
             $cell->setBackground('#b5c7e6');
             $cell->setValue('Team Members');
@@ -888,15 +892,15 @@ class AccountsPipelineController extends Controller
             $cell->setValignment('center');
         });
 
-        $sheet->cells('H5:H13', function($cells) {
+        $sheet->cells('H5:H14', function($cells) {
             $cells->setBackground('#fff1ce');
         });
 
-        $sheet->cells('H14:I17', function($cells) {
+        $sheet->cells('H15:I18', function($cells) {
             $cells->setBackground('#b5c7e6');
         });
 
-        $sheet->cells('H5:I17', function($cells) {
+        $sheet->cells('H5:I18', function($cells) {
             $cells->setFontFamily('Calibri (Body)');
             $cells->setFontSize(11);
             $cells->setAlignment('center');
@@ -904,90 +908,102 @@ class AccountsPipelineController extends Controller
         });
 
         $sheet->cell('H5', function($cell) use ($account) {
-            $cell->setValue('SVP');
+            $cell->setValue('SMD');
         });
         $sheet->cell('H6', function($cell) use ($account) {
-            $cell->setValue('RMD');
+            $cell->setValue('SVP');
         });
         $sheet->cell('H7', function($cell) use ($account) {
-            $cell->setValue('DOO');
+            $cell->setValue('RMD');
         });
         $sheet->cell('H8', function($cell) use ($account) {
-            $cell->setValue('DCS');
+            $cell->setValue('DOO');
         });
         $sheet->cell('H9', function($cell) use ($account) {
-            $cell->setValue('Recruiter');
+            $cell->setValue('DCS');
         });
         $sheet->cell('H10', function($cell) use ($account) {
-            $cell->setValue('Credentialer');
+            $cell->setValue('Recruiter');
         });
         $sheet->cell('H11', function($cell) use ($account) {
-            $cell->setValue('Scheduler');
+            $cell->setValue('Credentialer');
         });
         $sheet->cell('H12', function($cell) use ($account) {
-            $cell->setValue('Enrollment');
+            $cell->setValue('Scheduler');
         });
         $sheet->cell('H13', function($cell) use ($account) {
-            $cell->setValue('Payroll');
+            $cell->setValue('Enrollment');
         });
         $sheet->cell('H14', function($cell) use ($account) {
-            $cell->setValue('Physician Opens');
+            $cell->setValue('Payroll');
         });
         $sheet->cell('H15', function($cell) use ($account) {
-            $cell->setValue('APP Opens');
+            $cell->setValue('Physician Opens');
         });
         $sheet->cell('H16', function($cell) use ($account) {
-            $cell->setValue('Prev Month - Inc Comp');
+            $cell->setValue('APP Opens');
         });
         $sheet->cell('H17', function($cell) use ($account) {
+            $cell->setValue('Prev Month - Inc Comp');
+        });
+        $sheet->cell('H18', function($cell) use ($account) {
             $cell->setValue('YTD - Inc Comp');
         });
 
-        $sheet->cell('I5', function($cell) use ($account) {
-            $cell->setValue($account->pipeline->svp);
+        $sheet->cell('I5', function($cell) use ($SMD) {
+            if ($SMD->isEmpty()) {
+                $cell->setValue('OPEN');
+                $cell->setBackground('#FFFF00');
+                $cell->setFontWeight('bold');
+            } else {
+                $cell->setValue($SMD->first()->name);
+            }
         });
         $sheet->cell('I6', function($cell) use ($account) {
-            $cell->setValue($account->pipeline->rmd);
+            $cell->setValue($account->pipeline->svp);
         });
         $sheet->cell('I7', function($cell) use ($account) {
-            $cell->setValue($account->pipeline->dca);
+            $cell->setValue($account->pipeline->rmd);
         });
         $sheet->cell('I8', function($cell) use ($account) {
-            $cell->setValue($account->dcs ? $account->dcs->fullName() : '');
+            $cell->setValue($account->pipeline->dca);
         });
         $sheet->cell('I9', function($cell) use ($account) {
-            $cell->setValue($account->recruiter ? $account->recruiter->fullName() : '');
+            $cell->setValue($account->dcs ? $account->dcs->fullName() : '');
         });
         $sheet->cell('I10', function($cell) use ($account) {
-            $cell->setValue($account->credentialer ? $account->credentialer->fullName() : '');
+            $cell->setValue($account->recruiter ? $account->recruiter->fullName() : '');
         });
         $sheet->cell('I11', function($cell) use ($account) {
-            $cell->setValue($account->scheduler ? $account->scheduler->fullName() : '');
+            $cell->setValue($account->credentialer ? $account->credentialer->fullName() : '');
         });
         $sheet->cell('I12', function($cell) use ($account) {
-            $cell->setValue($account->enrollment ? $account->enrollment->fullName() : '');
+            $cell->setValue($account->scheduler ? $account->scheduler->fullName() : '');
         });
         $sheet->cell('I13', function($cell) use ($account) {
-            $cell->setValue($account->payroll ? $account->payroll->fullName() : '');
+            $cell->setValue($account->enrollment ? $account->enrollment->fullName() : '');
         });
         $sheet->cell('I14', function($cell) use ($account) {
+            $cell->setValue($account->payroll ? $account->payroll->fullName() : '');
+        });
+        $sheet->cell('I15', function($cell) use ($account) {
             if ($account->pipeline->practiceTime == 'hours') {
                 $cell->setValue($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves);
             } else {
                 $cell->setValue($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves);
             }
         });
-        $sheet->cell('I15', function($cell) use ($account) {
+        $sheet->cell('I16', function($cell) use ($account) {
             if ($account->pipeline->practiceTime == 'hours') {
                 $cell->setValue($account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves);
             } else {
                 $cell->setValue($account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves);
             }
         });
-        $sheet->cell('I16', function($cell) use ($accountPrevMonthIncComp) {
+        $sheet->cell('I17', function($cell) use ($accountPrevMonthIncComp) {
             $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
         });
-        $sheet->cell('I17', function($cell) use ($accountYTDIncComp) {
+        $sheet->cell('I18', function($cell) use ($accountYTDIncComp) {
             $cell->setValue($accountYTDIncComp->{'YTD - Inc Comp'});
         });
     }
@@ -1102,7 +1118,7 @@ class AccountsPipelineController extends Controller
         }
 
         if(count($activeRosterPhysicians) >= count($activeRosterAPPs)) {
-            $countUntil = count($activeRosterPhysicians) < 13 ? 13 : count($activeRosterPhysicians);
+            $countUntil = count($activeRosterPhysicians) < 14 ? 14 : count($activeRosterPhysicians);
 
             for ($i = 0; $i < $countUntil; $i++) { 
                 if ($account->pipeline->practiceTime == 'hours') {
@@ -1131,7 +1147,7 @@ class AccountsPipelineController extends Controller
                 $rosterBenchCount++;
             }
         } else {
-            $countUntil = count($activeRosterAPPs) < 13 ? 13 : count($activeRosterAPPs);
+            $countUntil = count($activeRosterAPPs) < 14 ? 14 : count($activeRosterAPPs);
 
             for ($i = 0; $i < $countUntil; $i++) {
                 if ($account->pipeline->practiceTime == 'hours') {
@@ -1661,8 +1677,8 @@ class AccountsPipelineController extends Controller
                     $sheet->setHeight($heights);
                     $sheet->setHeight(array($rosterBenchRow => 3));
                     $sheet->getStyle('A1:I2')->applyFromArray($tableStyle);
-                    $sheet->getStyle('H4:I13')->applyFromArray($tableStyle);
-                    $sheet->getStyle('H14:I17')->applyFromArray($tableStyle);
+                    $sheet->getStyle('H4:I14')->applyFromArray($tableStyle);
+                    $sheet->getStyle('H15:I18')->applyFromArray($tableStyle);
                     $sheet->getStyle('A4:F'.($rosterBenchRow+1))->applyFromArray($tableStyle);
                     $sheet->getStyle('A'.$benchTable[0].':F'.($benchTable[1]))->applyFromArray($tableStyle);
                     $sheet->getStyle('A'.$recruitingTable[0].':I'.$recruitingTable[1])->applyFromArray($tableStyle);

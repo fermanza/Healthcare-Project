@@ -638,6 +638,7 @@
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
                                 <th class="mw60">@lang('FT/PTG/EMB')</th>
+                                <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -660,6 +661,10 @@
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
                                 <td class="text-uppercase">@{{ roster.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.noc" @change="updateNoc(roster)">
+                                    <span class="hidden">@{{roster.noc}}</span>
+                                </td>
                                 <td>@{{ moment(roster.interview) }}</td>
                                 <td>@{{ moment(roster.contractOut) }}</td>
                                 <td>@{{ moment(roster.contractIn) }}</td>
@@ -730,6 +735,9 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <input type="checkbox" v-model="rosterPhysician.noc">
+                                </td>
+                                <td>
                                     <input type="text" class="form-control datepicker" v-model="rosterPhysician.interview" />
                                 </td>
                                 <td>
@@ -772,6 +780,7 @@
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
                                 <th class="mw60">@lang('FT/PTG/EMB')</th>
+                                <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -790,6 +799,10 @@
                                 <td>@{{ roster.name }}</td>
                                 <td>@{{ roster.hours }}</td>
                                 <td class="text-uppercase">@{{ roster.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.noc" @change="updateNoc(roster)">
+                                    <span class="hidden">@{{roster.noc}}</span>
+                                </td>
                                 <td>@{{ moment(roster.interview) }}</td>
                                 <td>@{{ moment(roster.contractOut) }}</td>
                                 <td>@{{ moment(roster.contractIn) }}</td>
@@ -857,6 +870,9 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <input type="checkbox" v-model="rosterApps.noc">
+                                </td>
+                                <td>
                                     <input type="text" class="form-control datepicker" v-model="rosterApps.interview" />
                                 </td>
                                 <td>
@@ -903,6 +919,7 @@
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
                                 <th class="mw100">@lang('PRN/Locum')</th>
+                                <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -917,6 +934,10 @@
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="bench.noc" @change="updateNoc(bench)">
+                                    <span class="hidden">@{{bench.noc}}</span>
+                                </td>
                                 <td>@{{ moment(bench.interview) }}</td>
                                 <td>@{{ moment(bench.contractOut) }}</td>
                                 <td>@{{ moment(bench.contractIn) }}</td>
@@ -977,6 +998,9 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <input type="checkbox" v-model="benchPhysician.noc">
+                                </td>
+                                <td>
                                     <input type="text" class="form-control datepicker" v-model="benchPhysician.interview" />
                                 </td>
                                 <td>
@@ -1018,6 +1042,7 @@
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
                                 <th class="mw100">@lang('PRN/Locum')</th>
+                                <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -1032,6 +1057,10 @@
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="bench.noc" @change="updateNoc(bench)">
+                                    <span class="hidden">@{{bench.noc}}</span>
+                                </td>
                                 <td>@{{ moment(bench.interview) }}</td>
                                 <td>@{{ moment(bench.contractOut) }}</td>
                                 <td>@{{ moment(bench.contractIn) }}</td>
@@ -1092,6 +1121,9 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <input type="checkbox" v-model="benchApps.noc">
+                                </td>
+                                <td>
                                     <input type="text" class="form-control datepicker" v-model="benchApps.interview" />
                                 </td>
                                 <td>
@@ -1137,6 +1169,7 @@
                                 <th class="mw60">@lang('PHYS/APP')</th>
                                 <th class="mw200">@lang('Name')</th>
                                 <th class="mw60">@lang('FT/PT/EMB')</th>
+                                <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
@@ -1150,6 +1183,10 @@
                                 <td class="text-uppercase">@{{ recruiting.type }}</td>
                                 <td>@{{ recruiting.name }}</td>
                                 <td class="text-uppercase">@{{ recruiting.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="recruiting.noc" @change="updateRecruitingNoc(recruiting)">
+                                    <span class="hidden">@{{recruiting.noc}}</span>
+                                </td>
                                 <td>@{{ moment(recruiting.interview) }}</td>
                                 <td>@{{ moment(recruiting.contractOut) }}</td>
                                 <td>@{{ moment(recruiting.contractIn) }}</td>
@@ -1211,6 +1248,9 @@
                                             <option value="{{ $contractType }}">{{ $name }}</option>
                                         @endforeach
                                     </select>
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="newRecruiting.noc">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="newRecruiting.interview" />
@@ -2482,6 +2522,39 @@
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
                     axios.patch(endpoint, roster)
+                        .then(function (response) {
+                            
+                        }.bind(this));
+                },
+
+                updateNoc: function(roster) {
+                    roster.interview = this.moment(roster.interview);
+                    roster.contractIn = this.moment(roster.contractIn);
+                    roster.contractOut = this.moment(roster.contractOut);
+                    roster.firstShift = this.moment(roster.firstShift);
+                    roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
+                    roster.privilegeGoal = this.moment(roster.privilegeGoal);
+                    roster.appToHospital = this.moment(roster.appToHospital);
+                    
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+
+                    axios.patch(endpoint, roster)
+                        .then(function (response) {
+                            
+                        }.bind(this));
+                },
+
+                updateRecruitingNoc: function(recruiting) {
+                    recruiting.interview = this.moment(recruiting.interview);
+                    recruiting.application = this.moment(recruiting.application);
+                    recruiting.contractOut = this.moment(recruiting.contractOut);
+                    recruiting.declined = this.moment(recruiting.declined);
+                    recruiting.contractIn = this.moment(recruiting.contractIn);
+                    recruiting.firstShift = this.moment(recruiting.firstShift);
+
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id;
+
+                    axios.patch(endpoint, recruiting)
                         .then(function (response) {
                             
                         }.bind(this));
