@@ -1034,14 +1034,32 @@ class ReportsController extends Controller
                 ]);
 
                 if ($account->pipeline->practiceTime == "hours") {
-                    $percentRecruitedPhys = ($account->pipeline->staffPhysicianFTEHaves / $account->pipeline->staffPhysicianFTENeeds) * 100;
-                    $percentRecruitedApp = ($account->pipeline->staffAppsFTEHaves / $account->pipeline->staffAppsFTENeeds) * 100;
+                    if ($account->pipeline->staffPhysicianFTENeeds == 0) {
+                        $percentRecruitedPhys = 0;
+                    } else {
+                        $percentRecruitedPhys = ($account->pipeline->staffPhysicianFTEHaves / $account->pipeline->staffPhysicianFTENeeds) * 100;
+                    }
+                    
+                    if ($account->pipeline->staffAppsFTENeeds == 0) {
+                        $percentRecruitedApp = 0;
+                    } else {
+                        $percentRecruitedApp = ($account->pipeline->staffAppsFTEHaves / $account->pipeline->staffAppsFTENeeds) * 100;
+                    }
 
                     $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;
                     $percentRecruitedAppReport = $percentRecruitedApp > 100 ? 100 : $percentRecruitedApp;
                 } else {
-                    $percentRecruitedPhys = ($account->pipeline->staffPhysicianFTEHaves / $account->pipeline->staffPhysicianNeeds) * 100;
-                    $percentRecruitedApp = ($account->pipeline->staffAppsFTEHaves / $account->pipeline->staffAppsNeeds) * 100;
+                    if ($account->pipeline->staffPhysicianNeeds == 0) {
+                        $percentRecruitedPhys = 0;
+                    } else {
+                        $percentRecruitedPhys = ($account->pipeline->staffPhysicianFTEHaves / $account->pipeline->staffPhysicianNeeds) * 100;
+                    }
+
+                    if ($account->pipeline->staffAppsNeeds == 0) {
+                        $percentRecruitedApp = 0;
+                    } else {
+                        $percentRecruitedApp = ($account->pipeline->staffAppsFTEHaves / $account->pipeline->staffAppsNeeds) * 100;
+                    }
 
                     $percentRecruitedPhysReport = $percentRecruitedPhys > 100 ? 100 : $percentRecruitedPhys;
                     $percentRecruitedAppReport = $percentRecruitedApp > 100 ? 100 : $percentRecruitedApp;
