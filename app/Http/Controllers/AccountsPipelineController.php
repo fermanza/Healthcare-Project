@@ -1430,7 +1430,7 @@ class AccountsPipelineController extends Controller
         if(count($queryString) == 0) {
             $accounts = [];
         } else {
-            $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
+            $accounts = Account::select('tAccount.id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
                 ->withGlobalScope('role', new AccountScope)
                 ->with([
                     'rsc',
@@ -1459,8 +1459,8 @@ class AccountsPipelineController extends Controller
 
             $ids = $request->ids;
 
-            if(count($ids) > 100) {
-                $ids = array_slice($ids, 0, 100);
+            if(count($ids) > 200) {
+                $ids = array_slice($ids, 0, 200);
             }
 
             $accounts = Account::whereIn('id', $ids)->get();

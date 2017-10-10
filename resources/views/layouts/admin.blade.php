@@ -89,6 +89,15 @@
                         </li>
                     @endpermission
 
+                    @permission('admin.accounts.export')
+                        <li class="{{ route_starts_with('admin.accounts.export') }}">
+                            <a href="{{ route('admin.accounts.export') }}">
+                                <i class="fa fa-file-excel-o"></i>
+                                <span>@lang('Accounts Batch Print')</span>
+                            </a>
+                        </li>
+                    @endpermission
+
                     @permission('admin.users.index')
                         <li class="{{ route_starts_with('admin.users') }}">
                             <a href="{{ route('admin.users.index') }}">
@@ -121,15 +130,6 @@
                             <a href="{{ route('admin.accounts.index') }}">
                                 <i class="fa fa-hospital-o"></i>
                                 <span>@lang('Accounts')</span>
-                            </a>
-                        </li>
-                    @endpermission
-
-                    @permission('admin.accounts.export')
-                        <li class="{{ route_starts_with('admin.accounts.export') }}">
-                            <a href="{{ route('admin.accounts.export') }}">
-                                <i class="fa fa-file-excel-o"></i>
-                                <span>@lang('Accounts Summary Export')</span>
                             </a>
                         </li>
                     @endpermission
