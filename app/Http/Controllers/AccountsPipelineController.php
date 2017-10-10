@@ -1430,7 +1430,7 @@ class AccountsPipelineController extends Controller
         if(count($queryString) == 0) {
             $accounts = [];
         } else {
-            $accounts = Account::select('tAccount.id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
+            $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
                 ->withGlobalScope('role', new AccountScope)
                 ->with([
                     'rsc',

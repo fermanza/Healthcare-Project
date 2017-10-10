@@ -26,7 +26,7 @@ class AccountFilter extends Filter
     public function practices($ids)
     {
         $this->query->whereHas('practices', function($query) use ($ids) {
-            $query->whereIn('id', $ids);
+            $query->whereIn('practiceId', $ids);
         });
     }
 
