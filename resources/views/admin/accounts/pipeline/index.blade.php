@@ -694,7 +694,7 @@
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="switchRosterBenchTo(roster, 'recruiting')"
+                                            @click="switchRosterBenchTo(roster, 'recruiting', 'phys')"
                                         >
                                             @lang('Recruiting')
                                         </button>
@@ -840,7 +840,7 @@
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="switchRosterBenchTo(roster, 'recruiting')"
+                                            @click="switchRosterBenchTo(roster, 'recruiting', 'app')"
                                         >
                                             @lang('Recruiting')
                                         </button>
@@ -983,7 +983,7 @@
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="switchRosterBenchTo(bench, 'recruiting')"
+                                            @click="switchRosterBenchTo(bench, 'recruiting', 'phys')"
                                         >
                                             @lang('Recruiting')
                                         </button>
@@ -1114,7 +1114,7 @@
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="switchRosterBenchTo(bench, 'recruiting')"
+                                            @click="switchRosterBenchTo(bench, 'recruiting', 'app')"
                                         >
                                             @lang('Recruiting')
                                         </button>
@@ -2272,8 +2272,9 @@
                     _.assignIn(this[object], credentialing);
                 },
 
-                switchRosterBenchTo: function (rosterBench, place) {
+                switchRosterBenchTo: function (rosterBench, place, type = null) {
                     rosterBench.place = place;
+                    rosterBench.type = type;
 
                     rosterBench.interview = this.moment(rosterBench.interview);
                     rosterBench.contractIn = this.moment(rosterBench.contractIn);
