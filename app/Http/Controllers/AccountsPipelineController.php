@@ -1475,8 +1475,8 @@ class AccountsPipelineController extends Controller
 
             $ids = $request->ids;
 
-            if(count($ids) > 200) {
-                $ids = array_slice($ids, 0, 200);
+            if(count($ids) > 150) {
+                $ids = array_slice($ids, 0, 150);
             }
 
             $accounts = Account::whereIn('id', $ids)->get();

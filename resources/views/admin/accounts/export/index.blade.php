@@ -90,7 +90,7 @@
     <form action="{{route('admin.accounts.export.pdf')}}" method="POST" id="bulkExportForm">
         {{ csrf_field() }}
         <div class="table-responsive mh400">
-            <table class="table table-hover table-bordered datatable iscroll">
+            <table class="table table-hover table-bordered summary-datatable iscroll">
                 <thead>
                     <tr>
                         <th class="mw200 w100">@lang('Name')</th>
