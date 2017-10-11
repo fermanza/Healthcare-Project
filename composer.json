@@ -7,17 +7,18 @@
     "require": {
         "php": ">=5.6.4",
         "barryvdh/laravel-debugbar": "2.4.0",
+        "chumper/zipper": "1.0.*",
         "dompdf/dompdf": "0.6.1",
-        "mpdf/mpdf": "~6.1",
         "laracasts/presenter": "^0.2.1",
         "laracasts/utilities": "^2.1",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "maatwebsite/excel": "~2.1.0",
+        "mpdf/mpdf": "~6.1",
         "phpoffice/phpword": "dev-develop",
-        "santigarcor/laratrust": "^4.0",
-        "chumper/zipper": "1.0.*"
+        "predis/predis": "^1.1",
+        "santigarcor/laratrust": "^4.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

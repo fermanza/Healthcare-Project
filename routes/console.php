@@ -181,19 +181,12 @@ Artisan::command('export-contract-logs {email} {--queue}', function ($email) {
     $file = new Illuminate\Filesystem\Filesystem;
     $file->deleteDirectory(public_path('contract_logs'));
 
-    \Mail::raw('', function ($message) use ($email) {
-        $message->from('envision@app.com', 'Envision');
+    $zip = public_path('contract_logs.zip');
 
-        $message->to($email)->subject('Contract Logs');
+    $user = new App\User;
+    $user->email = $email;
 
-        $message->attach(public_path('contract_logs.zip'));
-    });
-
-    if (\Mail::failures()) {
-        // return response showing failed emails
-    } else {
-        $file->delete(public_path('contractLogs.zip'));
-    }
+    $user->notify(new App\Notifications\ContractLogNotification($zip));
     
 })->describe('Download an excel file with all contract logs');
 

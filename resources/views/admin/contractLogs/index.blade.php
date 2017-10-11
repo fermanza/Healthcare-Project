@@ -309,9 +309,9 @@
             var data = {_token: "{{ csrf_token() }}", email: email};
 
             if (validateEmail(email)) {
-                $.post("{{ route('admin.contractLogs.exportAll') }}", data, function( data ) {
-                    console.log( data ); // John
-                }, "json");
+                $.post("{{ route('admin.contractLogs.exportAll') }}", data).done(function( data ) {
+                    alert('Please check your email in around 5 minutes.');
+                });
             } else {
                 alert("Please type a valid email.");
             }
