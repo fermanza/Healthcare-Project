@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Account;
 use App\PipelineRosterBench;
+use App\PipelineRecruiting;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
@@ -283,5 +284,34 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->delete();
 
         return $rosterBench;
+    }
+
+    /**
+     * Switch specified recruiting to rosterbench.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @param  \App\PipelineRosterBench  $rosterBench
+     * @return \Illuminate\Http\Response
+     */
+    public function switch(Request $request, Account $account, PipelineRosterBench $rosterBench)
+    {
+        $recruiting = new PipelineRecruiting;
+        $recruiting->pipelineId = $request->pipelineId;
+        $recruiting->type = $request->type;
+        $recruiting->name = $request->name;
+        $recruiting->contract = $request->contract;
+        $recruiting->interview = $request->interview;
+        $recruiting->contractOut = $request->contractOut;
+        $recruiting->contractIn = $request->contractIn;
+        $recruiting->firstShift = $request->firstShift;
+        $recruiting->notes = $request->notes;
+        $recruiting->noc = $request->noc;
+
+        if ($recruiting->save()) {
+            $rosterBench->delete();
+
+            return $recruiting;
+        }
     }
 }
