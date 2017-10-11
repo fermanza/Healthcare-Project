@@ -381,9 +381,13 @@ class ContractLogsController extends Controller
             ->where('tContractLogs.active', true)->filter($filter)->paginate($results);
     }
 
-    public function exportAll() {
-        \Artisan::call('export-contract-logs');
+    public function exportAll(Request $request) {
+        $email = $request->email;
 
-        return response()->download(public_path('contractLogs/Contract Logs.xlsx'))->deleteFileAfterSend(true);
+        $exitCode = \Artisan::call('export-contract-logs', [
+            'email' => $email
+        ]);
+
+        dd($exitCode);
     }
 }

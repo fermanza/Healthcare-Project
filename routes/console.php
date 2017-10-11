@@ -22,7 +22,7 @@ Artisan::command('set-new-routes', function () {
     App\Permission::reguard();
 })->describe('Register any new route to the Permissions table');
 
-Artisan::command('export-contract-logs', function () {
+Artisan::command('export-contract-logs {email}', function ($email) {
 
     $count = 1;
 
@@ -180,6 +180,20 @@ Artisan::command('export-contract-logs', function () {
 
     $file = new Illuminate\Filesystem\Filesystem;
     $file->deleteDirectory(public_path('contract_logs'));
+
+    \Mail::raw('', function ($message) use ($email) {
+        $message->from('envision@app.com', 'Envision');
+
+        $message->to($email)->subject('Contract Logs');
+
+        $message->attach(public_path('contract_logs.zip'));
+    });
+
+    if (\Mail::failures()) {
+        // return response showing failed emails
+    } else {
+        $file->delete(public_path('contractLogs.zip'));
+    }
     
 })->describe('Download an excel file with all contract logs');
 

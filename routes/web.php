@@ -89,6 +89,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->resource('positionTypes', 'PositionTypesController', ['except' => 'show']);
     $router->resource('employees', 'EmployeesController', ['except' => 'show']);
     
+    $router->post('contractLogs/exportAll', 'ContractLogsController@exportAll')->name('contractLogs.exportAll');
     $router->get('contractLogs/excel', 'ContractLogsController@exportToExcel')->name('contractLogs.excel');
     $router->resource('contractLogs', 'ContractLogsController', ['except' => 'show']);
 });
