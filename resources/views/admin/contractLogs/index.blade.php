@@ -310,6 +310,9 @@
 
             if (validateEmail(email)) {
                 $.post("{{ route('admin.contractLogs.exportAll') }}", data).done(function( data ) {
+                    $('#emailToExport').val('');
+                    $('#exportModal').modal('toggle');
+                    
                     alert('Please check your email in around 5 minutes.');
                 });
             } else {
