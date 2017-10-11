@@ -388,4 +388,12 @@ class ContractLogsController extends Controller
             'email' => $email
         ]);
     }
+
+    public function downloadZip(Request $request) {
+        $timestamp = $request->timestamp;
+
+        $file = public_path('contract_logs_'.$timestamp.'.zip');
+
+        return response()->download($file)->deleteFileAfterSend(true);
+    }
 }

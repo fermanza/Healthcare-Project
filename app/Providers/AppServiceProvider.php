@@ -15,10 +15,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Carbon::setToStringFormat('m/d/Y H:i:s');
-
-        \Queue::failing(function (JobFailed $event) {
-            \Log::error($event->exception);
-        });
     }
 
     /**

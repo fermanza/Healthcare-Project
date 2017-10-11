@@ -90,6 +90,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->resource('employees', 'EmployeesController', ['except' => 'show']);
     
     $router->post('contractLogs/exportAll', 'ContractLogsController@exportAll')->name('contractLogs.exportAll');
+    $router->get('contractLogs/download', 'ContractLogsController@downloadZip')->name('contractLogs.downloadZip');
     $router->get('contractLogs/excel', 'ContractLogsController@exportToExcel')->name('contractLogs.excel');
     $router->resource('contractLogs', 'ContractLogsController', ['except' => 'show']);
 });

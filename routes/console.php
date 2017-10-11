@@ -174,19 +174,19 @@ Artisan::command('export-contract-logs {email} {--queue}', function ($email) {
     $zipper = new \Chumper\Zipper\Zipper;
 
     $files = glob(public_path('contract_logs/*'));
-    $zipper->make(public_path('contract_logs.zip'))->add($files)->close();
+
+    $timestamp = \Carbon\Carbon::now()->timestamp;
+    $zipper->make(public_path('contract_logs_'.$timestamp.'.zip'))->add($files)->close();
 
     $this->line('Zip Created');
 
     $file = new Illuminate\Filesystem\Filesystem;
     $file->deleteDirectory(public_path('contract_logs'));
 
-    $zip = public_path('contract_logs.zip');
-
     $user = new App\User;
     $user->email = $email;
 
-    $user->notify(new App\Notifications\ContractLogNotification($zip));
+    $user->notify(new App\Notifications\ContractLogNotification($timestamp));
     
 })->describe('Download an excel file with all contract logs');
 

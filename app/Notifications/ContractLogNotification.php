@@ -11,16 +11,16 @@ class ContractLogNotification extends Notification
 {
     use Queueable;
 
-    protected $zip;
+    protected $timestamp;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($zip)
+    public function __construct($timestamp)
     {
-        $this->zip = $zip;
+        $this->timestamp = $timestamp;
     }
 
     /**
@@ -44,8 +44,8 @@ class ContractLogNotification extends Notification
     {
         return (new MailMessage)
                     ->subject('Contract Logs Zip')
-                    ->attach($this->zip)
-                    ->line('Here is your zip file');
+                    ->line('Please download the zip file from the link below.')
+                    ->line(route('admin.contractLogs.downloadZip', ["timestamp" => $this->timestamp]));
     }
 
     /**
