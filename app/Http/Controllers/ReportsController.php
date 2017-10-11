@@ -1140,7 +1140,7 @@ class ReportsController extends Controller
 
 
                 $sheetName = (strlen($account->name) > 31) ? substr($account->name,0,28).'...' : $account->name;
-                $sheetName = htmlspecialchars($sheetName);
+                $sheetName = str_replace("/", "_", $sheetName);
 
                 $excel->sheet($sheetName, function($sheet) use ($account, $percentRecruitedPhys, $percentRecruitedApp, $percentRecruitedPhysReport, $percentRecruitedAppReport, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $recruitings, $locums, $declines, $resigneds, $credentialersPhys, $credentialersAPP, $SMDOpen, $AMDOpen){
 
