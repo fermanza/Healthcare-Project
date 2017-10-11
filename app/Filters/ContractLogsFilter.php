@@ -206,23 +206,7 @@ class ContractLogsFilter extends Filter
      */
     public function pending($value)
     {
-        $filters = array_filter($this->request->all(), function($filter){
-            return !is_null($filter);
-        });
-        $filters = array_keys($filters);
-
-        $haystack = array('practices', 'divisions', 'statuses', 'recruiters', 'managers', 'owners',
-            'positions', 'accounts', 'regions', 'RSCs', 'provider', 'contractOutDate', 'contractInDate',
-            'signedNotStarted'
-        );
-
-        if(count(array_intersect($haystack, $filters)) > 0){
-            $this->query->orWhere(function($query) {
-                $query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate');
-            });
-        } else {
-            $this->query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate');
-        }
+        $this->query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate');
     }
 
     /**
@@ -233,21 +217,7 @@ class ContractLogsFilter extends Filter
      */
     public function placements($value)
     {
-        $filters = array_filter($this->request->all(), function($filter){
-            return !is_null($filter);
-        });
-        $filters = array_keys($filters);
-
-        $haystack = array('practices', 'divisions', 'statuses', 'recruiters', 'managers', 'owners',
-            'positions', 'accounts', 'regions', 'RSCs', 'provider', 'contractOutDate', 'contractInDate',
-            'signedNotStarted'
-        );
-
-        if(count(array_intersect($haystack, $filters)) > 0){
-            $this->query->orWhere('tContractLogs.value', '>', 0);   
-        } else {
-            $this->query->where('tContractLogs.value', '>', 0);
-        }
+        $this->query->where('tContractLogs.value', '>', 0);
     }
 
     /**
@@ -258,21 +228,7 @@ class ContractLogsFilter extends Filter
      */
     public function promos($value)
     {
-        $filters = array_filter($this->request->all(), function($filter){
-            return !is_null($filter);
-        });
-        $filters = array_keys($filters);
-
-        $haystack = array('practices', 'divisions', 'statuses', 'recruiters', 'managers', 'owners',
-            'positions', 'accounts', 'regions', 'RSCs', 'provider', 'contractOutDate', 'contractInDate',
-            'signedNotStarted'
-        );
-
-        if(count(array_intersect($haystack, $filters)) > 0){
-            $this->query->orWhere('statusId', 7);
-        } else {
-            $this->query->where('statusId', 7);
-        }
+        $this->query->where('statusId', 7);
     }
 
     /**
