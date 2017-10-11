@@ -22,7 +22,7 @@ Artisan::command('set-new-routes', function () {
     App\Permission::reguard();
 })->describe('Register any new route to the Permissions table');
 
-Artisan::command('export-contract-logs {email}', function ($email) {
+Artisan::command('export-contract-logs {email} {--queue}', function ($email) {
 
     $count = 1;
 

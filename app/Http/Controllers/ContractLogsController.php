@@ -18,6 +18,7 @@ use App\AccountEmployee;
 use App\EmployementStatus;
 use App\ProviderDesignation;
 use App\Practice;
+use App\Jobs\exportAllContractLogs;
 use App\Scopes\ContractLogScope;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
@@ -384,10 +385,8 @@ class ContractLogsController extends Controller
     public function exportAll(Request $request) {
         $email = $request->email;
 
-        $exitCode = \Artisan::call('export-contract-logs', [
-            'email' => $email
-        ]);
+        $this->dispatch(new exportAllContractLogs($email));
 
-        dd($exitCode);
+        return array('response', 'job created');
     }
 }
