@@ -51,7 +51,41 @@ class ReportsController extends Controller
 
         $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'action');
 
-        return view('admin.reports.index', $params);
+        return view('admin.reports.summary.index', $params);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function usage(SummaryFilter $filter, Request $request)
+    {
+
+        $queryString = $request->query();
+
+        if(count($queryString) == 0) {
+            $maxDate = AccountSummary::max('MonthEndDate');
+
+            $maxDate = Carbon::parse($maxDate)->format('m-Y');
+
+            return redirect()->route('admin.reports.usage.index', ['monthEndDate' => $maxDate]);
+        }
+
+        $accounts = $this->getUsageData($filter, 500);
+        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+        $practices = Practice::where('active', true)->orderBy('name')->get();
+        $divisions = Division::where('active', true)->orderBy('name')->get();
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
+        $affiliations = SystemAffiliation::all();
+        $regions = Region::where('active', true)->orderBy('name')->get();
+        $states = StateAbbreviation::all();
+        
+        $dates = AccountSummary::select('MonthEndDate')->get()->unique('MonthEndDate');
+
+        $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'action');
+
+        return view('admin.reports.usage.index', $params);
     }
 
     /**
@@ -59,7 +93,7 @@ class ReportsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function toggleScope(Request $request)
+    public function toggleScopeSummary(Request $request)
     {
         $ignore = session('ignore-summary-role-scope', false);
 
@@ -2464,6 +2498,13 @@ class ReportsController extends Controller
 
     private function getSummaryData(SummaryFilter $filter, $pages) {
         return AccountSummary::withGlobalScope('role', new AccountSummaryScope)->with('account')->filter($filter)->paginate($pages);
+    }
+
+    private function getUsageData(SummaryFilter $filter, $pages) {
+        return AccountSummary::withGlobalScope('role', new AccountSummaryScope)
+        ->with(['account.pipeline' => function($query) {
+            $query->with('rostersBenchs', 'recruitings', 'locums');
+        }])->filter($filter)->paginate($pages);
     }
 
     private function createRecruitingTable($sheet, $account, $benchTableStartData, $recruitings) {

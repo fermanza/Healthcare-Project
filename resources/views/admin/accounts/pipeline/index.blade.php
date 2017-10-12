@@ -326,6 +326,17 @@
                                 </td>
                                 <td>&nbsp;</td>
                             </tr>
+                            <tr>
+                                <td>@lang('SMD Opening')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="SMDOpenings" v-model="SMDOpenings" readonly />
+                                    <span class="visible-print">@{{ SMDOpenings }}</span>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
                         </tbody>
                         <tbody v-show="pipeline.practiceTime == 'fte'" v-cloak>
                             <tr>
@@ -429,6 +440,17 @@
                                 <td>
                                     <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedAppReport, 1) }}%" readonly />
                                 </td>
+                                <td>&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td>@lang('SMD Opening')</td>
+                                <td>
+                                    <input type="text" class="form-control hidden-print" name="SMDOpenings" v-model="SMDOpenings" readonly />
+                                    <span class="visible-print">@{{ SMDOpenings }}</span>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
                         </tbody>
@@ -692,6 +714,14 @@
                                         </button>
                                     @endpermission
 
+                                    @permission('admin.accounts.pipeline.rosterBench.switch')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="switchRosterBenchTo(roster, 'recruiting', 'phys')"
+                                        >
+                                            @lang('Recruiting')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
                                             @click="editRosterBench(roster, 'rosterPhysician')"
@@ -830,6 +860,14 @@
                                         </button>
                                     @endpermission
 
+                                    @permission('admin.accounts.pipeline.rosterBench.switch')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="switchRosterBenchTo(roster, 'recruiting', 'app')"
+                                        >
+                                            @lang('Recruiting')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
                                             @click="editRosterBench(roster, 'rosterApps')"
@@ -965,6 +1003,14 @@
                                         </button>
                                     @endpermission
 
+                                    @permission('admin.accounts.pipeline.rosterBench.switch')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="switchRosterBenchTo(bench, 'recruiting', 'phys')"
+                                        >
+                                            @lang('Recruiting')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
                                             @click="editRosterBench(bench, 'benchPhysician')"
@@ -1085,6 +1131,14 @@
                                             @click="switchRosterBenchTo(bench, 'roster')"
                                         >
                                             @lang('Roster')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.switch')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="switchRosterBenchTo(bench, 'recruiting', 'app')"
+                                        >
+                                            @lang('Recruiting')
                                         </button>
                                     @endpermission
 
@@ -1905,6 +1959,14 @@
             },
 
             computed: {
+                SMDOpenings: function () {
+                    var SMD = _.chain(this.pipeline.rostersBenchs)
+                        .filter({ isSMD: 1 })
+                        .value();
+
+                    return this.account.hasSMD ? (SMD.length ? 0 : 1) : 0;
+                },
+
                 staffPhysicianHaves: function () {
                     var result = 0;
 
@@ -2240,20 +2302,28 @@
                     _.assignIn(this[object], credentialing);
                 },
 
-                switchRosterBenchTo: function (rosterBench, place) {
+                switchRosterBenchTo: function (rosterBench, place, type = null) {
                     rosterBench.place = place;
+                    rosterBench.type = type;
 
                     rosterBench.interview = this.moment(rosterBench.interview);
                     rosterBench.contractIn = this.moment(rosterBench.contractIn);
                     rosterBench.contractOut = this.moment(rosterBench.contractOut);
                     rosterBench.firstShift = this.moment(rosterBench.firstShift);
 
-                    axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, rosterBench
-                    )
+                    if (place == 'recruiting') {
+                        axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id + '/switch', rosterBench)
+                        .then(function (response) {
+                            this.pipeline.recruitings.push(response.data);
+                            this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': rosterBench.id });
+                        }.bind(this));
+                    } else {
+                        axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, rosterBench)
                         .then(function (response) {
                             var newRosterBench = response.data;
                             _.assignIn(rosterBench, newRosterBench);
                         }.bind(this));
+                    }
                 },
 
                 deleteRosterBench: function (rosterBench) {

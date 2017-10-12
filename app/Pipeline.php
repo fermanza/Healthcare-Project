@@ -12,6 +12,15 @@ class Pipeline extends Model
     protected $table = 'tAccountPipeline';
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'lastUpdated'
+    ];
+
+    /**
      * Get the Roster Physicians for the Pipeline.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -39,5 +48,22 @@ class Pipeline extends Model
     public function locums()
     {
         return $this->hasMany(PipelineLocum::class, 'pipelineId');
+    }
+
+    public function lastUpdate() {
+        return $this->rostersBenchs->concat($this->recruitings)->concat($this->locums)
+        ->sortByDesc(function ($relationship) {
+            return $relationship->lastUpdated;
+        })->first();
+    }
+
+    /**
+     * Get user who updated.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'lastUpdatedBy');
     }
 }

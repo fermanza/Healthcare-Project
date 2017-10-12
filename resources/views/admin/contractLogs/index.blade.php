@@ -13,10 +13,10 @@
         </a>
     @endpermission
     @permission('admin.contractLogs.exportAll')
-        <button type="submit" class="btn btn-sm btn-info" data-toggle="modal" data-target="#exportModal">
+        <a href="{{ route('admin.contractLogs.exportAll') }}" type="submit" class="btn btn-sm btn-info">
             <i class="fa fa-file-zip-o"></i>
             @lang('Export All Records')
-        </button>
+        </a>
     @endpermission
     @permission('admin.contractLogs.create')
         <a href="{{ route('admin.contractLogs.create') }}" class="btn btn-sm btn-success">
@@ -247,27 +247,6 @@
             </tbody>
         </table>
     </div>
-    <div class="modal fade" id="exportModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">
-                        @lang('Resign')
-                        Export All Contract Logs
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <label>Email: </label>
-                    <input type="text" id="emailToExport" class="form-control">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button class="btn btn-success" id="exportAllRecords">Send</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     @if ($contractLogs->total() > 0 && $contractLogs->count() <= 0)
         <div class="well well-sm">
@@ -296,28 +275,3 @@
     </div>
 </div>
 @endsection
-
-@push('scripts')
-    <script>
-        function validateEmail(email) {
-          var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-          return re.test(email);
-        }
-
-        $('#exportAllRecords').on('click', function() {
-            var email = $('#emailToExport').val();
-            var data = {_token: "{{ csrf_token() }}", email: email};
-
-            if (validateEmail(email)) {
-                $.post("{{ route('admin.contractLogs.exportAll') }}", data).done(function( data ) {
-                    $('#emailToExport').val('');
-                    $('#exportModal').modal('toggle');
-                    
-                    alert('Please check your email in around 5 minutes.');
-                });
-            } else {
-                alert("Please type a valid email.");
-            }
-        });
-    </script>
-@endpush

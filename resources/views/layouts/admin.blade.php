@@ -86,6 +86,14 @@
                                         </a>
                                     </li>
                                 @endpermission
+                                @permission('admin.accounts.export')
+                                    <li class="{{ route_starts_with('admin.reports.usage') }}">
+                                        <a href="{{ route('admin.reports.usage.index') }}">
+                                            <i class="fa fa-file-excel-o"></i>
+                                            <span>@lang('Recruitment Update Report')</span>
+                                        </a>
+                                    </li>
+                                @endpermission
                                 @foreach(Auth::user()->dashboards as $dashboard)
                                     <li>
                                         <a href="{{ 'http://'.$dashboard->url }}" target="_blank">

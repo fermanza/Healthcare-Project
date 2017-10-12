@@ -23,7 +23,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
 
     $router->get('accounts/toggleScope', 'AccountsController@toggleScope')->name('accounts.toggleScope');
     $router->get('contractLogs/toggleScope', 'ContractLogsController@toggleScope')->name('contractLogs.toggleScope');
-    $router->get('reports/summary/toggleScope', 'ReportsController@toggleScope')->name('summaryReport.toggleScope');
+    $router->get('reports/summary/toggleScope', 'ReportsController@toggleScopeSummary')->name('summaryReport.toggleScope');
 
     $router->get('sidebar-collapse', 'SidebarController@collapse');
     $router->get('sidebar-expand', 'SidebarController@expand');
@@ -35,6 +35,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'acl']], function ($router) {
 
     $router->get('reports/summary', 'ReportsController@summary')->name('reports.summary.index');
+    $router->get('reports/usage', 'ReportsController@usage')->name('reports.usage.index');
     $router->get('reports/summary/excel', 'ReportsController@exportToExcel')->name('reports.summary.excel');
     $router->get('reports/summary/excel/detail', 'ReportsController@exportToExcelDetailed')->name('reports.summary.excel.details');
 
@@ -90,7 +91,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->resource('positionTypes', 'PositionTypesController', ['except' => 'show']);
     $router->resource('employees', 'EmployeesController', ['except' => 'show']);
     
-    $router->post('contractLogs/exportAll', 'ContractLogsController@exportAll')->name('contractLogs.exportAll');
+    $router->get('contractLogs/exportAll', 'ContractLogsController@exportAll')->name('contractLogs.exportAll');
     $router->get('contractLogs/download', 'ContractLogsController@downloadZip')->name('contractLogs.downloadZip');
     $router->get('contractLogs/excel', 'ContractLogsController@exportToExcel')->name('contractLogs.excel');
     $router->resource('contractLogs', 'ContractLogsController', ['except' => 'show']);

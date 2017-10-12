@@ -32,6 +32,7 @@ class PipelineLocum extends Model
         'contractOut',
         'startDate',
         'declined',
+        'lastUpdated'
     ];
 
     /**
@@ -42,5 +43,15 @@ class PipelineLocum extends Model
     public function getInstanceAttribute()
     {
         return 'locum';
+    }
+
+    /**
+     * Get user who updated.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'lastUpdatedBy');
     }
 }

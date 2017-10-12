@@ -31,7 +31,8 @@ class PipelineRecruiting extends Model
         'contractIn',
         'contractOut',
         'firstShift',
-        'declined'
+        'declined',
+        'lastUpdated'
     ];
 
     /**
@@ -42,5 +43,15 @@ class PipelineRecruiting extends Model
     public function getInstanceAttribute()
     {
         return 'recruiting';
+    }
+
+    /**
+     * Get user who updated.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'lastUpdatedBy');
     }
 }

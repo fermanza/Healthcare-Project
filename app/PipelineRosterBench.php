@@ -31,6 +31,17 @@ class PipelineRosterBench extends Model
         'lastShift',
         'fileToCredentialing',
         'privilegeGoal',
-        'appToHospital'
+        'appToHospital',
+        'lastUpdated'
     ];
+
+    /**
+     * Get user who updated.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'lastUpdatedBy');
+    }
 }

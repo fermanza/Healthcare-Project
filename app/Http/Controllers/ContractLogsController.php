@@ -23,6 +23,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Filters\ContractLogsFilter;
 use App\Http\Requests\ContractLogRequest;
+use Illuminate\Filesystem\Filesystem;
 
 class ContractLogsController extends Controller
 {
@@ -381,19 +382,30 @@ class ContractLogsController extends Controller
             ->where('tContractLogs.active', true)->filter($filter)->paginate($results);
     }
 
-    public function exportAll(Request $request) {
-        $email = $request->email;
+    public function exportAll() {
+        $email = \Auth::user()->email;
 
         \Artisan::queue('export-contract-logs', [
             'email' => $email
         ]);
+
+        flash(__('An email will be sent to your email within the next 10 minutes.'));
+
+        return back();
     }
 
     public function downloadZip(Request $request) {
         $timestamp = $request->timestamp;
+        $fileSystem = new Filesystem;
 
         $file = public_path('contract_logs_'.$timestamp.'.zip');
 
-        return response()->download($file)->deleteFileAfterSend(true);
+        if($fileSystem->exists($file)) {
+            return response()->download($file)->deleteFileAfterSend(true);
+        } else {
+            flash(__("That file has already been downloaded and it's not on the server anymore."));
+
+            return redirect()->route('admin.contractLogs.index');
+        }
     }
 }
