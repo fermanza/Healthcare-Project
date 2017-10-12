@@ -692,14 +692,6 @@
                                         </button>
                                     @endpermission
 
-                                    @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="switchRosterBenchTo(roster, 'recruiting', 'phys')"
-                                        >
-                                            @lang('Recruiting')
-                                        </button>
-                                    @endpermission
-
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
                                             @click="editRosterBench(roster, 'rosterPhysician')"
@@ -838,14 +830,6 @@
                                         </button>
                                     @endpermission
 
-                                    @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="switchRosterBenchTo(roster, 'recruiting', 'app')"
-                                        >
-                                            @lang('Recruiting')
-                                        </button>
-                                    @endpermission
-
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
                                             @click="editRosterBench(roster, 'rosterApps')"
@@ -981,14 +965,6 @@
                                         </button>
                                     @endpermission
 
-                                    @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="switchRosterBenchTo(bench, 'recruiting', 'phys')"
-                                        >
-                                            @lang('Recruiting')
-                                        </button>
-                                    @endpermission
-
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
                                             @click="editRosterBench(bench, 'benchPhysician')"
@@ -1109,14 +1085,6 @@
                                             @click="switchRosterBenchTo(bench, 'roster')"
                                         >
                                             @lang('Roster')
-                                        </button>
-                                    @endpermission
-
-                                    @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="switchRosterBenchTo(bench, 'recruiting', 'app')"
-                                        >
-                                            @lang('Recruiting')
                                         </button>
                                     @endpermission
 
@@ -2272,28 +2240,20 @@
                     _.assignIn(this[object], credentialing);
                 },
 
-                switchRosterBenchTo: function (rosterBench, place, type = null) {
+                switchRosterBenchTo: function (rosterBench, place) {
                     rosterBench.place = place;
-                    rosterBench.type = type;
 
                     rosterBench.interview = this.moment(rosterBench.interview);
                     rosterBench.contractIn = this.moment(rosterBench.contractIn);
                     rosterBench.contractOut = this.moment(rosterBench.contractOut);
                     rosterBench.firstShift = this.moment(rosterBench.firstShift);
 
-                    if (place == 'recruiting') {
-                        axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id + '/switch', rosterBench)
-                        .then(function (response) {
-                            this.pipeline.recruitings.push(response.data);
-                            this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': rosterBench.id });
-                        }.bind(this));
-                    } else {
-                        axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, rosterBench)
+                    axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, rosterBench
+                    )
                         .then(function (response) {
                             var newRosterBench = response.data;
                             _.assignIn(rosterBench, newRosterBench);
                         }.bind(this));
-                    }
                 },
 
                 deleteRosterBench: function (rosterBench) {
