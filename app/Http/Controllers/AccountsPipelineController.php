@@ -582,7 +582,7 @@ class AccountsPipelineController extends Controller
                 $sheet->getStyle('A'.$benchTable[0].':F'.($benchTable[1]))->applyFromArray($tableStyle);
                 $sheet->getStyle('A'.$recruitingTable[0].':I'.$recruitingTable[1])->applyFromArray($tableStyle);
                 $sheet->getStyle('A'.$credentialingTable[0].':I'.$credentialingTable[1])->applyFromArray($tableStyle);
-                $sheet->getStyle('A'.$requirementsTable[0].':I'.($requirementsTable[0]+5))->applyFromArray($tableStyle);
+                $sheet->getStyle('A'.$requirementsTable[0].':I'.($requirementsTable[0]+4))->applyFromArray($tableStyle);
 
                 $sheet->getStyle('D'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
                 $sheet->getStyle('E'.($credentialingTable[0]+1))->getAlignment()->setWrapText(true);
@@ -1344,7 +1344,7 @@ class AccountsPipelineController extends Controller
                 $credentialer->appToHospital ? $credentialer->appToHospital->format('m-d-Y') : '',
                 '',
                 $credentialer->privilegeGoal ? $credentialer->privilegeGoal->format('m-d-Y') : '',
-                $credentialer->notes
+                $credentialer->credentialingNotes
             ];
 
             $sheet->row($credentialingTableDataStart, $row);
@@ -1390,14 +1390,10 @@ class AccountsPipelineController extends Controller
         });
 
         $sheet->cell('A'.($requirementsTableStart+3), function($cell) use ($account) {
-            $cell->setValue('Application');
-        });
-
-        $sheet->cell('A'.($requirementsTableStart+4), function($cell) use ($account) {
             $cell->setValue('Meetings');
         });
 
-        $sheet->cell('A'.($requirementsTableStart+5), function($cell) use ($account) {
+        $sheet->cell('A'.($requirementsTableStart+4), function($cell) use ($account) {
             $cell->setValue('Other');
         });
 
@@ -1410,14 +1406,10 @@ class AccountsPipelineController extends Controller
         });
 
         $sheet->cell('B'.($requirementsTableStart+3), function($cell) use ($account) {
-            $cell->setValue($account->applications);
-        });
-
-        $sheet->cell('B'.($requirementsTableStart+4), function($cell) use ($account) {
             $cell->setValue($account->meetings);
         });
 
-        $sheet->cell('B'.($requirementsTableStart+5), function($cell) use ($account) {
+        $sheet->cell('B'.($requirementsTableStart+4), function($cell) use ($account) {
             $cell->setValue($account->other);
         });
 

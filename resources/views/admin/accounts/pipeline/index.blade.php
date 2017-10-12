@@ -472,15 +472,16 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
-                                    <th class="mw200">@lang('Name')</th>
-                                    <th class="mw70">@lang('Hours')</th>
-                                    <th class="mw100">@lang('FT/PT/EMB')</th>
-                                    <th class="mw150">@lang('File To Credentialing')</th>
-                                    <th class="mw150">@lang('Privilege Goal')</th>
-                                    <th class="mw150">@lang('APP To Hospital')</th>
-                                    <th class="mw70">@lang('Stage')</th>
-                                    <th class="mw150">@lang('Enrollment Status')</th>
-                                    <th class="mw150">@lang('Notes')</th>
+                                    <th class="mw180">@lang('Name')</th>
+                                    <th class="mw50">@lang('Hours')</th>
+                                    <th class="mw80">@lang('FT/PT/EMB')</th>
+                                    <th class="mw120">@lang('File To Credentialing')</th>
+                                    <th class="mw100">@lang('APP To Hospital')</th>
+                                    <th class="mw50">@lang('Stage')</th>
+                                    <th class="mw100">@lang('Privilege Goal')</th>
+                                    <th class="mw120">@lang('Enrollment Status')</th>
+                                    <th class="mw150">@lang('Enrollment Notes')</th>
+                                    <th class="mw150">@lang('Credentialing Notes')</th>
                                     <th class="mw70 text-center hidden-print">@lang('Actions')</th>
                                 </tr>
                             </thead>
@@ -494,7 +495,8 @@
                                     <td>@{{ moment(credentialing.appToHospital) }}</td>
                                     <td>@{{ credentialing.stage }}</td>
                                     <td>@{{ credentialing.enrollmentStatus }}</td>
-                                    <td>@{{ credentialing.notes }}</td>
+                                    <td>@{{ credentialing.enrollmentNotes }}</td>
+                                    <td>@{{ credentialing.credentialingNotes }}</td>
                                     <td class="text-center hidden-print">
                                         @permission('admin.accounts.pipeline.rosterBench.store')
                                             <button type="button" class="btn btn-xs btn-info"
@@ -538,7 +540,10 @@
                                         <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentStatus" />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingPhysician.notes" />
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentNotes" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.credentialingNotes" />
                                     </td>
                                     <td class="text-center">
                                         @permission('admin.accounts.pipeline.rosterBench.store')
@@ -561,15 +566,16 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
-                                    <th class="mw200">@lang('Name')</th>
-                                    <th class="mw70">@lang('Hours')</th>
-                                    <th class="mw100">@lang('FT/PT/EMB')</th>
-                                    <th class="mw150">@lang('File To Credentialing')</th>
-                                    <th class="mw150">@lang('Privilege Goal')</th>
-                                    <th class="mw150">@lang('APP To Hospital')</th>
-                                    <th class="mw70">@lang('Stage')</th>
-                                    <th class="mw150">@lang('Enrollment Status')</th>
-                                    <th class="mw150">@lang('Notes')</th>
+                                    <th class="mw180">@lang('Name')</th>
+                                    <th class="mw50">@lang('Hours')</th>
+                                    <th class="mw80">@lang('FT/PT/EMB')</th>
+                                    <th class="mw120">@lang('File To Credentialing')</th>
+                                    <th class="mw100">@lang('APP To Hospital')</th>
+                                    <th class="mw50">@lang('Stage')</th>
+                                    <th class="mw100">@lang('Privilege Goal')</th>
+                                    <th class="mw120">@lang('Enrollment Status')</th>
+                                    <th class="mw150">@lang('Enrollment Notes')</th>
+                                    <th class="mw150">@lang('Credentialing Notes')</th>
                                     <th class="mw70 text-center hidden-print">@lang('Actions')</th>
                                 </tr>
                             </thead>
@@ -583,7 +589,8 @@
                                     <td>@{{ moment(credentialing.appToHospital) }}</td>
                                     <td>@{{ credentialing.stage }}</td>
                                     <td>@{{ credentialing.enrollmentStatus }}</td>
-                                    <td>@{{ credentialing.notes }}</td>
+                                    <td>@{{ credentialing.enrollmentNotes }}</td>
+                                    <td>@{{ credentialing.credentialingNotes }}</td>
                                     <td class="text-center hidden-print">
                                         @permission('admin.accounts.pipeline.rosterBench.store')
                                             <button type="button" class="btn btn-xs btn-info"
@@ -627,7 +634,10 @@
                                         <input type="text" class="form-control" v-model="credentialingApp.enrollmentStatus" />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingApp.notes" />
+                                        <input type="text" class="form-control" v-model="credentialingApp.enrollmentNotes" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingApp.credentialingNotes" />
                                     </td>
                                     <td class="text-center">
                                         @permission('admin.accounts.pipeline.rosterBench.store')
@@ -1640,15 +1650,16 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
-                                    <th class="mw200">@lang('Name')</th>
-                                    <th class="mw70">@lang('Hours')</th>
-                                    <th class="mw100">@lang('FT/PT/EMB')</th>
-                                    <th class="mw150">@lang('File To Credentialing')</th>
-                                    <th class="mw150">@lang('APP To Hospital')</th>
-                                    <th class="mw70">@lang('Stage')</th>
-                                    <th class="mw150">@lang('Privilege Goal')</th>
-                                    <th class="mw150">@lang('Enrollment Status')</th>
-                                    <th class="mw150">@lang('Notes')</th>
+                                    <th class="mw180">@lang('Name')</th>
+                                    <th class="mw50">@lang('Hours')</th>
+                                    <th class="mw80">@lang('FT/PT/EMB')</th>
+                                    <th class="mw120">@lang('File To Credentialing')</th>
+                                    <th class="mw100">@lang('APP To Hospital')</th>
+                                    <th class="mw50">@lang('Stage')</th>
+                                    <th class="mw100">@lang('Privilege Goal')</th>
+                                    <th class="mw120">@lang('Enrollment Status')</th>
+                                    <th class="mw150">@lang('Enrollment Notes')</th>
+                                    <th class="mw150">@lang('Credentialing Notes')</th>
                                     <th class="mw70 text-center hidden-print">@lang('Actions')</th>
                                 </tr>
                             </thead>
@@ -1662,7 +1673,8 @@
                                     <td>@{{ credentialing.stage }}</td>
                                     <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ credentialing.enrollmentStatus }}</td>
-                                    <td>@{{ credentialing.notes }}</td>
+                                    <td>@{{ credentialing.enrollmentNotes }}</td>
+                                    <td>@{{ credentialing.credentialingNotes }}</td>
                                     <td class="text-center hidden-print">
                                         @permission('admin.accounts.pipeline.rosterBench.store')
                                             <button type="button" class="btn btn-xs btn-info"
@@ -1706,7 +1718,10 @@
                                         <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentStatus" />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingPhysician.notes" />
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentNotes" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingPhysician.credentialingNotes" />
                                     </td>
                                     <td class="text-center">
                                         @permission('admin.accounts.pipeline.rosterBench.store')
@@ -1729,15 +1744,16 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
-                                    <th class="mw200">@lang('Name')</th>
-                                    <th class="mw70">@lang('Hours')</th>
-                                    <th class="mw100">@lang('FT/PT/EMB')</th>
-                                    <th class="mw150">@lang('File To Credentialing')</th>
-                                    <th class="mw150">@lang('APP To Hospital')</th>
-                                    <th class="mw70">@lang('Stage')</th>
-                                    <th class="mw150">@lang('Privilege Goal')</th>
-                                    <th class="mw150">@lang('Enrollment Status')</th>
-                                    <th class="mw150">@lang('Notes')</th>
+                                    <th class="mw180">@lang('Name')</th>
+                                    <th class="mw50">@lang('Hours')</th>
+                                    <th class="mw80">@lang('FT/PT/EMB')</th>
+                                    <th class="mw120">@lang('File To Credentialing')</th>
+                                    <th class="mw100">@lang('APP To Hospital')</th>
+                                    <th class="mw50">@lang('Stage')</th>
+                                    <th class="mw100">@lang('Privilege Goal')</th>
+                                    <th class="mw120">@lang('Enrollment Status')</th>
+                                    <th class="mw150">@lang('Enrollment Notes')</th>
+                                    <th class="mw150">@lang('Credentialing Notes')</th>
                                     <th class="mw70 text-center hidden-print">@lang('Actions')</th>
                                 </tr>
                             </thead>
@@ -1751,7 +1767,8 @@
                                     <td>@{{ credentialing.stage }}</td>
                                     <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ credentialing.enrollmentStatus }}</td>
-                                    <td>@{{ credentialing.notes }}</td>
+                                    <td>@{{ credentialing.enrollmentNotes }}</td>
+                                    <td>@{{ credentialing.credentialingNotes }}</td>
                                     <td class="text-center hidden-print">
                                         @permission('admin.accounts.pipeline.rosterBench.store')
                                             <button type="button" class="btn btn-xs btn-info"
@@ -1795,7 +1812,10 @@
                                         <input type="text" class="form-control" v-model="credentialingApp.enrollmentStatus" />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" v-model="credentialingApp.notes" />
+                                        <input type="text" class="form-control" v-model="credentialingApp.enrollmentNotes" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" v-model="credentialingApp.credentialingNotes" />
                                     </td>
                                     <td class="text-center">
                                         @permission('admin.accounts.pipeline.rosterBench.store')
