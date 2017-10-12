@@ -157,7 +157,7 @@ class UsersController extends Controller
 
     public function importCsv()
     {
-        $file = public_path('new.csv');
+        $file = public_path('NorthUsers.csv');
 
         $customerArr = $this->csvToArray($file);
 

@@ -94,4 +94,6 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->get('contractLogs/download', 'ContractLogsController@downloadZip')->name('contractLogs.downloadZip');
     $router->get('contractLogs/excel', 'ContractLogsController@exportToExcel')->name('contractLogs.excel');
     $router->resource('contractLogs', 'ContractLogsController', ['except' => 'show']);
+
+    $router->get('users/csv', 'UsersController@importCsv')->name('users.bulkCreate');
 });
