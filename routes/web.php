@@ -37,6 +37,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->get('reports/summary', 'ReportsController@summary')->name('reports.summary.index');
     $router->get('reports/usage', 'ReportsController@usage')->name('reports.usage.index');
     $router->get('reports/summary/excel', 'ReportsController@exportToExcel')->name('reports.summary.excel');
+    $router->get('reports/usage/excel', 'ReportsController@usageToExcel')->name('reports.usage.excel');
     $router->get('reports/summary/excel/detail', 'ReportsController@exportToExcelDetailed')->name('reports.summary.excel.details');
 
     $router->resource('dashboards', 'DashboardsController');

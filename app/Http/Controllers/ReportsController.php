@@ -550,6 +550,147 @@ class ReportsController extends Controller
         })->download('xlsx'); 
     }
 
+    public function usageToExcel(SummaryFilter $filter) {
+        set_time_limit(600);
+
+        $dataToExport = $this->getSummaryData($filter, 5000);
+        $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
+            "RSC", "Recruiter", "Secondary Recruiter", "Managers", "Last Updated By", "Last Updated Time"
+        ];
+
+
+        Excel::create('Summary Report', function($excel) use ($dataToExport, $headers){
+
+            $accountIds = $dataToExport->map(function($account) { return $account->accountId; });
+            $accountIds = array_values($accountIds->toArray());
+
+            if(count($accountIds) > 100) {
+                $accountIds = array_slice($accountIds, 0, 100);
+            }
+
+            $accounts = Account::whereIn('id', $accountIds)->get();
+
+            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers){
+                
+                $rowNumber = 2;
+
+                $sheet->row($rowNumber, $headers);
+                $sheet->row($rowNumber, function($row) {
+                    $row->setBackground('#d9d9d9');
+                });
+                $sheet->setHeight($rowNumber, 25);
+
+                foreach($dataToExport as $account) {
+                    $rowNumber++;
+
+                    $row = [
+                        $account->siteCode,
+                        $account->{'Hospital Name'},
+                        $account->Practice,
+                        $account->{'System Affiliation'},
+                        ($account->account && $account->account->division && $account->account->division->isJV) ? 'Yes' : 'No',
+                        $account->{'Operating Unit'},
+                        ($account->account && $account->account->rsc) ? $account->account->rsc->name : '',
+                        $account->{'RSC Recruiter'},
+                        $account->{'Secondary Recruiter'},
+                        $account->Managers,
+                        $account->account && $account->account->pipeline && $account->account->pipeline->lastUpdate() ? $account->account->pipeline->lastUpdate()->updatedBy->name : '',
+                        $account->account && $account->account->pipeline && $account->account->pipeline->lastUpdate() ? $account->account->pipeline->lastUpdate()->lastUpdated->format('m/d/Y H:i:s') : ''
+                    ];
+
+                    $sheet->row($rowNumber, $row);
+                };
+
+                
+                $sheet->mergeCells('A1:J1');
+                $sheet->mergeCells('K1:L1');
+
+                // $sheet->setAutoFilter('A2:L2');
+
+                $sheet->cell('A1', function($cell) {
+                    $cell->setValue('RECRUITING SUMMARY');
+                    $cell->setFontColor('#000000');
+                    $cell->setFontFamily('Calibri (Body)');
+                    $cell->setFontSize(8);
+                    $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
+                });
+
+                $sheet->cell('K1', function($cell) {
+                    $cell->setValue('USAGE');
+                    $cell->setFontColor('#000000');
+                    $cell->setFontFamily('Calibri (Body)');
+                    $cell->setFontSize(8);
+                    $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
+                    $cell->setValignment('center');
+                });
+
+                $sheet->cells('A2:L2', function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setFontSize(8);
+                    $cells->setFontWeight('bold');
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+                $sheet->cells('A3:L'.$rowNumber, function($cells) {
+                    $cells->setFontColor('#000000');
+                    $cells->setFontFamily('Calibri (Body)');
+                    $cells->setFontSize(8);
+                    $cells->setAlignment('center');
+                    $cells->setValignment('center');
+                });
+
+                $sheet->setWidth(array(
+                    'A'     => 5,
+                    'B'     => 37,
+                    'C'     => 12,
+                    'D'     => 17,
+                    'E'     => 6,
+                    'F'     => 13,
+                    'G'     => 7,
+                    'H'     => 14,
+                    'I'     => 17,
+                    'J'     => 14,
+                    'K'     => 15,
+                    'L'     => 15,
+                ));
+
+                $tableStyle = array(
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                        'inside' => array(
+                            'style' => 'thin',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                    ),
+                );
+
+                $headersStyle = array(
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                        'inside' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                    ),
+                );
+
+                $sheet->getStyle('A1:L'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A2:L2')->applyFromArray($headersStyle);
+            });
+        })->download('xlsx'); 
+    }
+
     public function exportToExcelDetailed(Request $request, SummaryFilter $filter) {
         set_time_limit(600);
 

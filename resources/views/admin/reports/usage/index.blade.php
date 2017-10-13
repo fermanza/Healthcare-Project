@@ -3,6 +3,12 @@
 @section('content-header', __('Summary Report'))
 
 @section('tools')
+    @permission('admin.reports.usage.excel')
+    <a href="{{ route('admin.reports.usage.excel', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
+        <i class="fa fa-file-excel-o"></i>
+        @lang('Export to Excel')
+    </a>
+    @endpermission
     <a href="{{ route('admin.summaryReport.toggleScope') }}" class="btn btn-sm btn-success{{ session('ignore-summary-role-scope') ? ' active' : '' }}">
         @lang('View All')
     </a>
@@ -149,7 +155,7 @@
 	                        <td class="wd110">{{ $account->{'System Affiliation'} }}</td>
 	                        <td class="wd50">{{ $account->JV }}</td>
 	                        <td class="wd200">{{ $account->{'Operating Unit'} }}</td>
-	                        <td class="wd50">{{ $account->RSC }}</td>
+	                        <td class="wd50">{{ ($account->account && $account->account->rsc) ? $account->account->rsc->name : '' }}</td>
 	                        <td class="wd70">{{ $account->{'RSC Recruiter'} }}</td>
 	                        <td class="wd110">
 	                        	{{ $account->{'Secondary Recruiter'} }}

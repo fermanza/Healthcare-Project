@@ -185,8 +185,9 @@ return [
 
     'Reports' => [
         'admin.reports.summary.index' => 'Summary Report',
-        'admin.reports.summary.excel' => 'Export Reports To Excel',
+        'admin.reports.summary.excel' => 'Export Report To Excel',
         'admin.reports.usage.index' => 'Usage Report',
+        'admin.reports.usage.excel' => 'Export Usage Report To Excel',
     ],
     
 ];
