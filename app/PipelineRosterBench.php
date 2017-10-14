@@ -31,8 +31,7 @@ class PipelineRosterBench extends Model
         'lastShift',
         'fileToCredentialing',
         'privilegeGoal',
-        'appToHospital',
-        'lastUpdated'
+        'appToHospital'
     ];
 
     /**

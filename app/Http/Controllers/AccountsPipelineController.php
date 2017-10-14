@@ -186,7 +186,7 @@ class AccountsPipelineController extends Controller
         $pipeline->staffAppsFTEHaves = $request->staffAppsFTEHaves;
         $pipeline->staffAppsFTENeeds = $request->staffAppsFTENeeds;
         $pipeline->staffAppsFTEOpenings = $request->staffAppsFTEOpenings;
-        $pipeline->lastUpdated = Carbon::now()->format('m/d/Y');
+        $pipeline->lastUpdated = Carbon::now();
         $pipeline->lastUpdatedBy = \Auth::id();
         $pipeline->save();
 

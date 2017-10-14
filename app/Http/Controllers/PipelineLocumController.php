@@ -64,7 +64,7 @@ class PipelineLocumController extends Controller
         $locum->shiftsOffered = $request->shiftsOffered;
         $locum->startDate = $request->startDate;
         $locum->comments = $request->comments;
-        $locum->lastUpdated = Carbon::now()->format('m/d/Y');
+        $locum->lastUpdated = Carbon::now();
         $locum->lastUpdatedBy = \Auth::id();
         $locum->save();
 

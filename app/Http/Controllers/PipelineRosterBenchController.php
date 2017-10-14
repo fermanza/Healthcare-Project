@@ -77,7 +77,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->noc = $request->noc;
         $rosterBench->notes = $request->notes;
         $rosterBench->contract = $request->contract;
-        $rosterBench->lastUpdated = Carbon::now()->format('m/d/Y');
+        $rosterBench->lastUpdated = Carbon::now();
         $rosterBench->lastUpdatedBy = \Auth::id();
 
         if($rosterBench->save()) {

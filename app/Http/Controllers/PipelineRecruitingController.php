@@ -68,7 +68,7 @@ class PipelineRecruitingController extends Controller
         $recruiting->firstShift = $request->firstShift;
         $recruiting->noc = $request->noc;
         $recruiting->notes = $request->notes;
-        $recruiting->lastUpdated = Carbon::now()->format('m/d/Y');
+        $recruiting->lastUpdated = Carbon::now();
         $recruiting->lastUpdatedBy = \Auth::id();
         $recruiting->save();
 
@@ -134,7 +134,7 @@ class PipelineRecruitingController extends Controller
         $recruiting->firstShift = $request->firstShift;
         $recruiting->notes = $request->notes;
         $recruiting->noc = $request->noc;
-        $recruiting->lastUpdated = Carbon::now()->format('m/d/Y');
+        $recruiting->lastUpdated = Carbon::now();
         $recruiting->lastUpdatedBy = \Auth::id();
         $recruiting->save();
 

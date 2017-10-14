@@ -31,8 +31,7 @@ class PipelineLocum extends Model
         'potentialStart',
         'contractOut',
         'startDate',
-        'declined',
-        'lastUpdated'
+        'declined'
     ];
 
     /**
