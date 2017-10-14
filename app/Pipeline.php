@@ -12,15 +12,6 @@ class Pipeline extends Model
     protected $table = 'tAccountPipeline';
 
     /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'lastUpdated'
-    ];
-
-    /**
      * Get the Roster Physicians for the Pipeline.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
