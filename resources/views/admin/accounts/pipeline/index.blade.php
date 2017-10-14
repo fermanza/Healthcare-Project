@@ -2322,10 +2322,13 @@
                     _.assignIn(this[object], credentialing);
                 },
 
-                switchRosterBenchTo: function (rosterBench, place, type = null) {
+                switchRosterBenchTo: function (rosterBench, place, type) {
                     rosterBench.place = place;
-                    rosterBench.type = type;
-
+                    
+                    if(type !== undefined) {
+                      rosterBench.type = type;
+                    }
+                    
                     rosterBench.interview = this.moment(rosterBench.interview);
                     rosterBench.contractIn = this.moment(rosterBench.contractIn);
                     rosterBench.contractOut = this.moment(rosterBench.contractOut);
