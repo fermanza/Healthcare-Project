@@ -162,7 +162,7 @@
 	                        </td>
 	                        <td class="wd70">{{ $account->Managers }}</td>
                             <td class="wd110">
-                                {{ $account->account && $account->account->pipeline && (is_object($account->account->pipeline->lastUpdate())) ? $account->account->pipeline->lastUpdate()->updatedBy->name : '' }}
+                                {{ $account->account && $account->account->pipeline && (is_object($account->account->pipeline->lastUpdate())) ? (is_object($account->account->pipeline->lastUpdate()->updatedBy) ? $account->account->pipeline->lastUpdate()->updatedBy->name : '') : '' }}
                             </td>
                             <td class="wd110">
                                 {{ $account->account && $account->account->pipeline && (is_object($account->account->pipeline->lastUpdate())) ? ($account->account->pipeline->lastUpdate()->lastUpdated ? \Carbon\Carbon::parse($account->account->pipeline->lastUpdate()->lastUpdated)->format('m/d/Y H:i:s') : '') : '' }}
