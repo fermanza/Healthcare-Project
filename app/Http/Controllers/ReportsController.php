@@ -570,7 +570,7 @@ class ReportsController extends Controller
 
             $accounts = Account::whereIn('id', $accountIds)->get();
 
-            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers){
+            $excel->sheet('Usage Report', function($sheet) use ($dataToExport, $headers){
                 
                 $rowNumber = 2;
 
