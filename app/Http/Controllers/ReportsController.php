@@ -594,7 +594,7 @@ class ReportsController extends Controller
                         $account->{'RSC Recruiter'},
                         $account->{'Secondary Recruiter'},
                         $account->Managers,
-                        $account->account && $account->account->pipeline && $account->account->pipeline->lastUpdate() ? $account->account->pipeline->lastUpdate()->updatedBy->name : '',
+                        $account->account && $account->account->pipeline && (is_object($account->account->pipeline->lastUpdate())) ? (is_object($account->account->pipeline->lastUpdate()->updatedBy) ? $account->account->pipeline->lastUpdate()->updatedBy->name : '') : ''
                         $account->account && $account->account->pipeline && $account->account->pipeline->lastUpdate() ? ($account->account->pipeline->lastUpdate()->lastUpdated ? Carbon::parse($account->account->pipeline->lastUpdate()->lastUpdated)->format('m/d/Y H:i:s') : '') : ''
                     ];
 
