@@ -559,7 +559,7 @@ class ReportsController extends Controller
         ];
 
 
-        Excel::create('Summary Report', function($excel) use ($dataToExport, $headers){
+        Excel::create('Recruitment Update Report', function($excel) use ($dataToExport, $headers){
 
             $accountIds = $dataToExport->map(function($account) { return $account->accountId; });
             $accountIds = array_values($accountIds->toArray());

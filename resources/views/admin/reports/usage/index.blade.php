@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('content-header', __('Summary Report'))
+@section('content-header', __('Recruitment Update Report'))
 
 @section('tools')
     @permission('admin.reports.usage.excel')

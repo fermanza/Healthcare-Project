@@ -38,7 +38,7 @@ Artisan::command('export-contract-logs {email} {--queue}', function ($email) {
     ->select('tContractLogs.*')
     ->with('status', 'position', 'practice', 'division.group', 'note', 'account', 'designation',
         'specialty', 'recruiter', 'manager', 'coordinator', 'type', 'status')
-    ->where('tContractLogs.active', true)->chunk(2000, function($contractLogs) use (&$count) {
+    ->where('tContractLogs.active', true)->chunk(5000, function($contractLogs) use (&$count) {
         $headers = ["Status", "Main Site Code", "Provider", "Specialty", "Account", "System", "Operating Unit", "RSC",
             "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
             "Sent to Q/A Date", "Counter Sig Date", "Sent To Payroll Date", "# of Days (Contract Out to Payroll)",
