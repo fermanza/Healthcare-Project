@@ -2459,7 +2459,7 @@
                 },
 
                 decline: function () {
-                    let endpoint;
+                    var endpoint;
 
                     if (this.declining.instance == 'recruiting') {
                         endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.declining.id + '/decline';
