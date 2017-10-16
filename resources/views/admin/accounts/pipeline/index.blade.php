@@ -504,6 +504,11 @@
                                             >
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                            <button type="button" class="btn btn-xs btn-success"
+                                                @click="completeCredentialing(credentialing)"
+                                            >
+                                                Mark Complete
+                                            </button>
                                         @endpermission
                                     </td>
                                 </tr>
@@ -597,6 +602,11 @@
                                                 @click="editCredentialing(credentialing, 'credentialingApp')"
                                             >
                                                 <i class="fa fa-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-xs btn-success"
+                                                @click="completeCredentialing(credentialing)"
+                                            >
+                                                Mark Complete
                                             </button>
                                         @endpermission
                                     </td>
@@ -1682,6 +1692,11 @@
                                             >
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                            <button type="button" class="btn btn-xs btn-success"
+                                                @click="completeCredentialing(credentialing)"
+                                            >
+                                                Mark Complete
+                                            </button>
                                         @endpermission
                                     </td>
                                 </tr>
@@ -1775,6 +1790,11 @@
                                                 @click="editCredentialing(credentialing, 'credentialingApp')"
                                             >
                                                 <i class="fa fa-pencil"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-xs btn-success"
+                                                @click="completeCredentialing(credentialing)"
+                                            >
+                                                Mark Complete
                                             </button>
                                         @endpermission
                                     </td>
@@ -2191,6 +2211,7 @@
                     return _.chain(this.pipeline.rostersBenchs)
                         .filter({ activity: 'physician', signedNotStarted: 1 })
                         .reject('resigned')
+                        .reject('completed')
                         .value();
                 },
 
@@ -2198,6 +2219,7 @@
                     return _.chain(this.pipeline.rostersBenchs)
                         .filter({ activity: 'app', signedNotStarted: 1 })
                         .reject('resigned')
+                        .reject('completed')
                         .value();
                 },
 
@@ -2320,6 +2342,16 @@
 
 
                     _.assignIn(this[object], credentialing);
+                },
+
+                completeCredentialing: function(credentialing) {
+                    credentialing.completed = 1;
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + credentialing.id;
+
+                    axios.patch(endpoint, credentialing)
+                        .then(function (response) {
+                            
+                        }.bind(this));
                 },
 
                 switchRosterBenchTo: function (rosterBench, place, type) {

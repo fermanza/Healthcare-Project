@@ -384,9 +384,7 @@ class AccountsPipelineController extends Controller
         $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
         })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-        ->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->sortByDesc(function($rosterBench){
+        ->sortByDesc(function($rosterBench){
             return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->name);
         });
 
@@ -395,27 +393,21 @@ class AccountsPipelineController extends Controller
         $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
         })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-        ->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->sortBy('name');
+        ->sortBy('name');
 
         $benchPhysicians = $benchPhysicians->values();
 
         $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
         })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-        ->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->sortBy('name');
+        ->sortBy('name');
 
         $activeRosterAPPs = $activeRosterAPPs->values();
 
         $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
         })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-        ->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->sortBy('name');
+        ->sortBy('name');
 
         $benchAPPs = $benchAPPs->values();
 
@@ -601,8 +593,6 @@ class AccountsPipelineController extends Controller
             return $rosterBench->place == 'roster' && $rosterBench->activity == 'physician';
         })->reject(function($rosterBench){
             return $rosterBench->resigned;
-        })->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
         })->sortByDesc(function($rosterBench){
             return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
         });
@@ -613,8 +603,6 @@ class AccountsPipelineController extends Controller
             return $rosterBench->place == 'bench' && $rosterBench->activity == 'physician';
         })->reject(function($rosterBench){
             return $rosterBench->resigned;
-        })->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
         })->sortByDesc(function($rosterBench){
             return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
         });
@@ -632,8 +620,6 @@ class AccountsPipelineController extends Controller
         $currentRosterAPP = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->place == 'roster' && $rosterBench->activity == 'app';
         })->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
-        })->reject(function($rosterBench){
             return $rosterBench->resigned;
         })->sortBy('name');
 
@@ -641,8 +627,6 @@ class AccountsPipelineController extends Controller
 
         $currentBenchAPP = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->place == 'bench' && $rosterBench->activity == 'app';
-        })->reject(function($rosterBench){
-            return $rosterBench->signedNotStarted;
         })->reject(function($rosterBench){
             return $rosterBench->resigned;
         })->sortBy('name');
