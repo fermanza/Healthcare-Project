@@ -13,6 +13,7 @@ class ContractLogNotification extends Notification
 
     protected $timestamp;
 
+
     /**
      * Create a new notification instance.
      *
