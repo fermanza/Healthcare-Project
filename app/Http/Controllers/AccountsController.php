@@ -46,6 +46,7 @@ class AccountsController extends Controller
                 'region',
                 'recruiter.employee.person',
                 'manager.employee.person',
+                'credentialer.employee.person'
             ])
             ->where('active', true)
             ->termed(false)
