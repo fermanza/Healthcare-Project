@@ -65,7 +65,6 @@ class ContractLogRequest extends FormRequest
     public function save(Model $contractLog)
     {
         $account = Account::withoutGlobalScope('role')->with('practices')->find($this->accountId);
-        $status = ContractStatus::find($this->statusId);
 
         $contractLog->accountId = $this->accountId;
         $contractLog->recruiterId = $this->recruiterId;
@@ -93,7 +92,7 @@ class ContractLogRequest extends FormRequest
         $contractLog->contractCoordinatorId = $this->contractCoordinatorId;
         $contractLog->logOwnerId = $this->logOwnerId;
         $contractLog->positionId = $this->positionId;
-        $contractLog->value = $status->value;
+        $contractLog->value = $this->value;
         $contractLog->inactive = $this->inactive ? $this->inactive : 0;
         $contractLog->declined = $this->declined ? $this->declined : 0;
         $contractLog->neverReturned = $this->neverReturned ? $this->neverReturned : 0;
