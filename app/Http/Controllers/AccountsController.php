@@ -154,7 +154,6 @@ class AccountsController extends Controller
         Cache::forget('accounts'.$request->user()->id);
 
         flash(__('Account updated.'));
-
         return back();
     }
 
