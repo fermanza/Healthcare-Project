@@ -116,7 +116,6 @@ class ReportsController extends Controller
             "Signed Not Yet Started", "Inc Comp", "Attrition"
         ];
 
-
         Excel::create('Summary Report', function($excel) use ($dataToExport, $headers){
 
             $accountIds = $dataToExport->map(function($account) { return $account->accountId; });
@@ -745,18 +744,73 @@ class ReportsController extends Controller
 
         $fileName = trim($fileName, ' -');
 
-        Excel::create($fileName, function($excel) use ($dataToExport, $headers){
+        $tableStyle = array(
+            'borders' => array(
+                'outline' => array(
+                    'style' => 'thin',
+                    'color' => array('rgb' => '000000'),
+                ),
+                'inside' => array(
+                    'style' => 'thin',
+                    'color' => array('rgb' => '000000'),
+                ),
+            ),
+        );
 
-            $accountIds = $dataToExport->map(function($account) { return $account->accountId; });
+        $headerStyle = array(
+            'borders' => array(
+                'outline' => array(
+                    'style' => 'medium',
+                    'color' => array('rgb' => '000000'),
+                ),
+                'inside' => array(
+                    'style' => 'medium',
+                    'color' => array('rgb' => '000000'),
+                ),
+            ),
+        );
+
+        $topBorder = array(
+            'borders' => array(
+                'top' => array(
+                    'style' => 'medium',
+                    'color' => array('rgb' => '000000'),
+                ),
+            ),
+        );
+
+        $bottomBorder = array(
+            'borders' => array(
+                'bottom' => array(
+                    'style' => 'medium',
+                    'color' => array('rgb' => '000000'),
+                ),
+            ),
+        );
+
+        Excel::create($fileName, function($excel) use ($dataToExport, $headers, $tableStyle, $headerStyle, $topBorder, $bottomBorder){
+
+            $accountIds = $dataToExport->map(function($account) { return $account->accountId; })->unique();
             $accountIds = array_values($accountIds->toArray());
 
             if(count($accountIds) > 100) {
-                $accountIds = array_slice($accountIds, 0, 50);
+                $accountIds = array_slice($accountIds, 0, 100);
             }
 
-            $accounts = Account::whereIn('id', $accountIds)->get();
+            $accounts = Account::whereIn('id', $accountIds)->with([
+                'pipeline' => function ($query) {
+                    $query->with([
+                        'rostersBenchs', 'recruitings', 'locums',
+                    ]);
+                },
+                'recruiter.employee' => function ($query) {
+                    $query->with('person', 'manager.person');
+                },
+                'division.group.region',
+                'practices',
+            ])->get();
 
-            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers){
+            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers, $tableStyle, $headerStyle){
                 
                 $rowNumber = 2;
 
@@ -1132,32 +1186,6 @@ class ReportsController extends Controller
                     'AV'    => 12
                 ));
 
-                $tableStyle = array(
-                    'borders' => array(
-                        'outline' => array(
-                            'style' => 'medium',
-                            'color' => array('rgb' => '000000'),
-                        ),
-                        'inside' => array(
-                            'style' => 'thin',
-                            'color' => array('rgb' => '000000'),
-                        ),
-                    ),
-                );
-
-                $headersStyle = array(
-                    'borders' => array(
-                        'outline' => array(
-                            'style' => 'medium',
-                            'color' => array('rgb' => '000000'),
-                        ),
-                        'inside' => array(
-                            'style' => 'medium',
-                            'color' => array('rgb' => '000000'),
-                        ),
-                    ),
-                );
-
                 $sheet->getStyle('A1:AV'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('A1:Q'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('R1:T'.$rowNumber)->applyFromArray($tableStyle);
@@ -1166,7 +1194,7 @@ class ReportsController extends Controller
                 $sheet->getStyle('AC1:AE'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('AF1:AJ'.$rowNumber)->applyFromArray($tableStyle);
                 $sheet->getStyle('AK1:AO'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A2:AV2')->applyFromArray($headersStyle);
+                $sheet->getStyle('A2:AV2')->applyFromArray($headerStyle);
 
                 $sheet->getStyle('Q2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AH2')->getAlignment()->setWrapText(true);
@@ -1195,18 +1223,6 @@ class ReportsController extends Controller
             });
 
             foreach ($accounts as $account) {
-                $account->load([
-                    'pipeline' => function ($query) {
-                        $query->with([
-                            'rostersBenchs', 'recruitings', 'locums',
-                        ]);
-                    },
-                    'recruiter.employee' => function ($query) {
-                        $query->with('person', 'manager.person');
-                    },
-                    'division.group.region',
-                    'practices',
-                ]);
 
                 if ($account->pipeline->practiceTime == "hours") {
                     if ($account->pipeline->staffPhysicianFTENeeds == 0) {
@@ -1317,7 +1333,7 @@ class ReportsController extends Controller
                 $sheetName = (strlen($account->name) > 31) ? substr($account->name,0,28).'...' : $account->name;
                 $sheetName = str_replace("/", "_", $sheetName);
 
-                $excel->sheet($sheetName, function($sheet) use ($account, $percentRecruitedPhys, $percentRecruitedApp, $percentRecruitedPhysReport, $percentRecruitedAppReport, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $recruitings, $locums, $declines, $resigneds, $credentialersPhys, $credentialersAPP, $SMDOpen, $AMDOpen){
+                $excel->sheet($sheetName, function($sheet) use ($account, $percentRecruitedPhys, $percentRecruitedApp, $percentRecruitedPhysReport, $percentRecruitedAppReport, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $recruitings, $locums, $declines, $resigneds, $credentialersPhys, $credentialersAPP, $SMDOpen, $AMDOpen, $tableStyle, $headerStyle, $topBorder, $bottomBorder){
 
                     $accountInfo = $account->name.', '.$account->siteCode.' '.$account->address.' '.($account->recruiter ? $account->recruiter->fullName() : '').', '.($account->manager ? $account->manager->fullName() : '');
 
@@ -1332,42 +1348,6 @@ class ReportsController extends Controller
 
                     $sheet->cell('A1', function($cell) use ($accountInfo) {
                         $cell->setValue($accountInfo);
-                        $cell->setBackground('#d0cece');
-                        $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
-                    });
-
-                    $sheet->cells('B8:B10', function($cells) {
-                        $cells->setFontWeight('bold');
-                    });
-
-                    $sheet->cells('E8:E10', function($cells) {
-                        $cells->setFontWeight('bold');
-                    });
-
-                    $sheet->cells('H8:H9', function($cells) {
-                        $cells->setFontWeight('bold');
-                    });
-
-                    $sheet->cells('C13:I17', function($cells) {
-                        $cells->setFontWeight('bold');
-                    });
-
-                    $sheet->cells('C18:C24', function($cells) {
-                        $cells->setFontWeight('bold');
-                    });
-
-                    $sheet->cells('D19:E19', function($cells) {
-                        $cells->setFontWeight('bold');
-                    });
-
-                    $sheet->cells('G18:G24', function($cells) {
-                        $cells->setFontWeight('bold');
-                    });
-
-                    $sheet->cells('H19:I19', function($cells) {
-                        $cells->setFontWeight('bold');
                     });
 
                     $sheet->cell('B5', function($cell) {
@@ -1437,62 +1417,46 @@ class ReportsController extends Controller
                     $sheet->cell('A10', function($cell) {
                         $cell->setValue('Complete Staffing and Current Openings');
                         $cell->setBackground('#FFFF00');
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
                         $cell->setFontWeight('bold');
                     });
 
                     $sheet->cell('C12', function($cell) {
                         $cell->setValue('SMD');
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
-                        $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->cell('D12', function($cell) use ($SMDOpen) {
                         $cell->setValue($SMDOpen);
                         $cell->setBackground('#FFFF00');
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->cell('E12', function($cell) {
                         $cell->setValue('AMD');
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
-                        $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->cell('F12', function($cell) use ($AMDOpen) {
                         $cell->setValue($AMDOpen);
                         $cell->setBackground('#FFFF00');
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->cell('G12', function($cell) {
                         $cell->setValue('PHYS');
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
-                        $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
-                    $sheet->cell('H12', function($cell) use ($account) {
+                    $sheet->cell('H12', function($cell) use ($account, $SMDOpen, $AMDOpen) {
                         if ($account->pipeline->practiceTime == "hours") {
-                            $cell->setValue($account->pipeline->staffPhysicianFTEOpenings);
+                            $currentOpenings = $account->pipeline->staffPhysicianFTEOpenings;
+                            $phys = $currentOpenings - $SMDOpen - $AMDOpen;
+                            $phys = $phys < 0 ? 0 : $phys;
+
+                            $cell->setValue($phys);
                         } else {
-                            $cell->setValue($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves);
+                            $currentOpenings = $account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves;
+                            $phys = $currentOpenings - $SMDOpen - $AMDOpen;
+                            $phys = $phys < 0 ? 0 : $phys;
+
+                            $cell->setValue($phys);
                         }
+
                         $cell->setBackground('#FFFF00');
                         $cell->setFontFamily('Calibri (Body)');
                         $cell->setFontSize(11);
@@ -1515,6 +1479,7 @@ class ReportsController extends Controller
                         } else {
                             $cell->setValue($account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves);
                         }
+                        
                         $cell->setBackground('#FFFF00');
                         $cell->setFontFamily('Calibri (Body)');
                         $cell->setFontSize(11);
@@ -1879,8 +1844,6 @@ class ReportsController extends Controller
                         $cell->setValue('APPs');
                         $cell->setBackground('#d0cece');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($currentRosterAppStart+1).':B'.($currentRosterAppStart+1));
@@ -1923,8 +1886,6 @@ class ReportsController extends Controller
                         $cell->setValue('Current Bench');
                         $cell->setBackground('#1eb1ed');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($currentBenchPhysicianStart+1).':K'.($currentBenchPhysicianStart+1));
@@ -1933,8 +1894,6 @@ class ReportsController extends Controller
                         $cell->setValue('Physician');
                         $cell->setBackground('#d0cece');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($currentBenchPhysicianStart+2).':C'.($currentBenchPhysicianStart+2));
@@ -1977,8 +1936,6 @@ class ReportsController extends Controller
                         $cell->setValue('APPs');
                         $cell->setBackground('#d0cece');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($currentBenchAPPStart+1).':C'.($currentBenchAPPStart+1));
@@ -2021,8 +1978,6 @@ class ReportsController extends Controller
                         $cell->setValue('Rrecruiting Pipeline');
                         $cell->setBackground('#00a65a');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($recruitingPipelineStart+1).':B'.($recruitingPipelineStart+1));
@@ -2070,8 +2025,6 @@ class ReportsController extends Controller
                         $cell->setValue('Locums Pipeline');
                         $cell->setBackground('#00a65a');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($locumsPipelineStart+1).':B'.($locumsPipelineStart+1));
@@ -2119,8 +2072,6 @@ class ReportsController extends Controller
                         $cell->setValue('Declined List');
                         $cell->setBackground('#f39c12');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($declinedPipelineStart+1).':C'.($declinedPipelineStart+1));
@@ -2168,8 +2119,6 @@ class ReportsController extends Controller
                         $cell->setValue('Resigned List');
                         $cell->setBackground('#f39c12');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($resignedPipelineStart+1).':C'.($resignedPipelineStart+1));
@@ -2219,8 +2168,6 @@ class ReportsController extends Controller
                         $cell->setValue('Credentialing Pipeline');
                         $cell->setBackground('#1eb1ed');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($credentialingPipelineStart+1).':K'.($credentialingPipelineStart+1));
@@ -2229,8 +2176,6 @@ class ReportsController extends Controller
                         $cell->setValue('Physician');
                         $cell->setBackground('#d0cece');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($credentialingPipelineStart+2).':B'.($credentialingPipelineStart+2));
@@ -2274,8 +2219,6 @@ class ReportsController extends Controller
                         $cell->setValue('APPs');
                         $cell->setBackground('#d0cece');
                         $cell->setFontWeight('bold');
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->mergeCells('A'.($credentialingPipelinePhysicianStart+3).':B'.($credentialingPipelinePhysicianStart+3));
@@ -2320,243 +2263,123 @@ class ReportsController extends Controller
                         $cells->setValignment('center');
                     });
 
-                    $sheet->cells('J26:K'.$currentRosterPhysicianStart, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('J'.($currentRosterAppStart+2).':K'.$currentRosterAppStartTable, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('J'.($currentBenchPhysicianStart+2).':K'.$currentBenchPhysicianStartTable, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('J'.($currentBenchAPPStart+2).':K'.$currentBenchAPPStartTable, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('A'.($recruitingPipelineStart+2).':K'.$recruitingPipelineStartTable, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('A'.($locumsPipelineStart+2).':K'.$locumsPipelineStartTable, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('A'.($declinedPipelineStart+2).':K'.$declinedPipelineStartTable, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('A'.($resignedPipelineStart+2).':K'.$resignedPipelineStartTable, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('A'.($credentialingPipelineStart+2).':K'.$credentialingPipelinePhysicianStart, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
-                    $sheet->cells('A'.($credentialingPipelinePhysicianStart+3).':K'.$credentialingPipelineAPPStart, function($cells) {
-                        $cells->setAlignment('left');
-                    });
-
                     $sheet->cell('A1', function($cell) {
-                        $cell->setFontFamily('Calibri (Body)');
+                        $cell->setBackground('#d0cece');
                         $cell->setFontSize(11);
-                        $cell->setAlignment('center');
-                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
                     });
 
-                    $sheet->cells('A10:K12', function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
+                    $sheet->cells('B5:B7', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('E5:E7', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('H5:H6', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('C17:C21', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('G17:G21', function($cells) {
+                        $cells->setFontWeight('bold');
+                    });
+
+                    $sheet->cells('A10:K16', function($cells) {
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
+                        $cells->setFontWeight('bold');
                     });
 
                     $sheet->cells('A23:K25', function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
+                        $cells->setFontWeight('bold');
                     });
 
                     $sheet->cell('J25', function($cell){
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
                         $cell->setAlignment('left');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->cells('A'.$currentRosterAppStart.':K'.($currentRosterAppStart+1), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cell('J'.($currentRosterAppStart+1), function($cell) {
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
                         $cell->setAlignment('left');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->cells('A'.$currentBenchPhysicianStart.':K'.($currentBenchPhysicianStart+2), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cell('J'.($currentBenchPhysicianStart+2), function($cell) {
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
                         $cell->setAlignment('left');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->cells('A'.$currentBenchAPPStart.':K'.($currentBenchAPPStart+1), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cell('J'.($currentBenchAPPStart+1), function($cell) {
-                        $cell->setFontFamily('Calibri (Body)');
-                        $cell->setFontSize(11);
                         $cell->setAlignment('left');
-                        $cell->setValignment('center');
                     });
 
                     $sheet->cells('A'.$recruitingPipelineStart.':K'.$recruitingPipelineStart, function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cells('A'.($recruitingPipelineStart+1).':K'.($recruitingPipelineStart+1), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setFontSize(11);
                         $cells->setAlignment('left');
-                        $cells->setValignment('center');
+                        $cells->setFontSize(11);
                     });
 
                     $sheet->cells('A'.$locumsPipelineStart.':K'.$locumsPipelineStart, function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cells('A'.($locumsPipelineStart+1).':K'.($locumsPipelineStart+1), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setFontSize(11);
                         $cells->setAlignment('left');
-                        $cells->setValignment('center');
+                        $cells->setFontSize(11);
                     });
 
                     $sheet->cells('A'.$declinedPipelineStart.':K'.$declinedPipelineStart, function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cells('A'.($declinedPipelineStart+1).':K'.($declinedPipelineStart+1), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setFontSize(11);
                         $cells->setAlignment('left');
-                        $cells->setValignment('center');
+                        $cells->setFontSize(11);
                     });
 
                     $sheet->cells('A'.$resignedPipelineStart.':K'.$resignedPipelineStart, function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cells('A'.($resignedPipelineStart+1).':K'.($resignedPipelineStart+1), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setFontSize(11);
                         $cells->setAlignment('left');
-                        $cells->setValignment('center');
+                        $cells->setFontSize(11);
                     });
 
                     $sheet->cells('A'.$credentialingPipelineStart.':K'.($credentialingPipelineStart+1), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cells('A'.($credentialingPipelineStart+2).':K'.($credentialingPipelineStart+2), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setFontSize(11);
                         $cells->setAlignment('left');
-                        $cells->setValignment('center');
+                        $cells->setFontSize(11);
                     });
 
                     $sheet->cells('A'.($credentialingPipelinePhysicianStart+2).':K'.($credentialingPipelinePhysicianStart+2), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
                         $cells->setFontSize(11);
-                        $cells->setAlignment('center');
-                        $cells->setValignment('center');
                     });
 
                     $sheet->cells('A'.($credentialingPipelinePhysicianStart+3).':K'.($credentialingPipelinePhysicianStart+3), function($cells) {
-                        $cells->setFontFamily('Calibri (Body)');
-                        $cells->setFontSize(11);
                         $cells->setAlignment('left');
-                        $cells->setValignment('center');
+                        $cells->setFontSize(11);
                     });
-
-                    $tableStyle = array(
-                        'borders' => array(
-                            'outline' => array(
-                                'style' => 'thin',
-                                'color' => array('rgb' => '000000'),
-                            ),
-                            'inside' => array(
-                                'style' => 'thin',
-                                'color' => array('rgb' => '000000'),
-                            ),
-                        ),
-                    );
-
-                    $headerStyle = array(
-                        'borders' => array(
-                            'outline' => array(
-                                'style' => 'medium',
-                                'color' => array('rgb' => '000000'),
-                            ),
-                            'inside' => array(
-                                'style' => 'medium',
-                                'color' => array('rgb' => '000000'),
-                            ),
-                        ),
-                    );
-
-                    $topBorder = array(
-                        'borders' => array(
-                            'top' => array(
-                                'style' => 'medium',
-                                'color' => array('rgb' => '000000'),
-                            ),
-                        ),
-                    );
-
-                    $bottomBorder = array(
-                        'borders' => array(
-                            'bottom' => array(
-                                'style' => 'medium',
-                                'color' => array('rgb' => '000000'),
-                            ),
-                        ),
-                    );
 
                     $sheet->setWidth(array(
                         'A'     => 9,
@@ -2612,33 +2435,14 @@ class ReportsController extends Controller
                     $sheet->getStyle('G17:I21')->applyFromArray($tableStyle);
 
                     $sheet->getStyle('C12:J12')->applyFromArray($headerStyle);
-
-                    $sheet->setBorder("A".$currentRosterPhysicianStart.":K".$currentRosterPhysicianStart, 'none');
-                    
-                    $sheet->setBorder("A".$currentRosterAppStartTable.":K".$currentRosterAppStartTable, 'none');
-                    
-                    $sheet->setBorder("A".$currentBenchPhysicianStartTable.":K".$currentBenchPhysicianStartTable, 'none');
-                    
-                    $sheet->setBorder("A".$currentBenchAPPStartTable.":K".$currentBenchAPPStartTable, 'none');
-                    
-                    $sheet->setBorder("A".$recruitingPipelineStartTable.":K".$recruitingPipelineStartTable, 'none');
-                    
-                    $sheet->setBorder("A".$locumsPipelineStartTable.":K".$locumsPipelineStartTable, 'none');
-                    
-                    $sheet->setBorder("A".$declinedPipelineStartTable.":K".$declinedPipelineStartTable, 'none');
-                    
-                    $sheet->setBorder("A".$resignedPipelineStartTable.":K".$resignedPipelineStartTable, 'none');
-                    
-                    $sheet->setBorder("A".$credentialingPipelinePhysicianStart.":K".$credentialingPipelinePhysicianStart, 'none');
-                    
-                    $sheet->setBorder("A".$credentialingPipelineAPPStart.":K".$credentialingPipelineAPPStart, 'none');
                 });
             }
         })->download('xlsx'); 
     }
 
     private function getSummaryData(SummaryFilter $filter, $pages) {
-        return AccountSummary::withGlobalScope('role', new AccountSummaryScope)->with('account')->filter($filter)->paginate($pages);
+        return AccountSummary::withGlobalScope('role', new AccountSummaryScope)
+        ->with('account')->filter($filter)->paginate($pages);
     }
 
     private function getUsageData(SummaryFilter $filter, $pages) {

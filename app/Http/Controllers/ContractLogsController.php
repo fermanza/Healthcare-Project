@@ -227,7 +227,7 @@ class ContractLogsController extends Controller
 
 
         Excel::create('ContractLogs', function($excel) use ($dataToExport, $headers){
-            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers){
+            $excel->sheet('ContractLogs', function($sheet) use ($dataToExport, $headers){
                 
                 $rowNumber = 1;
 
@@ -378,7 +378,7 @@ class ContractLogsController extends Controller
             ->leftJoin('tProviderDesignation', 'tContractLogs.providerDesignationId', '=', 'tProviderDesignation.id')
             ->select('tContractLogs.*')
             ->with('status', 'position', 'practice', 'division.group', 'note', 'account', 'designation',
-                'specialty', 'recruiter', 'manager', 'coordinator', 'type', 'status')
+                'specialty', 'recruiter', 'manager', 'coordinator', 'type', 'status', 'account.region', 'account.rsc')
             ->where('tContractLogs.active', true)->filter($filter)->paginate($results);
     }
 

@@ -50,7 +50,7 @@ class AccountsController extends Controller
             ])
             ->where('active', true)
             ->termed(false)
-            ->filter($filter)->paginate(100);
+            ->filter($filter)->get();
         });
 
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
