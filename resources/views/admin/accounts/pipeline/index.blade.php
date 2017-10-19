@@ -2044,6 +2044,10 @@
                 },
 
                 staffPhysicianOpenings: function () {
+                    if(this.pipeline.practiceTime == 'fte') {
+                        return this.staffPhysicianNeeds - this.staffPhysicianHaves - this.SMDOpenings;
+                    }
+
                     return this.staffPhysicianNeeds - this.staffPhysicianHaves;
                 },
 
@@ -2109,7 +2113,7 @@
 
                 staffPhysicianFTEOpenings: function () {
                     if (this.pipeline.practiceTime == 'fte') {
-                        return this.staffPhysicianFTENeeds - this.staffPhysicianFTEHaves;
+                        return this.staffPhysicianFTENeeds - this.staffPhysicianFTEHaves - this.SMDOpenings;
                     };
 
                     if (this.fullTimeHoursPhys == 0) return 0;

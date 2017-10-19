@@ -188,6 +188,7 @@ class ContractLogsController extends Controller
         $additionalRecruiters = $contractLog->recruiters->diff(
             $contractLog->recruiter ? [$contractLog->recruiter] : []
         );
+        $recruiters = $recruiters->concat($managers)->sortBy(function($employee) { return $employee->fullName(); });
 
         JavaScript::put(compact('statuses', 'specialties'));
 
