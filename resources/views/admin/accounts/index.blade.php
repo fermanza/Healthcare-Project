@@ -53,7 +53,7 @@
                     <th class="mw30"></th>
                     <th class="mw200 w100">@lang('Name')</th>
                     <th class="mw60">@lang('Site Code')</th>
-                    <th class="mw60">@lang('Summary')</th>
+                    <th class="mw60">@lang('Site Sheet')</th>
                     <th class="mw110">@lang('City')</th>
                     <th class="mw70">@lang('State')</th>
                     <th class="mw70">@lang('Start Date')</th>
@@ -80,7 +80,7 @@
                         <td class="text-center">
                             @permission('admin.accounts.pipeline.index')
                                 <a href="{{ route('admin.accounts.pipeline.index', [$account]) }}" class="btn btn-xs btn-default">
-                                    @lang('Summary')
+                                    @lang('Site Sheet')
                                 </a>
                             @endpermission
                         </td>

@@ -45,8 +45,8 @@ class ContractLogNotification extends Notification
     {
         return (new MailMessage)
                     ->from('emttgda@treehousetechgroup.com', 'Envision Reporting')
-                    ->subject('Contract Logs Zip')
-                    ->line('Please download the zip file from the link below.')
+                    ->subject('Contract Logs')
+                    ->line('Please download the file from the link below.')
                     ->line(route('admin.contractLogs.downloadZip', ["timestamp" => $this->timestamp]));
     }
 

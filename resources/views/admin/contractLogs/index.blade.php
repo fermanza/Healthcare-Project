@@ -107,7 +107,7 @@
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="recruiters[]" data-placeholder="@lang('Recruiter')" multiple>
-                        @foreach ($employees as $recruiter)
+                        @foreach ($recruiters as $recruiter)
                             <option value="{{ $recruiter->id }}" {{ in_array($recruiter->id, Request::input('recruiters') ?: []) ? 'selected' : '' }}>{{ $recruiter->fullName() }}</option>
                         @endforeach
                     </select>
@@ -115,7 +115,7 @@
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <select class="form-control select2" name="managers[]" data-placeholder="@lang('Manager')" multiple>
-                        @foreach ($employees as $manager)
+                        @foreach ($managers as $manager)
                             <option value="{{ $manager->id }}" {{ in_array($manager->id, Request::input('managers') ?: []) ? 'selected' : '' }}>{{ $manager->fullName() }}</option>
                         @endforeach
                     </select>

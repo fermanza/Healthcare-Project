@@ -38,15 +38,19 @@ class ContractLogsController extends Controller
         $user = auth()->user();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+
+        $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
+        $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         
         $c_coordinators =  $employees->filter->hasPosition(config('instances.position_types.contract_coordinator'));
         $c_managers = $employees->filter->hasPosition(config('instances.position_types.contract_manager'));
-        $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         $directors = $employees->filter->hasPosition(config('instances.position_types.director'));
 
         $coordinators = $c_coordinators->merge($c_managers)->merge($managers)->merge($directors)->sortBy(function($coordinator) {
             return $coordinator->fullName();
         });
+
+        $recruiters = $recruiters->concat($managers)->sortBy(function($employee) { return $employee->fullName(); });
 
         $practiceTypes = Practice::all();
         $positions = Position::orderBy('position')->get();
@@ -59,7 +63,7 @@ class ContractLogsController extends Controller
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
             'positions', 'statuses', 'accounts', 'regions',
-            'RSCs', 'employees', 'coordinators'
+            'RSCs', 'employees', 'managers', 'recruiters', 'coordinators'
         );
 
         \Session::put('contractLogFilters', $request->query());
@@ -228,7 +232,7 @@ class ContractLogsController extends Controller
 
 
         Excel::create('ContractLogs', function($excel) use ($dataToExport, $headers){
-            $excel->sheet('ContractLogs', function($sheet) use ($dataToExport, $headers){
+            $excel->sheet('Contract Logs', function($sheet) use ($dataToExport, $headers){
                 
                 $rowNumber = 1;
 
@@ -248,6 +252,14 @@ class ContractLogsController extends Controller
                     $recruiters = $contractLog->recruiters->diff(
                         $contractLog->recruiter ? [$contractLog->recruiter] : []
                     );
+
+                    $startDate = $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '';
+
+                    if($startDate != '' && $startDate == \Carbon\Carbon::now()->format('m/d/Y')) {
+                        $sheet->cell('A'.$rowNumber.':Z'.$rowNumber, function($cell) {
+                            $cell->setFontColor('#ff0000');
+                        });
+                    }
 
                     foreach ($recruiters as $key => $recruiter) {
                         if (($key+1) == count($recruiters)) {
@@ -269,14 +281,14 @@ class ContractLogsController extends Controller
                         ($contractLog->account && $contractLog->account->systemAffiliation) ? $contractLog->account->systemAffiliation->name : '',
                         ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : '',
                         ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '',
-                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('d/m/Y') : '',
-                        $contractLog->contractInDate ? $contractLog->contractInDate->format('d/m/Y') : '',
+                        $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m/d/Y') : '',
+                        $contractLog->contractInDate ? $contractLog->contractInDate->format('m/d/Y') : '',
                         $contractLog->contractInDate ? $contractLog->contractInDate->diffInDays($contractLog->contractOutDate) : 'Contract Pending',
-                        $contractLog->sentToQADate ? $contractLog->sentToQADate->format('d/m/Y'): '',
-                        $contractLog->countersigDate ? $contractLog->countersigDate->format('d/m/Y') : '',
-                        $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->format('d/m/Y') : '',
+                        $contractLog->sentToQADate ? $contractLog->sentToQADate->format('m/d/Y'): '',
+                        $contractLog->countersigDate ? $contractLog->countersigDate->format('m/d/Y') : '',
+                        $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->format('m/d/Y') : '',
                         $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->diffInDays($contractLog->contractOutDate) : 'Payroll Pending',
-                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('d/m/Y') : '',
+                        $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '',
                         $contractLog->numOfHours,
                         $contractLog->recruiter ? $contractLog->recruiter->fullName() : '',
                         $additionalRecruiters,
@@ -295,12 +307,11 @@ class ContractLogsController extends Controller
                 $sheet->setFreeze('A2');
                 $sheet->setAutoFilter('A1:Z1');
 
-                $sheet->cell('A2:A'.$rowNumber, function($cell) {
-                    $cell->setBackground('#f5964f');
+                $sheet->cells('A2:A'.$rowNumber, function($cells) {
+                    $cells->setBackground('#f5964f');
                 });
 
                 $sheet->cells('A1:AJ1', function($cells) {
-                    $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri');
                     $cells->setFontSize(10);
                     $cells->setFontWeight('bold');
@@ -309,7 +320,6 @@ class ContractLogsController extends Controller
                 });
 
                 $sheet->cells('A2:AJ'.$rowNumber, function($cells) {
-                    $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri');
                     $cells->setFontSize(10);
                     $cells->setFontWeight('bold');
@@ -369,7 +379,7 @@ class ContractLogsController extends Controller
     }
 
     private function getContractLogsData(ContractLogsFilter $filter, $results) {
-        return ContractLog::withGlobalScope('role', new ContractLogScope)->leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
+        return ContractLog::leftJoin('tContractStatus', 'tContractLogs.statusId', '=', 'tContractStatus.id')
             ->leftJoin('tPosition', 'tContractLogs.positionId', '=', 'tPosition.id')
             ->leftJoin('tPractice', 'tContractLogs.practiceId', '=', 'tPractice.id')
             ->leftJoin('tAccount', 'tContractLogs.accountId', '=', 'tAccount.id')
@@ -399,7 +409,7 @@ class ContractLogsController extends Controller
         $timestamp = $request->timestamp;
         $fileSystem = new Filesystem;
 
-        $file = public_path('contract_logs_'.$timestamp.'.zip');
+        $file = public_path('contract_logs/Contract_Logs_'.$timestamp.'.xlsx');
 
         if($fileSystem->exists($file)) {
             return response()->download($file)->deleteFileAfterSend(true);
