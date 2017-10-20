@@ -793,8 +793,8 @@ class ReportsController extends Controller
             $accountIds = $dataToExport->map(function($account) { return $account->accountId; })->unique();
             $accountIds = array_values($accountIds->toArray());
 
-            if(count($accountIds) > 100) {
-                $accountIds = array_slice($accountIds, 0, 100);
+            if(count($accountIds) > 50) {
+                $accountIds = array_slice($accountIds, 0, 50);
             }
 
             $accounts = Account::whereIn('id', $accountIds)->with([
