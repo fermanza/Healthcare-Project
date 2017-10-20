@@ -193,15 +193,6 @@ Artisan::command('export-contract-logs {email} {--queue}', function ($email) {
         });
     })->store('xlsx', public_path('contract_logs'), true);
 
-    // $zipper = new \Chumper\Zipper\Zipper;
-
-    // $files = glob(public_path('contract_logs/*'));
-
-    // $zipper->make(public_path('contract_logs_'.$timestamp.'.zip'))->add($files)->close();
-
-    // $file = new Illuminate\Filesystem\Filesystem;
-    // $file->deleteDirectory(public_path('contract_logs'));
-
     $user = new App\User;
     $user->email = $email;
 
