@@ -1447,8 +1447,6 @@ class AccountsPipelineController extends Controller
     public function bulkExport(Request $request) {
         if ($request->ids) {
 
-            set_time_limit(600);
-
             $ids = $request->ids;
 
             if(count($ids) > 150) {

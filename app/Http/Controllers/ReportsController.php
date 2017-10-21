@@ -103,8 +103,6 @@ class ReportsController extends Controller
     }
 
     public function exportToExcel(SummaryFilter $filter) {
-        set_time_limit(600);
-
         $dataToExport = $this->getSummaryData($filter, 5000);
         $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO", "SVP", "RMD", "City", "Location",
@@ -550,8 +548,6 @@ class ReportsController extends Controller
     }
 
     public function usageToExcel(SummaryFilter $filter) {
-        set_time_limit(600);
-
         $dataToExport = $this->getSummaryData($filter, 5000);
         $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "Last Updated By", "Last Updated Time"
@@ -691,8 +687,6 @@ class ReportsController extends Controller
     }
 
     public function exportToExcelDetailed(Request $request, SummaryFilter $filter) {
-        set_time_limit(600);
-
         $dataToExport = $this->getSummaryData($filter, 5000);
         $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO", "SVP", "RMD", "City", "Location",
@@ -793,8 +787,8 @@ class ReportsController extends Controller
             $accountIds = $dataToExport->map(function($account) { return $account->accountId; })->unique();
             $accountIds = array_values($accountIds->toArray());
 
-            if(count($accountIds) > 50) {
-                $accountIds = array_slice($accountIds, 0, 50);
+            if(count($accountIds) > 150) {
+                $accountIds = array_slice($accountIds, 0, 150);
             }
 
             $accounts = Account::whereIn('id', $accountIds)->with([
