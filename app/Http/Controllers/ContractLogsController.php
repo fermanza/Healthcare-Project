@@ -400,7 +400,7 @@ class ContractLogsController extends Controller
             'email' => $email
         ]);
 
-        flash(__('An email will be sent to your email within the next 10 minutes.'));
+        flash(__('An email will be sent to your email after the process is done.'));
 
         return back();
     }
