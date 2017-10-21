@@ -1453,7 +1453,18 @@ class AccountsPipelineController extends Controller
                 $ids = array_slice($ids, 0, 150);
             }
 
-            $accounts = Account::whereIn('id', $ids)->get();
+            $accounts = Account::whereIn('id', $ids)->with([
+                'pipeline' => function ($query) {
+                    $query->with([
+                        'rostersBenchs', 'recruitings', 'locums',
+                    ]);
+                },
+                'recruiter.employee' => function ($query) {
+                    $query->with('person', 'manager.person');
+                },
+                'division.group.region',
+                'practices',
+            ])->get();
 
             if ($accounts) {
                 $this->exportPDF($accounts, 'pdf');
@@ -1482,18 +1493,6 @@ class AccountsPipelineController extends Controller
      */
     public function exportPDF($accounts) {
         foreach ($accounts as $account) {
-            $account->load([
-                'pipeline' => function ($query) {
-                    $query->with([
-                        'rostersBenchs', 'recruitings', 'locums',
-                    ]);
-                },
-                'recruiter.employee' => function ($query) {
-                    $query->with('person', 'manager.person');
-                },
-                'division.group.region',
-                'practices',
-            ]);
             $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
             })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
