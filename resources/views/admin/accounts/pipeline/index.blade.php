@@ -691,7 +691,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': roster.signedNotStarted}">
+                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': roster.signedNotStarted && compareFirstShift(roster.firstShift)}">
                                 <td>
                                     <input class="roster-radio" type="checkbox" name="SMD" :value="1" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
                                     <span class="hidden">@{{roster.isSMD}}</span>
@@ -713,7 +713,7 @@
                                 <td>@{{ moment(roster.firstShift) }}</td>
                                 <td>@{{ roster.notes }}</td>
                                 <td>
-                                    <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)">
+                                    <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)" @click="checkFirstShift(roster, $event)" :readonly="roster.firstShift == null">
                                     <span class="hidden">@{{roster.signedNotStarted}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
@@ -841,7 +841,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted}">
+                            <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted && compareFirstShift(roster.firstShift)}">
                                 <td>
                                     <input type="checkbox" v-model="roster.isChief" @click="updateRosterBench(roster, 'Chief')">
                                     <span class="hidden">@{{roster.isChief}}</span>
@@ -859,7 +859,7 @@
                                 <td>@{{ moment(roster.firstShift) }}</td>
                                 <td>@{{ roster.notes }}</td>
                                 <td>
-                                    <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)">
+                                    <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)" @click="checkFirstShift(roster, $event)" :readonly="roster.firstShift == null">
                                     <span class="hidden">@{{roster.signedNotStarted}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
@@ -988,7 +988,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="bench in activeBenchPhysicians" :class="{'highlight': bench.signedNotStarted}">
+                            <tr v-for="bench in activeBenchPhysicians" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift)}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
@@ -1002,7 +1002,7 @@
                                 <td>@{{ moment(bench.firstShift) }}</td>
                                 <td>@{{ bench.notes }}</td>
                                 <td>
-                                    <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
+                                    <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)" @click="checkFirstShift(bench, $event)" :readonly="bench.firstShift == null">
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
@@ -1119,7 +1119,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="bench in activeBenchApps" :class="{'highlight': bench.signedNotStarted}">
+                            <tr v-for="bench in activeBenchApps" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift)}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
@@ -1133,7 +1133,7 @@
                                 <td>@{{ moment(bench.firstShift) }}</td>
                                 <td>@{{ bench.notes }}</td>
                                 <td>
-                                    <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)">
+                                    <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)" @click="checkFirstShift(bench, $event)" :readonly="bench.firstShift == null">
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
@@ -1482,7 +1482,7 @@
                             <th class="mw100">@lang('Contract Out')</th>
                             <th class="mw100">@lang('Declined')</th>
                             <th class="mw200 w100">@lang('Reason')</th>
-                            <th class="mw50 text-center hidden-print">@lang('Actions')</th>
+                            <th class="mw80 text-center hidden-print">@lang('Actions')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1501,6 +1501,13 @@
                                         @click="setDeclining(declined)"
                                     >
                                         <i class="fa fa-pencil"></i>
+                                    </button>
+                                @endpermission
+                                @permission('admin.accounts.pipeline.rosterBench.delete')
+                                    <button type="button" class="btn btn-xs btn-danger"
+                                        @click="deleteDeclining(declined)"
+                                    >
+                                        <i class="fa fa-trash"></i>
                                     </button>
                                 @endpermission
                             </td>
@@ -1576,7 +1583,7 @@
                             <th class="mw200">@lang('Name')</th>
                             <th class="mw100">@lang('Resigned')</th>
                             <th class="mw200 w100">@lang('Reason')</th>
-                            <th class="mw50 text-center hidden-print">@lang('Actions')</th>
+                            <th class="mw80 text-center hidden-print">@lang('Actions')</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1592,6 +1599,13 @@
                                         @click="setResigning(resigned)"
                                     >
                                         <i class="fa fa-pencil"></i>
+                                    </button>
+                                @endpermission
+                                @permission('admin.accounts.pipeline.rosterBench.delete')
+                                    <button type="button" class="btn btn-xs btn-danger"
+                                        @click="deleteRosterBench(resigned)"
+                                    >
+                                        <i class="fa fa-trash"></i>
                                     </button>
                                 @endpermission
                             </td>
@@ -2400,6 +2414,30 @@
                     }
                 },
 
+                deleteDeclining: function (declining) {
+                    if (confirm("@lang('Are you sure you want to delete this record?')")) {
+                        var isLocum = _.find(this.pipeline.locums, function(locum){
+                             return locum.id == declining.id;
+                        });
+
+                        var isRecruiting = _.find(this.pipeline.recruitings, function(locum){
+                             return locum.id == declining.id;
+                        });
+
+                        if (isLocum) {
+                            axios.delete('/admin/accounts/' + this.account.id + '/pipeline/locum/' + declining.id)
+                                .then(function (response) {
+                                    this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': declining.id });
+                                }.bind(this));
+                        } else {
+                            axios.delete('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + declining.id)
+                                .then(function (response) {
+                                    this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': declining.id });
+                                }.bind(this));
+                        }
+                    }
+                },
+
 
                 addRecruiting: function () {
                     if(this.newRecruiting.id) {
@@ -2660,6 +2698,23 @@
                         .then(function (response) {
                             
                         }.bind(this));
+                },
+
+                checkFirstShift: function(roster, e) {
+                    if (roster.firstShift == null) {
+                        e.preventDefault();
+                        roster.signedNotStarted = 0;
+                        alert('First Shift Date must be filled');
+                    }
+                },
+
+
+                compareFirstShift: function (firstShift) {
+                    if(firstShift) {
+                        return moment().format('MM/DD/YYYY') <= moment(firstShift).format('MM/DD/YYYY');
+                    }
+
+                    return false;
                 },
 
                 updateNoc: function(roster) {
