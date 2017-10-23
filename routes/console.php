@@ -74,6 +74,7 @@ Artisan::command('export-contract-logs {email} {--queue}', function ($email) {
                 if($startDate != '' && $startDate == \Carbon\Carbon::now()->format('m/d/Y')) {
                     $sheet->cell('A'.$rowNumber.':Z'.$rowNumber, function($cell) {
                         $cell->setFontColor('#ff0000');
+                        $cell->setFontWeight('bold');
                     });
                 }
 

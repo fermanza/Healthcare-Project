@@ -802,7 +802,7 @@ class ReportsController extends Controller
                 },
                 'division.group.region',
                 'practices',
-            ])->get();
+            ])->orderBy('name')->get();
 
             $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers, $tableStyle, $headerStyle){
                 
@@ -1785,7 +1785,7 @@ class ReportsController extends Controller
                         '',
                         '',
                         '',
-                        'Regigned',
+                        'Resigned',
                         '',
                         'Reason',
                         ''

@@ -2044,15 +2044,21 @@
                 },
 
                 staffPhysicianOpenings: function () {
+                    var result;
+
                     if(this.pipeline.practiceTime == 'fte') {
-                        return this.staffPhysicianNeeds - this.staffPhysicianHaves - this.SMDOpenings;
+                        result = this.staffPhysicianNeeds - this.staffPhysicianHaves - this.SMDOpenings;
                     }
 
-                    return this.staffPhysicianNeeds - this.staffPhysicianHaves;
+                    result = this.staffPhysicianNeeds - this.staffPhysicianHaves;
+
+                    return this.roundStep(result, 0.5);
                 },
 
                 staffAppsOpenings: function () {
-                    return this.staffAppsNeeds - this.staffAppsHaves;
+                    var result = this.staffAppsNeeds - this.staffAppsHaves;
+
+                    return this.roundStep(result, 0.5);
                 },
 
                 staffPhysicianFTEHaves: function () {
@@ -2073,7 +2079,7 @@
                     if (this.fullTimeHoursPhys == 0) return 0;
                     var result = this.staffPhysicianHaves / this.fullTimeHoursPhys;
                     
-                    return this.roundStep(result, 0.5);
+                    return result.toFixed(1);
                 },
 
                 staffAppsFTEHaves: function () {
@@ -2094,21 +2100,21 @@
                     if (this.fullTimeHoursApps == 0) return 0;
                     var result = this.staffAppsHaves / this.fullTimeHoursApps;
                     
-                    return this.roundStep(result, 0.5);
+                    return result.toFixed(1);
                 },
 
                 staffPhysicianFTENeeds: function () {
                     if (this.fullTimeHoursPhys == 0) return 0;
                     var result = this.staffPhysicianNeeds / this.fullTimeHoursPhys;
                     
-                    return this.roundStep(result, 0.5);
+                    return result.toFixed(1);
                 },
 
                 staffAppsFTENeeds: function () {
                     if (this.fullTimeHoursApps == 0) return 0;
                     var result = this.staffAppsNeeds / this.fullTimeHoursApps;
                     
-                    return this.roundStep(result, 0.5);
+                    return result.toFixed(1);
                 },
 
                 staffPhysicianFTEOpenings: function () {

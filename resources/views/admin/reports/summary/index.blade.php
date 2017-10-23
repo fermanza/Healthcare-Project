@@ -295,6 +295,14 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            function roundStep (number, step) {
+                if (step == 0) return 0;
+
+                var factor = 1 / step;
+
+                return (Math.round(number * factor) / factor).toFixed(1);
+            }
+
             var summary = $('#datatableSummary').DataTable($.extend({}, defaultDTOptions, {
                 scrollY:        $('.reports-summary').height() > 400 ? $('.reports-summary').height()-180 : 400,
                 scrollX:        true,
@@ -337,7 +345,7 @@
                     var sum47 = api.column( 47, {page:'current'} ).data().sum();
                   
                   $( api.table().body() ).append(
-                    '<tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>'+(sum17 > 0 ? sum17.toFixed(1) : '')+'</td><td>'+(sum18 > 0 ? sum18.toFixed(1) : '')+'</td><td>'+(sum19 > 0 ? sum19.toFixed(1) : '')+'</td><td>'+(sum20 > 0 ? sum20.toFixed(1) : '')+'</td><td>'+(sum21 > 0 ? sum21.toFixed(1) : '')+'</td><td>'+(sum22 > 0 ? sum22.toFixed(1) : '')+'</td><td>'+(sum23 > 0 ? sum23.toFixed(1) : '')+'</td><td>'+(sum24 > 0 ? sum24.toFixed(1) : '')+'</td><td>'+(sum25 > 0 ? sum25.toFixed(1) : '')+'</td><td>'+(sum26 > 0 ? sum26.toFixed(1) : '')+'</td><td>'+(sum27 > 0 ? sum27.toFixed(1) : '')+'</td><td>'+(sum28 > 0 ? (sum28 > 100 ? '100%' : sum28.toFixed(1)+'%') : '')+'</td></td><td>'+(sum29 > 0 ? (sum29 > 100 ? '100%' : sum29.toFixed(1)+'%') : '')+'</td><td>'+(sum30 > 0 ? (sum30 > 100 ? '100%' : sum30.toFixed(1)+'%') : '')+'</td><td>'+(sum31 > 0 ? '$'+sum31.toFixed(2) : '')+'</td><td></td><td></td><td></td><td></td><td>'+(sum36 > 0 ? sum36.toFixed(1) : '')+'</td><td>'+(sum37 > 0 ? sum37.toFixed(1) : '')+'</td><td>'+(sum38 > 0 ? sum38.toFixed(1) : '')+'</td><td>'+(sum39 > 0 ? sum39.toFixed(1) : '')+'</td><td>'+(sum40 > 0 ? sum40.toFixed(1) : '')+'</td><td>'+(sum41 > 0 ? sum41.toFixed(1) : '')+'</td><td>'+(sum42 > 0 ? sum42.toFixed(1) : '')+'</td><td>'+(sum43 > 0 ? sum43.toFixed(1) : '')+'</td><td>'+(sum44 > 0 ? sum44.toFixed(1) : '')+'</td><td>'+(sum45 > 0 ? sum45.toFixed(1) : '')+'</td><td>'+(sum46 > 0 ? '$'+sum46.toFixed(2) : '')+'</td><td>'+(sum47 > 0 ? sum47.toFixed(1) : '')+'</td></tr>'
+                    '<tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>'+(sum17 > 0 ? sum17.toFixed(1) : '')+'</td><td>'+(sum18 > 0 ? sum18.toFixed(1) : '')+'</td><td>'+(sum19 > 0 ? sum19.toFixed(1) : '')+'</td><td>'+(sum20 > 0 ? sum20.toFixed(1) : '')+'</td><td>'+(sum21 > 0 ? sum21.toFixed(1) : '')+'</td><td>'+(sum22 > 0 ? sum22.toFixed(1) : '')+'</td><td>'+(sum23 > 0 ? roundStep(sum23, 0.5) : '')+'</td><td>'+(sum24 > 0 ? roundStep(sum24, 0.5) : '')+'</td><td>'+(sum25 > 0 ? roundStep(sum25, 0.5) : '')+'</td><td>'+(sum26 > 0 ? roundStep(sum26, 0.5) : '')+'</td><td>'+(sum27 > 0 ? roundStep(sum27, 0.5) : '')+'</td><td>'+(sum28 > 0 ? (sum28 > 100 ? '100%' : sum28.toFixed(1)+'%') : '')+'</td></td><td>'+(sum29 > 0 ? (sum29 > 100 ? '100%' : sum29.toFixed(1)+'%') : '')+'</td><td>'+(sum30 > 0 ? (sum30 > 100 ? '100%' : sum30.toFixed(1)+'%') : '')+'</td><td>'+(sum31 > 0 ? '$'+sum31.toFixed(2) : '')+'</td><td></td><td></td><td></td><td></td><td>'+(sum36 > 0 ? sum36.toFixed(1) : '')+'</td><td>'+(sum37 > 0 ? sum37.toFixed(1) : '')+'</td><td>'+(sum38 > 0 ? sum38.toFixed(1) : '')+'</td><td>'+(sum39 > 0 ? sum39.toFixed(1) : '')+'</td><td>'+(sum40 > 0 ? sum40.toFixed(1) : '')+'</td><td>'+(sum41 > 0 ? sum41.toFixed(1) : '')+'</td><td>'+(sum42 > 0 ? sum42.toFixed(1) : '')+'</td><td>'+(sum43 > 0 ? sum43.toFixed(1) : '')+'</td><td>'+(sum44 > 0 ? sum44.toFixed(1) : '')+'</td><td>'+(sum45 > 0 ? sum45.toFixed(1) : '')+'</td><td>'+(sum46 > 0 ? '$'+sum46.toFixed(2) : '')+'</td><td>'+(sum47 > 0 ? sum47.toFixed(1) : '')+'</td></tr>'
                   );
                 }
             }));

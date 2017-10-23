@@ -321,13 +321,29 @@ class AccountsPipelineController extends Controller
         $table->addCell(2000, $styleCell)->addText($currentBenchAPPList, $normalFontStyle);
         $table->addCell(2000, $styleCell)->addText($locumsAPPList, $normalFontStyle);
 
-        $section->addText('<w:br/>FTE Physicians required: '.$account->pipeline->staffPhysicianFTENeeds.'<w:br/>'.
-            'Current need: '.$account->pipeline->staffPhysicianFTEOpenings.'<w:br/>',
+        if ($account->pipeline->practiceTime == 'hours') {
+            $physNeeds = $account->pipeline->staffPhysicianFTENeeds;
+            $physOpenings = $account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves;
+        } else {
+            $physNeeds = $account->pipeline->staffPhysicianNeeds;
+            $physOpenings = $account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves;
+        }
+
+        $section->addText('<w:br/>FTE Physicians required: '.round($physNeeds,1).'<w:br/>'.
+            'Current need: '.$this->roundnum($physOpenings, 0.5).'<w:br/>',
             $normalFontStyle
         );
 
-        $section->addText('FTE Apps required: '.$account->pipeline->staffAppsFTENeeds.'<w:br/>'.
-            'Current need: '.$account->pipeline->staffAppsFTEOpenings.'<w:br/>',
+        if ($account->pipeline->practiceTime == 'hours') {
+            $appNeeds = $account->pipeline->staffAppsFTENeeds;
+            $appOpenings = $account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves;
+        } else {
+            $appNeeds = $account->pipeline->staffAppsNeeds;
+            $appOpenings = $account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves;
+        }
+
+        $section->addText('FTE Apps required: '.round($appNeeds,1).'<w:br/>'.
+            'Current need: '.$this->roundnum($appOpenings, 0.5).'<w:br/>',
             $normalFontStyle
         );
 
@@ -862,6 +878,10 @@ class AccountsPipelineController extends Controller
         return array($recruitingTableStart, $recruitingTableDataStart);
     }
 
+    private function roundnum($num, $nearest){ 
+        return round($num / $nearest) * $nearest; 
+    } 
+
     private function createMembersTable($sheet, $account, $accountPrevMonthIncComp, $accountYTDIncComp) {
         $SMD = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
             return $rosterBench->isSMD;
@@ -972,17 +992,21 @@ class AccountsPipelineController extends Controller
         });
         $sheet->cell('I15', function($cell) use ($account) {
             if ($account->pipeline->practiceTime == 'hours') {
-                $cell->setValue($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves);
+                $result = $account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves;
             } else {
-                $cell->setValue($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves);
+                $result = $account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves;
             }
+
+            $cell->setValue($this->roundnum($result, 0.5));
         });
         $sheet->cell('I16', function($cell) use ($account) {
             if ($account->pipeline->practiceTime == 'hours') {
-                $cell->setValue($account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves);
+                $result = $account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves;
             } else {
-                $cell->setValue($account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves);
+                $result = $account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves;
             }
+
+            $cell->setValue($this->roundnum($result, 0.5));
         });
         $sheet->cell('I17', function($cell) use ($accountPrevMonthIncComp) {
             $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
@@ -1449,8 +1473,8 @@ class AccountsPipelineController extends Controller
 
             $ids = $request->ids;
 
-            if(count($ids) > 150) {
-                $ids = array_slice($ids, 0, 150);
+            if(count($ids) > 175) {
+                $ids = array_slice($ids, 0, 175);
             }
 
             $accounts = Account::whereIn('id', $ids)->with([
