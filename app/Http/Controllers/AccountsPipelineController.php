@@ -11,6 +11,7 @@ use App\Division;
 use App\Employee;
 use App\Practice;
 use App\SystemAffiliation;
+use App\Group;
 use Illuminate\Filesystem\Filesystem;
 use App\Filters\AccountFilter;
 use App\Scopes\AccountScope;
@@ -1442,6 +1443,7 @@ class AccountsPipelineController extends Controller
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $affiliations = SystemAffiliation::all();
+        $groups = Group::all();
 
         if(count($queryString) == 0) {
             $accounts = [];
@@ -1459,7 +1461,7 @@ class AccountsPipelineController extends Controller
                 ->filter($filter)->get();
         }
 
-        return view('admin.accounts.export.index', compact('accounts', 'employees', 'practices', 'divisions', 'regions', 'RSCs', 'affiliations'));
+        return view('admin.accounts.export.index', compact('accounts', 'employees', 'practices', 'divisions', 'regions', 'RSCs', 'affiliations', 'groups'));
     }
 
     /**
@@ -1562,6 +1564,8 @@ class AccountsPipelineController extends Controller
             $accountPrevMonthIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
             $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
             $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
+            $sheetName = str_replace('/', '_', $sheetName);
+            
             $fileInfo = Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
                 $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
                     

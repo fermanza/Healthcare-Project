@@ -94,4 +94,17 @@ class AccountFilter extends Filter
             $query->whereIn('id', $ids);
         });
     }
+
+    /**
+     * Apply groups filter.
+     *
+     * @param  array  $groups
+     * @return void
+     */
+    public function groups($groups)
+    {
+        $this->query->whereHas('division.group', function($query) use ($groups) {
+            $query->whereIn('groupId', $groups);
+        });
+    }
 }

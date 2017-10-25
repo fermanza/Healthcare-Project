@@ -98,14 +98,14 @@ Artisan::command('export-contract-logs {email} {--queue}', function ($email) {
                     ($contractLog->account && $contractLog->account->systemAffiliation) ? $contractLog->account->systemAffiliation->name : '',
                     ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : '',
                     ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '',
-                    $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m/d/Y') : '',
-                    $contractLog->contractInDate ? $contractLog->contractInDate->format('m/d/Y') : '',
-                    $contractLog->contractInDate ? $contractLog->contractInDate->diffInDays($contractLog->contractOutDate) : 'Contract Pending',
-                    $contractLog->sentToQADate ? $contractLog->sentToQADate->format('m/d/Y'): '',
-                    $contractLog->countersigDate ? $contractLog->countersigDate->format('m/d/Y') : '',
-                    $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->format('m/d/Y') : '',
-                    $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->diffInDays($contractLog->contractOutDate) : 'Payroll Pending',
-                    $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '',
+                    $contractLog->contractOutDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->contractOutDate) : '',
+                        $contractLog->contractInDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->contractInDate) : '',
+                        $contractLog->contractInDate ? $contractLog->contractInDate->diffInDays($contractLog->contractOutDate) : 'Contract Pending',
+                        $contractLog->sentToQADate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->sentToQADate): '',
+                        $contractLog->countersigDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->countersigDate) : '',
+                        $contractLog->sentToPayrollDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->sentToPayrollDate) : '',
+                        $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->diffInDays($contractLog->contractOutDate) : 'Payroll Pending',
+                        $contractLog->projectedStartDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->projectedStartDate) : '',
                     $contractLog->numOfHours,
                     $contractLog->recruiter ? $contractLog->recruiter->fullName() : '',
                     $additionalRecruiters,
@@ -174,9 +174,9 @@ Artisan::command('export-contract-logs {email} {--queue}', function ($email) {
             ));
 
             $sheet->setColumnFormat(array(
-                'I2:J'.$rowNumber      => 'mm-dd-yy',
-                'L2:N'.$rowNumber      => 'mm-dd-yy',
-                'P2:P'.$rowNumber      => 'mm-dd-yy',
+                'I2:J'.$rowNumber      => 'mm/dd/yy',
+                'L2:N'.$rowNumber      => 'mm/dd/yy',
+                'P2:P'.$rowNumber      => 'mm/dd/yy',
             ));
 
             $tableStyle = array(

@@ -71,6 +71,14 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="groups[]" data-placeholder="@lang('Group')" multiple>
+                        @foreach ($groups as $group)
+                            <option value="{{ $group->id }}" {{ in_array($group->id, Request::input('groups') ?: []) ? 'selected' : '' }}>{{ $group->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         
             <div class="row">

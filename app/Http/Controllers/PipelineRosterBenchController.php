@@ -318,4 +318,20 @@ class PipelineRosterBenchController extends Controller
             return $recruiting;
         }
     }
+
+    /**
+     * Mark rosterbench/credentialing as completed.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @param  \App\PipelineRosterBench  $rosterBench
+     * @return \Illuminate\Http\Response
+     */
+    public function complete(Request $request, Account $account, PipelineRosterBench $rosterBench)
+    {
+        $rosterBench->completed = 1;
+        $rosterBench->save();
+
+        return $rosterBench;
+    }
 }

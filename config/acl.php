@@ -57,6 +57,7 @@ return [
         'admin.accounts.pipeline.rosterBench.resign' => 'Account Summary Roster/Bench Resign Action',
         'admin.accounts.pipeline.rosterBench.destroy' => 'Account Summary Delete Roster/Bench',
         'admin.accounts.pipeline.rosterBench.switch' => 'Account Summary Switch rosterBench To Recruiting',
+        'admin.accounts.pipeline.rosterBench.complete' => 'Account Summary Mark Credentialing As Complete',
         'admin.accounts.pipeline.recruiting.store' => 'Account Summary Recruiting Create Action',
         'admin.accounts.pipeline.recruiting.update' => 'Account Summary Recruiting Update Action',
         'admin.accounts.pipeline.recruiting.decline' => 'Account Summary Recruiting Decline Action',

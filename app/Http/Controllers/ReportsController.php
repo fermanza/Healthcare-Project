@@ -11,6 +11,7 @@ use App\Employee;
 use App\Practice;
 use App\SystemAffiliation;
 use App\StateAbbreviation;
+use App\Group;
 use App\Scopes\AccountSummaryScope;
 use App\Filters\SummaryFilter;
 use Maatwebsite\Excel\Facades\Excel;
@@ -39,6 +40,7 @@ class ReportsController extends Controller
         }
 
         $accounts = $this->getSummaryData($filter, 500);
+        $sites = Account::where('active', true)->orderBy('name')->get();
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
@@ -46,10 +48,11 @@ class ReportsController extends Controller
         $affiliations = SystemAffiliation::all();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $states = StateAbbreviation::all();
+        $groups = Group::all();
         
         $dates = AccountSummary::select('MonthEndDate')->get()->unique('MonthEndDate');
 
-        $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'action');
+        $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'groups', 'action', 'sites');
 
         return view('admin.reports.summary.index', $params);
     }

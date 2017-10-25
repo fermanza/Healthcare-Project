@@ -113,4 +113,30 @@ class SummaryFilter extends Filter
     {
         $this->query->whereIn('DOO', $names);
     }
+
+    /**
+     * Apply groups filter.
+     *
+     * @param  array  $groups
+     * @return void
+     */
+    public function groups($groups)
+    {
+        $this->query->whereHas('account.division.group', function($query) use ($groups) {
+            $query->whereIn('groupId', $groups);
+        });
+    }
+
+    /**
+     * Apply groups filter.
+     *
+     * @param  array  $sites
+     * @return void
+     */
+    public function sites($sites)
+    {
+        $this->query->whereHas('account', function($query) use ($sites) {
+            $query->whereIn('id', $sites);
+        });
+    }
 }

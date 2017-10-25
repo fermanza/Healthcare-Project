@@ -289,8 +289,20 @@
                                     <span class="visible-print">@{{ staffPhysicianOpenings }}</span>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianFTEOpenings" value="{{ old('staffPhysicianFTEOpenings') ?: $pipeline->staffPhysicianFTEOpenings }}" v-model="staffPhysicianFTEOpenings" readonly />
-                                    <span class="visible-print">@{{ staffPhysicianFTEOpenings }}</span>
+                                    <div class="inline-block">
+                                        Phys
+                                    </div>
+                                    <div class="inline-block w40p mr15">
+                                        <input type="text" class="form-control hidden-print text-center" name="staffPhysicianFTEOpenings" value="{{ old('staffPhysicianFTEOpenings') ?: $pipeline->staffPhysicianFTEOpenings }}" v-model="staffPhysicianFTEOpenings" readonly />
+                                        <span class="visible-print">@{{ staffPhysicianOpenings }}</span>
+                                    </div>
+                                    <div class="inline-block">
+                                        SMD
+                                    </div>
+                                    <div class="inline-block w40p">
+                                        <input type="text" class="form-control hidden-print text-center" name="SMDOpenings" v-model="SMDOpenings" readonly />
+                                        <span class="visible-print">@{{ SMDOpenings }}</span>
+                                    </div>
                                 </td>
                                 <td>@lang('Openings')</td>
                                 <td>
@@ -324,17 +336,6 @@
                                 <td>
                                     <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedAppReport, 1) }}%" readonly />
                                 </td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>@lang('SMD Opening')</td>
-                                <td>
-                                    <input type="text" class="form-control hidden-print" name="SMDOpenings" v-model="SMDOpenings" readonly />
-                                    <span class="visible-print">@{{ SMDOpenings }}</span>
-                                </td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
                         </tbody>
@@ -407,8 +408,20 @@
                             <tr>
                                 <td>@lang('Openings')</td>
                                 <td>
-                                    <input type="text" class="form-control hidden-print" name="staffPhysicianOpenings" value="{{ old('staffPhysicianOpenings') ?: $pipeline->staffPhysicianOpenings }}" v-model="staffPhysicianOpenings" readonly />
-                                    <span class="visible-print">@{{ staffPhysicianOpenings }}</span>
+                                    <div class="inline-block">
+                                        Phys
+                                    </div>
+                                    <div class="inline-block w40p mr15">
+                                        <input type="text" class="form-control hidden-print text-center" name="staffPhysicianOpenings" value="{{ old('staffPhysicianOpenings') ?: $pipeline->staffPhysicianOpenings }}" v-model="staffPhysicianOpenings" readonly />
+                                        <span class="visible-print">@{{ staffPhysicianOpenings }}</span>
+                                    </div>
+                                    <div class="inline-block">
+                                        SMD
+                                    </div>
+                                    <div class="inline-block w40p">
+                                        <input type="text" class="form-control hidden-print text-center" name="SMDOpenings" v-model="SMDOpenings" readonly />
+                                        <span class="visible-print">@{{ SMDOpenings }}</span>
+                                    </div>
                                 </td>
                                 <td>&nbsp;</td>
                                 <td>@lang('Openings')</td>
@@ -440,17 +453,6 @@
                                 <td>
                                     <input type="text" class="form-control hidden-print" name="recruitedApp" value="{{ number_format($percentRecruitedAppReport, 1) }}%" readonly />
                                 </td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>@lang('SMD Opening')</td>
-                                <td>
-                                    <input type="text" class="form-control hidden-print" name="SMDOpenings" v-model="SMDOpenings" readonly />
-                                    <span class="visible-print">@{{ SMDOpenings }}</span>
-                                </td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
                         </tbody>
@@ -504,6 +506,8 @@
                                             >
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                        @endpermission
+                                        @permission('admin.accounts.pipeline.rosterBench.complete')
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
@@ -603,6 +607,8 @@
                                             >
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                        @endpermission
+                                        @permission('admin.accounts.pipeline.rosterBench.complete')
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
@@ -1706,6 +1712,8 @@
                                             >
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                        @endpermission
+                                        @permission('admin.accounts.pipeline.rosterBench.complete')
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
@@ -1805,6 +1813,8 @@
                                             >
                                                 <i class="fa fa-pencil"></i>
                                             </button>
+                                        @endpermission
+                                        @permission('admin.accounts.pipeline.rosterBench.complete')
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
@@ -2062,6 +2072,8 @@
 
                     if(this.pipeline.practiceTime == 'fte') {
                         result = this.staffPhysicianNeeds - this.staffPhysicianHaves - this.SMDOpenings;
+
+                        return this.roundStep(result, 0.5);
                     }
 
                     result = this.staffPhysicianNeeds - this.staffPhysicianHaves;
@@ -2137,7 +2149,7 @@
                     };
 
                     if (this.fullTimeHoursPhys == 0) return 0;
-                    var result = this.staffPhysicianFTENeeds - this.staffPhysicianFTEHaves;
+                    var result = this.staffPhysicianFTENeeds - this.staffPhysicianFTEHaves  - this.SMDOpenings;
                     
                     return this.roundStep(result, 0.5);
                 },
@@ -2369,8 +2381,16 @@
                 },
 
                 completeCredentialing: function(credentialing) {
+                    credentialing.interview = this.moment(credentialing.interview);
+                    credentialing.contractIn = this.moment(credentialing.contractIn);
+                    credentialing.contractOut = this.moment(credentialing.contractOut);
+                    credentialing.firstShift = this.moment(credentialing.firstShift);
+                    credentialing.fileToCredentialing = this.moment(credentialing.fileToCredentialing);
+                    credentialing.privilegeGoal = this.moment(credentialing.privilegeGoal);
+                    credentialing.appToHospital = this.moment(credentialing.appToHospital);
                     credentialing.completed = 1;
-                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + credentialing.id;
+
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + credentialing.id + '/complete';
 
                     axios.patch(endpoint, credentialing)
                         .then(function (response) {
