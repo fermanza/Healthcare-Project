@@ -47,6 +47,7 @@ return [
         'admin.accounts.update' => 'Account Edit Action',
         'admin.accounts.destroy' => 'Delete Account',
         'admin.accounts.export.pdf' => 'Bulk export account summary',
+        'admin.accounts.download' => 'Download Account Bulk Export Zip',
     ],
 
     'Account Summary' => [

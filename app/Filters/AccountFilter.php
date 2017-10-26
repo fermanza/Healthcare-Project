@@ -90,8 +90,8 @@ class AccountFilter extends Filter
      */
     public function DOO($ids)
     {
-        $this->query->whereHas('dca', function($query) use ($ids) {
-            $query->whereIn('id', $ids);
+        $this->query->whereHas('dcs', function($query) use ($ids) {
+            $query->whereIn('employeeId', $ids);
         });
     }
 

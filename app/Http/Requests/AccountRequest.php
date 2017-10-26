@@ -21,7 +21,6 @@ class AccountRequest extends FormRequest
     {
         $commonRules = [
             'name' => 'required',
-            'siteCode' => 'required|numeric',
             'photoPath' => '',
             'recruiterId' => 'exists:tEmployee,id',
             'credentialerId' => 'exists:tEmployee,id',
@@ -69,7 +68,15 @@ class AccountRequest extends FormRequest
             'hasAMD' => 'boolean',
         ];
         
-        $methodRules = [];
+        if ($this->isCreate()) {
+            $methodRules = [
+                'siteCode' => 'required|unique:tAccount,siteCode|numeric',
+            ];
+        } else {
+            $methodRules = [
+                'siteCode' => 'required|unique:tAccount,siteCode,'.$this->account->id.'|numeric',
+            ];
+        }
 
         return array_merge($commonRules, $methodRules);
     }

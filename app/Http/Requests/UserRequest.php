@@ -15,7 +15,6 @@ class UserRequest extends FormRequest
     {
         $commonRules = [
             'name' => 'required',
-            'email' => 'required|email',
             'roles' => 'required|array|exists:tRole,id',
             'employeeId' => 'nullable|exists:tEmployee,id',
             'RSCId' => 'nullable|exists:tRSC,id',
@@ -25,10 +24,12 @@ class UserRequest extends FormRequest
         if ($this->isCreate()) {
             $methodRules = [
                 'password' => 'required|min:6',
+                'email' => 'required|unique:tUser,email|email',
             ];
         } else {
             $methodRules = [
                 'password' => 'nullable|min:6',
+                'email' => 'required|unique:tUser,email,'.$this->user->id.'|email',
             ];
         }
 

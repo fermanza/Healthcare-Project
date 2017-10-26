@@ -53,6 +53,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->get('accounts/{account}/manager', 'AccountsController@findManager')->name('accounts.find');
     
     $router->get('accounts/export', 'AccountsPipelineController@exportIndex')->name('accounts.export');
+    $router->get('accounts/download', 'AccountsPipelineController@downloadZip')->name('accounts.download');
     $router->post('accounts/export/pdf', 'AccountsPipelineController@bulkExport')->name('accounts.export.pdf');
     
     $router->resource('accounts', 'AccountsController');

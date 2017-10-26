@@ -240,8 +240,10 @@ class AccountsPipelineController extends Controller
         $locumsAPPList = $lists['locumsAPPList'];
         $futureRostersList = $lists['futureRostersList'];
         $futureLocumsList = $lists['futureLocumsList'];
-        $recruitingsList = $lists['recruitingsList'];
-        $credentialingsList = $lists['credentialingsList'];
+        $recruitingsPhysList = $lists['recruitingsPhysList'];
+        $recruitingsAppList = $lists['recruitingsAppList'];
+        $credentialingsPhysList = $lists['credentialingsPhysList'];
+        $credentialingsAppList = $lists['credentialingsAppList'];
 
         $address = $account->googleAddress.' | '.$account->city.', '.$account->state.' '.$account->zipCode;
 
@@ -361,14 +363,20 @@ class AccountsPipelineController extends Controller
             $section->addText($futureLocumsList, $normalFontStyle);
         }
 
-        if($recruitingsList) {
-            $section->addText('Pipeline/candidate update', $boldUnderlinedFontStyle);
-            $section->addText($recruitingsList, $normalFontStyle);
+        if($recruitingsPhysList || $recruitingsAppList) {
+            $section->addText('Pipeline/Candidate Update', $boldUnderlinedFontStyle);
+            $section->addText('PHYS', $boldUnderlinedFontStyle);
+            $section->addText($recruitingsPhysList, $normalFontStyle);
+            $section->addText('APP', $boldUnderlinedFontStyle);
+            $section->addText($recruitingsAppList, $normalFontStyle);
         }
 
-        if($credentialingsList) {
+        if($credentialingsPhysList || $credentialingsAppList) {
             $section->addText('Credentialing', $boldUnderlinedFontStyle);
-            $section->addText($credentialingsList, $normalFontStyle);
+            $section->addText('PHYS', $boldUnderlinedFontStyle);
+            $section->addText($credentialingsPhysList, $normalFontStyle);
+            $section->addText('APP', $boldUnderlinedFontStyle);
+            $section->addText($credentialingsAppList, $normalFontStyle);
         }
 
         // Saving the document...
@@ -678,13 +686,37 @@ class AccountsPipelineController extends Controller
 
         $futureLocums = $futureLocums->values();
 
-        $credentialings = $account->pipeline->rostersBenchs->filter(function($locum) {
-            return $locum->signedNotStarted;
-        })->reject(function($locum){
-            return $locum->declined;
+        $credentialingsPhys = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->signedNotStarted && $rosterBench->activity == 'physician';
+        })->reject(function($rosterBench){
+            return $rosterBench->resigned;
+        })->reject(function($recruiting){
+            return $recruiting->completed;
         })->sortBy('name');
 
-        $credentialings = $credentialings->values();
+        $credentialingsPhys = $credentialingsPhys->values();
+
+        $credentialingsApp = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->signedNotStarted && $rosterBench->activity == 'app';
+        })->reject(function($rosterBench){
+            return $rosterBench->resigned;
+        })->reject(function($recruiting){
+            return $recruiting->completed;
+        })->sortBy('name');
+
+        $credentialingsApp = $credentialingsApp->values();
+
+        $recruitingsPhys = $account->pipeline->recruitings->filter(function($recruiting) {
+            return $recruiting->type == 'phys';
+        })->reject(function($recruiting) {
+            return $recruiting->declined;
+        })->sortBy('name');
+
+        $recruitingsApp = $account->pipeline->recruitings->filter(function($recruiting) {
+            return $recruiting->type == 'app';
+        })->reject(function($recruiting) {
+            return $recruiting->declined;
+        })->sortBy('name');
         /////// End of Elements for lists /////////
 
 
@@ -761,18 +793,32 @@ class AccountsPipelineController extends Controller
             $futureLocumsList.= '<w:br/>';
         }
 
-        $recruitingsList = '';
-        foreach ($account->pipeline->recruitings as $key => $recruiting) {
-            $recruitingsList .= $recruiting->name.' - '.htmlspecialchars($recruiting->notes);
+        $recruitingsPhysList = '';
+        foreach ($recruitingsPhys as $key => $recruitingPhys) {
+            $recruitingsPhysList .= $recruitingPhys->name.' - '.htmlspecialchars($recruitingPhys->notes);
 
-            $recruitingsList.= '<w:br/>';
+            $recruitingsPhysList.= '<w:br/>';
         }
 
-        $credentialingsList = '';
-        foreach ($credentialings as $key => $credentialing) {
-            $credentialingsList .= $credentialing->name.' - '.htmlspecialchars($credentialing->notes);
+        $recruitingsAppList = '';
+        foreach ($recruitingsApp as $key => $recruitingApp) {
+            $recruitingsAppList .= $recruitingApp->name.' - '.htmlspecialchars($recruitingApp->notes);
 
-            $credentialingsList.= '<w:br/>';
+            $recruitingsAppList.= '<w:br/>';
+        }
+
+        $credentialingsPhysList = '';
+        foreach ($credentialingsPhys as $key => $credentialingPhys) {
+            $credentialingsPhysList .= $credentialingPhys->name.' - '.htmlspecialchars($credentialingPhys->credentialingNotes);
+
+            $credentialingsPhysList.= '<w:br/>';
+        }
+
+        $credentialingsAppList = '';
+        foreach ($credentialingsApp as $key => $credentialingApp) {
+            $credentialingsAppList .= $credentialingApp->name.' - '.htmlspecialchars($credentialingApp->credentialingNotes);
+
+            $credentialingsAppList.= '<w:br/>';
         }
         /////// End of Lists ///////////
 
@@ -785,8 +831,10 @@ class AccountsPipelineController extends Controller
             'locumsAPPList' => $locumsAPPList,
             'futureRostersList' => $futureRostersList,
             'futureLocumsList' => $futureLocumsList,
-            'recruitingsList' => $recruitingsList,
-            'credentialingsList' => $credentialingsList
+            'recruitingsPhysList' => $recruitingsPhysList,
+            'recruitingsAppList' => $recruitingsAppList,
+            'credentialingsPhysList' => $credentialingsPhysList,
+            'credentialingsAppList' => $credentialingsAppList,
         );
     }
 
@@ -1475,36 +1523,45 @@ class AccountsPipelineController extends Controller
 
             $ids = $request->ids;
 
-            if(count($ids) > 175) {
-                $ids = array_slice($ids, 0, 175);
-            }
+            if(count($ids) > 100) {
+                $email = \Auth::user()->email;
 
-            $accounts = Account::whereIn('id', $ids)->with([
-                'pipeline' => function ($query) {
-                    $query->with([
-                        'rostersBenchs', 'recruitings', 'locums',
-                    ]);
-                },
-                'recruiter.employee' => function ($query) {
-                    $query->with('person', 'manager.person');
-                },
-                'division.group.region',
-                'practices',
-            ])->get();
+                \Artisan::queue('export-accounts-pdf', [
+                    'email' => $email,
+                    'ids' => $ids
+                ]);
 
-            if ($accounts) {
-                $this->exportPDF($accounts, 'pdf');
+                flash(__('An email will be sent to your email after the process is done.'));
 
-                $zipper = new \Chumper\Zipper\Zipper;
+                return back();
+            } else {
+                $accounts = Account::whereIn('id', $ids)->with([
+                    'pipeline' => function ($query) {
+                        $query->with([
+                            'rostersBenchs', 'recruitings', 'locums',
+                        ]);
+                    },
+                    'recruiter.employee' => function ($query) {
+                        $query->with('person', 'manager.person');
+                    },
+                    'division.group.region',
+                    'practices',
+                ])->get();
 
-                $files = glob(public_path('exports/*'));
-                $zipper->make('reports.zip')->add($files)->close();
+                if ($accounts) {
+                    $this->exportPDF($accounts, 'pdf');
 
-                $file = new Filesystem;
+                    $zipper = new \Chumper\Zipper\Zipper;
 
-                $file->deleteDirectory(public_path('exports'));
+                    $files = glob(public_path('exports/*'));
+                    $zipper->make('reports.zip')->add($files)->close();
 
-                return response()->download(public_path('reports.zip'))->deleteFileAfterSend(true);
+                    $file = new Filesystem;
+
+                    $file->deleteDirectory(public_path('exports'));
+
+                    return response()->download(public_path('reports.zip'))->deleteFileAfterSend(true);
+                }
             }
         } else {
             flash(__('Use the filters to get data first.'));
@@ -1522,32 +1579,24 @@ class AccountsPipelineController extends Controller
             $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
             })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-            ->reject(function($rosterBench){
-                return $rosterBench->signedNotStarted;
-            })->sortByDesc(function($rosterBench){
+            ->sortByDesc(function($rosterBench){
                 return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->name);
             });
             $activeRosterPhysicians = $activeRosterPhysicians->values();
             $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
             })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-            ->reject(function($rosterBench){
-                return $rosterBench->signedNotStarted;
-            })->sortBy('name');
+            ->sortBy('name');
             $benchPhysicians = $benchPhysicians->values();
             $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
             })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-            ->reject(function($rosterBench){
-                return $rosterBench->signedNotStarted;
-            })->sortBy('name');
+            ->sortBy('name');
             $activeRosterAPPs = $activeRosterAPPs->values();
             $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                 return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
             })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-            ->reject(function($rosterBench){
-                return $rosterBench->signedNotStarted;
-            })->sortBy('name');
+            ->sortBy('name');
             $benchAPPs = $benchAPPs->values();
             $credentialers = $account->pipeline->rostersBenchs
             ->reject(function($rosterBench) { 
@@ -1700,6 +1749,21 @@ class AccountsPipelineController extends Controller
                     $sheet->setBorder("G3:G".($recruitingTable[0]-1), 'none');
                 });
             })->store('pdf', public_path('exports'), true);
+        }
+    }
+
+    public function downloadZip(Request $request) {
+        $timestamp = $request->timestamp;
+        $fileSystem = new Filesystem;
+
+        $file = public_path('reports_'.$timestamp.'.zip');
+
+        if($fileSystem->exists($file)) {
+            return response()->download($file)->deleteFileAfterSend(true);
+        } else {
+            flash(__("That file has already been downloaded and it's not on the server anymore."));
+
+            return redirect()->route('admin.accounts.export');
         }
     }
 }
