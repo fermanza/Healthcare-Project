@@ -36,7 +36,14 @@
                 @endif
                 <input type="text" class="form-control" id="siteCode" name="siteCode" value="{{ old('siteCode') ?: $account->siteCode }}" required />
                 @if ($errors->has('siteCode'))
-                    <span class="help-block"><strong>{{ $errors->first('siteCode') }}</strong></span>
+                    <span class="help-block">
+                        <strong>
+                            {{ $errors->first('siteCode') }} 
+                            <a href="{{ $oldAccount ? route('admin.accounts.edit', $oldAccount->id) : '' }}" target="_blank">
+                                {{ $oldAccount ? 'Check Here' : '' }}
+                            </a>
+                        </strong>
+                    </span>
                 @endif
             </div>
         </div>
