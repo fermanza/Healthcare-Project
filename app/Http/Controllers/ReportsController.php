@@ -1570,7 +1570,7 @@ class ReportsController extends Controller
                             $cell->setValue(round($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys, 1));
                         });
                         $sheet->cell('E19', function($cell) use ($account) {
-                            $cell->setValue(round(($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys), 1));
+                            $cell->setValue($this->roundnum($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys), 0.5));
                         });
                     } else {
                         $sheet->cell('D17', function($cell) use ($account) {
@@ -1580,7 +1580,7 @@ class ReportsController extends Controller
                             $cell->setValue(round($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys, 1));
                         });
                         $sheet->cell('D19', function($cell) use ($account) {
-                            $cell->setValue(round(($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys), 1));
+                            $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys), 0.5));
                         });
                         $sheet->cell('D20', function($cell) use ($percentRecruitedPhys) {
                             $cell->setValue(number_format($percentRecruitedPhys, 1).'%');
@@ -3023,5 +3023,9 @@ class ReportsController extends Controller
         });
 
         return array($requirementsTableStart);
+    }
+
+    private function roundnum($num, $nearest){ 
+        return round($num / $nearest) * $nearest; 
     }
 }
