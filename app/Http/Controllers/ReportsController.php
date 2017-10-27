@@ -1256,9 +1256,7 @@ class ReportsController extends Controller
                 $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                     return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
                 })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-                ->reject(function($rosterBench){
-                    return $rosterBench->signedNotStarted;
-                })->sortByDesc(function($rosterBench){
+                ->sortByDesc(function($rosterBench){
                     return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->isAMD, $rosterBench->name);
                 });
 
@@ -1277,25 +1275,19 @@ class ReportsController extends Controller
                 $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                     return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
                 })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-                ->reject(function($rosterBench){
-                    return $rosterBench->signedNotStarted;
-                })->sortByDesc(function($rosterBench){
+                ->sortByDesc(function($rosterBench){
                     return sprintf('%-12s%s', $rosterBench->isChief, $rosterBench->name);
                 });
 
                 $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                     return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
                 })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-                ->reject(function($rosterBench){
-                    return $rosterBench->signedNotStarted;
-                })->sortBy('name');
+                ->sortBy('name');
 
                 $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                     return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
                 })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-                ->reject(function($rosterBench){
-                    return $rosterBench->signedNotStarted;
-                })->sortBy('name');
+                ->sortBy('name');
 
                 $recruitings = $account->pipeline->recruitings->reject(function($recruiting) { 
                     return !is_null($recruiting->declined); 
