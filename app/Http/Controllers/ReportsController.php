@@ -3026,6 +3026,8 @@ class ReportsController extends Controller
     }
 
     private function roundnum($num, $nearest){ 
-        return round($num / $nearest) * $nearest; 
+        $num = round($num / $nearest) * $nearest;
+        
+        return (-1 * abs($num));
     }
 }
