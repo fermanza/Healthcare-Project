@@ -2734,7 +2734,7 @@
                         return moment().format('MM/DD/YYYY') <= moment(firstShift).format('MM/DD/YYYY');
                     }
 
-                    return false;
+                    return true;
                 },
 
                 updateNoc: function(roster) {
