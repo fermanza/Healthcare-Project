@@ -1137,8 +1137,8 @@ class AccountsPipelineController extends Controller
         $physicianNegative = $physicianOpenings < 0 ? true : false;
         $appNegative = $appOpenings < 0 ? true : false;
 
-        $physicianDecimal = $physicianOpenings - floor($physicianOpenings);
-        $appDecimal = $appOpenings - floor($appOpenings);
+        $physicianDecimal = $this->roundnum($physicianOpenings - floor($physicianOpenings), 0.5);
+        $appDecimal = $this->roundnum($appOpenings - floor($appOpenings), 0.5);
 
         $normalizedPhyOpenings = $physicianNegative ? (ceil($physicianOpenings * -1)) : ceil($physicianOpenings);
         $normalizedAppOpenings = $appNegative ? (ceil($appOpenings * -1)) : ceil($appOpenings);
