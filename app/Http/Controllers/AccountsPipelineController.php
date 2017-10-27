@@ -1146,8 +1146,6 @@ class AccountsPipelineController extends Controller
         $activeRosterPhysicians = $activeRosterPhysicians->toArray();
         $activeRosterAPPs = $activeRosterAPPs->toArray();
 
-        dd($physicianDecimal);
-
         for ($x = 1; $x <= (int) $normalizedPhyOpenings; $x++) {
             $tempArray = array();
 
