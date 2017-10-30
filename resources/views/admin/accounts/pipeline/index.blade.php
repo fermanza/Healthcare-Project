@@ -816,6 +816,9 @@
                                 <td>
                                     <input type="checkbox" v-model="rosterPhysician.signedNotStarted">
                                 </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterPhysician.isProactive">
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -963,6 +966,9 @@
                                 </td>
                                 <td>
                                     <input type="checkbox" v-model="rosterApps.signedNotStarted">
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterApps.isProactive">
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -2741,7 +2747,7 @@
 
                 compareFirstShift: function (firstShift) {
                     if(firstShift) {
-                        return moment().format('MM/DD/YYYY') <= moment(firstShift).format('MM/DD/YYYY');
+                        return moment() <= moment(firstShift);
                     }
 
                     return true;

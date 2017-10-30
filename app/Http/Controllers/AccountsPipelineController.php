@@ -1058,10 +1058,18 @@ class AccountsPipelineController extends Controller
             $cell->setValue($this->roundnum($result, 0.5));
         });
         $sheet->cell('I17', function($cell) use ($accountPrevMonthIncComp) {
-            $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
+            if(is_object($accountPrevMonthIncComp)) {
+                $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
+            } else {
+                $cell->setValue('');
+            }
         });
         $sheet->cell('I18', function($cell) use ($accountYTDIncComp) {
-            $cell->setValue($accountYTDIncComp->{'YTD - Inc Comp'});
+            if(is_object($accountYTDIncComp)) {
+                $cell->setValue($accountYTDIncComp->{'YTD - Inc Comp'});
+            } else {
+                $cell->setValue('');
+            }
         });
     }
 
@@ -1523,7 +1531,7 @@ class AccountsPipelineController extends Controller
 
             $ids = $request->ids;
 
-            if(count($ids) > 100) {
+            if(count($ids) < 100) {
                 $email = \Auth::user()->email;
 
                 \Artisan::queue('export-accounts-pdf', [
@@ -1546,21 +1554,12 @@ class AccountsPipelineController extends Controller
                     },
                     'division.group.region',
                     'practices',
-                ])->get();
+                ])->orderBy('name')->get();
 
                 if ($accounts) {
-                    $this->exportPDF($accounts, 'pdf');
+                    $fileInfo = $this->exportPDF($accounts);
 
-                    $zipper = new \Chumper\Zipper\Zipper;
-
-                    $files = glob(public_path('exports/*'));
-                    $zipper->make('reports.zip')->add($files)->close();
-
-                    $file = new Filesystem;
-
-                    $file->deleteDirectory(public_path('exports'));
-
-                    return response()->download(public_path('reports.zip'))->deleteFileAfterSend(true);
+                    return response()->download(public_path('exports/'.$fileInfo['file']))->deleteFileAfterSend(true);
                 }
             }
         } else {
@@ -1575,48 +1574,53 @@ class AccountsPipelineController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function exportPDF($accounts) {
-        foreach ($accounts as $account) {
-            $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-                return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
-            })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-            ->sortByDesc(function($rosterBench){
-                return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->name);
-            });
-            $activeRosterPhysicians = $activeRosterPhysicians->values();
-            $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-                return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
-            })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-            ->sortBy('name');
-            $benchPhysicians = $benchPhysicians->values();
-            $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-                return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
-            })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-            ->sortBy('name');
-            $activeRosterAPPs = $activeRosterAPPs->values();
-            $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-                return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
-            })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
-            ->sortBy('name');
-            $benchAPPs = $benchAPPs->values();
-            $credentialers = $account->pipeline->rostersBenchs
-            ->reject(function($rosterBench) { 
-                return !is_null($rosterBench->resigned); 
-            })
-            ->reject(function($rosterBench){
-                return !$rosterBench->signedNotStarted;
-            })->sortBy('name');
-            $recruitings = $account->pipeline->recruitings
-            ->reject(function($rosterBench) { 
-                return !is_null($rosterBench->declined); 
-            })
-            ->sortBy('name');
-            $accountPrevMonthIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
-            $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
-            $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
-            $sheetName = str_replace('/', '_', $sheetName);
-            
-            $fileInfo = Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
-                $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
+        $timestamp = Carbon::now()->timestamp;
+
+        $fileInfo = Excel::create('Accounts_Batch_Print_'.$timestamp, function($excel) use ($accounts){
+
+            foreach ($accounts as $account) {
+                $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                    return $rosterBench->activity == 'physician' && $rosterBench->place == 'roster';
+                })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+                ->sortByDesc(function($rosterBench){
+                    return sprintf('%-12s%s', $rosterBench->isSMD, $rosterBench->name);
+                });
+                $activeRosterPhysicians = $activeRosterPhysicians->values();
+                $benchPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                    return $rosterBench->activity == 'physician' && $rosterBench->place == 'bench';
+                })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+                ->sortBy('name');
+                $benchPhysicians = $benchPhysicians->values();
+                $activeRosterAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                    return $rosterBench->activity == 'app' && $rosterBench->place == 'roster';
+                })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+                ->sortBy('name');
+                $activeRosterAPPs = $activeRosterAPPs->values();
+                $benchAPPs = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                    return $rosterBench->activity == 'app' && $rosterBench->place == 'bench';
+                })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
+                ->sortBy('name');
+                $benchAPPs = $benchAPPs->values();
+                $credentialers = $account->pipeline->rostersBenchs
+                ->reject(function($rosterBench) { 
+                    return !is_null($rosterBench->resigned); 
+                })
+                ->reject(function($rosterBench){
+                    return !$rosterBench->signedNotStarted;
+                })->sortBy('name');
+                $recruitings = $account->pipeline->recruitings
+                ->reject(function($rosterBench) { 
+                    return !is_null($rosterBench->declined); 
+                })
+                ->sortBy('name');
+                $accountPrevMonthIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+                $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
+
+                $sheetName = (strlen($account->name) > 31) ? substr($account->name,0,28).'...' : $account->name;
+                $sheetName = str_replace("/", "_", $sheetName);
+                $sheetName = str_replace("?", "_", $sheetName);
+
+                $excel->sheet($sheetName, function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
                     
                     $rosterBenchRow = $this->createRosterBenchTable($sheet, $account, $activeRosterPhysicians, $activeRosterAPPs);
                     ///////// Team Members //////////
@@ -1748,15 +1752,17 @@ class AccountsPipelineController extends Controller
                     $sheet->setBorder("H18:I".($recruitingTable[0]-1), 'none');
                     $sheet->setBorder("G3:G".($recruitingTable[0]-1), 'none');
                 });
-            })->store('pdf', public_path('exports'), true);
-        }
+            }
+        })->store('pdf', public_path('exports'), true);
+
+        return $fileInfo;
     }
 
     public function downloadZip(Request $request) {
         $timestamp = $request->timestamp;
         $fileSystem = new Filesystem;
 
-        $file = public_path('reports_'.$timestamp.'.zip');
+        $file = public_path('exports/Accounts_Batch_Print_'.$timestamp.'.pdf');
 
         if($fileSystem->exists($file)) {
             return response()->download($file)->deleteFileAfterSend(true);
