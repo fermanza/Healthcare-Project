@@ -1586,25 +1586,25 @@ class ReportsController extends Controller
                             }
                         });
                     } else {
-                        $sheet->cell('D17', function($cell) use ($account) {
+                        $sheet->cell('D17', function($cell) use ($account, $activeRosterPhysicians) {
                             if ($account->pipeline->fullTimeHoursPhys == 0) {
                                 $cell->setValue(0);
                             } else {
-                                $cell->setValue(round($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys, 1));
+                                $cell->setValue($account->pipeline->staffPhysicianHaves);
                             }
                         });
                         $sheet->cell('D18', function($cell) use ($account) {
                             if ($account->pipeline->fullTimeHoursPhys == 0) {
                                 $cell->setValue(0);
                             } else {
-                                $cell->setValue(round($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys, 1));
+                                $cell->setValue($account->pipeline->staffPhysicianNeeds);
                             }
                         });
                         $sheet->cell('D19', function($cell) use ($account) {
                             if ($account->pipeline->fullTimeHoursPhys == 0) {
                                 $cell->setValue(0);
                             } else {
-                                $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys), 0.5));
+                                $cell->setValue($this->roundnum($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianHaves, 0.5));
                             }
                         });
                         $sheet->cell('D20', function($cell) use ($percentRecruitedPhys) {

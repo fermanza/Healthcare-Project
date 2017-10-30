@@ -684,7 +684,7 @@
                                 <th class="mw50">@lang('SMD')</th>
                                 <th class="mw50">@lang('AMD')</th>
                                 <th class="mw200">@lang('Name')</th>
-                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw50">@lang('Hours')</th>
                                 <th class="mw60">@lang('FT/PTG/EMB')</th>
                                 <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
@@ -692,7 +692,8 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
-                                <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw60">@lang('Signed Not Started')</th>
+                                <th class="mw60">@lang('Proactive')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -710,7 +711,7 @@
                                 <td>@{{ roster.hours }}</td>
                                 <td class="text-uppercase">@{{ roster.contract }}</td>
                                 <td>
-                                    <input type="checkbox" v-model="roster.noc" @change="updateNoc(roster)">
+                                    <input type="checkbox" v-model="roster.noc" @change="updateHighLight(roster)">
                                     <span class="hidden">@{{roster.noc}}</span>
                                 </td>
                                 <td>@{{ moment(roster.interview) }}</td>
@@ -721,6 +722,10 @@
                                 <td>
                                     <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)" @click="checkFirstShift(roster, $event)" :readonly="roster.firstShift == null">
                                     <span class="hidden">@{{roster.signedNotStarted}}</span>
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.isProactive" @change="updateHighLight(roster)">
+                                    <span class="hidden">@{{roster.isProactive}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
@@ -834,7 +839,7 @@
                             <tr>
                                 <th class="mw100">@lang('Chief')</th>
                                 <th class="mw200">@lang('Name')</th>
-                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw50">@lang('Hours')</th>
                                 <th class="mw60">@lang('FT/PTG/EMB')</th>
                                 <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
@@ -842,7 +847,8 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
-                                <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw60">@lang('Signed Not Started')</th>
+                                <th class="mw60">@lang('Proactive')</th>
                                 <th class="mw150 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -856,7 +862,7 @@
                                 <td>@{{ roster.hours }}</td>
                                 <td class="text-uppercase">@{{ roster.contract }}</td>
                                 <td>
-                                    <input type="checkbox" v-model="roster.noc" @change="updateNoc(roster)">
+                                    <input type="checkbox" v-model="roster.noc" @change="updateHighLight(roster)">
                                     <span class="hidden">@{{roster.noc}}</span>
                                 </td>
                                 <td>@{{ moment(roster.interview) }}</td>
@@ -867,6 +873,10 @@
                                 <td>
                                     <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)" @click="checkFirstShift(roster, $event)" :readonly="roster.firstShift == null">
                                     <span class="hidden">@{{roster.signedNotStarted}}</span>
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.isProactive" @change="updateHighLight(roster)">
+                                    <span class="hidden">@{{roster.isProactive}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
@@ -999,7 +1009,7 @@
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
                                 <td>
-                                    <input type="checkbox" v-model="bench.noc" @change="updateNoc(bench)">
+                                    <input type="checkbox" v-model="bench.noc" @change="updateHighLight(bench)">
                                     <span class="hidden">@{{bench.noc}}</span>
                                 </td>
                                 <td>@{{ moment(bench.interview) }}</td>
@@ -1130,7 +1140,7 @@
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
                                 <td>
-                                    <input type="checkbox" v-model="bench.noc" @change="updateNoc(bench)">
+                                    <input type="checkbox" v-model="bench.noc" @change="updateHighLight(bench)">
                                     <span class="hidden">@{{bench.noc}}</span>
                                 </td>
                                 <td>@{{ moment(bench.interview) }}</td>
@@ -2735,23 +2745,6 @@
                     }
 
                     return true;
-                },
-
-                updateNoc: function(roster) {
-                    roster.interview = this.moment(roster.interview);
-                    roster.contractIn = this.moment(roster.contractIn);
-                    roster.contractOut = this.moment(roster.contractOut);
-                    roster.firstShift = this.moment(roster.firstShift);
-                    roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
-                    roster.privilegeGoal = this.moment(roster.privilegeGoal);
-                    roster.appToHospital = this.moment(roster.appToHospital);
-                    
-                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
-
-                    axios.patch(endpoint, roster)
-                        .then(function (response) {
-                            
-                        }.bind(this));
                 },
 
                 updateRecruitingNoc: function(recruiting) {

@@ -75,6 +75,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->isChief = $request->isChief;
         $rosterBench->signedNotStarted = $request->signedNotStarted;
         $rosterBench->noc = $request->noc;
+        $rosterBench->isProactive = $request->isProactive;
         $rosterBench->notes = $request->notes;
         $rosterBench->contract = $request->contract;
         $rosterBench->lastUpdated = Carbon::now();
@@ -200,6 +201,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contract = $request->contract;
 
         $rosterBench->noc = $request->noc;
+        $rosterBench->isProactive = $request->isProactive;
 
         $rosterBench->place = $request->place;
 
