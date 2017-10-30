@@ -1491,7 +1491,7 @@ class AccountsPipelineController extends Controller
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $affiliations = SystemAffiliation::all();
-        $groups = Group::all();
+        $groups = Group::where('active', true)->get()->sortBy('name');
 
         if(count($queryString) == 0) {
             $accounts = [];

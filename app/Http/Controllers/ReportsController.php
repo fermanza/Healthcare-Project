@@ -48,7 +48,7 @@ class ReportsController extends Controller
         $affiliations = SystemAffiliation::all();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $states = StateAbbreviation::all();
-        $groups = Group::all();
+        $groups = Group::where('active', true)->get()->sortBy('name');
         
         $dates = AccountSummary::select('MonthEndDate')->get()->unique('MonthEndDate');
 
@@ -1564,23 +1564,47 @@ class ReportsController extends Controller
                         });
 
                         $sheet->cell('E17', function($cell) use ($account) {
-                            $cell->setValue(round($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys, 1));
+                            if ($account->pipeline->fullTimeHoursPhys == 0) {
+                                $cell->setValue(0);
+                            } else {
+                                $cell->setValue(round($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys, 1));
+                            }
                         });
                         $sheet->cell('E18', function($cell) use ($account) {
-                            $cell->setValue(round($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys, 1));
+                            if ($account->pipeline->fullTimeHoursPhys == 0) {
+                                $cell->setValue(0);
+                            } else {
+                                $cell->setValue(round($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys, 1));
+                            }
                         });
                         $sheet->cell('E19', function($cell) use ($account) {
-                            $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys), 0.5));
+                            if ($account->pipeline->fullTimeHoursPhys == 0) {
+                                $cell->setValue(0);
+                            } else {
+                                $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys), 0.5));
+                            }
                         });
                     } else {
                         $sheet->cell('D17', function($cell) use ($account) {
-                            $cell->setValue(round($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys, 1));
+                            if ($account->pipeline->fullTimeHoursPhys == 0) {
+                                $cell->setValue(0);
+                            } else {
+                                $cell->setValue(round($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys, 1));
+                            }
                         });
                         $sheet->cell('D18', function($cell) use ($account) {
-                            $cell->setValue(round($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys, 1));
+                            if ($account->pipeline->fullTimeHoursPhys == 0) {
+                                $cell->setValue(0);
+                            } else {
+                                $cell->setValue(round($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys, 1));
+                            }
                         });
                         $sheet->cell('D19', function($cell) use ($account) {
-                            $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys), 0.5));
+                            if ($account->pipeline->fullTimeHoursPhys == 0) {
+                                $cell->setValue(0);
+                            } else {
+                                $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys), 0.5));
+                            }
                         });
                         $sheet->cell('D20', function($cell) use ($percentRecruitedPhys) {
                             $cell->setValue(number_format($percentRecruitedPhys, 1).'%');
