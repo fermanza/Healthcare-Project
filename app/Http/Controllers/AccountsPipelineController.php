@@ -1531,7 +1531,7 @@ class AccountsPipelineController extends Controller
 
             $ids = $request->ids;
 
-            if(count($ids) < 100) {
+            if(count($ids) > 100) {
                 $email = \Auth::user()->email;
 
                 \Artisan::queue('export-accounts-pdf', [
