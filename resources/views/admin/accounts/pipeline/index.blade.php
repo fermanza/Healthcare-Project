@@ -2051,12 +2051,15 @@
                     var result = 0;
 
                     if(this.pipeline.practiceTime == 'hours') {
-                        return _(this.activeRosterPhysicians).sumBy('hours')
+                        return _(this.activeRosterPhysicians).sumBy(function(roster){
+                            if(roster.contract != 'emb')
+                            return roster.hours;
+                        });
                     } else {
                         $.each(this.activeRosterPhysicians, function(index, roster) {
-                            if (roster.contract == 'ft' || roster.contract == 'emb') {
+                            if (roster.contract == 'ft') {
                                 result += 1;
-                            } else {
+                            } else if(roster.contract != 'ft' && roster.contract != 'emb') {
                                 result += 0.5;
                             }
                         });
@@ -2069,12 +2072,15 @@
                     var result = 0;
 
                     if(this.pipeline.practiceTime == 'hours') {
-                        return _(this.activeRosterApps).sumBy('hours') 
+                        return _(this.activeRosterApps).sumBy(function(roster){
+                            if(roster.contract != 'emb')
+                            return roster.hours;
+                        });
                     } else {
                         $.each(this.activeRosterApps, function(index, roster) {
-                            if (roster.contract == 'ft' || roster.contract == 'emb') {
+                            if (roster.contract == 'ft') {
                                 result += 1;
-                            } else {
+                            } else if(roster.contract != 'ft' && roster.contract != 'emb') {
                                 result += 0.5;
                             }
                         });

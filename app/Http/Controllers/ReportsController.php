@@ -785,14 +785,16 @@ class ReportsController extends Controller
             ),
         );
 
-        Excel::create($fileName, function($excel) use ($dataToExport, $headers, $tableStyle, $headerStyle, $topBorder, $bottomBorder){
+        $accountIds = $dataToExport->map(function($account) { return $account->accountId; })->unique();
+        $accountIds = array_values($accountIds->toArray());
 
-            $accountIds = $dataToExport->map(function($account) { return $account->accountId; })->unique();
-            $accountIds = array_values($accountIds->toArray());
+        if(count($accountIds) > 150) {
+            flash(__('Please try to avoid exporting above the limit which currently is at 150.'));
 
-            if(count($accountIds) > 150) {
-                $accountIds = array_slice($accountIds, 0, 150);
-            }
+            return back();
+        }
+
+        Excel::create($fileName, function($excel) use ($dataToExport, $accountIds, $headers, $tableStyle, $headerStyle, $topBorder, $bottomBorder){
 
             $accounts = Account::whereIn('id', $accountIds)->with([
                 'pipeline' => function ($query) {
