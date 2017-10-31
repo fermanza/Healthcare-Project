@@ -470,8 +470,8 @@
                 <h4 class="pipeline-blue-title">@lang('Credentialing Pipeline')</h4>
                 <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
                 <form @submit.prevent="addCredentialing('credentialingPhysician')">
-                    <div class="table-responsive">
-                        <table class="table table-bordered summary-datatable">
+                    <div class="table-responsive overflow-hidden">
+                        <table id="credentialingPhysicianTable" class="table table-bordered">
                             <thead class="bg-gray">
                                 <tr>
                                     <th class="mw180">@lang('Name')</th>
@@ -571,8 +571,8 @@
             <div class="no-break-inside">
                 <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
                 <form @submit.prevent="addCredentialing('credentialingApp')">
-                    <div class="table-responsive">
-                        <table class="table table-bordered summary-datatable">
+                    <div class="table-responsive overflow-hidden">
+                        <table id="credentialingAppTable" class="table table-bordered">
                             <thead class="bg-gray">
                                 <tr>
                                     <th class="mw180">@lang('Name')</th>
@@ -677,7 +677,7 @@
             <h4 class="pipeline-blue-title">@lang('Current Roster')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysician')">
-                <div class="table-responsive">
+                <div class="table-responsive overflow-hidden">
                     <table id="rosterPhysicianTable" class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
@@ -836,8 +836,8 @@
         <div class="no-break-inside">
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps')">
-                <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                <div class="table-responsive overflow-hidden">
+                    <table id="rosterAppTable" class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw100">@lang('Chief')</th>
@@ -992,8 +992,8 @@
             <h4 class="pipeline-blue-title">@lang('Current Bench')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
-                <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                <div class="table-responsive overflow-hidden">
+                    <table id="benchPhysicianTable" class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -1123,8 +1123,8 @@
         <div class="no-break-inside">
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps')">
-                <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                <div class="table-responsive overflow-hidden">
+                    <table id="benchAppTable" class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -1258,8 +1258,8 @@
         <div class="no-break-inside">
             <h4 class="pipeline-green-title">@lang('Recruiting Pipeline')</h4>
             <form @submit.prevent="addRecruiting">
-                <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                <div class="table-responsive overflow-hidden">
+                    <table id="recruitingsTable" class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('PHYS/APP')</th>
@@ -1381,8 +1381,8 @@
         <div class="no-break-inside">
             <h4 class="pipeline-green-title">@lang('Locums Pipeline')</h4>
             <form @submit.prevent="addLocum">
-                <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                <div class="table-responsive overflow-hidden">
+                    <table id="locumsTable" class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('PHYS/APP')</th>
@@ -1493,8 +1493,8 @@
 
         <div class="no-break-inside">
             <h4 class="pipeline-orange-title">@lang('Declined List')</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered summary-datatable">
+            <div class="table-responsive overflow-hidden">
+                <table id="declinedTable" class="table table-bordered">
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw200">@lang('Name')</th>
@@ -1597,8 +1597,8 @@
 
         <div class="no-break-inside">
             <h4 class="pipeline-orange-title">@lang('Resigned List')</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered summary-datatable">
+            <div class="table-responsive overflow-hidden">
+                <table id="resignedTable" class="table table-bordered">
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw60">@lang('PHYS/APP')</th>
@@ -1692,8 +1692,8 @@
                 <h4 class="pipeline-blue-title">@lang('Credentialing Pipeline')</h4>
                 <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
                 <form @submit.prevent="addCredentialing('credentialingPhysician')">
-                    <div class="table-responsive">
-                        <table class="table table-bordered summary-datatable">
+                    <div class="table-responsive overflow-hidden">
+                        <table id="credentialingPhysicianTable" class="table table-bordered">
                             <thead class="bg-gray">
                                 <tr>
                                     <th class="mw180">@lang('Name')</th>
@@ -1793,8 +1793,8 @@
             <div class="no-break-inside">
                 <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
                 <form @submit.prevent="addCredentialing('credentialingApp')">
-                    <div class="table-responsive">
-                        <table class="table table-bordered summary-datatable">
+                    <div class="table-responsive overflow-hidden">
+                        <table id="credentialingAppTable" class="table table-bordered">
                             <thead class="bg-gray">
                                 <tr>
                                     <th class="mw180">@lang('Name')</th>
@@ -1904,8 +1904,93 @@
         });
 
         $(document).ready(function() {
-            var accountsDT = $('#rosterPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]]
+            var rosterPhysiciansTable = $('#rosterPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 3
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var rosterAppTable = $('#rosterAppTable').DataTable($.extend({}, defaultDTOptions, {
+                fixedColumns:   {
+                    leftColumns: 2
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var benchPhysicianTable = $('#benchPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 1
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var benchAppTable = $('#benchAppTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 1
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var credentialingPhysicianTable = $('#credentialingPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 1
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var credentialingAppTable = $('#credentialingAppTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 1
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var recruitingsTable = $('#recruitingsTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 1
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var locumsTable = $('#locumsTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 1
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var resignedTable = $('#resignedTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 1
+                },
+                scrollX:        true,
+                scrollCollapse: true,
+            }));
+
+            var declinedTable = $('#declinedTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
+                fixedColumns:   {
+                    leftColumns: 1
+                },
+                scrollX:        true,
+                scrollCollapse: true,
             }));
         });
 
@@ -2298,7 +2383,7 @@
                 declines: function () {
                     return _.chain(this.pipeline.recruitings)
                         .concat(this.pipeline.locums)
-                        .filter('declined').value();
+                        .filter('declined').orderBy('declined','desc').value();
                 },
 
                 resigns: function () {

@@ -1302,7 +1302,7 @@ class ReportsController extends Controller
                 $declines = $account->pipeline->recruitings->concat($account->pipeline->locums)
                 ->filter(function($locum) { 
                     return !is_null($locum->declined); 
-                })->sortBy('name');
+                })->sortByDesc('declined');
 
                 $resigneds = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
                     return !is_null($rosterBench->resigned);
