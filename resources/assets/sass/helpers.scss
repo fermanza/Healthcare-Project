@@ -124,6 +124,22 @@
 	width: 40px !important;
 }
 
+.fixed-headers {
+
+	thead {
+		tr {
+			display: block;
+			position: relative;
+		}
+	}
+
+	tbody {
+		display: block;
+		height: 400px;
+		overflow: auto; 
+	}
+}
+
 body {
     min-height: 100vh;
 }

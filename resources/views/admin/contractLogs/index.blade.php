@@ -168,7 +168,7 @@
     </form>
 
     <div class="table-responsive mh400">
-        <table class="table table-hover table-bordered table-sortable">
+        <table class="table table-hover table-bordered table-sortable fixed-headers">
             <thead>
                 <tr>
                     <th class="mw110">@lang('Actions')</th>
@@ -195,7 +195,7 @@
             <tbody>
                 @foreach($contractLogs as $contractLog)
                     <tr class="{{$contractLog->inactive ? 'danger' : ''}}">
-                        <td class="text-center">
+                        <td class="text-center mw110">
                             @permission('admin.contractLogs.edit')
                                 <a href="{{ route('admin.contractLogs.edit', [$contractLog]) }}" class="btn btn-xs btn-primary">
                                     <i class="fa fa-pencil"></i>
@@ -220,28 +220,28 @@
                                 </a>
                             @endpermission
                         </td>
-                        <td>{{ $contractLog->providerLastName }}</td>
-                        <td>{{ $contractLog->providerFirstName }}</td>
-                        <td>{{ $contractLog->value }}</td>
-                        <td>{{ $contractLog->status ? $contractLog->status->contractStatus : '' }}</td>
-                        <td>{{ $contractLog->position ? $contractLog->position->position : '' }}</td>
-                        <td>{{ $contractLog->numOfHours }}</td>
-                        <td>{{ $contractLog->practice ? $contractLog->practice->name : '' }}</td>
-                        <td>{{ $contractLog->account ? $contractLog->account->name : '' }}</td>
-                        <td>{{ $contractLog->account ? $contractLog->account->siteCode : '' }}</td>
-                        <td>{{ ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : '' }}</td>
-                        <td>{{ ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '' }}</td>
-                        <td>{{ $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m/d/Y') : '' }}</td>
-                        <td>{{ $contractLog->contractInDate ? $contractLog->contractInDate->format('m/d/Y') : '' }}</td>
-                        <td> 
+                        <td class="mw90">{{ $contractLog->providerLastName }}</td>
+                        <td class="mw90">{{ $contractLog->providerFirstName }}</td>
+                        <td class="mw60">{{ $contractLog->value }}</td>
+                        <td class="mw140">{{ $contractLog->status ? $contractLog->status->contractStatus : '' }}</td>
+                        <td class="mw80">{{ $contractLog->position ? $contractLog->position->position : '' }}</td>
+                        <td class="mw60">{{ $contractLog->numOfHours }}</td>
+                        <td class="mw100">{{ $contractLog->practice ? $contractLog->practice->name : '' }}</td>
+                        <td class="mw200">{{ $contractLog->account ? $contractLog->account->name : '' }}</td>
+                        <td class="mw80">{{ $contractLog->account ? $contractLog->account->siteCode : '' }}</td>
+                        <td class="mw100">{{ ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : '' }}</td>
+                        <td class="mw110">{{ ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '' }}</td>
+                        <td class="mw100">{{ $contractLog->contractOutDate ? $contractLog->contractOutDate->format('m/d/Y') : '' }}</td>
+                        <td class="mw100">{{ $contractLog->contractInDate ? $contractLog->contractInDate->format('m/d/Y') : '' }}</td>
+                        <td class="mw100"> 
                             @if($contractLog->inactive)
                                 <i class="fa fa-check" aria-hidden="true"></i>
                             @endif
                         </td>
-                        <td>{{ $contractLog->lastUpdated }}</td>
-                        <td>{{ $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '' }}</td>
-                        <td>{{ $contractLog->note ? $contractLog->note->contractNote : '' }}</td>
-                        <td>{{ $contractLog->comments }}</td>
+                        <td class="mw100">{{ $contractLog->lastUpdated }}</td>
+                        <td class="mw100">{{ $contractLog->projectedStartDate ? $contractLog->projectedStartDate->format('m/d/Y') : '' }}</td>
+                        <td class="mw200">{{ $contractLog->note ? $contractLog->note->contractNote : '' }}</td>
+                        <td class="mw200">{{ $contractLog->comments }}</td>
                     </tr>
                 @endforeach
             </tbody>
