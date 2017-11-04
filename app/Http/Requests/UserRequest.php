@@ -48,10 +48,10 @@ class UserRequest extends FormRequest
         $user->email = $this->email;
         $user->password = $this->password ? bcrypt($this->password) : $user->password;
         $user->employeeId = $this->employeeId;
-        $user->RSCId = $this->RSCId;
-        $user->operatingUnitId = $this->operatingUnitId;
         $user->save();
 
         $user->roles()->sync($this->roles);
+        $user->RSCs()->sync($this->RSCIds ?: []);
+        $user->operatingUnits()->sync($this->operatingUnitIds ?: []);
     }
 }

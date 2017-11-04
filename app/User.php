@@ -115,4 +115,24 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Dashboard::class, 'tUserToDashboard', 'userId', 'dashboardId');
     }
+
+    /**
+     * Get the user's RSCs
+     *
+     * @return bool
+     */
+    public function RSCs()
+    {
+        return $this->belongsToMany(RSC::class, 'tUserToRSC', 'userId', 'RSCId');
+    }
+
+    /**
+     * Get the user's Operating Units
+     *
+     * @return bool
+     */
+    public function operatingUnits()
+    {
+        return $this->belongsToMany(Region::class, 'tUserToOperatingUnit', 'userId', 'operatingUnitId');
+    }    
 }

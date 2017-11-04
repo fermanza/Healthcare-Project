@@ -92,6 +92,14 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <select class="form-control select2" name="specialties[]" data-placeholder="@lang('Specialty')" multiple>
+                        @foreach ($specialties as $specialty)
+                            <option value="{{ $specialty->id }}" {{ in_array($specialty->id, Request::input('specialties') ?: []) ? 'selected' : '' }}>{{ $specialty->specialty }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <div class="input-group date">
                         <input type="text" class="form-control rangedatepicker" name="contractOutDate" value="{{ Request::input('contractOutDate') }}" placeholder="@lang('Contract Out Date')" />
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>

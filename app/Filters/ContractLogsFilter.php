@@ -232,6 +232,17 @@ class ContractLogsFilter extends Filter
     }
 
     /**
+     * Apply specialties filter.
+     *
+     * @param  array  $ids
+     * @return void
+     */
+    public function specialties($ids)
+    {
+        $this->query->whereIn('tContractLogs.specialtyId', $ids);
+    }
+
+    /**
      * Apply sort filter.
      *
      * @param  string  $key

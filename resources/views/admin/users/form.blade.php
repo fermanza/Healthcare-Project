@@ -60,13 +60,12 @@
                     <span class="help-block"><strong>{{ $errors->first('employeeId') }}</strong></span>
                 @endif
             </div>
-
-            <div class="form-group{{ $errors->has('RSCId') ? ' has-error' : '' }}">
+            
+            <div class="form-group{{ $errors->has('RSCIds') ? ' has-error' : '' }}">
                 <label for="RSCId">@lang('RSC')</label>
-                <select class="form-control select2" id="RSCId" name="RSCId">
-                    <option value="" {{ $user->RSCId ? '' : 'selected' }}>@lang('NONE')</option>
+                <select class="form-control select2" id="RSCIds" name="RSCIds[]" multiple>
                     @foreach ($RSCs as $RSC)
-                        <option value="{{ $RSC->id }}" {{ (old('RSCId') == $RSC->id ?: $RSC->id == $user->RSCId) ? 'selected': '' }}>{{ $RSC->name }}</option>
+                        <option value="{{ $RSC->id }}" {{ (in_array($RSC->id, old('RSCIds') ?: []) ?: $user->RSCs->contains($RSC)) ? 'selected': '' }}>{{ $RSC->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('RSCId'))
@@ -74,12 +73,11 @@
                 @endif
             </div>
 
-            <div class="form-group{{ $errors->has('operatingUnitId') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->has('operatingUnitIds') ? ' has-error' : '' }}">
                 <label for="operatingUnitId">@lang('Operating Unit')</label>
-                <select class="form-control select2" id="operatingUnitId" name="operatingUnitId">
-                    <option value="" {{ $user->operatingUnitId ? '' : 'selected' }}>@lang('NONE')</option>
+                <select class="form-control select2" id="operatingUnitIds" name="operatingUnitIds[]" multiple>
                     @foreach ($regions as $region)
-                        <option value="{{ $region->id }}" {{ (old('operatingUnitId') == $region->id ?: $region->id == $user->operatingUnitId) ? 'selected': '' }}>{{ $region->name }}</option>
+                        <option value="{{ $region->id }}" {{ (in_array($region->id, old('operatingUnits') ?: []) ?: $user->operatingUnits->contains($region)) ? 'selected': '' }}>{{ $region->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('operatingUnitId'))

@@ -58,12 +58,14 @@ class ContractLogsController extends Controller
         $accounts = Account::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
+        $specialties = Specialty::orderBy('specialty')->get();
         $contractLogs = $this->getContractLogsData($filter, 100);
 
         $params = compact(
             'contractLogs', 'divisions', 'practiceTypes',
             'positions', 'statuses', 'accounts', 'regions',
-            'RSCs', 'employees', 'managers', 'recruiters', 'coordinators'
+            'RSCs', 'employees', 'managers', 'recruiters', 'coordinators',
+            'specialties'
         );
 
         \Session::put('contractLogFilters', $request->query());
