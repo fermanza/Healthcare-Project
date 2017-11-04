@@ -3,9 +3,9 @@
 @section('content-header', __('Contract Logs'))
 
 @section('tools')
-    <a href="{{ route('admin.contractLogs.toggleScope') }}" class="btn btn-sm btn-default{{ session('ignore-contract-log-role-scope') ? ' active' : '' }}">
+    {{-- <a href="{{ route('admin.contractLogs.toggleScope') }}" class="btn btn-sm btn-default{{ session('ignore-contract-log-role-scope') ? ' active' : '' }}">
         @lang('View All')
-    </a>
+    </a> --}}
     @permission('admin.contractLogs.excel')
         <a href="{{ route('admin.contractLogs.excel', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
             <i class="fa fa-file-excel-o"></i>

@@ -75,17 +75,21 @@ class Handler extends ExceptionHandler
         if ($this->isHttpException($e)) {
             return $this->toIlluminateResponse($this->renderHttpException($e), $e);
         } else {
-            view()->replaceNamespace('errors', [
-                resource_path('views/errors'),
-                __DIR__.'/views',
-            ]);
+            if(env('APP_DEBUG') == false) {
+                view()->replaceNamespace('errors', [
+                    resource_path('views/errors'),
+                    __DIR__.'/views',
+                ]);
 
-            if (view()->exists('errors::500')) {
-                return response()->view('errors::500', ['exception' => $e], 500, []);
+                if (view()->exists('errors::500')) {
+                    return response()->view('errors::500', ['exception' => $e], 500, []);
+                } else {
+                    return $this->convertExceptionToResponse($e);
+                }
+                return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
             } else {
                 return $this->convertExceptionToResponse($e);
             }
-            return $this->toIlluminateResponse($this->convertExceptionToResponse($e), $e);
         }
     }
 }
