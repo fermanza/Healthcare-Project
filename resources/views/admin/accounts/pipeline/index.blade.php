@@ -493,9 +493,9 @@
                                     <td>@{{ credentialing.hours }}</td>
                                     <td class="text-uppercase">@{{ credentialing.contract }}</td>
                                     <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
-                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ moment(credentialing.appToHospital) }}</td>
                                     <td>@{{ credentialing.stage }}</td>
+                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ credentialing.enrollmentStatus }}</td>
                                     <td>@{{ credentialing.enrollmentNotes }}</td>
                                     <td>@{{ credentialing.credentialingNotes }}</td>
@@ -532,9 +532,6 @@
                                         <input type="text" class="form-control datepicker" v-model="credentialingPhysician.fileToCredentialing" />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.privilegeGoal" />
-                                    </td>
-                                    <td>
                                         <input type="text" class="form-control datepicker" v-model="credentialingPhysician.appToHospital" />
                                     </td>
                                     <td>
@@ -544,6 +541,9 @@
                                                 <option value="{{$x}}">{{$x}}</option>
                                             @endfor
                                         </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingPhysician.privilegeGoal" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentStatus" />
@@ -594,9 +594,9 @@
                                     <td>@{{ credentialing.hours }}</td>
                                     <td class="text-uppercase">@{{ credentialing.contract }}</td>
                                     <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
-                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ moment(credentialing.appToHospital) }}</td>
                                     <td>@{{ credentialing.stage }}</td>
+                                    <td>@{{ moment(credentialing.privilegeGoal) }}</td>
                                     <td>@{{ credentialing.enrollmentStatus }}</td>
                                     <td>@{{ credentialing.enrollmentNotes }}</td>
                                     <td>@{{ credentialing.credentialingNotes }}</td>
@@ -633,9 +633,6 @@
                                         <input type="text" class="form-control datepicker" v-model="credentialingApp.fileToCredentialing" />
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.privilegeGoal" />
-                                    </td>
-                                    <td>
                                         <input type="text" class="form-control datepicker" v-model="credentialingApp.appToHospital" />
                                     </td>
                                     <td>
@@ -645,6 +642,9 @@
                                                 <option value="{{$x}}">{{$x}}</option>
                                             @endfor
                                         </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control datepicker" v-model="credentialingApp.privilegeGoal" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" v-model="credentialingApp.enrollmentStatus" />
@@ -668,8 +668,6 @@
                     </div>
                 </form>
             </div>
-
-            <hr />
         @endif
 
 
