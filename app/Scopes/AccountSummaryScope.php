@@ -44,38 +44,57 @@ class AccountSummaryScope implements Scope
     }
 
     private function validate($builder, $user, $role, $employeeType) {
-        if (!$user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
-            $RSCs = $user->RSCs->map(function($RSC) {
-                return $RSC->id;
-            });
+        // if (!$user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
+        //     $RSCs = $user->RSCs->map(function($RSC) {
+        //         return $RSC->id;
+        //     });
 
-            $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
-                return $operatingUnit->id;
-            });
+        //     $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
+        //         return $operatingUnit->id;
+        //     });
 
-            $builder->whereHas('account', function($query) use ($RSCs, $operatingUnits) {
-                $query->whereIn('RSCId', $RSCs)
-                    ->whereIn('operatingUnitId', $operatingUnits)
-                    ->whereNotNull('RSCId')
-                    ->whereNotNull('operatingUnitId');
-            });
-        } else if (!$user->RSCs->isEmpty() && $user->operatingUnits->isEmpty()) {
-            $RSCs = $user->RSCs->map(function($RSC) {
-                return $RSC->id;
-            });
+        //     $builder->whereHas('account', function($query) use ($RSCs, $operatingUnits) {
+        //         $query->whereIn('RSCId', $RSCs)
+        //             ->whereIn('operatingUnitId', $operatingUnits)
+        //             ->whereNotNull('RSCId')
+        //             ->whereNotNull('operatingUnitId');
+        //     });
+        // } else if (!$user->RSCs->isEmpty() && $user->operatingUnits->isEmpty()) {
+        //     $RSCs = $user->RSCs->map(function($RSC) {
+        //         return $RSC->id;
+        //     });
 
-            $builder->whereHas('account', function($query) use ($RSCs) {
-                $query->whereIn('RSCId', $RSCs)
-                    ->whereNotNull('RSCId');
-            });
-        } else if ($user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
-            $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
-                return $operatingUnit->id;
-            });
+        //     $builder->whereHas('account', function($query) use ($RSCs) {
+        //         $query->whereIn('RSCId', $RSCs)
+        //             ->whereNotNull('RSCId');
+        //     });
+        // } else if ($user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
+        //     $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
+        //         return $operatingUnit->id;
+        //     });
 
-            $builder->whereHas('account', function($query) use ($operatingUnits) {
-                $query->whereIn('operatingUnitId', $operatingUnits)
-                    ->whereNotNull('operatingUnitId');
+        //     $builder->whereHas('account', function($query) use ($operatingUnits) {
+        //         $query->whereIn('operatingUnitId', $operatingUnits)
+        //             ->whereNotNull('operatingUnitId');
+        //     });
+        // } 
+
+        if ($user->RSCId && $user->operatingUnitId) {
+            $builder->whereHas('account', function($query) use ($user) {
+                $query->where('account.RSCId', $user->RSCId)
+                ->where('account.operatingUnitId', $user->operatingUnitId)
+                ->whereNotNull('RSCId')
+                ->whereNotNull('operatingUnitId');
+            });
+        } else if ($user->RSCId && !$user->operatingUnitId) {
+            $builder->whereHas('account', function($query) use ($user) {
+                $query->where('RSCId', $user->RSCId)
+                ->whereNotNull('RSCId');
+            });
+        } else if (!$user->RSCId && $user->operatingUnitId) {
+            $builder->whereHas('account', function($query) use ($user) {
+                $query->where('operatingUnitId', $user->operatingUnitId)
+                ->whereNotNull('operatingUnitId');
             });
         } else {
             if($role == 'account.recruiter') {

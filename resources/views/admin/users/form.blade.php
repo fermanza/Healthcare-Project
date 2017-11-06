@@ -60,8 +60,34 @@
                     <span class="help-block"><strong>{{ $errors->first('employeeId') }}</strong></span>
                 @endif
             </div>
+
+            <div class="form-group{{ $errors->has('RSCId') ? ' has-error' : '' }}">
+                <label for="RSCId">@lang('RSC')</label>
+                <select class="form-control select2" id="RSCId" name="RSCId">
+                    <option value="" {{ $user->RSCId ? '' : 'selected' }}>@lang('NONE')</option>
+                    @foreach ($RSCs as $RSC)
+                        <option value="{{ $RSC->id }}" {{ (old('RSCId') == $RSC->id ?: $RSC->id == $user->RSCId) ? 'selected': '' }}>{{ $RSC->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('RSCId'))
+                    <span class="help-block"><strong>{{ $errors->first('RSCId') }}</strong></span>
+                @endif
+            </div>
+
+            <div class="form-group{{ $errors->has('operatingUnitId') ? ' has-error' : '' }}">
+                <label for="operatingUnitId">@lang('Operating Unit')</label>
+                <select class="form-control select2" id="operatingUnitId" name="operatingUnitId">
+                    <option value="" {{ $user->operatingUnitId ? '' : 'selected' }}>@lang('NONE')</option>
+                    @foreach ($regions as $region)
+                        <option value="{{ $region->id }}" {{ (old('operatingUnitId') == $region->id ?: $region->id == $user->operatingUnitId) ? 'selected': '' }}>{{ $region->name }}</option>
+                    @endforeach
+                </select>
+                @if ($errors->has('operatingUnitId'))
+                    <span class="help-block"><strong>{{ $errors->first('operatingUnitId') }}</strong></span>
+                @endif
+            </div>
             
-            <div class="form-group{{ $errors->has('RSCIds') ? ' has-error' : '' }}">
+            {{-- <div class="form-group{{ $errors->has('RSCIds') ? ' has-error' : '' }}">
                 <label for="RSCId">@lang('RSC')</label>
                 <select class="form-control select2" id="RSCIds" name="RSCIds[]" multiple>
                     @foreach ($RSCs as $RSC)
@@ -83,7 +109,7 @@
                 @if ($errors->has('operatingUnitId'))
                     <span class="help-block"><strong>{{ $errors->first('operatingUnitId') }}</strong></span>
                 @endif
-            </div>
+            </div> --}}
 
         </div>
     </div>

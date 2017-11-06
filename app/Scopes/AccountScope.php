@@ -44,32 +44,44 @@ class AccountScope implements Scope
     }
 
     private function validate($builder, $user, $role, $employeeType) {
-        if (!$user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
-            $RSCs = $user->RSCs->map(function($RSC) {
-                return $RSC->id;
-            });
+        // if (!$user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
+        //     $RSCs = $user->RSCs->map(function($RSC) {
+        //         return $RSC->id;
+        //     });
 
-            $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
-                return $operatingUnit->id;
-            });
+        //     $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
+        //         return $operatingUnit->id;
+        //     });
 
-            $builder->whereIn('RSCId', $RSCs)
-                ->whereIn('operatingUnitId', $operatingUnits)
+        //     $builder->whereIn('RSCId', $RSCs)
+        //         ->whereIn('operatingUnitId', $operatingUnits)
+        //         ->whereNotNull('RSCId')
+        //         ->whereNotNull('operatingUnitId');
+        // } else if (!$user->RSCs->isEmpty() && $user->operatingUnits->isEmpty()) {
+        //     $RSCs = $user->RSCs->map(function($RSC) {
+        //         return $RSC->id;
+        //     });
+
+        //     $builder->whereIn('RSCId', $RSCs)
+        //         ->whereNotNull('RSCId');
+        // } else if ($user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
+        //     $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
+        //         return $operatingUnit->id;
+        //     });
+
+        //     $builder->whereIn('operatingUnitId', $operatingUnits)
+        //         ->whereNotNull('operatingUnitId');
+        // } else {
+        if ($user->RSCId && $user->operatingUnitId) {
+            $builder->where('RSCId', $user->RSCId)
+                ->where('operatingUnitId', $user->operatingUnitId)
                 ->whereNotNull('RSCId')
                 ->whereNotNull('operatingUnitId');
-        } else if (!$user->RSCs->isEmpty() && $user->operatingUnits->isEmpty()) {
-            $RSCs = $user->RSCs->map(function($RSC) {
-                return $RSC->id;
-            });
-
-            $builder->whereIn('RSCId', $RSCs)
+        } else if ($user->RSCId && !$user->operatingUnitId) {
+            $builder->where('RSCId', $user->RSCId)
                 ->whereNotNull('RSCId');
-        } else if ($user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
-            $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
-                return $operatingUnit->id;
-            });
-
-            $builder->whereIn('operatingUnitId', $operatingUnits)
+        } else if (!$user->RSCId && $user->operatingUnitId) {
+            $builder->where('operatingUnitId', $user->operatingUnitId)
                 ->whereNotNull('operatingUnitId');
         } else {
             if($role == 'recruiter') {

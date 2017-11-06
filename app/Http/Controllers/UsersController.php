@@ -120,7 +120,7 @@ class UsersController extends Controller
      */
     protected function form($user, $action, $view)
     {
-        $user->load('roles','RSCs', 'operatingUnits');
+        $user->load('roles');
         $roles = Role::orderBy('name')->get();
         $employees = Employee::with('person')
             ->where('active', true)
