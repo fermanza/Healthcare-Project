@@ -1914,81 +1914,46 @@
             }));
 
             var rosterAppTable = $('#rosterAppTable').DataTable($.extend({}, defaultDTOptions, {
-                fixedColumns:   {
-                    leftColumns: 2
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
 
             var benchPhysicianTable = $('#benchPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 1
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
 
             var benchAppTable = $('#benchAppTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 1
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
 
             var credentialingPhysicianTable = $('#credentialingPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 1
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
 
             var credentialingAppTable = $('#credentialingAppTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 1
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
 
             var recruitingsTable = $('#recruitingsTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 1
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
 
             var locumsTable = $('#locumsTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 1
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
 
             var resignedTable = $('#resignedTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 1
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
 
             var declinedTable = $('#declinedTable').DataTable($.extend({}, defaultDTOptions, {
-                order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 1
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
