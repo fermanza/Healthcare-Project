@@ -1906,9 +1906,6 @@
         $(document).ready(function() {
             var rosterPhysiciansTable = $('#rosterPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
                 order: [[ 0, 'desc' ], [ 1, 'desc' ]],
-                fixedColumns:   {
-                    leftColumns: 3
-                },
                 scrollX:        true,
                 scrollCollapse: true,
             }));
