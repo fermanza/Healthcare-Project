@@ -838,7 +838,7 @@ class ReportsController extends Controller
                         $account->RMD,
                         $account->City,
                         $account->Location,
-                        $account->{'Start Date'} ? $account->{'Start Date'}->format('d/m/y') : '',
+                        $account->{'Start Date'} ? \PHPExcel_Shared_Date::PHPToExcel($account->{'Start Date'}) : '',
                         $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated(),
                         $account->present()->excel('Complete Staff - Phys'),
                         $account->present()->excel('Complete Staff - APP'),
@@ -1122,7 +1122,7 @@ class ReportsController extends Controller
                 });
 
                 $sheet->setColumnFormat(array(
-                    'P3:P'.$rowNumber      => 'dd/mm/yy',
+                    'P3:P'.$rowNumber      => 'mm/dd/yy',
                     'Q3:AB'.$rowNumber     => '0.0',
                     'AC3:AE'.$rowNumber    => '0.0%',
                     'AF3:AF'.$rowNumber    => '"$"#,##0.00_-',
