@@ -1492,7 +1492,7 @@
         <div class="no-break-inside">
             <h4 class="pipeline-orange-title">@lang('Declined List')</h4>
             <div class="table-responsive">
-                <table class="table table-bordered summary-datatable">
+                <table id="declinedTable" class="table table-bordered">
                     <thead class="bg-gray">
                         <tr>
                             <th class="mw200">@lang('Name')</th>
@@ -1904,6 +1904,10 @@
         $(document).ready(function() {
             var accountsDT = $('#rosterPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
                 order: [[ 0, 'desc' ], [ 1, 'desc' ]]
+            }));
+
+            var declinedDT = $('#declinedTable').DataTable($.extend({}, defaultDTOptions, {
+                order: [[ 5, 'desc' ]]
             }));
         });
 
