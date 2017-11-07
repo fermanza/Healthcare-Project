@@ -696,7 +696,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': roster.signedNotStarted && compareFirstShift(roster.firstShift)}">
+                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': (roster.signedNotStarted && compareFirstShift(roster.firstShift))}">
                                 <td>
                                     <input class="roster-radio" type="checkbox" name="SMD" :value="1" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
                                     <span class="hidden">@{{roster.isSMD}}</span>

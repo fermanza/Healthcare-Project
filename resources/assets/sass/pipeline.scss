@@ -56,23 +56,12 @@
     }
 
     .highlight {
-        background-color: #78f478;
+        background-color: #78f478 !important;
     }
 
     table.dataTable thead > tr > th {
         padding-left: 0;
         padding-right: 0;
-    }
-
-    #rosterPhysicianTable_wrapper,
-    #rosterAppTable_wrapper,
-    #benchPhysicianTable_wrapper,
-    #benchAppTable_wrapper,
-    #credentialingPhysicianTable_wrapper,
-    #credentialingAppTable_wrapper {
-        td {
-            background: #ffffff;
-        }
     }
 
     .overflow-hidden {
