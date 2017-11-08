@@ -71,6 +71,8 @@ return [
         'admin.accounts.pipeline.locum.switch' => 'Account Summary Switch Locum To RosterBench',
         'admin.accounts.pipeline.export.word' => 'Export Account Summary To Word',
         'admin.accounts.pipeline.export.excel' => 'Export Account Summary To Excel',
+        'admin.accounts.pipeline.declined.destroy' => ' Delete A Resigned RosterBench',
+        'admin.accounts.pipeline.resigned.destroy' => 'Delete A Declined Locum/Recruiting',
     ],
 
     'Files' => [
