@@ -1523,7 +1523,7 @@
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                 @endpermission
-                                @permission('admin.accounts.pipeline.rosterBench.delete')
+                                @permission('admin.accounts.pipeline.declined.destroy')
                                     <button type="button" class="btn btn-xs btn-danger"
                                         @click="deleteDeclining(declined)"
                                     >
@@ -1621,7 +1621,7 @@
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                 @endpermission
-                                @permission('admin.accounts.pipeline.rosterBench.delete')
+                                @permission('admin.accounts.pipeline.resigned.destroy')
                                     <button type="button" class="btn btn-xs btn-danger"
                                         @click="deleteRosterBench(resigned)"
                                     >

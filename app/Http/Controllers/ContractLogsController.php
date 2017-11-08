@@ -287,7 +287,7 @@ class ContractLogsController extends Controller
                         ($contractLog->account && $contractLog->account->region) ? $contractLog->account->region->name : '',
                         ($contractLog->account && $contractLog->account->rsc) ? $contractLog->account->rsc->name : '',
                         $contractLog->contractOutDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->contractOutDate) : '',
-                        $contractLog->contractInDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->contractInDate) : '',
+                        $contractLog->inactive ? 'Inactive' : ($contractLog->contractInDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->contractInDate) : ''),
                         $contractLog->contractInDate ? $contractLog->contractInDate->diffInDays($contractLog->contractOutDate) : 'Contract Pending',
                         $contractLog->sentToQADate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->sentToQADate): '',
                         $contractLog->countersigDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->countersigDate) : '',

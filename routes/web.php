@@ -66,6 +66,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->post('accounts/{account}/pipeline/rosterBench', 'PipelineRosterBenchController@store')->name('accounts.pipeline.rosterBench.store');
     $router->patch('accounts/{account}/pipeline/rosterBench/{rosterBench}', 'PipelineRosterBenchController@update')->name('accounts.pipeline.rosterBench.update');
     $router->delete('accounts/{account}/pipeline/rosterBench/{rosterBench}', 'PipelineRosterBenchController@destroy')->name('accounts.pipeline.rosterBench.destroy');
+    $router->delete('accounts/{account}/pipeline/resigned/{rosterBench}', 'PipelineRosterBenchController@destroy')->name('accounts.pipeline.resigned.destroy');
     $router->patch('accounts/{account}/pipeline/rosterBench/{rosterBench}/resign', 'PipelineRosterBenchController@resign')->name('accounts.pipeline.rosterBench.resign');
     $router->post('accounts/{account}/pipeline/rosterBench/{rosterBench}/switch', 'PipelineRosterBenchController@switch')->name('accounts.pipeline.rosterBench.switch');
     $router->patch('accounts/{account}/pipeline/rosterBench/{rosterBench}/complete', 'PipelineRosterBenchController@complete')->name('accounts.pipeline.rosterBench.complete');
@@ -80,6 +81,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->patch('accounts/{account}/pipeline/locum/{locum}/decline', 'PipelineLocumController@decline')->name('accounts.pipeline.locum.decline');
     $router->patch('accounts/{account}/pipeline/locum/{locum}', 'PipelineLocumController@update')->name('accounts.pipeline.locum.update');
     $router->delete('accounts/{account}/pipeline/locum/{locum}', 'PipelineLocumController@destroy')->name('accounts.pipeline.locum.destroy');
+    $router->delete('accounts/{account}/pipeline/declined/{locum}', 'PipelineLocumController@destroy')->name('accounts.pipeline.declined.destroy');
     $router->post('accounts/{account}/pipeline/locum/{locum}/switch', 'PipelineLocumController@switch')->name('accounts.pipeline.locum.switch');
 
     $router->resource('users', 'UsersController', ['except' => 'show']);
