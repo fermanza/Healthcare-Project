@@ -72,7 +72,8 @@
                     <select class="form-control select2" id="accountId" name="accountId" required>
                         <option value="" disabled selected></option>
                         @foreach ($accounts as $account)
-                            <option value="{{ $account->id }}" {{ (old('accountId') == $account->id ?: $account->id == $contractLog->accountId) ? 'selected': '' }}>{{ $account->siteCode }} - {{ $account->name }}</option>
+                            <option value="{{ $account->id }}" {{ (old('accountId') == $account->id ?: $account->id == $contractLog->accountId) ? 'selected': '' }}>{{ $account->siteCode }} - {{ $account->name }} {{ $account->practices->isEmpty() ? '' : '('.$account->practices->first()->name.')' }}</option>
+                            }
                         @endforeach
                     </select>
                     @if ($errors->has('accountId'))

@@ -96,12 +96,14 @@ class ContractLogsController extends Controller
      */
     public function store(ContractLogRequest $request)
     {
+        $contractLogFilters = \Session::get('contractLogFilters');
+
         $contractLog = new ContractLog;
         $request->save($contractLog);
 
         flash(__('ContractLog created.'));
 
-        return redirect()->route('admin.contractLogs.index');
+        return redirect()->route('admin.contractLogs.index', $contractLogFilters);
     }
 
     /**
