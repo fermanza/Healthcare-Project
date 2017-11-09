@@ -22,6 +22,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], 
     $router->get('dashboard', 'AdminController@index')->name('dashboard');
 
     $router->get('accounts/toggleScope', 'AccountsController@toggleScope')->name('accounts.toggleScope');
+    $router->get('accounts/toggleChildren', 'AccountsController@toggleChildren')->name('accounts.toggleChildren');
     $router->get('contractLogs/toggleScope', 'ContractLogsController@toggleScope')->name('contractLogs.toggleScope');
     $router->get('reports/summary/toggleScope', 'ReportsController@toggleScopeSummary')->name('summaryReport.toggleScope');
 

@@ -335,6 +335,22 @@ class AccountsController extends Controller
     }
 
     /**
+     * Toggle the 'view child sites' to current Session.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function toggleChildren(Request $request)
+    {
+        $ignore = session('see-child-accounts', false);
+
+        session(['see-child-accounts' => ! $ignore]);
+
+        Cache::forget('accounts'.$request->user()->id);
+
+        return back();
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Account  $account

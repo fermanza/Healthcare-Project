@@ -7,6 +7,10 @@
         @lang('View All')
     </a>
 
+    <a href="{{ route('admin.accounts.toggleChildren') }}" class="btn btn-sm btn-default{{ session('see-child-accounts') ? ' active' : '' }}">
+        @lang('View Child Accounts')
+    </a>
+
     @permission('admin.accounts.create')
         <a href="{{ route('admin.accounts.create') }}" class="btn btn-sm btn-success">
             <i class="fa fa-plus"></i>
@@ -69,6 +73,89 @@
             </thead>
             <tbody>
                 @foreach($accounts as $account)
+                    @if(session('see-child-accounts'))
+                    @if($account->parentSiteCode)
+                    <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}"
+                        data-id="{{ $account->id }}" data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
+                        data-edit="{{ route('admin.accounts.edit', [$account]) }}"
+                    >
+                        <td></td>
+                        <td>{{ $account->name }}</td>
+                        <td>{{ $account->siteCode }}</td>
+                        <td class="text-center">
+                            @permission('admin.accounts.pipeline.index')
+                                <a href="{{ route('admin.accounts.pipeline.index', [$account]) }}" class="btn btn-xs btn-default">
+                                    @lang('Site Sheet')
+                                </a>
+                            @endpermission
+                        </td>
+                        <td>{{ $account->city }}</td>
+                        <td>{{ $account->state }}</td>
+                        <td>{{ $account->startDate ? $account->startDate->format('m/d/Y') : '' }}</td>
+                        <td>{{ $account->endDate ? $account->endDate->format('m/d/Y') : '' }}</td>
+                        <td>
+                            {{ $account->parentSiteCode }}
+                            @permission('admin.accounts.removeParent')
+                                @if ($account->parentSiteCode)
+                                    <a href="javascript:;" 
+                                        class="pull-right text-danger removes-parent"
+                                        data-action="{{ route('admin.accounts.removeParent', [$account]) }}"
+                                        data-name="{{ $account->name }}"
+                                    >
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                @endif
+                            @endpermission
+                        </td>
+                        <td>{{ $account->rsc ? $account->rsc->name : '' }}</td>
+                        <td>{{ $account->region ? $account->region->name : '' }}</td>
+                        <td>{{ $account->recruiter ? $account->recruiter->fullName() : '' }}</td>
+                        <td>{{ $account->manager ? $account->manager->fullName() : '' }}</td>
+                        <td>{{ $account->credentialer ? $account->credentialer->fullName() : '' }}</td>
+                        <td class="text-center">
+                            @permission('admin.accounts.merge')
+                                <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
+                                    data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Merge')"
+                                    data-title="@lang('Merge Site Code')" data-account="{{ $account->name }}"
+                                    data-action="{{ route('admin.accounts.merge') }}" data-id="{{ $account->id }}"
+                                    data-site-code="{{ $account->siteCode }}"
+                                >
+                                    @lang('Merge')
+                                </button>
+                            @endpermission
+
+                            @permission('admin.accounts.parent')
+                                <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
+                                    data-toggle="modal" data-target="#mergeOrParentSiteCode" data-submit="@lang('Set Parent')"
+                                    data-title="@lang('Parent Site Code')" data-account="{{ $account->name }}"
+                                    data-action="{{ route('admin.accounts.parent') }}" data-id="{{ $account->id }}"
+                                    data-site-code="{{ $account->siteCode }}" data-associated-site-code="{{ $account->parentSiteCode }}"
+                                >
+                                    @lang('Set Parent')
+                                </button>
+                            @endpermission
+
+                            @permission('admin.accounts.edit')
+                                <a href="{{ route('admin.accounts.edit', [$account]) }}" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            @endpermission
+                                
+                            @permission('admin.accounts.destroy')
+                                <a 
+                                    href="javascript:;"
+                                    class="btn btn-xs btn-danger deletes-record"
+                                    data-action="{{ route('admin.accounts.destroy', [$account]) }}"
+                                    data-record="{{ $account->id }}"
+                                    data-name="{{ $account->name }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            @endpermission
+                        </td>
+                    </tr>
+                    @endif
+                    @else
                     @if(!$account->parentSiteCode)
                     <tr class="{{ $account->hasEnded() ? 'danger' : ($account->isRecentlyCreated() ? 'success' : '') }}"
                         data-id="{{ $account->id }}" data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
@@ -149,6 +236,7 @@
                             @endpermission
                         </td>
                     </tr>
+                    @endif
                     @endif
                 @endforeach
             </tbody>
