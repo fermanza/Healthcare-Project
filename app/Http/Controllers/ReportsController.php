@@ -1435,18 +1435,10 @@ class ReportsController extends Controller
                     });
 
                     $sheet->cell('H12', function($cell) use ($account, $SMDOpen, $AMDOpen) {
-                        if ($account->pipeline->practiceTime == "hours") {
-                            $currentOpenings = $account->pipeline->staffPhysicianFTEOpenings;
-                            $phys = $currentOpenings - $SMDOpen - $AMDOpen;
-                            $phys = $phys < 0 ? 0 : $phys;
-
-                            $cell->setValue($phys);
+                        if ($account->pipeline->fullTimeHoursPhys == 0) {
+                            $cell->setValue(0);
                         } else {
-                            $currentOpenings = $account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves;
-                            $phys = $currentOpenings - $SMDOpen - $AMDOpen;
-                            $phys = $phys < 0 ? 0 : $phys;
-
-                            $cell->setValue($phys);
+                            $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys), 0.5));
                         }
 
                         $cell->setBackground('#FFFF00');

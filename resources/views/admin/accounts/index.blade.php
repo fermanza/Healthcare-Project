@@ -107,11 +107,11 @@
                                 @endif
                             @endpermission
                         </td>
-                        <td>{{ $account->rsc ? $account->rsc->name : '' }}</td>
-                        <td>{{ $account->region ? $account->region->name : '' }}</td>
-                        <td>{{ $account->recruiter ? $account->recruiter->fullName() : '' }}</td>
-                        <td>{{ $account->manager ? $account->manager->fullName() : '' }}</td>
-                        <td>{{ $account->credentialer ? $account->credentialer->fullName() : '' }}</td>
+                        <td>{{ $account->RSC }}</td>
+                        <td>{{ $account->operatingUnit }}</td>
+                        <td>{{ $account->recruiter }}</td>
+                        <td>{{ $account->manager }}</td>
+                        <td>{{ $account->credentialer }}</td>
                         <td class="text-center">
                             @permission('admin.accounts.merge')
                                 <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 
@@ -189,11 +189,11 @@
                                 @endif
                             @endpermission
                         </td>
-                        <td>{{ $account->rsc ? $account->rsc->name : '' }}</td>
-                        <td>{{ $account->region ? $account->region->name : '' }}</td>
-                        <td>{{ $account->recruiter ? $account->recruiter->fullName() : '' }}</td>
-                        <td>{{ $account->manager ? $account->manager->fullName() : '' }}</td>
-                        <td>{{ $account->credentialer ? $account->credentialer->fullName() : '' }}</td>
+                        <td>{{ $account->RSC }}</td>
+                        <td>{{ $account->operatingUnit }}</td>
+                        <td>{{ $account->recruiter }}</td>
+                        <td>{{ $account->manager }}</td>
+                        <td>{{ $account->credentialer }}</td>
                         <td class="text-center">
                             @permission('admin.accounts.merge')
                                 <button type="button" class="btn btn-xs btn-default btnMergeOrParentSiteCode" 

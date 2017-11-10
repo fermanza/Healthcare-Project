@@ -12,6 +12,7 @@ use App\Employee;
 use App\Practice;
 use App\StateAbbreviation;
 use App\SystemAffiliation;
+use DB;
 use App\Scopes\AccountScope;
 use App\Filters\AccountFilter;
 use Illuminate\Http\Request;
@@ -29,29 +30,61 @@ class AccountsController extends Controller
      */
     public function index(Request $request, AccountFilter $filter)
     {
-        $cachedFilters = Cache::get('filters'.$request->user()->id);
+        
 
-        if ($cachedFilters != $request->all()) {
-            Cache::put('filters'.$request->user()->id, $request->all(), 10);
-            Cache::forget('accounts'.$request->user()->id);
-        } else {
-            Cache::put('filters'.$request->user()->id, $request->all(), 10);
-        }
+        //  use tae with (Nolock) on production
 
-        $accounts = Cache::remember('accounts'.$request->user()->id, 30, function () use ($filter) {
-            return Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
-            ->withGlobalScope('role', new AccountScope)
-            ->with([
-                'rsc',
-                'region',
-                'recruiter.employee.person',
-                'manager.employee.person',
-                'credentialer.employee.person'
-            ])
-            ->where('active', true)
-            ->termed(false)
-            ->filter($filter)->get();
-        });
+        $accounts = Account::hydrate(DB::select(DB::raw("SELECT accounts.id
+            , accounts.name
+            , accounts.siteCode
+            , accounts.city
+            , accounts.state
+            , accounts.startDate
+            , accounts.endDate
+            , accounts.parentSiteCode
+            , accounts.RSC
+            , accounts.operatingUnit
+            , MAX(accounts.recruiter) as recruiter
+            , MAX(accounts.manager) as manager
+            , MAX(accounts.credentialer) as credentialer
+        FROM (
+        SELECT DISTINCT acc.id, acc.name, acc.siteCode, acc.city, acc.state, acc.startDate, acc.endDate, acc.parentSiteCode,
+        rsc.name AS RSC, ou.name AS operatingUnit,
+        CASE
+            WHEN ate.positionTypeId = 2 AND isPrimary = 1 
+                THEN fullName
+        END AS recruiter,
+        CASE
+            WHEN ate.positionTypeId = 1
+                THEN fullName
+        END AS manager,
+        CASE
+            WHEN ate.positionTypeId = 11
+                THEN fullName
+        END AS credentialer
+        FROM tAccount acc
+        LEFT JOIN tRSC rsc on acc.RSCId = rsc.id
+        LEFT JOIN tOperatingUnit ou on acc.operatingUnitId = ou.id
+        LEFT JOIN (
+           SELECT * FROM (
+                SELECT accountId, employeeId, positionTypeId, isPrimary, fullName
+                FROM vAccountToEmployee tae 
+                 
+            ) ate
+        ) ate 
+        ON acc.id = ate.accountId
+        WHERE acc.active = '1' AND (acc.endDate IS NULL OR acc.endDate > '2017-11-10')
+        ) accounts 
+        group by accounts.id
+            , accounts.name
+            , accounts.siteCode
+            , accounts.city
+            , accounts.state
+            , accounts.startDate
+            , accounts.endDate
+            , accounts.parentSiteCode
+            , accounts.RSC
+            , accounts.operatingUnit")));
 
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
 
