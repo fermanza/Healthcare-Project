@@ -154,7 +154,7 @@ class AccountsController extends Controller
             ) tae
         ) tae 
         ON acc.id = tae.accountId
-        WHERE acc.active = '1' AND (acc.endDate IS NULL OR acc.endDate > ".Carbon::now()->format('Y-m-d').")
+        WHERE acc.active = '1' AND (acc.endDate IS NULL OR acc.endDate > '".Carbon::now()->format('Y-m-d')."')
         $user_filter
         $RSC_filter
         ) accounts 
