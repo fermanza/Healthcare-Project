@@ -88,7 +88,7 @@ class AccountsController extends Controller
 
             $operatingUnits = implode (", ", $operatingUnits->toArray());
 
-            $builder = "AND acc.operatingUnitId IN ($RSCs) AND acc.operatingUnitId IS NOT NULL";
+            $builder = "AND acc.operatingUnitId IN ($operatingUnits) AND acc.operatingUnitId IS NOT NULL";
         } else {
             if($role == config('instances.roles.recruiter')) {
                 $builder = "AND (tae.accountId = acc.id AND tae.positionTypeId = $role and tae.isPrimary = 1 and tae.".$employeeType." = ".$user->employeeId.") OR (tae.accountId = acc.id AND tae.positionTypeId = $role and tae.isPrimary = 0 and tae.".$employeeType." = ".$user->employeeId.")";
