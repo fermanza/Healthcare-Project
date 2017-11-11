@@ -95,7 +95,7 @@ class AccountsController extends Controller
             } elseif ($role == config('instances.position_types.director')) {
                 $builder = "AND rsc.".$employeeType." = ".($user->employeeId ? $user->employeeId : '0')." AND rsc.".$employeeType." IS NOT NULL";
             } else {
-                $builder = "AND tae.accountId = acc.id AND positionTypeId = $role  and tae.".$employeeType." = ".($user->employeeId ? $user->employeeId : '0')." AND ".$employeeType.". IS NOT NULL";
+                $builder = "AND tae.accountId = acc.id AND positionTypeId = $role  and tae.".$employeeType." = ".($user->employeeId ? $user->employeeId : '0')." AND ".$employeeType." IS NOT NULL";
             }
         }
 
