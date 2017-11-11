@@ -40,13 +40,13 @@ class AccountsController extends Controller
         } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
             $builder = $this->check($user, config('instances.position_types.contract_coordinator'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
-            $builder = $this->check($user, config('instances.position_types.director'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.director'), 'directorId');
         } else if ($user->hasRoleId(config('instances.roles.dca'))) {
             $builder = $this->check($user, config('instances.position_types.dca'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_view'))) {
-            $builder = $this->check($user, config('instances.roles.other_view'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.other'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_edit'))) {
-            $builder = $this->check($user, config('instances.roles.other_edit'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.other'), 'employeeId');
         }  else if ($user->hasRoleId(config('instances.roles.credentialer'))) {
             $builder = $this->check($user, config('instances.position_types.credentialer'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.vp_of_operations'))) {
