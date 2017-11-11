@@ -34,23 +34,23 @@ class AccountsController extends Controller
         $builder = '';
 
         if ($user->hasRoleId(config('instances.roles.manager'))) {
-            $builder = $this->check($user, config('instances.roles.manager'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.manager'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
-            $builder = $this->check($user, config('instances.roles.recruiter'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.recruiter'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
-            $builder = $this->check($user, config('instances.roles.contract_coordinator'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.contract_coordinator'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
-            $builder = $this->check($user, config('instances.roles.director'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.director'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.dca'))) {
-            $builder = $this->check($user, config('instances.roles.dca'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.dca'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_view'))) {
             $builder = $this->check($user, config('instances.roles.other_view'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_edit'))) {
             $builder = $this->check($user, config('instances.roles.other_edit'), 'employeeId');
         }  else if ($user->hasRoleId(config('instances.roles.credentialer'))) {
-            $builder = $this->check($user, config('instances.roles.credentialer'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.credentialer'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.vp_of_operations'))) {
-            $builder = $this->check($user, config('instances.roles.vp_of_operations'), 'employeeId');
+            $builder = $this->check($user, config('instances.position_types.vp_of_operations'), 'employeeId');
         }
 
         return $builder;
@@ -90,10 +90,10 @@ class AccountsController extends Controller
 
             $builder = "AND acc.operatingUnitId IN ($operatingUnits) AND acc.operatingUnitId IS NOT NULL";
         } else {
-            if($role == config('instances.roles.recruiter')) {
+            if($role == config('instances.position_types.recruiter')) {
                 $builder = "AND (tae.accountId = acc.id AND tae.positionTypeId = $role and tae.isPrimary = 1 and tae.".$employeeType." = ".$user->employeeId.") OR (tae.accountId = acc.id AND tae.positionTypeId = $role and tae.isPrimary = 0 and tae.".$employeeType." = ".$user->employeeId.")";
             } else {
-                $builder = "AND tae.accountId = acc.id AND positionTypeId = $role  and tae.".$employeeType." = ".$user->employeeId;
+                $builder = "AND tae.accountId = acc.id AND positionTypeId = $role  and tae.".$employeeType." = ".($user->employeeId ? $user->employeeId : '0');
             }
         }
 
@@ -132,15 +132,15 @@ class AccountsController extends Controller
         SELECT DISTINCT acc.id, acc.name, acc.siteCode, acc.city, acc.state, acc.startDate, acc.endDate, acc.parentSiteCode,
         rsc.name AS RSC, ou.name AS operatingUnit,
         CASE
-            WHEN tae.positionTypeId = 2 AND isPrimary = 1 
+            WHEN tae.positionTypeId = ".config('instances.position_types.recruiter')." AND isPrimary = 1 
                 THEN fullName
         END AS recruiter,
         CASE
-            WHEN tae.positionTypeId = 1
+            WHEN tae.positionTypeId = ".config('instances.position_types.manager')."
                 THEN fullName
         END AS manager,
         CASE
-            WHEN tae.positionTypeId = 11
+            WHEN tae.positionTypeId = ".config('instances.position_types.credentialer')."
                 THEN fullName
         END AS credentialer
         FROM tAccount acc
