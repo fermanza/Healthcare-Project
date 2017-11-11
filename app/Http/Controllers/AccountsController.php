@@ -23,6 +23,83 @@ use Carbon\Carbon;
 
 class AccountsController extends Controller
 {
+
+    private function validateUser() {
+        $user = auth()->user();
+        
+        if (! $user || session('ignore-account-role-scope')) {
+            return;
+        }
+
+        $builder = '';
+
+        if ($user->hasRoleId(config('instances.roles.manager'))) {
+            $builder = $this->check($user, config('instances.roles.manager'), 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.recruiter'))) {
+            $builder = $this->check($user, config('instances.roles.recruiter'), 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.contract_coordinator'))) {
+            $builder = $this->check($user, config('instances.roles.contract_coordinator'), 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.director'))) {
+            $builder = $this->check($user, config('instances.roles.director'), 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.dca'))) {
+            $builder = $this->check($user, config('instances.roles.dca'), 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.other_view'))) {
+            $builder = $this->check($user, config('instances.roles.other_view'), 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.other_edit'))) {
+            $builder = $this->check($user, config('instances.roles.other_edit'), 'employeeId');
+        }  else if ($user->hasRoleId(config('instances.roles.credentialer'))) {
+            $builder = $this->check($user, config('instances.roles.credentialer'), 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.vp_of_operations'))) {
+            $builder = $this->check($user, config('instances.roles.vp_of_operations'), 'employeeId');
+        }
+
+        return $builder;
+    }
+
+    private function check($user, $role, $employeeType) {
+        if (!$user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
+
+            $RSCs = $user->RSCs->map(function($RSC) {
+                return $RSC->id;
+            });
+
+            $RSCs = implode (", ", $RSCs->toArray());
+
+
+            $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
+                return $operatingUnit->id;
+            });
+
+            $operatingUnits = implode (", ", $operatingUnits->toArray());
+
+            $builder = "AND acc.RSCId IN ($RSCs) AND acc.operatingUnitId IN ($operatingUnits) AND acc.RSCId IS NOT NULL AND acc.operatingUnitId IS NOT NULL";
+        } else if (!$user->RSCs->isEmpty() && $user->operatingUnits->isEmpty()) {
+            $RSCs = $user->RSCs->map(function($RSC) {
+                return $RSC->id;
+            });
+
+            $RSCs = $RSCs == null ? '' : implode (", ", $RSCs->toArray());
+
+            $builder = "AND acc.RSCId IN ($RSCs) AND acc.RSCId IS NOT NULL";
+        } else if ($user->RSCs->isEmpty() && !$user->operatingUnits->isEmpty()) {
+            $operatingUnits = $user->operatingUnits->map(function($operatingUnit) {
+                return $operatingUnit->id;
+            });
+
+            $operatingUnits = implode (", ", $operatingUnits->toArray());
+
+            $builder = "AND acc.operatingUnitId IN ($RSCs) AND acc.operatingUnitId IS NOT NULL";
+        } else {
+            if($role == config('instances.roles.recruiter')) {
+                $builder = "AND (tae.accountId = acc.id AND tae.positionTypeId = $role and tae.isPrimary = 1 and tae.".$employeeType." = ".$user->employeeId.") OR (tae.accountId = acc.id AND tae.positionTypeId = $role and tae.isPrimary = 0 and tae.".$employeeType." = ".$user->employeeId.")";
+            } else {
+                $builder = "AND tae.accountId = acc.id AND positionTypeId = $role  and tae.".$employeeType." = ".$user->employeeId;
+            }
+        }
+
+        return $builder;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,10 +107,14 @@ class AccountsController extends Controller
      */
     public function index(Request $request, AccountFilter $filter)
     {
-        
+
+        $user_filter = $this->validateUser();
+
+        $RSC_values = $request->RSCs;
+        $RSC_values = $RSC_values == null ? '' : implode (", ", $RSC_values);
+        $RSC_filter = $RSC_values == '' ? '' : 'AND acc.RSCId IN ('.$RSC_values.')';
 
         //  use tae with (Nolock) on production
-
         $accounts = Account::hydrate(DB::select(DB::raw("SELECT accounts.id
             , accounts.name
             , accounts.siteCode
@@ -51,15 +132,15 @@ class AccountsController extends Controller
         SELECT DISTINCT acc.id, acc.name, acc.siteCode, acc.city, acc.state, acc.startDate, acc.endDate, acc.parentSiteCode,
         rsc.name AS RSC, ou.name AS operatingUnit,
         CASE
-            WHEN ate.positionTypeId = 2 AND isPrimary = 1 
+            WHEN tae.positionTypeId = 2 AND isPrimary = 1 
                 THEN fullName
         END AS recruiter,
         CASE
-            WHEN ate.positionTypeId = 1
+            WHEN tae.positionTypeId = 1
                 THEN fullName
         END AS manager,
         CASE
-            WHEN ate.positionTypeId = 11
+            WHEN tae.positionTypeId = 11
                 THEN fullName
         END AS credentialer
         FROM tAccount acc
@@ -70,10 +151,12 @@ class AccountsController extends Controller
                 SELECT accountId, employeeId, positionTypeId, isPrimary, fullName
                 FROM vAccountToEmployee tae 
                  
-            ) ate
-        ) ate 
-        ON acc.id = ate.accountId
-        WHERE acc.active = '1' AND (acc.endDate IS NULL OR acc.endDate > '2017-11-10')
+            ) tae
+        ) tae 
+        ON acc.id = tae.accountId
+        WHERE acc.active = '1' AND (acc.endDate IS NULL OR acc.endDate > ".Carbon::now()->format('Y-m-d').")
+        $user_filter
+        $RSC_filter
         ) accounts 
         group by accounts.id
             , accounts.name
