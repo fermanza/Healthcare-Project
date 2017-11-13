@@ -1438,7 +1438,7 @@ class ReportsController extends Controller
                         if ($account->pipeline->fullTimeHoursPhys == 0) {
                             $cell->setValue(0);
                         } else {
-                            $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys), 0.5));
+                            $cell->setValue($this->roundnum(($account->pipeline->staffPhysicianNeeds / $account->pipeline->fullTimeHoursPhys) - ($account->pipeline->staffPhysicianHaves / $account->pipeline->fullTimeHoursPhys), 0.5) - $SMDOpen);
                         }
 
                         $cell->setBackground('#FFFF00');
