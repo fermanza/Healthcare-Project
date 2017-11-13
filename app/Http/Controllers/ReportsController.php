@@ -2450,7 +2450,7 @@ class ReportsController extends Controller
 
     private function getSummaryData(SummaryFilter $filter, $pages) {
         return AccountSummary::withGlobalScope('role', new AccountSummaryScope)
-        ->with('account')->filter($filter)->paginate($pages);
+        ->with('account.rsc')->filter($filter)->paginate($pages);
     }
 
     private function getUsageData(SummaryFilter $filter, $pages) {
