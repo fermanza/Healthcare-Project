@@ -138,13 +138,6 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
-                    <div class="input-group date">
-                        <input type="text" class="form-control rangedatepicker" name="signedNotStarted" value="{{ Request::input('signedNotStarted') ? Request::input('signedNotStarted') : '' }}" placeholder="@lang('Signed Not Started')" />
-                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <input type="checkbox" name="pending" value="1" {{ Request::input('pending') ? 'checked' : '' }} />
                     @lang('Pending Contract')
                 </div>
@@ -157,6 +150,18 @@
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <input type="checkbox" name="promos" value="1" {{ Request::input('promos') ? 'checked' : '' }} />
                     @lang('Leadership Promos')
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <input type="checkbox" name="inactive" value="1" {{ Request::input('inactive') ? 'checked' : '' }} />
+                    @lang('Inactive')
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <div class="input-group date">
+                        <input type="text" class="form-control rangedatepicker" name="signedNotStarted" value="{{ Request::input('signedNotStarted') ? Request::input('signedNotStarted') : '' }}" placeholder="@lang('Signed Not Started')" />
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
         

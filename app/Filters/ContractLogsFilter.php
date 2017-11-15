@@ -206,7 +206,7 @@ class ContractLogsFilter extends Filter
      */
     public function pending($value)
     {
-        $this->query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate');
+        $this->query->whereNotNull('tContractLogs.contractOutDate')->whereNull('tContractLogs.contractInDate')->where('tContractLogs.value', '>', 0);
     }
 
     /**
@@ -217,7 +217,7 @@ class ContractLogsFilter extends Filter
      */
     public function placements($value)
     {
-        $this->query->where('tContractLogs.value', '>', 0);
+        $this->query->where('tContractLogs.value', '>', 0)->whereNotNull('tContractLogs.contractInDate')->where('tContractLogs.active', 1)->where('tContractLogs.inactive', 0);
     }
 
     /**
@@ -229,6 +229,17 @@ class ContractLogsFilter extends Filter
     public function promos($value)
     {
         $this->query->where('statusId', 7);
+    }
+
+    /**
+     * Apply inactive filter.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function inactive($value)
+    {
+        $this->query->where('inactive', 1);
     }
 
     /**
