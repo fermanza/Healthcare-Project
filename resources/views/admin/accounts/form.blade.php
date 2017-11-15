@@ -34,7 +34,7 @@
                         </a>
                     </small>
                 @endif
-                <input type="text" class="form-control" id="siteCode" name="siteCode" value="{{ old('siteCode') ?: $account->siteCode }}" required />
+                <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="form-control" id="siteCode" name="siteCode" value="{{ old('siteCode') ?: $account->siteCode }}" required />
                 @if ($errors->has('siteCode'))
                     <span class="help-block">
                         <strong>
