@@ -507,6 +507,14 @@
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                         @endpermission
+                                        @permission('admin.accounts.pipeline.rosterBench.removeCredentialing')
+                                            <button type="button" class="btn btn-xs btn-danger"
+                                                data-toggle="modal" data-target="#credentialingModal"
+                                                @click="setCredentialing(credentialing)"
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        @endpermission
                                         @permission('admin.accounts.pipeline.rosterBench.complete')
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
@@ -606,6 +614,14 @@
                                                 @click="editCredentialing(credentialing, 'credentialingApp')"
                                             >
                                                 <i class="fa fa-pencil"></i>
+                                            </button>
+                                        @endpermission
+                                        @permission('admin.accounts.pipeline.rosterBench.removeCredentialing')
+                                            <button type="button" class="btn btn-xs btn-danger"
+                                                data-toggle="modal" data-target="#credentialingModal"
+                                                @click="setCredentialing(credentialing)"
+                                            >
+                                                <i class="fa fa-trash"></i>
                                             </button>
                                         @endpermission
                                         @permission('admin.accounts.pipeline.rosterBench.complete')
@@ -1333,7 +1349,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="newRecruiting.name" required />
+                                    <input type="text" id="internalUsers" class="form-control" v-model="newRecruiting.name" required />
                                 </td>
                                 <td>
                                     <select class="form-control" v-model="newRecruiting.contract" required>
@@ -1592,6 +1608,37 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="credentialingModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">
+                            @lang('Remove')
+                            @{{ credentialing.name }}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit.prevent="removeCredentialing">
+                            <div class="form-group">
+                                <label for="removedReason">@lang('Please input reason for removal')</label>
+                                <input id="removedReason" type="text" class="form-control" v-model="credentialing.removedReason" required />
+                            </div>
+                            <div class="row mt5">
+                                <div class="col-xs-6">
+                                    <button type="submit" class="btn btn-warning">
+                                        @lang('Confirm')
+                                    </button>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">@lang('Close')</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="no-break-inside">
             <h4 class="pipeline-orange-title">@lang('Resigned List')</h4>
@@ -1727,6 +1774,14 @@
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                         @endpermission
+                                        @permission('admin.accounts.pipeline.rosterBench.removeCredentialing')
+                                            <button type="button" class="btn btn-xs btn-danger"
+                                                data-toggle="modal" data-target="#credentialingModal"
+                                                @click="setCredentialing(credentialing)"
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        @endpermission
                                         @permission('admin.accounts.pipeline.rosterBench.complete')
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
@@ -1828,6 +1883,14 @@
                                                 <i class="fa fa-pencil"></i>
                                             </button>
                                         @endpermission
+                                        @permission('admin.accounts.pipeline.rosterBench.removeCredentialing')
+                                            <button type="button" class="btn btn-xs btn-danger"
+                                                data-toggle="modal" data-target="#credentialingModal"
+                                                @click="setCredentialing(credentialing)"
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        @endpermission
                                         @permission('admin.accounts.pipeline.rosterBench.complete')
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
@@ -1909,6 +1972,12 @@
             var declinedDT = $('#declinedTable').DataTable($.extend({}, defaultDTOptions, {
                 order: [[ 5, 'desc' ]]
             }));
+
+            // var internalUsers = BackendVars.pipeline.recruitings.map(function(recruiting) {return recruiting.name});
+
+            // $( "#internalUsers" ).autocomplete({
+            //   source: internalUsers
+            // });
         });
 
         window.app = new Vue({
@@ -2029,6 +2098,18 @@
                     instance: '',
                 },
                 toDecline: {},
+
+                credentialing: {
+                    id: null,
+                    name: '',
+                    hours: '',
+                    fileToCredentialing: '',
+                    privilegeGoal: '',
+                    appToHospital: '',
+                    stage: '',
+                    notes: '',
+                },
+                toRemove: {},
 
 
                 resigning: {
@@ -2272,6 +2353,7 @@
                         .filter({ activity: 'physician', signedNotStarted: 1 })
                         .reject('resigned')
                         .reject('completed')
+                        .reject('removed')
                         .value();
                 },
 
@@ -2280,6 +2362,7 @@
                         .filter({ activity: 'app', signedNotStarted: 1 })
                         .reject('resigned')
                         .reject('completed')
+                        .reject('removed')
                         .value();
                 },
 
@@ -2419,6 +2502,29 @@
                     axios.patch(endpoint, credentialing)
                         .then(function (response) {
                             
+                        }.bind(this));
+                },
+
+                setCredentialing: function(credentialing) {
+                    credentialing.interview = this.moment(credentialing.interview);
+                    credentialing.contractIn = this.moment(credentialing.contractIn);
+                    credentialing.contractOut = this.moment(credentialing.contractOut);
+                    credentialing.firstShift = this.moment(credentialing.firstShift);
+                    credentialing.fileToCredentialing = this.moment(credentialing.fileToCredentialing);
+                    credentialing.privilegeGoal = this.moment(credentialing.privilegeGoal);
+                    credentialing.appToHospital = this.moment(credentialing.appToHospital);
+
+                    this.credentialing = _.cloneDeep(credentialing);
+                    this.toRemove = credentialing;
+                },
+
+                removeCredentialing: function () {
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this.credentialing.id + '/remove';
+
+                    axios.patch(endpoint, this.credentialing)
+                        .then(function (response) {
+                            this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': this.credentialing.id });
+                            $('#credentialingModal').modal('hide');
                         }.bind(this));
                 },
 

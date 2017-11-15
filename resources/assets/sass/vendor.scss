@@ -11,6 +11,11 @@
 @import "node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3";
 @import "node_modules/toastr/toastr";
 @import "node_modules/bootstrap-daterangepicker/daterangepicker.scss";
+@import "node_modules/jquery-ui/themes/base/theme";
+@import "node_modules/jquery-ui/themes/base/controlgroup";
+@import "node_modules/jquery-ui/themes/base/menu";
+@import "node_modules/jquery-ui/themes/base/dialog";
+@import "node_modules/jquery-ui/themes/base/autocomplete";
 
 .flexboxgrid {
     @import "node_modules/flexboxgrid/dist/flexboxgrid";

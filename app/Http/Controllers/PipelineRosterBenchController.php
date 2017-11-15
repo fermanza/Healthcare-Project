@@ -336,4 +336,21 @@ class PipelineRosterBenchController extends Controller
 
         return $rosterBench;
     }
+
+    /**
+     * Mark rosterbench/credentialing as completed.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @param  \App\PipelineRosterBench  $rosterBench
+     * @return \Illuminate\Http\Response
+     */
+    public function remove(Request $request, Account $account, PipelineRosterBench $rosterBench)
+    {
+        $rosterBench->removed = 1;
+        $rosterBench->removedReason = $request->removedReason;
+        $rosterBench->save();
+
+        return $rosterBench;
+    }
 }

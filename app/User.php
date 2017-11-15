@@ -134,5 +134,15 @@ class User extends Authenticatable
     public function operatingUnits()
     {
         return $this->belongsToMany(Region::class, 'tUserToOperatingUnit', 'userId', 'operatingUnitId');
-    }    
+    }
+
+    /**
+     * Get the user's logins
+     *
+     * @return bool
+     */
+    public function logins()
+    {
+        return $this->hasMany(Login::class, 'tUserLogin', 'userId', 'id');
+    }
 }

@@ -138,6 +138,8 @@ class AccountRequest extends FormRequest
         $account->applications = $this->applications;
         $account->meetings = $this->meetings;
         $account->other = $this->other;
+        $account->lastUpdated = \Carbon\Carbon::now();
+        $account->lastUpdatedBy = \Auth::id();
         $account->save();
 
         if ($this->isCreate()) {

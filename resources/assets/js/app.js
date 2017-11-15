@@ -15,6 +15,7 @@ if (typeof CustomEvent !== 'function') {
 
 // jQuery
 window.$ = window.jQuery = require('jquery');
+require("jquery-ui/ui/widgets/autocomplete");
 
 // Bootstrap
 require('bootstrap-sass');

@@ -71,6 +71,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->patch('accounts/{account}/pipeline/rosterBench/{rosterBench}/resign', 'PipelineRosterBenchController@resign')->name('accounts.pipeline.rosterBench.resign');
     $router->post('accounts/{account}/pipeline/rosterBench/{rosterBench}/switch', 'PipelineRosterBenchController@switch')->name('accounts.pipeline.rosterBench.switch');
     $router->patch('accounts/{account}/pipeline/rosterBench/{rosterBench}/complete', 'PipelineRosterBenchController@complete')->name('accounts.pipeline.rosterBench.complete');
+    $router->patch('accounts/{account}/pipeline/rosterBench/{rosterBench}/remove', 'PipelineRosterBenchController@remove')->name('accounts.pipeline.rosterBench.remove');
 
     $router->post('accounts/{account}/pipeline/recruiting', 'PipelineRecruitingController@store')->name('accounts.pipeline.recruiting.store');
     $router->patch('accounts/{account}/pipeline/recruiting/{recruiting}/decline', 'PipelineRecruitingController@decline')->name('accounts.pipeline.recruiting.decline');
