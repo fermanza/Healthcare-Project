@@ -2,12 +2,12 @@
 
 namespace App;
 
-class Specialty extends Model
+class Provider extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'tSpecialty';
+    protected $table = 'tProvider';
 }

@@ -12,6 +12,7 @@ use App\Employee;
 use App\Practice;
 use App\SystemAffiliation;
 use App\Group;
+use App\Provider;
 use Illuminate\Filesystem\Filesystem;
 use App\Filters\AccountFilter;
 use App\Scopes\AccountScope;
@@ -36,7 +37,7 @@ class AccountsPipelineController extends Controller
         $account->load([
             'pipeline' => function ($query) {
                 $query->with([
-                    'rostersBenchs', 'recruitings', 'locums',
+                    'rostersBenchs.provider', 'recruitings.provider', 'locums.provider',
                 ]);
             },
             'recruiter.employee' => function ($query) {
@@ -45,6 +46,7 @@ class AccountsPipelineController extends Controller
             'division.group.region',
             'practices', 'summary',
         ]);
+
         $pipeline = $account->pipeline;
         $summary = $account->summary;
         $region = $account->region;
@@ -54,6 +56,7 @@ class AccountsPipelineController extends Controller
         $contractTypes = config('pipeline.contract_types');
         $benchContractTypes = config('pipeline.bench_contract_types');
         $accounts = Account::where('active', true)->orderBy('name')->get();
+        $providers = Provider::where('active', true)->orderBy('fullName')->get();
 
         if ($practice && $practice->isIPS() && $pipeline->practiceTime == 'hours') {
             $pipeline->fullTimeHoursPhys = $pipeline->fullTimeHoursPhys == 0 ? 180 : $pipeline->fullTimeHoursPhys;
@@ -81,11 +84,15 @@ class AccountsPipelineController extends Controller
 
         $params = compact(
             'account', 'pipeline', 'region', 'practice', 'practiceTimes',
-            'recruitingTypes', 'contractTypes', 'benchContractTypes', 'accounts', 'percentRecruitedPhys',
-            'percentRecruitedApp', 'percentRecruitedPhysReport', 'percentRecruitedAppReport'
+            'recruitingTypes', 'contractTypes', 'benchContractTypes', 'accounts', 'providers',
+            'percentRecruitedPhys', 'percentRecruitedApp', 'percentRecruitedPhysReport', 'percentRecruitedAppReport'
         );
 
         JavaScript::put($params);
+
+        if($account->rsc && $account->rsc->name == 'West') {
+            return view('admin.accounts.pipeline.west', $params);
+        }
 
         return view('admin.accounts.pipeline.index', $params);
     }
