@@ -80,6 +80,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->contract = $request->contract;
         $rosterBench->lastUpdated = Carbon::now();
         $rosterBench->lastUpdatedBy = \Auth::id();
+        $rosterBench->stopLight = $request->stopLight;
 
         if($rosterBench->save()) {
             if($rosterBench->isSMD) {
@@ -206,6 +207,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->place = $request->place;
 
         $rosterBench->completed = $request->completed;
+        $rosterBench->stopLight = $request->stopLight;
 
         $rosterBench->lastUpdated = Carbon::now();
         $rosterBench->lastUpdatedBy = \Auth::id();

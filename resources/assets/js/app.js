@@ -92,3 +92,4 @@ window.$.fn.daterangepicker = function(options, callback) {
 
 // Onload Defaults
 require('./app/onload-defaults');
+

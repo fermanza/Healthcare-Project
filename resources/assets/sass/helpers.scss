@@ -140,6 +140,56 @@
 	}
 }
 
+.replacementCheckboxHolder, .replacementRadioButtonHolder {
+    display : inline-block;
+    width: 2%;
+    user-select: none;
+}
+
+.checkboxReplacement, .radioButtonReplacement {
+    display: inline-block;
+}
+
+.emptyCheckbox, .emptyRadioButton {
+    border: 2px solid #000;
+    height: 10px;
+    width: 10px;
+    cursor: pointer;
+    -webkit-transition: .3s;
+    -moz-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+    position: relative;
+    top: 2px;
+}
+
+.emptyRadioButton {
+    border-radius: 50%;
+}
+
+.emptyCheckbox.error {
+    border-color: rgb(192, 0, 0)
+}
+
+.filledCheckbox, .filledCheckbox.error {
+    top: -2px;
+    width: 16px;
+    height: 8px;
+    border: 2px solid #0f9d58;
+    border-top: none;
+    border-right: none;
+    opacity: 1;
+    z-index: 888;
+    -webkit-transform: rotate(-66deg);
+    -moz-transform: rotate(-66deg);
+    -o-transform: rotate(-66deg);
+    transform: rotate(-66deg);
+}
+
+.filledRadioButton {
+    background: #0f9d58;
+}
+
 body {
     min-height: 100vh;
 }

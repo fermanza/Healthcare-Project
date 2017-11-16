@@ -23,6 +23,30 @@ $(() => {
         increaseArea: '20%'
     });
 
+    $('.icheck-red').iCheck({
+        checkboxClass: 'icheckbox_square-red',
+        radioClass: 'iradio_square-red',
+    }).on('ifChecked', function () {
+        const event = new CustomEvent('change');
+        this.dispatchEvent(event);
+    });
+
+    $('.icheck-yellow').iCheck({
+        checkboxClass: 'icheckbox_square-yellow',
+        radioClass: 'iradio_square-yellow',
+    }).on('ifChecked', function () {
+        const event = new CustomEvent('change');
+        this.dispatchEvent(event);
+    });
+
+    $('.icheck-green').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
+    }).on('ifChecked', function () {
+        const event = new CustomEvent('change');
+        this.dispatchEvent(event);
+    });
+
     // DataTables
     (() => {
         window.defaultDTOptions = {

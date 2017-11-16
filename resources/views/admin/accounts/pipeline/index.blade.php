@@ -474,6 +474,7 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
+                                    <th class="mw20"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
@@ -489,6 +490,11 @@
                             </thead>
                             <tbody>
                                 <tr v-for="credentialing in credentialingPhysicians">
+                                    <td>
+                                        <input type='radio' class="icheck-red" name="stopLight" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                        <input type='radio' class="icheck-yellow" name="stopLight" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                        <input type='radio' class="icheck-green" name="stopLight" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                    </td>
                                     <td>@{{ credentialing.name }}</td>
                                     <td>@{{ credentialing.hours }}</td>
                                     <td class="text-uppercase">@{{ credentialing.contract }}</td>
@@ -527,6 +533,8 @@
                             </tbody>
                             <tfoot class="hidden-print" v-show="credentialingPhysician.id">
                                 <tr>
+                                    <td>
+                                    </td>
                                     <td>
                                         <input type="text" class="form-control" v-model="credentialingPhysician.name" required readonly />
                                     </td>
@@ -583,6 +591,7 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
+                                    <th class="mw20"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
@@ -598,6 +607,11 @@
                             </thead>
                             <tbody>
                                 <tr v-for="credentialing in credentialingApps">
+                                    <td>
+                                        <input type='radio' class="icheck-red" name="stopLight" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                        <input type='radio' class="icheck-yellow" name="stopLight" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                        <input type='radio' class="icheck-green" name="stopLight" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                    </td>
                                     <td>@{{ credentialing.name }}</td>
                                     <td>@{{ credentialing.hours }}</td>
                                     <td class="text-uppercase">@{{ credentialing.contract }}</td>
@@ -636,6 +650,8 @@
                             </tbody>
                             <tfoot class="hidden-print" v-show="credentialingApp.id">
                                 <tr>
+                                    <td>
+                                    </td>
                                     <td>
                                         <input type="text" class="form-control" v-model="credentialingApp.name" required readonly />
                                     </td>
@@ -1741,6 +1757,7 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
+                                    <th class="mw20"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
@@ -1756,6 +1773,11 @@
                             </thead>
                             <tbody>
                                 <tr v-for="credentialing in credentialingPhysicians">
+                                    <td>
+                                        <input type='radio' class="icheck-red" name="stopLight" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                        <input type='radio' class="icheck-yellow" name="stopLight" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                        <input type='radio' class="icheck-green" name="stopLight" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                    </td>
                                     <td>@{{ credentialing.name }}</td>
                                     <td>@{{ credentialing.hours }}</td>
                                     <td class="text-uppercase">@{{ credentialing.contract }}</td>
@@ -1794,6 +1816,8 @@
                             </tbody>
                             <tfoot class="hidden-print" v-show="credentialingPhysician.id">
                                 <tr>
+                                    <td>
+                                    </td>
                                     <td>
                                         <input type="text" class="form-control" v-model="credentialingPhysician.name" required readonly />
                                     </td>
@@ -1850,6 +1874,7 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
+                                    <th class="mw20"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
@@ -1865,6 +1890,11 @@
                             </thead>
                             <tbody>
                                 <tr v-for="credentialing in credentialingApps">
+                                    <td>
+                                        <input type='radio' class="icheck-red" name="stopLight" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                        <input type='radio' class="icheck-yellow" name="stopLight" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                        <input type='radio' class="icheck-green" name="stopLight" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                    </td>
                                     <td>@{{ credentialing.name }}</td>
                                     <td>@{{ credentialing.hours }}</td>
                                     <td class="text-uppercase">@{{ credentialing.contract }}</td>
@@ -1903,6 +1933,8 @@
                             </tbody>
                             <tfoot class="hidden-print" v-show="credentialingApp.id">
                                 <tr>
+                                    <td>
+                                    </td>
                                     <td>
                                         <input type="text" class="form-control" v-model="credentialingApp.name" required readonly />
                                     </td>
@@ -2746,6 +2778,8 @@
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
 
+                    console.log(roster);
+
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
                     if (type == 'SMD') {
@@ -2841,6 +2875,24 @@
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
+                    
+                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+
+                    axios.patch(endpoint, roster)
+                        .then(function (response) {
+                            
+                        }.bind(this));
+                },
+
+                updateStopLight: function(roster, color) {
+                    roster.interview = this.moment(roster.interview);
+                    roster.contractIn = this.moment(roster.contractIn);
+                    roster.contractOut = this.moment(roster.contractOut);
+                    roster.firstShift = this.moment(roster.firstShift);
+                    roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
+                    roster.privilegeGoal = this.moment(roster.privilegeGoal);
+                    roster.appToHospital = this.moment(roster.appToHospital);
+                    roster.stopLight = color;
                     
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
