@@ -70,6 +70,7 @@ class PipelineRecruitingController extends Controller
         $recruiting->notes = $request->notes;
         $recruiting->lastUpdated = Carbon::now();
         $recruiting->lastUpdatedBy = \Auth::id();
+        $recruiting->providerId = $request->providerId;
         $recruiting->save();
 
         return $recruiting->fresh();

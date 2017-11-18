@@ -728,7 +728,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': (roster.signedNotStarted && compareFirstShift(roster.firstShift))}">
+                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': (roster.signedNotStarted && compareFirstShift(roster.firstShift)), 'bold': roster.providerId}">
                                 <td>
                                     <input class="roster-radio" type="checkbox" name="SMD" :value="1" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
                                     <span class="hidden">@{{roster.isSMD}}</span>
@@ -808,7 +808,12 @@
                                     <input type="checkbox" v-model="rosterPhysician.isAMD">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="rosterPhysician.name" required />
+                                    <select class="form-control providers" v-model="rosterPhysician.name" required>
+                                        <option value="" disabled selected></option>
+                                        @foreach($providers as $provider)
+                                            <option value="{{$provider->fullName}}">{{$provider->fullName}}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="rosterPhysician.hours" min="0" required />
@@ -867,7 +872,7 @@
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="rosterAppsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw100">@lang('Chief')</th>
@@ -886,7 +891,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted && compareFirstShift(roster.firstShift)}">
+                            <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted && compareFirstShift(roster.firstShift), 'bold': roster.providerId}">
                                 <td>
                                     <input type="checkbox" v-model="roster.isChief" @click="updateRosterBench(roster, 'Chief')">
                                     <span class="hidden">@{{roster.isChief}}</span>
@@ -959,7 +964,12 @@
                                     <input type="checkbox" v-model="rosterApps.isChief" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="rosterApps.name" required />
+                                    <select class="form-control providers" v-model="rosterApps.name" required>
+                                        <option value="" disabled selected></option>
+                                        @foreach($providers as $provider)
+                                            <option value="{{$provider->fullName}}">{{$provider->fullName}}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="rosterApps.hours" min="0" required />
@@ -1023,7 +1033,7 @@
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="benchPhysicianTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -1040,7 +1050,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="bench in activeBenchPhysicians" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift)}">
+                            <tr v-for="bench in activeBenchPhysicians" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift), 'bold': bench.providerId}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
@@ -1102,7 +1112,12 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="benchPhysician.name" required />
+                                    <select class="form-control providers" v-model="benchPhysician.name" required>
+                                        <option value="" disabled selected></option>
+                                        @foreach($providers as $provider)
+                                            <option value="{{$provider->fullName}}">{{$provider->fullName}}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="benchPhysician.hours" min="0" required />
@@ -1154,7 +1169,7 @@
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="benchAppsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -1171,7 +1186,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="bench in activeBenchApps" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift)}">
+                            <tr v-for="bench in activeBenchApps" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift), 'bold': bench.providerId}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
@@ -1233,7 +1248,12 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="benchApps.name" required />
+                                    <select class="form-control providers" v-model="benchApps.name" required>
+                                        <option value="" disabled selected></option>
+                                        @foreach($providers as $provider)
+                                            <option value="{{$provider->fullName}}">{{$provider->fullName}}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="benchApps.hours" min="0" required />
@@ -1289,7 +1309,7 @@
             <h4 class="pipeline-green-title">@lang('Recruiting Pipeline')</h4>
             <form @submit.prevent="addRecruiting">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="recruitingsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('PHYS/APP')</th>
@@ -1305,7 +1325,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="recruiting in sortedRecruitings" :class="{'bg-success': currentRecruiting(recruiting)}">
+                            <tr v-for="recruiting in sortedRecruitings" :class="{'bg-success': currentRecruiting(recruiting), 'bold': recruiting.providerId}">
                                 <td class="text-uppercase">@{{ recruiting.type }}</td>
                                 <td>@{{ recruiting.name }}</td>
                                 <td class="text-uppercase">@{{ recruiting.contract }}</td>
@@ -1365,7 +1385,12 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="newRecruiting.name" required />
+                                    <select class="form-control providers" v-model="newRecruiting.name" required>
+                                        <option value="" disabled selected></option>
+                                        @foreach($providers as $provider)
+                                            <option value="{{$provider->fullName}}">{{$provider->fullName}}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <select class="form-control" v-model="newRecruiting.contract" required>
@@ -1412,7 +1437,7 @@
             <h4 class="pipeline-green-title">@lang('Locums Pipeline')</h4>
             <form @submit.prevent="addLocum">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="locumsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('PHYS/APP')</th>
@@ -1427,7 +1452,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="locum in sortedLocums">
+                            <tr v-for="locum in sortedLocums" :class="{'bold': locum.providerId}">
                                 <td class="text-uppercase">@{{ locum.type }}</td>
                                 <td>@{{ locum.name }}</td>
                                 <td>@{{ locum.agency }}</td>
@@ -1483,7 +1508,12 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="newLocum.name" required />
+                                    <select class="form-control providers" v-model="newLocum.name" required>
+                                        <option value="" disabled selected></option>
+                                        @foreach($providers as $provider)
+                                            <option value="{{$provider->fullName}}">{{$provider->fullName}}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="newLocum.agency" required />
@@ -1997,20 +2027,16 @@
         });
 
         $(document).ready(function() {
-            var accountsDT = $('#rosterPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
+            var accountsDT = $('#rosterPhysicianTable').DataTable($.extend({}, window.defaultDTOptions, {
                 order: [[ 0, 'desc' ], [ 1, 'desc' ]]
             }));
 
-            var declinedDT = $('#declinedTable').DataTable($.extend({}, defaultDTOptions, {
+            var declinedDT = $('#declinedTable').DataTable($.extend({}, window.defaultDTOptions, {
                 order: [[ 5, 'desc' ]]
             }));
 
             var providers = BackendVars.providers.map(function(provider) {
                 return provider.fullName;
-            });
-
-            $( ".providers" ).autocomplete({
-              source: providers
             });
         });
 
@@ -2021,6 +2047,7 @@
                 account: BackendVars.account,
                 pipeline: BackendVars.pipeline,
                 summary: BackendVars.summary,
+                providers: BackendVars.providers,
 
                 staffPhysicianNeeds: BackendVars.pipeline.staffPhysicianNeeds,
                 staffAppsNeeds: BackendVars.pipeline.staffAppsNeeds,
@@ -2448,6 +2475,23 @@
                         }
                     }
 
+                    var id;
+
+                    switch(entity) {
+                        case 'rosterPhysician':
+                            id = 'rosterPhysicianTable';
+                            break;
+                        case 'rosterApps':
+                            id = 'rosterAppsTable';
+                            break;
+                        case 'benchPhysician':
+                            id = 'benchPhysicianTable';
+                            break;
+                        case 'benchApps':
+                            id = 'benchAppsTable';
+                            break;
+                    }
+
                     if(this[entity].id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
 
@@ -2459,8 +2503,14 @@
                                 var rosterBench = _.find(this.pipeline.rostersBenchs, {id: response.data.id});
                                 _.assignIn(rosterBench, response.data);
                                 this.clearRosterBench(entity);
+                                $('#'+id+' .providers').val(null).trigger('change');
                         }.bind(this));
                     } else {
+                        var name = this[entity].name;
+                        var provider = _.find(this.providers, {fullName: name});
+                        
+                        this[entity].providerId = provider ? provider.id : null;
+
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
                             place: place,
                             activity: activity
@@ -2469,6 +2519,7 @@
                                 var rosterBench = response.data;
                                 this.pipeline.rostersBenchs.push(rosterBench);
                                 this.clearRosterBench(entity);
+                                $('#'+id+' .providers').val(null).trigger('change');
 
                                 if(response.data.isSMD) {
                                     this.oldSMD = [];
@@ -2480,7 +2531,7 @@
                                     this.oldAMD.push(response.data);
                                 }
                             }.bind(this));
-                        }
+                    }
                 },
 
                 addCredentialing: function (entity) {
@@ -2504,6 +2555,33 @@
                     rosterBench.fileToCredentialing = this.moment(rosterBench.fileToCredentialing);
                     rosterBench.privilegeGoal = this.moment(rosterBench.privilegeGoal);
                     rosterBench.appToHospital = this.moment(rosterBench.appToHospital);
+
+                    var id;
+
+                    switch(object) {
+                        case 'rosterPhysician':
+                            id = 'rosterPhysicianTable';
+                            break;
+                        case 'rosterApps':
+                            id = 'rosterAppsTable';
+                            break;
+                        case 'benchPhysician':
+                            id = 'benchPhysicianTable';
+                            break;
+                        case 'benchApps':
+                            id = 'benchAppsTable';
+                            break;
+                    }
+
+                    // Set the value, creating a new option if necessary
+                    if ($('#'+id+' .providers').find("option[value='" + rosterBench.name + "']").length) {
+                        $('#'+id+' .providers').val(rosterBench.name).trigger('change');
+                    } else { 
+                        // Create a DOM Option and pre-select by default
+                        var newOption = new Option(rosterBench.name, rosterBench.name, true, true);
+                        // Append it to the select
+                        $('#'+id+' .providers').append(newOption).trigger('change');
+                    }
 
                     _.assignIn(this[object], rosterBench);
                 },
@@ -2632,13 +2710,20 @@
                                 var recruiting = _.find(this.pipeline.recruitings, {id: response.data.id});
                                 _.assignIn(recruiting, response.data);
                                 this.clearNewRecruiting();
+                                $('#recruitingsTable .providers').val(null).trigger('change');
                         }.bind(this));
                     } else {
+                        var name = this.newRecruiting.name;
+                        var provider = _.find(this.providers, {fullName: name});
+                        
+                        this.newRecruiting.providerId = provider ? provider.id : null;
+
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting', this.newRecruiting)
                             .then(function (response) {
                                 var recruiting = response.data;
                                 this.pipeline.recruitings.push(recruiting);
                                 this.clearNewRecruiting();
+                                $('#recruitingsTable .providers').val(null).trigger('change');
                             }.bind(this));
                     }
                 },
@@ -2650,6 +2735,16 @@
                     recruiting.declined = this.moment(recruiting.declined);
                     recruiting.contractIn = this.moment(recruiting.contractIn);
                     recruiting.firstShift = this.moment(recruiting.firstShift);
+
+                    // Set the value, creating a new option if necessary
+                    if ($('#recruitingsTable .providers').find("option[value='" + recruiting.name + "']").length) {
+                        $('#recruitingsTable .providers').val(recruiting.name).trigger('change');
+                    } else { 
+                        // Create a DOM Option and pre-select by default
+                        var newOption = new Option(recruiting.name, recruiting.name, true, true);
+                        // Append it to the select
+                        $('#recruitingsTable .providers').append(newOption).trigger('change');
+                    } 
 
                     _.assignIn(this.newRecruiting, recruiting);
                 },
@@ -2679,13 +2774,20 @@
                                 var locum = _.find(this.pipeline.locums, {id: response.data.id});
                                 _.assignIn(locum, response.data);
                                 this.clearNewLocum();
+                                $('#locumsTable .providers').val(null).trigger('change');
                         }.bind(this));
                     } else {
+                        var name = this.newLocum.name;
+                        var provider = _.find(this.providers, {fullName: name});
+                        
+                        this.newLocum.providerId = provider ? provider.id : null;
+
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum', this.newLocum)
                             .then(function (response) {
                                 var locum = response.data;
                                 this.pipeline.locums.push(locum);
                                 this.clearNewLocum();
+                                $('#locumsTable .providers').val(null).trigger('change');
                             }.bind(this));
                     }
                 },
@@ -2698,6 +2800,16 @@
                     locum.interview = this.moment(locum.interview);
 
                     _.assignIn(this.newLocum, locum);
+
+                    // Set the value, creating a new option if necessary
+                    if ($('#locumsTable .providers').find("option[value='" + locum.name + "']").length) {
+                        $('#locumsTable .providers').val(locum.name).trigger('change');
+                    } else { 
+                        // Create a DOM Option and pre-select by default
+                        var newOption = new Option(locum.name, locum.name, true, true);
+                        // Append it to the select
+                        $('#locumsTable .providers').append(newOption).trigger('change');
+                    } 
                 },
 
                 deleteLocum: function (locum) {

@@ -66,6 +66,7 @@ class PipelineLocumController extends Controller
         $locum->comments = $request->comments;
         $locum->lastUpdated = Carbon::now();
         $locum->lastUpdatedBy = \Auth::id();
+        $locum->providerId = $request->providerId;
         $locum->save();
 
         return $locum->fresh();

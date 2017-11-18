@@ -33,7 +33,5 @@
     "toastr": "^2.1.2",
     "vue": "^2.4.2"
   },
-  "dependencies": {
-    "jquery-ui": "^1.12.1"
-  }
+  "dependencies": {}
 }

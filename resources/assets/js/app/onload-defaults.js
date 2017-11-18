@@ -111,11 +111,18 @@ $(() => {
         format: 'mm/dd/yyyy hh:ii',
         autoclose: true,
         todayHighlight: true
-    }).on('changeDate', function () {
-        const event = new CustomEvent('input');
-        this.dispatchEvent(event);
     });
 
+    // Provider Autocomplete
+    $(".providers").each(function () {
+        $(this).select2({
+            tags: true,
+            minimumInputLength: 2
+        }).on('select2:select', function(e) {
+            const event = new CustomEvent('change');
+            this.dispatchEvent(event);
+        });
+    });
 
     // DatePicker
     $('.datepicker').datepicker({

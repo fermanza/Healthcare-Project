@@ -81,6 +81,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->lastUpdated = Carbon::now();
         $rosterBench->lastUpdatedBy = \Auth::id();
         $rosterBench->stopLight = $request->stopLight;
+        $rosterBench->providerId = $request->providerId;
 
         if($rosterBench->save()) {
             if($rosterBench->isSMD) {
