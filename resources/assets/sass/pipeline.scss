@@ -121,13 +121,16 @@
     .iradio_square-red,
     .iradio_square-yellow,
     .iradio_square-green {
-        background-position: -144px 0;
+        background-size: 180px 18px;
+        background-position: -108px 0px;
+        width: 17px;
+        height: 17px;
     }
 
     .iradio_square-red.checked,
     .iradio_square-yellow.checked,
     .iradio_square-green.checked {
-            background-position: -168px 0;
+        background-position: -126px 0;
     }
 
     .select2-container .select2-selection--single {
@@ -146,6 +149,7 @@
         font-weight: bold;
     }
 }
+
 
 @media print {
     .pipeline {
