@@ -45,6 +45,7 @@ class AccountsPipelineController extends Controller
             },
             'division.group.region',
             'practices', 'summary',
+            'providers'
         ]);
 
         $pipeline = $account->pipeline;
@@ -56,7 +57,7 @@ class AccountsPipelineController extends Controller
         $contractTypes = config('pipeline.contract_types');
         $benchContractTypes = config('pipeline.bench_contract_types');
         $accounts = Account::where('active', true)->orderBy('name')->get();
-        $providers = Provider::where('active', true)->orderBy('fullName')->get();
+        $providers = $account->providers;
 
         if ($practice && $practice->isIPS() && $pipeline->practiceTime == 'hours') {
             $pipeline->fullTimeHoursPhys = $pipeline->fullTimeHoursPhys == 0 ? 180 : $pipeline->fullTimeHoursPhys;

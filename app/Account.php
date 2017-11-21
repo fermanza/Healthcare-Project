@@ -202,6 +202,16 @@ class Account extends Model
     }
 
     /**
+     * Get the Providers for the Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function providers()
+    {
+        return $this->belongsToMany(Provider::class, 'tProviderToAccount', 'accountId', 'providerId');
+    }
+
+    /**
      * Get the Division for the Account.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
