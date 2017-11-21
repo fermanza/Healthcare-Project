@@ -70,11 +70,11 @@ class AccountRequest extends FormRequest
         
         if ($this->isCreate()) {
             $methodRules = [
-                'siteCode' => 'required|unique:tAccount,siteCode|numeric',
+                'siteCode' => 'required|unique:tAccount,siteCode',
             ];
         } else {
             $methodRules = [
-                'siteCode' => 'required|unique:tAccount,siteCode,'.$this->account->id.'|numeric',
+                'siteCode' => 'required|unique:tAccount,siteCode,'.$this->account->id,
             ];
         }
 

@@ -84,8 +84,8 @@
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
                     <select class="form-control select2" name="DOO[]" data-placeholder="@lang('DOO')" multiple>
-                        @foreach ($employees as $employee)
-                            <option value="{{ $employee->fullName() }}" {{ in_array($employee->fullName(), Request::input('DOO') ?: []) ? 'selected' : '' }}>{{ $employee->fullName() }}</option>
+                        @foreach ($doos as $doo)
+                            <option value="{{ $doo->fullName() }}" {{ in_array($doo->fullName(), Request::input('DOO') ?: []) ? 'selected' : '' }}>{{ $doo->fullName() }}</option>
                         @endforeach
                     </select>
                 </div>

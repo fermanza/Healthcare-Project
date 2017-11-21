@@ -31,7 +31,7 @@ return [
         'manager' => 1,
         'recruiter' => 2,
         'director' => 5,
-        'dca' => 6,
+        'doo' => 6,
         'contract_coordinator' => 7,
         'svp' => 8,
         'rmd' => 9,

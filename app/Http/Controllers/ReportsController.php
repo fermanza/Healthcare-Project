@@ -42,6 +42,7 @@ class ReportsController extends Controller
         $accounts = $this->getSummaryData($filter, 500);
         $sites = Account::where('active', true)->orderBy('name')->get();
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
+        $doos = $employees->filter->hasPosition(config('instances.position_types.dca'));
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
@@ -52,7 +53,7 @@ class ReportsController extends Controller
         
         $dates = AccountSummary::select('MonthEndDate')->get()->unique('MonthEndDate');
 
-        $params = compact('accounts', 'employees', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'groups', 'action', 'sites');
+        $params = compact('accounts', 'employees', 'doos', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'groups', 'action', 'sites');
 
         return view('admin.reports.summary.index', $params);
     }
@@ -2208,7 +2209,7 @@ class ReportsController extends Controller
                             $credentialer->stage,
                             $credentialer->privilegeGoal ? $credentialer->privilegeGoal->format('m/d/Y') : '',
                             $credentialer->enrollmentStatus,
-                            $credentialer->notes,
+                            $credentialer->credentialingNotes,
                             ''
                         ];
 
@@ -2251,7 +2252,7 @@ class ReportsController extends Controller
                             $credentialer->stage,
                             $credentialer->privilegeGoal ? $credentialer->privilegeGoal->format('m/d/Y') : '',
                             $credentialer->enrollmentStatus,
-                            $credentialer->notes,
+                            $credentialer->credentialingNotes,
                             ''
                         ];
 
