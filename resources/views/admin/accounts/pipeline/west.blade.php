@@ -2999,6 +2999,12 @@
                 },
 
                 updateStopLight: function(roster, color) {
+                    if (roster.stopLight == color) {
+                        roster.stopLight = null;
+                    } else {
+                        roster.stopLight = color;
+                    }
+
                     roster.interview = this.moment(roster.interview);
                     roster.contractIn = this.moment(roster.contractIn);
                     roster.contractOut = this.moment(roster.contractOut);
@@ -3006,7 +3012,6 @@
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
-                    roster.stopLight = color;
                     
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
