@@ -117,15 +117,15 @@ $(() => {
     });
 
     // Provider Autocomplete
-    $(".providers").each(function () {
-        $(this).select2({
-            tags: true,
-            minimumInputLength: 2
-        }).on('select2:select', function(e) {
-            const event = new CustomEvent('change');
-            this.dispatchEvent(event);
-        });
-    });
+    // $(".providers").each(function () {
+    //     $(this).select2({
+    //         tags: true,
+    //         minimumInputLength: 2
+    //     }).on('select2:select', function(e) {
+    //         const event = new CustomEvent('change');
+    //         this.dispatchEvent(event);
+    //     });
+    // });
 
     // DatePicker
     $('.datepicker').datepicker({
