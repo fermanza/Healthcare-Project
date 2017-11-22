@@ -128,7 +128,7 @@ class SummaryFilter extends Filter
     }
 
     /**
-     * Apply groups filter.
+     * Apply sites filter.
      *
      * @param  array  $sites
      * @return void
@@ -138,5 +138,16 @@ class SummaryFilter extends Filter
         $this->query->whereHas('account', function($query) use ($sites) {
             $query->whereIn('id', $sites);
         });
+    }
+
+    /**
+     * Apply cities filter.
+     *
+     * @param  array  $cities
+     * @return void
+     */
+    public function cities($cities)
+    {
+        $this->query->whereIn('city', $cities);
     }
 }

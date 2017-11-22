@@ -30,6 +30,7 @@ class ReportsController extends Controller
     {
 
         $queryString = $request->query();
+        $newFilter = $request->new;
 
         if(count($queryString) == 0) {
             $maxDate = AccountSummary::max('MonthEndDate');
@@ -50,10 +51,21 @@ class ReportsController extends Controller
         $regions = Region::where('active', true)->orderBy('name')->get();
         $states = StateAbbreviation::all();
         $groups = Group::where('active', true)->get()->sortBy('name');
+        $cities = Account::select('city')->where('active', true)->orderBy('city')->get()->unique('city');
         
         $dates = AccountSummary::select('MonthEndDate')->get()->unique('MonthEndDate');
 
-        $params = compact('accounts', 'employees', 'doos', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'groups', 'action', 'sites');
+        if ($newFilter == "1") {
+            $accounts = $accounts->filter(function($account) {
+                return $account->getMonthsSinceCreated() < 7;
+            });
+        } elseif ($newFilter == "2") {
+            $accounts = $accounts->filter(function($account) {
+                return $account->getMonthsSinceCreated() > 7;
+            });
+        }
+
+        $params = compact('accounts', 'employees', 'doos', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'groups', 'action', 'sites', 'cities');
 
         return view('admin.reports.summary.index', $params);
     }

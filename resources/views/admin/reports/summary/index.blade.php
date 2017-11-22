@@ -115,6 +115,24 @@
                         @endforeach
                     </select>
                 </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="cities[]" data-placeholder="@lang('City')" multiple>
+                        @foreach ($cities as $city)
+                            <option value="{{ $city->city }}" {{ in_array($city->city, Request::input('cities') ?: []) ? 'selected' : '' }}>
+                                {{ $city->city }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="new" data-placeholder="@lang('Same\New')">
+                        <option value=""></option>
+                        <option value="1" {{ Request::input('new') == 1 ? 'selected' : '' }}>New Store</option>
+                        <option value="2" {{ Request::input('new') == 2 ? 'selected' : '' }}>Same Store</option>
+                    </select>
+                </div>
             </div>
         
             <div class="row">
