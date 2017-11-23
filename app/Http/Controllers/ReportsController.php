@@ -51,9 +51,9 @@ class ReportsController extends Controller
         $regions = Region::where('active', true)->orderBy('name')->get();
         $states = StateAbbreviation::all();
         $groups = Group::where('active', true)->get()->sortBy('name');
-        $cities = Account::select('city')->where('active', true)->orderBy('city')->get()->unique('city');
+        $cities = Account::distinct('city')->select('city')->where('active', true)->orderBy('city')->get();
         
-        $dates = AccountSummary::select('MonthEndDate')->get()->unique('MonthEndDate');
+        $dates = AccountSummary::distinct('MonthEndDate')->select('MonthEndDate')->orderBy('MonthEndDate')->get();
 
         if ($newFilter == "1") {
             $accounts = $accounts->filter(function($account) {
