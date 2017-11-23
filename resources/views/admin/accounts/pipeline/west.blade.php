@@ -2016,6 +2016,7 @@
                         const cEvent = new CustomEvent('input');
                         this.dispatchEvent(cEvent);
                         $(this).blur();
+                        $(this).focus();
                     }
                 });
             });
