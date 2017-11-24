@@ -43,7 +43,7 @@ class ReportsController extends Controller
         $accounts = $this->getSummaryData($filter, 500);
         $sites = Account::where('active', true)->orderBy('name')->get();
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
-        $doos = $employees->filter->hasPosition(config('instances.position_types.dca'));
+        $doos = $employees->filter->hasPosition(config('instances.position_types.doo'));
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $divisions = Division::where('active', true)->orderBy('name')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
