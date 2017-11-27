@@ -209,6 +209,7 @@ class PipelineRosterBenchController extends Controller
 
         $rosterBench->completed = $request->completed;
         $rosterBench->stopLight = $request->stopLight;
+        $rosterBench->providerId = $request->providerId;
 
         $rosterBench->lastUpdated = Carbon::now();
         $rosterBench->lastUpdatedBy = \Auth::id();

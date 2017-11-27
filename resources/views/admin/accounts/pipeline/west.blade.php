@@ -2457,6 +2457,11 @@
                         }
                     }
 
+                    var name = this[entity].name;
+                    var provider = _.find(this.providers, {fullName: name});
+                    
+                    this[entity].providerId = provider ? provider.id : null;
+
                     if(this[entity].id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
 
@@ -2470,11 +2475,6 @@
                                 this.clearRosterBench(entity);
                         }.bind(this));
                     } else {
-                        var name = this[entity].name;
-                        var provider = _.find(this.providers, {fullName: name});
-                        
-                        this[entity].providerId = provider ? provider.id : null;
-
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench', $.extend({}, {
                             place: place,
                             activity: activity
@@ -2655,6 +2655,11 @@
 
 
                 addRecruiting: function () {
+                    var name = this.newRecruiting.name;
+                    var provider = _.find(this.providers, {fullName: name});
+                    
+                    this.newRecruiting.providerId = provider ? provider.id : null;
+
                     if(this.newRecruiting.id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.newRecruiting.id;
 
@@ -2665,11 +2670,6 @@
                                 this.clearNewRecruiting();
                         }.bind(this));
                     } else {
-                        var name = this.newRecruiting.name;
-                        var provider = _.find(this.providers, {fullName: name});
-                        
-                        this.newRecruiting.providerId = provider ? provider.id : null;
-
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting', this.newRecruiting)
                             .then(function (response) {
                                 var recruiting = response.data;
@@ -2707,6 +2707,11 @@
 
 
                 addLocum: function () {
+                    var name = this.newLocum.name;
+                    var provider = _.find(this.providers, {fullName: name});
+                    
+                    this.newLocum.providerId = provider ? provider.id : null;
+
                     if(this.newLocum.id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/locum/' + this.newLocum.id;
 
@@ -2717,11 +2722,6 @@
                                 this.clearNewLocum();
                         }.bind(this));
                     } else {
-                        var name = this.newLocum.name;
-                        var provider = _.find(this.providers, {fullName: name});
-                        
-                        this.newLocum.providerId = provider ? provider.id : null;
-
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum', this.newLocum)
                             .then(function (response) {
                                 var locum = response.data;
