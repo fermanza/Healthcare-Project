@@ -30,8 +30,8 @@ class AccountScope implements Scope
             $builder = $this->validate($builder, $user, 'coordinator', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
             $builder = $this->validate($builder, $user, 'rsc', 'directorId');
-        } else if ($user->hasRoleId(config('instances.roles.dca'))) {
-            $builder = $this->validate($builder, $user, 'dca', 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.doo'))) {
+            $builder = $this->validate($builder, $user, 'doo', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_view'))) {
             $builder = $this->validate($builder, $user, 'other', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_edit'))) {
