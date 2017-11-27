@@ -68,69 +68,19 @@
         overflow: hidden !important;
     }
 
-    // input[type='radio']:after {
-    //     width: 18px;
-    //     height: 18px;
-    //     border-radius: 18px;
-    //     top: -3px;
-    //     left: -3px;
-    //     position: relative;
-    //     content: '';
-    //     display: inline-block;
-    //     visibility: visible;
-    //     border: 1px solid grey;
-    // }
-
-    // input[type='radio']:checked:after {
-    //     width: 18px;
-    //     height: 18px;
-    //     border-radius: 18px;
-    //     top: -3px;
-    //     left: -3px;
-    //     position: relative;
-    //     content: '';
-    //     display: inline-block;
-    //     visibility: visible;
-    //     border: 1px solid grey;
-    // }
-
-    // .red:after {
-    //     background-color: #fb9d9e;
-    // }
-
-    // .yellow:after {
-    //     background-color: #fbf5af;
-    // }
-
-    // .green:after {
-    //     background-color: #86a98f;
-    // }
-
-    // .red:checked:after {
-    //     background-color: #ff0000;
-    // }
-
-    // .yellow:checked:after {
-    //     background-color: #f9e702;
-    // }
-
-    // .green:checked:after {
-    //     background-color: #028c27;
-    // }
-
     .iradio_square-red,
     .iradio_square-yellow,
     .iradio_square-green {
-        background-size: 180px 18px;
-        background-position: -108px 0px;
-        width: 17px;
-        height: 17px;
+        background-size: 140px 14px;
+        background-position: -84px 0px;
+        width: 13px;
+        height: 13px;
     }
 
     .iradio_square-red.checked,
     .iradio_square-yellow.checked,
     .iradio_square-green.checked {
-        background-position: -126px 0;
+        background-position: -98px 0;
     }
 
     .select2-container .select2-selection--single {

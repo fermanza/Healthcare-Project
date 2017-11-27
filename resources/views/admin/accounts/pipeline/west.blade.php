@@ -477,7 +477,7 @@
                                     <th class="mw20"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
-                                    <th class="mw80">@lang('FT/PT/EMB')</th>
+                                    <th class="mw70">@lang('FT/PT/EMB')</th>
                                     <th class="mw120">@lang('File To Credentialing')</th>
                                     <th class="mw100">@lang('APP To Hospital')</th>
                                     <th class="mw50">@lang('Stage')</th>
@@ -485,7 +485,7 @@
                                     <th class="mw120">@lang('Enrollment Status')</th>
                                     <th class="mw150">@lang('Enrollment Notes')</th>
                                     <th class="mw150">@lang('Credentialing Notes')</th>
-                                    <th class="mw70 text-center hidden-print">@lang('Actions')</th>
+                                    <th class="mw100 text-center hidden-print">@lang('Actions')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -525,7 +525,7 @@
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
-                                                Mark Complete
+                                                <i class="fa fa-check"></i>
                                             </button>
                                         @endpermission
                                     </td>
@@ -602,7 +602,7 @@
                                     <th class="mw120">@lang('Enrollment Status')</th>
                                     <th class="mw150">@lang('Enrollment Notes')</th>
                                     <th class="mw150">@lang('Credentialing Notes')</th>
-                                    <th class="mw70 text-center hidden-print">@lang('Actions')</th>
+                                    <th class="mw100 text-center hidden-print">@lang('Actions')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -642,7 +642,7 @@
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
-                                                Mark Complete
+                                                <i class="fa fa-check"></i>
                                             </button>
                                         @endpermission
                                     </td>
@@ -724,7 +724,7 @@
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw60">@lang('Signed Not Started')</th>
                                 <th class="mw60">@lang('Proactive')</th>
-                                <th class="mw150 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -758,6 +758,14 @@
                                     <span class="hidden">@{{roster.isProactive}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(roster, 'rosterPhysician')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
                                             data-toggle="modal" data-target="#resignModal"
@@ -768,7 +776,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.update')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(roster, 'bench')"
                                         >
                                             @lang('Bench')
@@ -776,18 +784,10 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(roster, 'recruiting', 'phys')"
                                         >
                                             @lang('Recruiting')
-                                        </button>
-                                    @endpermission
-
-                                    @permission('admin.accounts.pipeline.rosterBench.store')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="editRosterBench(roster, 'rosterPhysician')"
-                                        >
-                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
                                     
@@ -882,7 +882,7 @@
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw60">@lang('Signed Not Started')</th>
                                 <th class="mw60">@lang('Proactive')</th>
-                                <th class="mw150 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -912,6 +912,14 @@
                                     <span class="hidden">@{{roster.isProactive}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(roster, 'rosterApps')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
                                             data-toggle="modal" data-target="#resignModal"
@@ -922,7 +930,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.update')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(roster, 'bench')"
                                         >
                                             @lang('Bench')
@@ -930,18 +938,10 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(roster, 'recruiting', 'app')"
                                         >
                                             @lang('Recruiting')
-                                        </button>
-                                    @endpermission
-
-                                    @permission('admin.accounts.pipeline.rosterBench.store')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="editRosterBench(roster, 'rosterApps')"
-                                        >
-                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -1036,7 +1036,7 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
-                                <th class="mw150 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1058,6 +1058,14 @@
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(bench, 'benchPhysician')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
                                             data-toggle="modal" data-target="#resignModal"
@@ -1068,7 +1076,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.update')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(bench, 'roster')"
                                         >
                                             @lang('Roster')
@@ -1076,18 +1084,10 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(bench, 'recruiting', 'phys')"
                                         >
                                             @lang('Recruiting')
-                                        </button>
-                                    @endpermission
-
-                                    @permission('admin.accounts.pipeline.rosterBench.store')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="editRosterBench(bench, 'benchPhysician')"
-                                        >
-                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -1167,7 +1167,7 @@
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
-                                <th class="mw150 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1189,6 +1189,14 @@
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
                                 <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(bench, 'benchApps')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.rosterBench.resign')
                                         <button type="button" class="btn btn-xs btn-warning"
                                             data-toggle="modal" data-target="#resignModal"
@@ -1199,7 +1207,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.update')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(bench, 'roster')"
                                         >
                                             @lang('Roster')
@@ -1207,18 +1215,10 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(bench, 'recruiting', 'app')"
                                         >
                                             @lang('Recruiting')
-                                        </button>
-                                    @endpermission
-
-                                    @permission('admin.accounts.pipeline.rosterBench.store')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="editRosterBench(bench, 'benchApps')"
-                                        >
-                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -1301,7 +1301,7 @@
                                 <th class="mw100">@lang('Contract In')</th>
                                 <th class="mw100">@lang('First Shift')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
-                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1319,6 +1319,14 @@
                                 <td>@{{ moment(recruiting.firstShift) }}</td>
                                 <td>@{{ recruiting.notes }}</td>
                                 <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.recruiting.store')
+                                        <button type="button" class="btn btn-xs btn-info mb5"
+                                            @click="editRecruiting(recruiting)"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.recruiting.switch')
                                         <button @click="switchRecruitingTo(recruiting, 'roster')" type="button" class="btn btn-xs btn-primary mb5">
                                             @lang('Roster')
@@ -1335,14 +1343,6 @@
                                             @click="setDeclining(recruiting)"
                                         >
                                             @lang('Decline')
-                                        </button>
-                                    @endpermission
-
-                                    @permission('admin.accounts.pipeline.recruiting.store')
-                                        <button type="button" class="btn btn-xs btn-info mb5"
-                                            @click="editRecruiting(recruiting)"
-                                        >
-                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -1423,7 +1423,7 @@
                                 <th class="mw70">@lang('Shifts')</th>
                                 <th class="mw100">@lang('Start Date')</th>
                                 <th class="mw200 w50">@lang('Comments')</th>
-                                <th class="mw120 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1437,6 +1437,14 @@
                                 <td>@{{ moment(locum.startDate) }}</td>
                                 <td>@{{ locum.comments }}</td>
                                 <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.locum.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editLocum(locum)"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.locum.switch')
                                         <button @click="switchLocumTo(locum, 'roster')" type="button" class="btn btn-xs btn-primary mb5">
                                             @lang('Roster')
@@ -1453,14 +1461,6 @@
                                             @click="setDeclining(locum)"
                                         >
                                             @lang('Decline')
-                                        </button>
-                                    @endpermission
-
-                                    @permission('admin.accounts.pipeline.locum.store')
-                                        <button type="button" class="btn btn-xs btn-info"
-                                            @click="editLocum(locum)"
-                                        >
-                                            <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
 
@@ -1768,7 +1768,7 @@
                                     <th class="mw120">@lang('Enrollment Status')</th>
                                     <th class="mw150">@lang('Enrollment Notes')</th>
                                     <th class="mw150">@lang('Credentialing Notes')</th>
-                                    <th class="mw70 text-center hidden-print">@lang('Actions')</th>
+                                    <th class="mw100 text-center hidden-print">@lang('Actions')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1808,7 +1808,7 @@
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
-                                                Mark Complete
+                                                <i class="fa fa-check"></i>
                                             </button>
                                         @endpermission
                                     </td>
@@ -1885,7 +1885,7 @@
                                     <th class="mw120">@lang('Enrollment Status')</th>
                                     <th class="mw150">@lang('Enrollment Notes')</th>
                                     <th class="mw150">@lang('Credentialing Notes')</th>
-                                    <th class="mw70 text-center hidden-print">@lang('Actions')</th>
+                                    <th class="mw100 text-center hidden-print">@lang('Actions')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1925,7 +1925,7 @@
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
-                                                Mark Complete
+                                                <i class="fa fa-check"></i>
                                             </button>
                                         @endpermission
                                     </td>

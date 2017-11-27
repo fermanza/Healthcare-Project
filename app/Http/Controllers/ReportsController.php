@@ -1448,7 +1448,7 @@ class ReportsController extends Controller
                     });
 
                     $sheet->cell('H12', function($cell) use ($account, $SMDOpen, $AMDOpen) {
-                        $cell->setValue($this->roundnum($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianHaves, 0.5) - $SMDOpen);
+                        $cell->setValue($this->roundnum($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves, 0.5) - $SMDOpen);
 
                         $cell->setBackground('#FFFF00');
                         $cell->setFontFamily('Calibri (Body)');
