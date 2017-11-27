@@ -150,4 +150,30 @@ class SummaryFilter extends Filter
     {
         $this->query->whereIn('city', $cities);
     }
+
+    /**
+     * Apply SVP filter.
+     *
+     * @param  array  $names
+     * @return void
+     */
+    public function SVP($names)
+    {
+        $this->query->whereHas('account.pipeline', function($query) use ($names) {
+            $query->whereIn('SVP', $names);
+        });
+    }
+
+    /**
+     * Apply RMD filter.
+     *
+     * @param  array  $names
+     * @return void
+     */
+    public function RMD($names)
+    {
+        $this->query->whereHas('account.pipeline', function($query) use ($names) {
+            $query->whereIn('RMD', $names);
+        });
+    }
 }

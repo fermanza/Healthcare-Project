@@ -12,6 +12,7 @@ use App\Practice;
 use App\SystemAffiliation;
 use App\StateAbbreviation;
 use App\Group;
+use App\Pipeline;
 use App\Scopes\AccountSummaryScope;
 use App\Filters\SummaryFilter;
 use Maatwebsite\Excel\Facades\Excel;
@@ -51,6 +52,8 @@ class ReportsController extends Controller
         $regions = Region::where('active', true)->orderBy('name')->get();
         $states = StateAbbreviation::all();
         $groups = Group::where('active', true)->get()->sortBy('name');
+        $SVPs = Pipeline::distinct('SVP')->select('SVP')->orderBy('SVP')->get();
+        $RMDs = Pipeline::distinct('RMD')->select('RMD')->orderBy('RMD')->get();
         $cities = Account::distinct('city')->select('city')->where('active', true)->orderBy('city')->get();
         
         $dates = AccountSummary::distinct('MonthEndDate')->select('MonthEndDate')->orderBy('MonthEndDate')->get();
@@ -65,7 +68,7 @@ class ReportsController extends Controller
             });
         }
 
-        $params = compact('accounts', 'employees', 'doos', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'groups', 'action', 'sites', 'cities');
+        $params = compact('accounts', 'employees', 'doos', 'practices', 'divisions', 'RSCs', 'regions', 'dates', 'affiliations', 'states', 'groups', 'action', 'sites', 'cities', 'SVPs', 'RMDs');
 
         return view('admin.reports.summary.index', $params);
     }

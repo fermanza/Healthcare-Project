@@ -91,6 +91,22 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="SVP[]" data-placeholder="@lang('SVP')" multiple>
+                        @foreach ($SVPs as $SVP)
+                            <option value="{{ $SVP->SVP }}" {{ in_array($SVP->SVP, Request::input('SVP') ?: []) ? 'selected' : '' }}>{{ $SVP->SVP }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="RMD[]" data-placeholder="@lang('RMD')" multiple>
+                        @foreach ($RMDs as $RMD)
+                            <option value="{{ $RMD->RMD }}" {{ in_array($RMD->RMD, Request::input('RMD') ?: []) ? 'selected' : '' }}>{{ $RMD->RMD }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
                     <select class="form-control select2" name="cities[]" data-placeholder="@lang('City')" multiple>
                         @foreach ($cities as $city)
                             <option value="{{ $city->city }}" {{ in_array($city->city, Request::input('cities') ?: []) ? 'selected' : '' }}>
