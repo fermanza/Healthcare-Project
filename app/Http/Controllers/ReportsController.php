@@ -1448,7 +1448,17 @@ class ReportsController extends Controller
                     });
 
                     $sheet->cell('H12', function($cell) use ($account, $SMDOpen, $AMDOpen) {
-                        $cell->setValue($this->roundnum($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves, 0.5) - $SMDOpen);
+                        if ($account->pipeline->practiceTime == "hours") {
+                            $phys = $this->roundnum($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves, 0.5) - $SMDOpen;
+
+                            $phys = $phys < 0 ? 0 : $phys;
+                        } else {
+                            $phys = $this->roundnum($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianHaves, 0.5) - $SMDOpen;
+
+                            $phys = $phys < 0 ? 0 : $phys;
+                        }
+
+                        $cell->setValue($phys);
 
                         $cell->setBackground('#FFFF00');
                         $cell->setFontFamily('Calibri (Body)');
