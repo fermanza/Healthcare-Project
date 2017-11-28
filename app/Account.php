@@ -122,7 +122,7 @@ class Account extends Model
     public function dca()
     {
         return $this->hasOne(AccountEmployee::class, 'accountId')
-            ->where('positionTypeId', config('instances.position_types.dca'));
+            ->where('positionTypeId', config('instances.position_types.doo'));
     }
 
     /**
