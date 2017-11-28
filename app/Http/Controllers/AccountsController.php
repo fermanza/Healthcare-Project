@@ -41,8 +41,8 @@ class AccountsController extends Controller
             $builder = $this->check($user, config('instances.position_types.contract_coordinator'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
             $builder = $this->check($user, config('instances.position_types.director'), 'directorId');
-        } else if ($user->hasRoleId(config('instances.roles.dca'))) {
-            $builder = $this->check($user, config('instances.position_types.dca'), 'employeeId');
+        } else if ($user->hasRoleId(config('instances.roles.doo'))) {
+            $builder = $this->check($user, config('instances.position_types.doo'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_view'))) {
             $builder = $this->check($user, config('instances.position_types.other'), 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_edit'))) {
