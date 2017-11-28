@@ -30,7 +30,7 @@ class AccountSummaryScope implements Scope
             $builder = $this->validate($builder, $user, 'account.coordinator', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.director'))) {
             $builder = $this->validate($builder, $user, 'account.rsc', 'directorId');
-        } else if ($user->hasRoleId(config('instances.roles.doo'))) {
+        } else if ($user->hasRoleId(config('instances.roles.dca'))) {
             $builder = $this->validate($builder, $user, 'account.doo', 'employeeId');
         } else if ($user->hasRoleId(config('instances.roles.other_view'))) {
             $builder = $this->validate($builder, $user, 'account.other', 'employeeId');
