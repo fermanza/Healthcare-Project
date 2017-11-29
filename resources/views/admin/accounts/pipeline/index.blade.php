@@ -474,7 +474,7 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
-                                    <th class="mw20"></th>
+                                    <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
@@ -591,7 +591,7 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
-                                    <th class="mw20"></th>
+                                    <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
@@ -1757,7 +1757,7 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
-                                    <th class="mw20"></th>
+                                    <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
@@ -1874,7 +1874,7 @@
                         <table class="table table-bordered summary-datatable">
                             <thead class="bg-gray">
                                 <tr>
-                                    <th class="mw20"></th>
+                                    <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw50">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
