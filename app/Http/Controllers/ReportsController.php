@@ -717,6 +717,18 @@ class ReportsController extends Controller
             "Signed Not Yet Started", "Inc Comp", "Attrition"
         ];
 
+        $newFilter = $request->new;
+
+        if ($newFilter == "1") {
+            $dataToExport = $dataToExport->filter(function($account) {
+                return $account->getMonthsSinceCreated() < 7;
+            });
+        } elseif ($newFilter == "2") {
+            $dataToExport = $dataToExport->filter(function($account) {
+                return $account->getMonthsSinceCreated() > 7;
+            });
+        }
+
         $affiliation = $request->affiliations ? $request->affiliations[0] : '';
         $RSC = $request->RSCs ? $request->RSCs[0] : '';
         $operatingUnit = $request->regions ? $request->regions[0] : '';

@@ -65,7 +65,7 @@ class AccountSummary extends Model
         
         $months = $days / $monthDays;
 
-        return $months;
+        return number_format($months, 1);
     }
     
     public function account()
