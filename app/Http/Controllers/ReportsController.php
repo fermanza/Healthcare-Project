@@ -263,15 +263,15 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AC'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=W'.($rowNumber+2).'/T'.($rowNumber+2));
+                    $cell->setValue('=(T'.($rowNumber+2).'-AB'.($rowNumber+2).')/T'.($rowNumber+2));
                 });
 
                 $sheet->cell('AD'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=U'.($rowNumber+2).'/R'.($rowNumber+2));
+                    $cell->setValue('=(R'.($rowNumber+2).'-Z'.($rowNumber+2).'-Y'.($rowNumber+2).'-X'.($rowNumber+2).')/R'.($rowNumber+2));
                 });
 
                 $sheet->cell('AE'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=V'.($rowNumber+2).'/S'.($rowNumber+2));
+                    $cell->setValue('=(S'.($rowNumber+2).'/-AA'.($rowNumber+2).')/S'.($rowNumber+2));
                 });
 
                 $sheet->cell('AF'.($rowNumber+2), function($cell) use($rowNumber) {
@@ -956,15 +956,15 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AC'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=W'.($rowNumber+2).'/T'.($rowNumber+2));
+                    $cell->setValue('=(T'.($rowNumber+2).'-AB'.($rowNumber+2).')/T'.($rowNumber+2));
                 });
 
                 $sheet->cell('AD'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=U'.($rowNumber+2).'/R'.($rowNumber+2));
+                    $cell->setValue('=(R'.($rowNumber+2).'-Z'.($rowNumber+2).'-Y'.($rowNumber+2).'-X'.($rowNumber+2).')/R'.($rowNumber+2));
                 });
 
                 $sheet->cell('AE'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=V'.($rowNumber+2).'/S'.($rowNumber+2));
+                    $cell->setValue('=(S'.($rowNumber+2).'-AA'.($rowNumber+2).')/S'.($rowNumber+2));
                 });
 
                 $sheet->cell('AF'.($rowNumber+2), function($cell) use($rowNumber) {

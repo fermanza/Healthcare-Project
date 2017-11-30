@@ -290,7 +290,7 @@ class ContractLogsController extends Controller
                         $contractLog->inactive ? 'Inactive' : ($contractLog->contractInDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->contractInDate) : ''),
                         $contractLog->contractInDate ? $contractLog->contractInDate->diffInDays($contractLog->contractOutDate) : 'Contract Pending',
                         $contractLog->sentToQADate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->sentToQADate): '',
-                        $contractLog->countersigDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->countersigDate) : '',
+                        $contractLog->counterSigDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->counterSigDate) : '',
                         $contractLog->sentToPayrollDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->sentToPayrollDate) : '',
                         $contractLog->sentToPayrollDate ? $contractLog->sentToPayrollDate->diffInDays($contractLog->contractOutDate) : 'Payroll Pending',
                         $contractLog->projectedStartDate ? \PHPExcel_Shared_Date::PHPToExcel($contractLog->projectedStartDate) : '',
