@@ -271,7 +271,7 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AE'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=(S'.($rowNumber+2).'/-AA'.($rowNumber+2).')/S'.($rowNumber+2));
+                    $cell->setValue('=(S'.($rowNumber+2).'-AA'.($rowNumber+2).')/S'.($rowNumber+2));
                 });
 
                 $sheet->cell('AF'.($rowNumber+2), function($cell) use($rowNumber) {
