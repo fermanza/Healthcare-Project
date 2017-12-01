@@ -121,7 +121,7 @@ class ReportsController extends Controller
         return back();
     }
 
-    public function exportToExcel(SummaryFilter $filter) {
+    public function exportToExcel(SummaryFilter $filter, Request $request) {
         $dataToExport = $this->getSummaryData($filter, 5000);
         $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO", "SVP", "RMD", "City", "Location",
@@ -133,7 +133,49 @@ class ReportsController extends Controller
             "Signed Not Yet Started", "Inc Comp", "Attrition"
         ];
 
-        Excel::create('Summary Report', function($excel) use ($dataToExport, $headers){
+        $affiliation = $request->affiliations ? $request->affiliations[0] : '';
+        $RSC = $request->RSCs ? $request->RSCs[0] : '';
+        $operatingUnit = $request->regions ? $request->regions[0] : '';
+        $serviceLine = $request->practices ? $request->practices[0] : '';
+
+        if ($RSC != '') {
+            $RSCInfo = RSC::find($RSC);
+            $RSC = $RSCInfo->name;
+        }
+
+        if (substr($serviceLine, 0, 2) === 'ED') {
+            $serviceLine = 'ED';
+        } else if (substr($serviceLine, 0, 2) === 'HM') {
+            $serviceLine = 'HM';
+        }
+
+        $fileName = '';
+
+        if ($affiliation != '') {
+            $fileName .= $affiliation.' - ';
+        }
+
+        if ($RSC != '') {
+            $fileName .= $RSC.' - ';
+        }
+
+        if ($operatingUnit != '') {
+            $fileName .= $operatingUnit.' - ';
+        }
+
+        if ($serviceLine != '') {
+            $fileName .= $serviceLine;
+        }
+
+        if ($fileName == '') {
+            $fileName = 'Summary Report';
+        }
+
+        $fileName = trim($fileName, ' -');
+
+        $fileName .= ' - '.Carbon::now()->format('m/d/Y');
+
+        Excel::create($fileName, function($excel) use ($dataToExport, $headers){
 
             $accountIds = $dataToExport->map(function($account) { return $account->accountId; });
             $accountIds = array_values($accountIds->toArray());
@@ -267,7 +309,7 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AD'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=(R'.($rowNumber+2).'-Z'.($rowNumber+2).'-Y'.($rowNumber+2).'-X'.($rowNumber+2).')/R'.($rowNumber+2));
+                    $cell->setValue('=(R'.($rowNumber+2).'-Z'.($rowNumber+2).')/R'.($rowNumber+2));
                 });
 
                 $sheet->cell('AE'.($rowNumber+2), function($cell) use($rowNumber) {
@@ -572,8 +614,7 @@ class ReportsController extends Controller
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "Last Updated By", "Last Updated Time"
         ];
 
-
-        Excel::create('Recruitment Update Report', function($excel) use ($dataToExport, $headers){
+        Excel::create('Recruitment Update Report - '.Carbon::now()->format('m/d/Y'), function($excel) use ($dataToExport, $headers){
 
             $accountIds = $dataToExport->map(function($account) { return $account->accountId; });
             $accountIds = array_values($accountIds->toArray());
@@ -769,6 +810,8 @@ class ReportsController extends Controller
 
         $fileName = trim($fileName, ' -');
 
+        $fileName .= ' - '.Carbon::now()->format('m/d/Y');
+
         $tableStyle = array(
             'borders' => array(
                 'outline' => array(
@@ -960,7 +1003,7 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AD'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=(R'.($rowNumber+2).'-Z'.($rowNumber+2).'-Y'.($rowNumber+2).'-X'.($rowNumber+2).')/R'.($rowNumber+2));
+                    $cell->setValue('=(R'.($rowNumber+2).'-Z'.($rowNumber+2).')/R'.($rowNumber+2));
                 });
 
                 $sheet->cell('AE'.($rowNumber+2), function($cell) use($rowNumber) {

@@ -376,7 +376,7 @@
                     var sum26 = api.column( 26, {page:'current'} ).data().sum(); 
                     var sum27 = api.column( 27, {page:'current'} ).data().sum(); 
                     var sum28 = ((sum19 - sum27) / sum19) * 100;
-                    var sum29 = ((sum17 - sum23 - sum24 - sum25) / sum17) * 100;
+                    var sum29 = ((sum17 - sum25) / sum17) * 100;
                     var sum30 = ((sum18 - sum26) / sum18) * 100;
                     var sum31 = api.column( 31, {page:'current'} ).data().sum(); 
                     var sum32 = api.column( 32, {page:'current'} ).data().sum(); 

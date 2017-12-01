@@ -257,7 +257,7 @@ class AccountsPipelineController extends Controller
 
         // Creating the new document...
         $word = new \PhpOffice\PhpWord\PhpWord();
-        $documentName = $account->name.', '.$account->siteCode.'.docx';
+        $documentName = $account->name.', '.$account->siteCode.' - '.Carbon::now()->format('m_d_Y').'.docx';
 
         $boldFontStyle = array('name' => 'Cambria(Body)', 'size' => 8, 'bold' => true);
         $boldUnderlinedFontStyle = array('name' => 'Cambria(Body)', 'size' => 8, 'bold' => true, 'underline' => 'single');
@@ -462,7 +462,7 @@ class AccountsPipelineController extends Controller
 
         $accountYTDIncComp = AccountSummary::where('accountId', $account->id)->orderBy('MonthEndDate', 'desc')->first();
 
-        $sheetName = $account->name.', '.$account->siteCode.' - Ops Review';
+        $sheetName = $account->name.', '.$account->siteCode.' - Ops Review - '.Carbon::now()->format('m/d/Y');
 
         Excel::create($sheetName, function($excel) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
             $excel->sheet('Summary', function($sheet) use ($account, $activeRosterPhysicians, $activeRosterAPPs, $benchPhysicians, $benchAPPs, $credentialers, $recruitings, $accountPrevMonthIncComp, $accountYTDIncComp){
@@ -1582,9 +1582,9 @@ class AccountsPipelineController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function exportPDF($accounts) {
-        $timestamp = Carbon::now()->timestamp;
+        $timestamp = Carbon::now()->format('m_d_Y');
 
-        $fileInfo = Excel::create('Accounts_Batch_Print_'.$timestamp, function($excel) use ($accounts){
+        $fileInfo = Excel::create('Accounts_Batch_Print - '.$timestamp, function($excel) use ($accounts){
 
             foreach ($accounts as $account) {
                 $activeRosterPhysicians = $account->pipeline->rostersBenchs->filter(function($rosterBench) {

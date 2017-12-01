@@ -18,6 +18,7 @@ use App\AccountEmployee;
 use App\EmployementStatus;
 use App\ProviderDesignation;
 use App\Practice;
+use Carbon\Carbon;
 use App\Scopes\ContractLogScope;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
@@ -235,7 +236,7 @@ class ContractLogsController extends Controller
         ];
 
 
-        Excel::create('ContractLogs', function($excel) use ($dataToExport, $headers){
+        Excel::create('ContractLogs - '.Carbon::now()->format('m/d/Y'), function($excel) use ($dataToExport, $headers){
             $excel->sheet('Contract Logs', function($sheet) use ($dataToExport, $headers){
                 
                 $rowNumber = 1;
