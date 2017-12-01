@@ -720,10 +720,11 @@
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
-                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw60">@lang('Signed Not Started')</th>
                                 <th class="mw60">@lang('Proactive')</th>
+                                <th class="mw150">@lang('Provisional Privilege Start')</th>
                                 <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
@@ -849,6 +850,9 @@
                                 <td>
                                     <input type="checkbox" v-model="rosterPhysician.isProactive">
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.provisionalPrivilegeStart" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -878,7 +882,7 @@
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
-                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw60">@lang('Signed Not Started')</th>
                                 <th class="mw60">@lang('Proactive')</th>
@@ -1033,7 +1037,7 @@
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
-                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
                                 <th class="mw250 text-center hidden-print">@lang('Actions')</th>
@@ -1164,7 +1168,7 @@
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
-                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
                                 <th class="mw250 text-center hidden-print">@lang('Actions')</th>
@@ -1299,7 +1303,7 @@
                                 <th class="mw100">@lang('Interview')</th>
                                 <th class="mw100">@lang('Contract Out')</th>
                                 <th class="mw100">@lang('Contract In')</th>
-                                <th class="mw100">@lang('First Shift')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
@@ -2502,6 +2506,7 @@
                     rosterBench.fileToCredentialing = this.moment(rosterBench.fileToCredentialing);
                     rosterBench.privilegeGoal = this.moment(rosterBench.privilegeGoal);
                     rosterBench.appToHospital = this.moment(rosterBench.appToHospital);
+                    rosterBench.provisionalPrivilegeStart = this.moment(rosterBench.provisionalPrivilegeStart);
 
                     _.assignIn(this[object], rosterBench);
                 },
@@ -2911,7 +2916,7 @@
                     if (roster.firstShift == null) {
                         e.preventDefault();
                         roster.signedNotStarted = 0;
-                        alert('First Shift Date must be filled');
+                        alert('Projected Start Date Date must be filled');
                     }
                 },
 

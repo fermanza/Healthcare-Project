@@ -82,6 +82,7 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->lastUpdatedBy = \Auth::id();
         $rosterBench->stopLight = $request->stopLight;
         $rosterBench->providerId = $request->providerId;
+        $rosterBench->provisionalPrivilegeStart = $request->provisionalPrivilegeStart;
 
         if($rosterBench->save()) {
             if($rosterBench->isSMD) {
@@ -210,6 +211,8 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->completed = $request->completed;
         $rosterBench->stopLight = $request->stopLight;
         $rosterBench->providerId = $request->providerId;
+
+        $rosterBench->provisionalPrivilegeStart = $request->provisionalPrivilegeStart;
 
         $rosterBench->lastUpdated = Carbon::now();
         $rosterBench->lastUpdatedBy = \Auth::id();
