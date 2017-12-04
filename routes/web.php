@@ -86,6 +86,8 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
     $router->delete('accounts/{account}/pipeline/declined/{locum}', 'PipelineLocumController@destroy')->name('accounts.pipeline.declined.destroy');
     $router->post('accounts/{account}/pipeline/locum/{locum}/switch', 'PipelineLocumController@switch')->name('accounts.pipeline.locum.switch');
 
+    $router->post('emworks/find', 'EmworksController@findByProviderId')->name('emworks.find');
+
     $router->resource('users', 'UsersController', ['except' => 'show']);
     $router->resource('roles', 'RolesController', ['except' => 'show']);
     $router->resource('permissions', 'PermissionsController', ['except' => ['create', 'store', 'show', 'destroy']]);

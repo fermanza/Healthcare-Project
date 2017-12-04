@@ -83,6 +83,12 @@ class PipelineRosterBenchController extends Controller
         $rosterBench->stopLight = $request->stopLight;
         $rosterBench->providerId = $request->providerId;
         $rosterBench->provisionalPrivilegeStart = $request->provisionalPrivilegeStart;
+        $rosterBench->privilegeGoal = $request->privilegeGoal;
+        $rosterBench->appToHospital = $request->appToHospital;
+        $rosterBench->stage = $request->stage;
+        $rosterBench->enrollmentStatus = $request->enrollmentStatus;
+        $rosterBench->enrollmentNotes = $request->enrollmentNotes;
+        $rosterBench->credentialingNotes = $request->credentialingNotes;
 
         if($rosterBench->save()) {
             if($rosterBench->isSMD) {

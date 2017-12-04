@@ -810,7 +810,7 @@
                                     <input type="checkbox" v-model="rosterPhysician.isAMD">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="rosterPhysician.name">
+                                    <input type="text" data-id="rosterPhysician" class="form-control providers" v-model="rosterPhysician.name">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="rosterPhysician.hours" min="0" required />
@@ -846,7 +846,7 @@
                                     <input type="text" class="form-control" v-model="rosterPhysician.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="rosterPhysician.signedNotStarted">
+                                    <input type="checkbox" :disabled="!rosterPhysician.firstShift" v-model="rosterPhysician.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="checkbox" v-model="rosterPhysician.isProactive">
@@ -966,7 +966,7 @@
                                     <input type="checkbox" v-model="rosterApps.isChief" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="rosterApps.name">
+                                    <input type="text" data-id="rosterApps" class="form-control providers" v-model="rosterApps.name">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="rosterApps.hours" min="0" required />
@@ -1002,7 +1002,7 @@
                                     <input type="text" class="form-control" v-model="rosterApps.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="rosterApps.signedNotStarted">
+                                    <input type="checkbox" :disabled="!rosterApps.firstShift" v-model="rosterApps.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="checkbox" v-model="rosterApps.isProactive">
@@ -1114,7 +1114,7 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="benchPhysician.name">
+                                    <input type="text" data-id="benchPhysician" class="form-control providers" v-model="benchPhysician.name">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="benchPhysician.hours" min="0" required />
@@ -1146,7 +1146,7 @@
                                     <input type="text" class="form-control" v-model="benchPhysician.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="benchPhysician.signedNotStarted">
+                                    <input type="checkbox" :disabled="!benchPhysician.firstShift" v-model="benchPhysician.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="benchPhysician.provisionalPrivilegeStart" />
@@ -1250,7 +1250,7 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control providers" v-model="benchApps.name">
+                                    <input type="text" data-id="benchApps" class="form-control providers" v-model="benchApps.name">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="benchApps.hours" min="0" required />
@@ -1282,7 +1282,7 @@
                                     <input type="text" class="form-control" v-model="benchApps.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="benchApps.signedNotStarted">
+                                    <input type="checkbox" :disabled="!benchApps.firstShift" v-model="benchApps.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="benchApps.provisionalPrivilegeStart" />
@@ -2037,6 +2037,19 @@
                         this.dispatchEvent(cEvent);
                         $(this).blur();
                         $(this).focus();
+                    },
+                    select: function( event, ui ) {
+                        var selected = ui.item.value;
+                        var autocompletePlace = $(event.target).data("id");
+                        var provider = _.find(BackendVars.providers, {fullName: selected});
+
+                        $.post('/admin/emworks/find', {
+                            providerId: provider.id,
+                            _token: "{{ csrf_token() }}"
+                        }, function(response) {
+                            window.app.provider = response;
+                            window.app.autocomplete = autocompletePlace;
+                        });
                     }
                 });
             });
@@ -2050,6 +2063,8 @@
                 pipeline: BackendVars.pipeline,
                 summary: BackendVars.summary,
                 providers: BackendVars.providers,
+                provider: null,
+                autocomplete: null,
 
                 staffPhysicianNeeds: BackendVars.pipeline.staffPhysicianNeeds,
                 staffAppsNeeds: BackendVars.pipeline.staffAppsNeeds,
@@ -2070,6 +2085,7 @@
                     contractIn: '',
                     firstShift: '',
                     notes: '',
+                    provisionalPrivilegeStart: '',
                 },
 
                 rosterApps: {
@@ -2081,6 +2097,7 @@
                     contractIn: '',
                     firstShift: '',
                     notes: '',
+                    provisionalPrivilegeStart: '',
                 },
 
                 credentialingPhysician: {
@@ -2113,6 +2130,7 @@
                     contractIn: '',
                     firstShift: '',
                     notes: '',
+                    provisionalPrivilegeStart: '',
                 },
 
                 benchApps: {
@@ -2123,6 +2141,7 @@
                     contractIn: '',
                     firstShift: '',
                     notes: '',
+                    provisionalPrivilegeStart: '',
                 },
 
 
@@ -2182,6 +2201,56 @@
                     resignedReason: '',
                 },
                 toResign: {},
+            },
+
+            watch: {
+                provider: function (newProvider) {
+                    if (this.autocomplete == 'rosterPhysician') {
+                        this.rosterPhysician.hours = newProvider.hours;
+                        this.rosterPhysician.interview = this.moment(newProvider.interview);
+                        this.rosterPhysician.contractIn = this.moment(newProvider.contractIn);
+                        this.rosterPhysician.contractOut = this.moment(newProvider.contractOut);
+                        this.rosterPhysician.privilegeGoal = this.moment(newProvider.privilegeGoal);
+                        this.rosterPhysician.provisionalPrivilegeStart = this.moment(newProvider.ProvisionalPrivilegeStart);
+                        this.rosterPhysician.enrollmentStatus = newProvider.EnrollmentStatus;
+                        this.rosterPhysician.credentialingNotes = newProvider.credentialingNotes;
+                        this.rosterPhysician.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
+                        this.rosterPhysician.appToHospital = this.moment(newProvider.appToHospital);
+                    } else if (this.autocomplete == 'benchPhysician') {
+                        this.benchPhysician.hours = newProvider.hours;
+                        this.benchPhysician.interview = this.moment(newProvider.interview);
+                        this.benchPhysician.contractIn = this.moment(newProvider.contractIn);
+                        this.benchPhysician.contractOut = this.moment(newProvider.contractOut);
+                        this.benchPhysician.privilegeGoal = this.moment(newProvider.privilegeGoal);
+                        this.benchPhysician.provisionalPrivilegeStart = this.moment(newProvider.ProvisionalPrivilegeStart);
+                        this.benchPhysician.enrollmentStatus = newProvider.EnrollmentStatus;
+                        this.benchPhysician.credentialingNotes = newProvider.credentialingNotes;
+                        this.benchPhysician.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
+                        this.benchPhysician.appToHospital = this.moment(newProvider.appToHospital);
+                    } else if (this.autocomplete == 'rosterApps') {
+                        this.rosterApps.hours = newProvider.hours;
+                        this.rosterApps.interview = this.moment(newProvider.interview);
+                        this.rosterApps.contractIn = this.moment(newProvider.contractIn);
+                        this.rosterApps.contractOut = this.moment(newProvider.contractOut);
+                        this.rosterApps.privilegeGoal = this.moment(newProvider.privilegeGoal);
+                        this.rosterApps.provisionalPrivilegeStart = this.moment(newProvider.ProvisionalPrivilegeStart);
+                        this.rosterApps.enrollmentStatus = newProvider.EnrollmentStatus;
+                        this.rosterApps.credentialingNotes = newProvider.credentialingNotes;
+                        this.rosterApps.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
+                        this.rosterApps.appToHospital = this.moment(newProvider.appToHospital);
+                    } else if (this.autocomplete == 'benchApps') {
+                        this.benchApps.hours = newProvider.hours;
+                        this.benchApps.interview = this.moment(newProvider.interview);
+                        this.benchApps.contractIn = this.moment(newProvider.contractIn);
+                        this.benchApps.contractOut = this.moment(newProvider.contractOut);
+                        this.benchApps.privilegeGoal = this.moment(newProvider.privilegeGoal);
+                        this.benchApps.provisionalPrivilegeStart = this.moment(newProvider.ProvisionalPrivilegeStart);
+                        this.benchApps.enrollmentStatus = newProvider.EnrollmentStatus;
+                        this.benchApps.credentialingNotes = newProvider.credentialingNotes;
+                        this.benchApps.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
+                        this.benchApps.appToHospital = this.moment(newProvider.appToHospital);
+                    }
+                }
             },
 
             computed: {
@@ -2455,6 +2524,10 @@
             },
 
             methods: {
+                setProvider: function(obj) {
+                    this.provider = obj;
+                },
+
                 addRosterBench: function (place, activity, entity) {
                     if(entity == 'rosterPhysician') {
                         this[entity].oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
@@ -2608,6 +2681,10 @@
                     rosterBench.contractIn = this.moment(rosterBench.contractIn);
                     rosterBench.contractOut = this.moment(rosterBench.contractOut);
                     rosterBench.firstShift = this.moment(rosterBench.firstShift);
+                    rosterBench.fileToCredentialing = this.moment(rosterBench.fileToCredentialing);
+                    rosterBench.privilegeGoal = this.moment(rosterBench.privilegeGoal);
+                    rosterBench.appToHospital = this.moment(rosterBench.appToHospital);
+                    rosterBench.provisionalPrivilegeStart = this.moment(rosterBench.provisionalPrivilegeStart);
 
                     if (place == 'recruiting') {
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id + '/switch', rosterBench)
@@ -2824,6 +2901,7 @@
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
+                    roster.provisionalPrivilegeStart = this.moment(roster.provisionalPrivilegeStart);
 
                     console.log(roster);
 
@@ -2922,6 +3000,7 @@
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
+                    roster.provisionalPrivilegeStart = this.moment(roster.provisionalPrivilegeStart);
                     
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
@@ -2945,6 +3024,7 @@
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
+                    roster.provisionalPrivilegeStart = this.moment(roster.provisionalPrivilegeStart);
                     
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
