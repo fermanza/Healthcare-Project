@@ -1730,7 +1730,7 @@ class AccountsPipelineController extends Controller
                         'I'     => 18,
                     ));
                     $sheet->setColumnFormat(array(
-                        'I16:I17' => '"$"#,##0.00_-',
+                        'I17:I18' => '"$"#,##0.00_-',
                     ));
                     $heights = array();
                     for($x = $recruitingTable[0]; $x <= ($credentialingTable[1]); $x++) {
@@ -1757,7 +1757,7 @@ class AccountsPipelineController extends Controller
                     $sheet->setBorder("A".($recruitingTable[0]-2).":I".($recruitingTable[0]-2), 'none');
                     $sheet->setBorder("A".($credentialingTable[0]-1).":I".($credentialingTable[0]-1), 'none');
                     $sheet->setBorder("A".($requirementsTable[0]-1).":I".($requirementsTable[0]-1), 'none');
-                    $sheet->setBorder("H18:I".($recruitingTable[0]-1), 'none');
+                    $sheet->setBorder("H19:I".($recruitingTable[0]-1), 'none');
                     $sheet->setBorder("G3:G".($recruitingTable[0]-1), 'none');
                 });
             }
