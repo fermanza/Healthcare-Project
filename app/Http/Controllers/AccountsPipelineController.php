@@ -34,6 +34,9 @@ class AccountsPipelineController extends Controller
      */
     public function index(Account $account)
     {
+
+        $onlyAccount = $account;
+
         $account->load([
             'pipeline' => function ($query) {
                 $query->with([
@@ -48,7 +51,7 @@ class AccountsPipelineController extends Controller
             'providers'
         ]);
 
-        $pipeline = $account->pipeline;
+        $pipeline = $onlyAccount->pipeline;
         $summary = $account->summary;
         $region = $account->region;
         $practice = $account->practices->count() ? $account->practices->first() : null;
