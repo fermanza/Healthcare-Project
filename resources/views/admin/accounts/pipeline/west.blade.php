@@ -2206,7 +2206,6 @@
             watch: {
                 provider: function (newProvider) {
                     if (this.autocomplete == 'rosterPhysician') {
-                        this.rosterPhysician.hours = newProvider.hours;
                         this.rosterPhysician.interview = this.moment(newProvider.interview);
                         this.rosterPhysician.contractIn = this.moment(newProvider.contractIn);
                         this.rosterPhysician.contractOut = this.moment(newProvider.contractOut);
@@ -2217,7 +2216,6 @@
                         this.rosterPhysician.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
                         this.rosterPhysician.appToHospital = this.moment(newProvider.appToHospital);
                     } else if (this.autocomplete == 'benchPhysician') {
-                        this.benchPhysician.hours = newProvider.hours;
                         this.benchPhysician.interview = this.moment(newProvider.interview);
                         this.benchPhysician.contractIn = this.moment(newProvider.contractIn);
                         this.benchPhysician.contractOut = this.moment(newProvider.contractOut);
@@ -2228,7 +2226,6 @@
                         this.benchPhysician.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
                         this.benchPhysician.appToHospital = this.moment(newProvider.appToHospital);
                     } else if (this.autocomplete == 'rosterApps') {
-                        this.rosterApps.hours = newProvider.hours;
                         this.rosterApps.interview = this.moment(newProvider.interview);
                         this.rosterApps.contractIn = this.moment(newProvider.contractIn);
                         this.rosterApps.contractOut = this.moment(newProvider.contractOut);
@@ -2239,7 +2236,6 @@
                         this.rosterApps.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
                         this.rosterApps.appToHospital = this.moment(newProvider.appToHospital);
                     } else if (this.autocomplete == 'benchApps') {
-                        this.benchApps.hours = newProvider.hours;
                         this.benchApps.interview = this.moment(newProvider.interview);
                         this.benchApps.contractIn = this.moment(newProvider.contractIn);
                         this.benchApps.contractOut = this.moment(newProvider.contractOut);
