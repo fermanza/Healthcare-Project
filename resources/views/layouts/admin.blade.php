@@ -62,6 +62,15 @@
                         </li>
                     @endpermission
 
+                    {{-- @permission('admin.providers.index')
+                        <li class="{{ route_starts_with('admin.providers') }}">
+                            <a href="{{ route('admin.providers.index') }}">
+                                <i class="fa fa-user-o"></i>
+                                <span>@lang('Providers')</span>
+                            </a>
+                        </li>
+                    @endpermission --}}
+
                     @permission(['admin.reports.summary.index'])
                         <li class="treeview {{ route_starts_with('admin.reports') }}">
                             <a href="#">

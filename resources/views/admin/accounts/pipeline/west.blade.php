@@ -2478,7 +2478,7 @@
 
                 credentialingPhysicians: function () {
                     return _.chain(this.pipeline.rostersBenchs)
-                        .filter(credentialing => {
+                        .filter(function(credentialing) {
                             return credentialing.activity === 'physician' && (
                                 credentialing.signedNotStarted === 1 || credentialing.fileToCredentialing !== null
                             );
@@ -2491,7 +2491,7 @@
 
                 credentialingApps: function () {
                     return _.chain(this.pipeline.rostersBenchs)
-                        .filter(credentialing => {
+                        .filter(function(credentialing) {
                             return credentialing.activity === 'app' && (
                                 credentialing.signedNotStarted === 1 || credentialing.fileToCredentialing !== null
                             );
