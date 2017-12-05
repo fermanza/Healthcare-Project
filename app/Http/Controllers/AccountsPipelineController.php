@@ -36,6 +36,7 @@ class AccountsPipelineController extends Controller
     {
 
         $onlyAccount = $account;
+        $onlyAccount->load('pipeline');
 
         $account->load([
             'pipeline' => function ($query) {
@@ -51,7 +52,7 @@ class AccountsPipelineController extends Controller
             'providers'
         ]);
 
-        $pipeline = $onlyAccount->load('pipeline');
+        $pipeline = $onlyAccount->pipeline;
         $summary = $account->summary;
         $region = $account->region;
         $practice = $account->practices->count() ? $account->practices->first() : null;
