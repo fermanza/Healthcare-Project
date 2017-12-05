@@ -35,10 +35,11 @@ class AccountsPipelineController extends Controller
     public function index(Account $account)
     {
 
-        $onlyAccount = $account;
-        $onlyAccount->load('pipeline');
+        $account->load('pipeline');
 
-        $account->load([
+        $fullInfo = clone $account;
+
+        $fullInfo->load([
             'pipeline' => function ($query) {
                 $query->with([
                     'rostersBenchs.provider', 'recruitings.provider', 'locums.provider',
@@ -52,16 +53,16 @@ class AccountsPipelineController extends Controller
             'providers'
         ]);
 
-        $pipeline = $onlyAccount->pipeline;
-        $summary = $account->summary;
-        $region = $account->region;
-        $practice = $account->practices->count() ? $account->practices->first() : null;
+        $pipeline = $account->pipeline;
+        $summary = $fullInfo->summary;
+        $region = $fullInfo->region;
+        $practice = $fullInfo->practices->count() ? $fullInfo->practices->first() : null;
         $practiceTimes = config('pipeline.practice_times');
         $recruitingTypes = config('pipeline.recruiting_types');
         $contractTypes = config('pipeline.contract_types');
         $benchContractTypes = config('pipeline.bench_contract_types');
         $accounts = Account::where('active', true)->orderBy('name')->get();
-        $providers = $account->providers;
+        $providers = $fullInfo->providers;
 
         if ($practice && $practice->isIPS() && $pipeline->practiceTime == 'hours') {
             $pipeline->fullTimeHoursPhys = $pipeline->fullTimeHoursPhys == 0 ? 180 : $pipeline->fullTimeHoursPhys;
@@ -75,6 +76,9 @@ class AccountsPipelineController extends Controller
         $percentRecruitedApp = 0;
         $percentRecruitedPhysReport = 0;
         $percentRecruitedAppReport = 0;
+
+        $account = json_encode($account);
+        dd($account);
         
         if ($summary) {
             if($summary->{'Complete Staff - Phys'} && $summary->{'Complete Staff - Phys'} > 0) {
