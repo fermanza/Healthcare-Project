@@ -76,9 +76,6 @@ class AccountsPipelineController extends Controller
         $percentRecruitedApp = 0;
         $percentRecruitedPhysReport = 0;
         $percentRecruitedAppReport = 0;
-
-        $account = json_encode($account);
-        dd($account);
         
         if ($summary) {
             if($summary->{'Complete Staff - Phys'} && $summary->{'Complete Staff - Phys'} > 0) {
