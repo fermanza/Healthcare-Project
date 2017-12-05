@@ -51,7 +51,7 @@ class AccountsPipelineController extends Controller
             'providers'
         ]);
 
-        $pipeline = $onlyAccount->pipeline;
+        $pipeline = $onlyAccount->load('pipeline');
         $summary = $account->summary;
         $region = $account->region;
         $practice = $account->practices->count() ? $account->practices->first() : null;
