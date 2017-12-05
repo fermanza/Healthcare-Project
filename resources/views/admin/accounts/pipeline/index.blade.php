@@ -489,11 +489,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="credentialing in credentialingPhysicians">
+                                <tr v-for="(credentialing, index) in credentialingPhysicians" v-bind:id="credentialing.id">
                                     <td>
-                                        <input type='radio' class="icheck-red" name="stopLight" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
-                                        <input type='radio' class="icheck-yellow" name="stopLight" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
-                                        <input type='radio' class="icheck-green" name="stopLight" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                        <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                        <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                        <input type='radio' class="icheck-green" :name="'stopLight' + index" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
                                     </td>
                                     <td>@{{ credentialing.name }}</td>
                                     <td>@{{ credentialing.hours }}</td>
@@ -606,11 +606,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="credentialing in credentialingApps">
+                                <tr v-for="(credentialing, index) in credentialingApps">
                                     <td>
-                                        <input type='radio' class="icheck-red" name="stopLight" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
-                                        <input type='radio' class="icheck-yellow" name="stopLight" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
-                                        <input type='radio' class="icheck-green" name="stopLight" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                        <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                        <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                        <input type='radio' class="icheck-green" :name="'stopLight' + index" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
                                     </td>
                                     <td>@{{ credentialing.name }}</td>
                                     <td>@{{ credentialing.hours }}</td>
@@ -1776,11 +1776,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="credentialing in credentialingPhysicians">
+                                <tr v-for="(credentialing, index) in credentialingPhysicians" v-bind:id="credentialing.id">
                                     <td>
-                                        <input type='radio' class="icheck-red" name="stopLight" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
-                                        <input type='radio' class="icheck-yellow" name="stopLight" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
-                                        <input type='radio' class="icheck-green" name="stopLight" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                        <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                        <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                        <input type='radio' class="icheck-green" :name="'stopLight' + index" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
                                     </td>
                                     <td>@{{ credentialing.name }}</td>
                                     <td>@{{ credentialing.hours }}</td>
@@ -1893,11 +1893,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="credentialing in credentialingApps">
+                                <tr v-for="(credentialing, index) in credentialingApps">
                                     <td>
-                                        <input type='radio' class="icheck-red" name="stopLight" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
-                                        <input type='radio' class="icheck-yellow" name="stopLight" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
-                                        <input type='radio' class="icheck-green" name="stopLight" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                        <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                        <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                        <input type='radio' class="icheck-green" :name="'stopLight' + index" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
                                     </td>
                                     <td>@{{ credentialing.name }}</td>
                                     <td>@{{ credentialing.hours }}</td>
@@ -2386,7 +2386,11 @@
 
                 credentialingPhysicians: function () {
                     return _.chain(this.pipeline.rostersBenchs)
-                        .filter({ activity: 'physician', signedNotStarted: 1 })
+                        .filter(credentialing => {
+                            return credentialing.activity === 'physician' && (
+                                credentialing.signedNotStarted === 1 || credentialing.fileToCredentialing !== null
+                            );
+                        })
                         .reject('resigned')
                         .reject('completed')
                         .reject('removed')
@@ -2395,7 +2399,11 @@
 
                 credentialingApps: function () {
                     return _.chain(this.pipeline.rostersBenchs)
-                        .filter({ activity: 'app', signedNotStarted: 1 })
+                        .filter(credentialing => {
+                            return credentialing.activity === 'app' && (
+                                credentialing.signedNotStarted === 1 || credentialing.fileToCredentialing !== null
+                            );
+                        })
                         .reject('resigned')
                         .reject('completed')
                         .reject('removed')

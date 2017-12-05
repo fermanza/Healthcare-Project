@@ -425,7 +425,7 @@ Artisan::command('export-accounts-pdf {email} {ids} {--queue}', function ($email
         });
         $sheet->cell('I17', function($cell) use ($accountPrevMonthIncComp) {
             if(is_object($accountPrevMonthIncComp)) {
-                $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
+                $cell->setValue($accountPrevMonthIncComp->{'Prev - Inc Comp'});
             } else {
                 $cell->setValue('');
             }
@@ -501,11 +501,11 @@ Artisan::command('export-accounts-pdf {email} {ids} {--queue}', function ($email
         $rosterBenchCount = 1;
 
         if ($account->pipeline->practiceTime == 'hours') {
-            $physicianOpenings = $account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves;
-            $appOpenings = $account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves;
+            $physicianOpenings = $this->roundnum($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves, 0.5);
+            $appOpenings = $this->roundnum($account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves, 0.5);
         } else {
-            $physicianOpenings = $account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves;
-            $appOpenings = $account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves;
+            $physicianOpenings = $this->roundnum($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves, 0.5);
+            $appOpenings = $this->roundnum($account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves, 0.5);
         }
 
         $physicianNegative = $physicianOpenings < 0 ? true : false;
@@ -1013,7 +1013,7 @@ Artisan::command('export-accounts-pdf {email} {ids} {--queue}', function ($email
                         'I'     => 18,
                     ));
                     $sheet->setColumnFormat(array(
-                        'I16:I17' => '"$"#,##0.00_-',
+                        'I17:I18' => '"$"#,##0.00_-',
                     ));
                     $heights = array();
                     for($x = $recruitingTable[0]; $x <= ($credentialingTable[1]); $x++) {
@@ -1040,7 +1040,7 @@ Artisan::command('export-accounts-pdf {email} {ids} {--queue}', function ($email
                     $sheet->setBorder("A".($recruitingTable[0]-2).":I".($recruitingTable[0]-2), 'none');
                     $sheet->setBorder("A".($credentialingTable[0]-1).":I".($credentialingTable[0]-1), 'none');
                     $sheet->setBorder("A".($requirementsTable[0]-1).":I".($requirementsTable[0]-1), 'none');
-                    $sheet->setBorder("H18:I".($recruitingTable[0]-1), 'none');
+                    $sheet->setBorder("H19:I".($recruitingTable[0]-1), 'none');
                     $sheet->setBorder("G3:G".($recruitingTable[0]-1), 'none');
                 });
             }

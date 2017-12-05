@@ -1067,7 +1067,7 @@ class AccountsPipelineController extends Controller
         });
         $sheet->cell('I17', function($cell) use ($accountPrevMonthIncComp) {
             if(is_object($accountPrevMonthIncComp)) {
-                $cell->setValue($accountPrevMonthIncComp->{'Prev Month - Inc Comp'});
+                $cell->setValue($accountPrevMonthIncComp->{'Prev - Inc Comp'});
             } else {
                 $cell->setValue('');
             }
@@ -1143,11 +1143,11 @@ class AccountsPipelineController extends Controller
         $rosterBenchCount = 1;
 
         if ($account->pipeline->practiceTime == 'hours') {
-            $physicianOpenings = $account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves;
-            $appOpenings = $account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves;
+            $physicianOpenings = $this->roundnum($account->pipeline->staffPhysicianFTENeeds - $account->pipeline->staffPhysicianFTEHaves, 0.5);
+            $appOpenings = $this->roundnum($account->pipeline->staffAppsFTENeeds - $account->pipeline->staffAppsFTEHaves, 0.5);
         } else {
-            $physicianOpenings = $account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves;
-            $appOpenings = $account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves;
+            $physicianOpenings = $this->roundnum($account->pipeline->staffPhysicianNeeds - $account->pipeline->staffPhysicianFTEHaves, 0.5);
+            $appOpenings = $this->roundnum($account->pipeline->staffAppsNeeds - $account->pipeline->staffAppsFTEHaves, 0.5);
         }
 
         $physicianNegative = $physicianOpenings < 0 ? true : false;
