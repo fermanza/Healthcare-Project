@@ -54,4 +54,14 @@ class PipelineRosterBench extends Model
     {
         return $this->belongsTo(Provider::class, 'providerId');
     }
+
+    /**
+     * Get the rosterbench's pipeline.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function pipeline()
+    {
+        return $this->hasOne(Pipeline::class, 'pipelineId');
+    }
 }
