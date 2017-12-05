@@ -42,7 +42,7 @@ class AccountsPipelineController extends Controller
         $fullInfo->load([
             'pipeline' => function ($query) {
                 $query->with([
-                    'rostersBenchs.provider', 'recruitings.provider', 'locums.provider',
+                    'rostersBenchs', 'recruitings', 'locums',
                 ]);
             },
             'recruiter.employee' => function ($query) {
@@ -53,7 +53,10 @@ class AccountsPipelineController extends Controller
             'providers'
         ]);
 
-        $pipeline = $fullInfo->pipeline;
+        $pipeline = $account->pipeline;
+        $rostersBenchs = $fullInfo->pipeline->rostersBenchs;
+        $recruitings = $fullInfo->pipeline->recruitings;
+        $locums = $fullInfo->pipeline->locums;
         $summary = $fullInfo->summary;
         $region = $fullInfo->region;
         $practice = $fullInfo->practices->count() ? $fullInfo->practices->first() : null;
@@ -89,7 +92,7 @@ class AccountsPipelineController extends Controller
         }
 
         $params = compact(
-            'account', 'pipeline', 'region', 'practice', 'practiceTimes',
+            'account', 'pipeline', 'rostersBenchs', 'recruitings', 'locums', 'region', 'practice', 'practiceTimes',
             'recruitingTypes', 'contractTypes', 'benchContractTypes', 'accounts', 'providers',
             'percentRecruitedPhys', 'percentRecruitedApp', 'percentRecruitedPhysReport', 'percentRecruitedAppReport'
         );
