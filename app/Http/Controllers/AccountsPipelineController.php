@@ -97,7 +97,11 @@ class AccountsPipelineController extends Controller
             'percentRecruitedPhys', 'percentRecruitedApp', 'percentRecruitedPhysReport', 'percentRecruitedAppReport'
         );
 
-        JavaScript::put($params);
+        $paramsJS = compact(
+            'account', 'pipeline', 'rostersBenchs', 'recruitings', 'locums', 'providers'
+        );
+
+        JavaScript::put($paramsJS);
 
         if($account->rsc && $account->rsc->name == 'West') {
             return view('admin.accounts.pipeline.west', $params);

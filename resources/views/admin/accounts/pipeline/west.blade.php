@@ -2064,7 +2064,6 @@
                 rostersBenchs: BackendVars.rostersBenchs,
                 recruitings: BackendVars.recruitings,
                 locums: BackendVars.locums,
-                summary: BackendVars.summary,
                 providers: BackendVars.providers,
                 provider: null,
                 autocomplete: null,
