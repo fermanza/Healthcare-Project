@@ -2630,7 +2630,7 @@
                     credentialing.fileToCredentialing = this.moment(credentialing.fileToCredentialing);
                     credentialing.privilegeGoal = this.moment(credentialing.privilegeGoal);
                     credentialing.appToHospital = this.moment(credentialing.appToHospital);
-
+                    credentialing.provisionalPrivilegeStart = this.moment(credentialing.provisionalPrivilegeStart);
 
                     _.assignIn(this[object], credentialing);
                 },

@@ -54,4 +54,15 @@ class PipelineRosterBench extends Model
     {
         return $this->belongsTo(Provider::class, 'providerId');
     }
+
+    /**
+     * Get the credentialingNotes.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCredentialingNotesAttribute($value)
+    {
+        return utf8_decode($value);
+    }
 }
