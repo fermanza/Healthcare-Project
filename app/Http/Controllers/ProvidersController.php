@@ -110,4 +110,9 @@ class ProvidersController extends Controller
 
         return view('admin.providers.index', $params);
     }
+
+    public function switch(Request $request)
+    {
+        return $request->all();
+    }
 }

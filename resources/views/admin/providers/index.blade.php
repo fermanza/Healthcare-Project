@@ -31,12 +31,14 @@
         </div>
     </form>
 	<div class="box-body providers-page">
-		<div class="site title">
-			<div class="name title">Hospital</div>
-			<div class="stage title">Stage 1</div>
-			<div class="stage title">Stage 2</div>
-			<div class="stage title">Stage 3</div>
-		</div>
+		@if($sites->count() > 0)
+			<div class="site title">
+				<div class="name title">Hospital</div>
+				<div class="stage title">Stage 1</div>
+				<div class="stage title">Stage 2</div>
+				<div class="stage title">Stage 3</div>
+			</div>
+		@endif
 		@foreach($sites as $key => $site)
 			<div class="site">
 				<div class="name">
@@ -53,7 +55,7 @@
 								@foreach($providers as $provider_key => $provider)
 									<div data-info="{{$provider}}" class="draggable" data-provider="{{$provider->name}}" 
 										data-account="{{$provider->pipeline->account->name}}">
-										Phy {{$provider_key+1}}
+										P {{substr($provider->name, 0, 3)}}
 									</div>
 								@endforeach
 							@endif
@@ -92,6 +94,8 @@
 		});
 		$(document).ready(function() {
 
+			var postUrl = '/admin/providers/switch';
+
 			function sort(element) {
 				var items = element.children().sort(function(a, b) {
 			        var vA = $(a).text();
@@ -114,6 +118,10 @@
 					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
 
 					sort(droppedOn);
+
+					$.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
+						console.log(response);
+					});
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -133,6 +141,10 @@
 					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
 
 					sort(droppedOn);
+
+					$.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
+						console.log(response);
+					});
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -151,7 +163,11 @@
 					var droppedOn = $(this);
 					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
 
-					sort(droppedOn);   
+					sort(droppedOn);
+
+					$.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
+						console.log(response);
+					});
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
