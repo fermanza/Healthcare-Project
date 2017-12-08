@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 use App\User;
 use App\PipelineRosterBench;
+use App\PipelineRecruiting;
+use App\PipelineLocum;
 use App\Account;
 use Illuminate\Http\Request;
 use App\Http\Requests\FileRequest;
 use App\Http\Requests\DashboardRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Filters\ProvidersFilter;
+use Carbon\Carbon;
 
 class ProvidersController extends Controller
 {
@@ -26,32 +29,79 @@ class ProvidersController extends Controller
         if(count($queryString) == 0) {
             $sites = collect();
         } else {
-            $providers = PipelineRosterBench::with('pipeline.account')->whereNotNull('fileToCredentialing')
-            ->orWhere('signedNotStarted', 1)->filter($filter)->get();
+            $locums = PipelineLocum::with('pipeline.account')->whereNull('declined')->filter($filter)->get();
+            $recruitings = PipelineRecruiting::with('pipeline.account')->whereNull('declined')->filter($filter)->get();
 
-            $sites = $providers->groupBy(function($provider) {
+            $interviews = $locums->merge($recruitings);
+
+            $credentialings = PipelineRosterBench::with('pipeline.account')->where(function($query){
+                $query->whereNotNull('fileToCredentialing')
+                ->orWhere('signedNotStarted', 1);
+            })->where('completed', 0)->filter($filter)->get();
+
+            $contractIn = PipelineRosterBench::with('pipeline.account')->whereNotNull('contractIn')->where('firstShift', '>', Carbon::now()->format('Y-m-d'))->where('completed', 0)->filter($filter)->get();
+
+            $interviews_sites = $interviews->groupBy(function($provider) {
+                return $provider->pipeline->account->name;
+            });
+
+            $contractIn_sites = $contractIn->groupBy(function($provider) {
+                return $provider->pipeline->account->name;
+            });
+
+            $credentialings_sites = $credentialings->groupBy(function($provider) {
                 return $provider->pipeline->account->name;
             });
 
             $temp = array();
 
-            foreach ($sites as $key => $site) {
-                $stages = $site->groupBy('stage');
-                
-                if(!isset($stages[1])) {
-                    $stages[1] = array();
+            foreach ($interviews_sites as $key => $site) {
+                if(!isset($temp[$key])) {
+                    $temp[$key] = array();
+                    $temp[$key][1] = array();
+                    $temp[$key][1][] = $site;
+                } else {
+                    $temp[$key][1][] = $site;
                 }
-
-                if(!isset($stages[2])) {
-                    $stages[2] = array();
-                }
-
-                if(!isset($stages[3])) {
-                    $stages[3] = array();
-                }
-
-                $temp[$key] = $stages;
             }
+
+            foreach ($contractIn_sites as $key => $site) {
+                if(!isset($temp[$key])) {
+                    $temp[$key] = array();
+                    $temp[$key][2] = array();
+                    $temp[$key][2][] = $site;
+                } else {
+                    $temp[$key][2][] = $site;
+                }
+            }
+
+            foreach ($credentialings_sites as $key => $site) {
+                if(!isset($temp[$key])) {
+                    $temp[$key] = array();
+                    $temp[$key][3] = array();
+                    $temp[$key][3][] = $site;
+                } else {
+                    $temp[$key][3][] = $site;
+                }
+            }
+
+            foreach ($interviews_sites as $key => $site) {
+                if(!isset($temp[$key][1])) {
+                    $temp[$key][1] = array();
+                }
+
+                if(!isset($temp[$key][2])) {
+                    $temp[$key][2] = array();
+                }
+
+                if(!isset($temp[$key][3])) {
+                    $temp[$key][3] = array();
+                }
+
+                ksort($temp[$key]);
+            }
+
+            ksort($temp);
 
             $sites = collect($temp);
         }

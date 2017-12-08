@@ -65,7 +65,7 @@ class Pipeline extends Model
      */
     public function account()
     {
-        return $this->belongsTo(Account::class, 'id');
+        return $this->belongsTo(Account::class, 'accountId');
     }
 
 

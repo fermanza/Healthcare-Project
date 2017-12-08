@@ -62,6 +62,6 @@ class PipelineRosterBench extends Model
      */
     public function pipeline()
     {
-        return $this->hasOne(Pipeline::class, 'pipelineId');
+        return $this->belongsTo(Pipeline::class, 'pipelineId');
     }
 }

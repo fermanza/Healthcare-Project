@@ -30,18 +30,33 @@
             </div>
         </div>
     </form>
-	<div class="providers">
+	<div class="box-body providers-page">
+		<div class="site title">
+			<div class="name title">Hospital</div>
+			<div class="stage title">Stage 1</div>
+			<div class="stage title">Stage 2</div>
+			<div class="stage title">Stage 3</div>
+		</div>
 		@foreach($sites as $key => $site)
-			<div>
+			<div class="site">
 				<div class="name">
 					{{$key}}
 				</div>
 				@foreach($site as $stage_key => $stage)
 					<div class="stage stage{{$stage_key}}">
-						@foreach($stage as $provider_key => $provider)
-							<div data-id="{{$provider->id}}" class="draggable" title="{{$provider->name}}">
-								Phy {{$provider_key}}
-							</div>
+						@foreach($stage as $providers)
+							@if($providers->count() > 15)
+								<div class="draggable" data-providers="{{$providers}}">
+									Phy {{$providers->count()}}
+								</div>
+							@else
+								@foreach($providers as $provider_key => $provider)
+									<div data-info="{{$provider}}" class="draggable" data-provider="{{$provider->name}}" 
+										data-account="{{$provider->pipeline->account->name}}">
+										Phy {{$provider_key+1}}
+									</div>
+								@endforeach
+							@endif
 						@endforeach
 					</div>
 				@endforeach
@@ -53,19 +68,39 @@
 @push('scripts')
 	<script>
 		$( document ).tooltip({
-			items: "[data-text]",
+			items: "[data-provider], [data-account], [data-providers], [data-info]",
 			content: function() {
 				var element = $( this );
-				if ( element.is( "[data-text]" ) ) {
-					var text = element.text();
-					return "<img class='map' alt='" + text +
-					"' src='http://maps.google.com/maps/api/staticmap?" +
-					"zoom=11&size=350x350&maptype=terrain&sensor=false&center=" +
-					text + "'>";
+
+				if (element.is("[data-provider]")) {
+					var provider = element.data('provider');
+					var account = element.data('account');
+
+					var element = '<div>'+provider+'<br><br>'+account+'</div>';
+				} else if (element.is("[data-providers]")) {
+					var providers = element.data('providers');
+
+					var element = '<div><table class="table table-bordered table-striped"><tr><td>Physician</td><td>Hospitals</td></tr>';
+					$.each(providers, function(index, provider) {
+						element += '<tr><td>'+provider.name+'</td><td>'+provider.pipeline.account.name+'</td></tr>'
+					});
+					element += '</table></div>';
 				}
+				
+				return element;
 			}
 		});
 		$(document).ready(function() {
+
+			function sort(element) {
+				var items = element.children().sort(function(a, b) {
+			        var vA = $(a).text();
+			        var vB = $(b).text();
+			        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
+			    });
+
+    			element.append(items);
+			}
 
 			$(".draggable").draggable({ axis: "x", revert: "invalid" });
 
@@ -73,8 +108,12 @@
 				drop: function(event, ui) {
 					$(this).removeClass("border").removeClass("over");
 					var dropped = ui.draggable;
+					var info = dropped.data('info');
+
 					var droppedOn = $(this);
-					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);      
+					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
+
+					sort(droppedOn);
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -88,8 +127,12 @@
 				drop: function(event, ui) {
 					$(this).removeClass("border").removeClass("over");
 					var dropped = ui.draggable;
+					var info = dropped.data('info');
+
 					var droppedOn = $(this);
-					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);      
+					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
+
+					sort(droppedOn);
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -103,8 +146,12 @@
 				drop: function(event, ui) {
 					$(this).removeClass("border").removeClass("over");
 					var dropped = ui.draggable;
+					var info = dropped.data('info');
+
 					var droppedOn = $(this);
-					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);      
+					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
+
+					sort(droppedOn);   
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -113,8 +160,6 @@
 					$(this).removeClass("over");
 				}
 			});
-
-			$(".stage1, .stage2, .stage3").sortable();
 		});
 	</script>
 @endpush
