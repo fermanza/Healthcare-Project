@@ -138,6 +138,18 @@ class ReportsController extends Controller
         $operatingUnit = $request->regions ? $request->regions[0] : '';
         $serviceLine = $request->practices ? $request->practices[0] : '';
 
+        $newFilter = $request->new;
+
+        if ($newFilter == "1") {
+            $dataToExport = $dataToExport->filter(function($account) {
+                return $account->getMonthsSinceCreated() < 7;
+            });
+        } elseif ($newFilter == "2") {
+            $dataToExport = $dataToExport->filter(function($account) {
+                return $account->getMonthsSinceCreated() > 7;
+            });
+        }
+
         if ($RSC != '') {
             $RSCInfo = RSC::find($RSC);
             $RSC = $RSCInfo->name;
