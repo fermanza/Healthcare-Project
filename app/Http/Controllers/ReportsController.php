@@ -2543,7 +2543,7 @@ class ReportsController extends Controller
             $incAction = IncAction::where('siteCode', $request->siteCode)->first();
 
             if($incAction) {
-                $fileName = 'INC Site Action Team - '.$incAction->siteCode.' - '.$incAction->{'Hospital Name'}.'.docx';
+                $fileName = $incAction->siteCode.' - '.$incAction->{'Hospital Name'}.' - SAWR.docx';
 
                 $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(public_path('template.docx'));
                 $templateProcessor->setValue('date', Carbon::now()->format('d/m/Y'));
