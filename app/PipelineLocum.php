@@ -65,7 +65,7 @@ class PipelineLocum extends Model
     }
 
     /**
-     * Get the pipeline.
+     * Get the locum'spipeline.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

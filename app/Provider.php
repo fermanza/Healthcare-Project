@@ -10,4 +10,14 @@ class Provider extends Model
      * @var string
      */
     protected $table = 'tProvider';
+
+     /**
+     * Get the provider's accounts.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function accounts()
+    {
+        return $this->belongsToMany(Account::class, 'tProviderToAccount', 'providerId', 'accountId');
+    }
 }

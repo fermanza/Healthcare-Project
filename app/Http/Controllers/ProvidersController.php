@@ -12,6 +12,7 @@ use App\Http\Requests\DashboardRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Filters\ProvidersFilter;
 use Carbon\Carbon;
+use JavaScript;
 
 class ProvidersController extends Controller
 {
@@ -29,17 +30,17 @@ class ProvidersController extends Controller
         if(count($queryString) == 0) {
             $sites = collect();
         } else {
-            $locums = PipelineLocum::with('pipeline.account')->whereNull('declined')->filter($filter)->get();
-            $recruitings = PipelineRecruiting::with('pipeline.account')->whereNull('declined')->filter($filter)->get();
+            $locums = PipelineLocum::with('pipeline.account', 'provider.accounts')->whereNull('declined')->filter($filter)->get();
+            $recruitings = PipelineRecruiting::with('pipeline.account', 'provider.accounts')->whereNull('declined')->filter($filter)->get();
 
             $interviews = $locums->merge($recruitings);
 
-            $credentialings = PipelineRosterBench::with('pipeline.account')->where(function($query){
+            $credentialings = PipelineRosterBench::with('pipeline.account', 'provider.accounts')->where(function($query){
                 $query->whereNotNull('fileToCredentialing')
                 ->orWhere('signedNotStarted', 1);
             })->where('completed', 0)->filter($filter)->get();
 
-            $contractIn = PipelineRosterBench::with('pipeline.account')->whereNotNull('contractIn')->where('firstShift', '>', Carbon::now()->format('Y-m-d'))->where('completed', 0)->filter($filter)->get();
+            $contractIn = PipelineRosterBench::with('pipeline.account', 'provider.accounts')->whereNotNull('contractIn')->where('firstShift', '>', Carbon::now()->format('Y-m-d'))->where('completed', 0)->filter($filter)->get();
 
             $interviews_sites = $interviews->groupBy(function($provider) {
                 return $provider->pipeline->account->name;

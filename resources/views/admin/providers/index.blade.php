@@ -3,6 +3,7 @@
 @section('content-header', __('Provider Dashboard'))
 
 @section('content')
+<div class="providers-page">
 	<form class="box-body">
         <div class="flexboxgrid">
             <div class="row">
@@ -30,7 +31,7 @@
             </div>
         </div>
     </form>
-	<div class="box-body providers-page">
+	<div class="box-body">
 		@if($sites->count() > 0)
 			<div class="site title">
 				<div class="name title">Hospital</div>
@@ -48,14 +49,17 @@
 					<div class="stage stage{{$stage_key}}">
 						@foreach($stage as $providers)
 							@if($providers->count() > 15)
-								<div class="draggable" data-providers="{{$providers}}">
+								<div class="draggable multiple" data-providers="{{$providers}}">
 									Phy {{$providers->count()}}
 								</div>
 							@else
 								@foreach($providers as $provider_key => $provider)
-									<div data-info="{{$provider}}" class="draggable" data-provider="{{$provider->name}}" 
-										data-account="{{$provider->pipeline->account->name}}">
-										P {{substr($provider->name, 0, 3)}}
+									<div class="draggable single stage{{$stage_key}}" data-provider="{{$provider->name}}" data-info="{{$provider}}" data-accounts="{{$provider->provider ? $provider->provider->accounts : ''}}">
+										@if($provider->type == 'phys') 
+											P {{substr($provider->name, 0, 3)}}
+										@else
+											A {{substr($provider->name, 0, 3)}}
+										@endif
 									</div>
 								@endforeach
 							@endif
@@ -65,20 +69,57 @@
 			</div>
 		@endforeach
 	</div>
+	<button onclick="revertDrop()">revert</button>
+	<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        <span id="providerName"></span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                	<label>Provider Accounts</label>
+                	<ul id="providerAccounts">
+                		
+                	</ul>
+                	<label>Add Accounts To This Provider</label>
+                    <select class="form-control select2" name="accounts[]" data-placeholder="@lang('Account')" multiple>
+                        @foreach ($accounts as $account)
+                            <option value="{{ $account->id }}">
+                                {{ $account->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-success">Confirm</button>
+			    	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			    </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 	<script>
 		$( document ).tooltip({
-			items: "[data-provider], [data-account], [data-providers], [data-info]",
+			items: "[data-provider], [data-accounts], [data-providers], [data-info]",
 			content: function() {
 				var element = $( this );
 
 				if (element.is("[data-provider]")) {
 					var provider = element.data('provider');
-					var account = element.data('account');
+					var accounts = element.data('accounts');
 
-					var element = '<div>'+provider+'<br><br>'+account+'</div>';
+					var element = '<div class="bold-text">'+provider+'</div>';
+					var accountsList = '';
+					$.each(accounts, function(index, account) {
+						accountsList += account.name+'; ';
+					});
+					element += '<div><p>'+accountsList+'</p></div>';
 				} else if (element.is("[data-providers]")) {
 					var providers = element.data('providers');
 
@@ -92,14 +133,19 @@
 				return element;
 			}
 		});
+
 		$(document).ready(function() {
 
 			var postUrl = '/admin/providers/switch';
+			var droppedElement = null;
+			var droppedFrom = null;
+			var oldClass = null;
+			var newClass = null;
 
 			function sort(element) {
 				var items = element.children().sort(function(a, b) {
-			        var vA = $(a).text();
-			        var vB = $(b).text();
+			        var vA = $(a).text().toLowerCase();
+			        var vB = $(b).text().toLowerCase();
 			        return (vA < vB) ? -1 : (vA > vB) ? 1 : 0;
 			    });
 
@@ -108,7 +154,25 @@
 
 			$(".draggable").draggable({ axis: "x", revert: "invalid" });
 
-			$(".stage1").droppable({ accept: ".draggable", 
+			$(".draggable.single").dblclick(function() {
+				var provider = $(this);
+				var providerName = provider.data('provider');
+				$('#providerName').text(providerName);
+
+				var providerAccounts = provider.data('accounts');
+				var accountsList = '';
+				$.each(providerAccounts, function(index, account) {
+					accountsList += '<li>'+account.name+'</li>';
+				});
+				$('#providerAccounts').append(accountsList);
+
+				$('#editModal').modal('toggle');
+			});
+
+			$(".stage1").droppable({ accept: "",
+				create: function(event, ui) {
+					sort($(this));
+				},
 				drop: function(event, ui) {
 					$(this).removeClass("border").removeClass("over");
 					var dropped = ui.draggable;
@@ -131,11 +195,20 @@
 				}
 			});
 
-			$(".stage2").droppable({ accept: ".draggable", 
+			$(".stage2").droppable({ accept: ".draggable.stage1",
+				create: function(event, ui) {
+					sort($(this));
+				},
 				drop: function(event, ui) {
 					$(this).removeClass("border").removeClass("over");
 					var dropped = ui.draggable;
 					var info = dropped.data('info');
+
+					oldClass = 'stage1';
+					newClass = 'stage2';
+
+					dropped.removeClass(oldClass);
+					dropped.addClass(newClass);
 
 					var droppedOn = $(this);
 					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
@@ -145,6 +218,9 @@
 					$.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
 						console.log(response);
 					});
+
+					droppedElement = dropped;
+					droppedFrom = $('.stage.stage1');
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -154,11 +230,17 @@
 				}
 			});
 
-			$(".stage3").droppable({ accept: ".draggable", 
+			$(".stage3").droppable({ accept: ".draggable.stage2",
+				create: function(event, ui) {
+					sort($(this));
+				},
 				drop: function(event, ui) {
 					$(this).removeClass("border").removeClass("over");
 					var dropped = ui.draggable;
 					var info = dropped.data('info');
+
+					oldClass = 'stage2';
+					newClass = 'stage3';
 
 					var droppedOn = $(this);
 					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
@@ -168,6 +250,9 @@
 					$.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
 						console.log(response);
 					});
+
+					droppedElement = dropped;
+					droppedFrom = $('.stage.stage2');
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -176,6 +261,18 @@
 					$(this).removeClass("over");
 				}
 			});
+
+			$('#editModal').on('hidden.bs.modal', function () {
+			    $('#providerAccounts').html('');
+			})
+
+			window.revertDrop = function() {
+				droppedElement.removeClass(newClass);
+				droppedElement.addClass(oldClass);
+
+				$(droppedElement).detach().css({top: 0,left: 0}).appendTo(droppedFrom);
+				sort(droppedFrom);
+			}
 		});
 	</script>
 @endpush

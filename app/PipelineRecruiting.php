@@ -65,7 +65,7 @@ class PipelineRecruiting extends Model
     }
 
     /**
-     * Get the pipeline.
+     * Get the recruiting's pipeline.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
