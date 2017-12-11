@@ -2547,8 +2547,8 @@ class ReportsController extends Controller
 
                 $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(public_path('template.docx'));
                 $templateProcessor->setValue('date', Carbon::now()->format('d/m/Y'));
-                $templateProcessor->setValue('SVP', $incAction->SVP);
-                $templateProcessor->setValue('DOO', $incAction->DOO);
+                $templateProcessor->setValue('SVP', $incAction->SVP ? $incAction->SVP.',' : '');
+                $templateProcessor->setValue('DOO', $incAction->DOO ? $incAction->DOO.',' : '');
                 $templateProcessor->setValue('siteCode', $incAction->siteCode);
                 $templateProcessor->setValue('hospitalName', $incAction->{'Hospital Name'});
                 $templateProcessor->setValue('YTD - Inc Comp', $incAction->{'YTD - Inc Comp'});
