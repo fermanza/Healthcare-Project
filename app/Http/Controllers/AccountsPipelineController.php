@@ -34,10 +34,15 @@ class AccountsPipelineController extends Controller
      */
     public function index(Account $account)
     {
-        $account->load([
+
+        $account->load('pipeline');
+
+        $fullInfo = clone $account;
+
+        $fullInfo->load([
             'pipeline' => function ($query) {
                 $query->with([
-                    'rostersBenchs.provider', 'recruitings.provider', 'locums.provider',
+                    'rostersBenchs', 'recruitings', 'locums',
                 ]);
             },
             'recruiter.employee' => function ($query) {
@@ -49,15 +54,18 @@ class AccountsPipelineController extends Controller
         ]);
 
         $pipeline = $account->pipeline;
-        $summary = $account->summary;
-        $region = $account->region;
-        $practice = $account->practices->count() ? $account->practices->first() : null;
+        $rostersBenchs = $fullInfo->pipeline->rostersBenchs;
+        $recruitings = $fullInfo->pipeline->recruitings;
+        $locums = $fullInfo->pipeline->locums;
+        $summary = $fullInfo->summary;
+        $region = $fullInfo->region;
+        $practice = $fullInfo->practices->count() ? $fullInfo->practices->first() : null;
         $practiceTimes = config('pipeline.practice_times');
         $recruitingTypes = config('pipeline.recruiting_types');
         $contractTypes = config('pipeline.contract_types');
         $benchContractTypes = config('pipeline.bench_contract_types');
         $accounts = Account::where('active', true)->orderBy('name')->get();
-        $providers = $account->providers;
+        $providers = $fullInfo->providers;
 
         if ($practice && $practice->isIPS() && $pipeline->practiceTime == 'hours') {
             $pipeline->fullTimeHoursPhys = $pipeline->fullTimeHoursPhys == 0 ? 180 : $pipeline->fullTimeHoursPhys;
@@ -84,12 +92,16 @@ class AccountsPipelineController extends Controller
         }
 
         $params = compact(
-            'account', 'pipeline', 'region', 'practice', 'practiceTimes',
+            'account', 'pipeline', 'rostersBenchs', 'recruitings', 'locums', 'region', 'practice', 'practiceTimes',
             'recruitingTypes', 'contractTypes', 'benchContractTypes', 'accounts', 'providers',
             'percentRecruitedPhys', 'percentRecruitedApp', 'percentRecruitedPhysReport', 'percentRecruitedAppReport'
         );
 
-        JavaScript::put($params);
+        $paramsJS = compact(
+            'account', 'pipeline', 'rostersBenchs', 'recruitings', 'locums', 'providers'
+        );
+
+        JavaScript::put($paramsJS);
 
         if($account->rsc && $account->rsc->name == 'West') {
             return view('admin.accounts.pipeline.west', $params);

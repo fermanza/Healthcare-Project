@@ -232,7 +232,7 @@ class ContractLogsController extends Controller
             "Contract Out Date", "Contract In Date", "# of Days (Contract Out to Contract In)",
             "Sent to Q/A Date", "Counter Sig Date", "Sent To Payroll Date", "# of Days (Contract Out to Payroll)",
             "Provider Start Date", "# of Hours", "Recruiter", "Recruiters", "Manager", "Contract Coordinator", "Contract",
-            "(# of times) Revised/Resent", "Phys\MLP", "Value", "Comments"
+            "(# of times) Revised/Resent", "Phys\MLP", "Value", "Reason", "Comments"
         ];
 
 
@@ -304,6 +304,7 @@ class ContractLogsController extends Controller
                         '',
                         $contractLog->position ? $contractLog->position->position : '',
                         $contractLog->value,
+                        $contractLog->note ? $contractLog->note->contractNote : '',
                         $contractLog->comments
                     ];
 
@@ -311,7 +312,7 @@ class ContractLogsController extends Controller
                 };
 
                 $sheet->setFreeze('A2');
-                $sheet->setAutoFilter('A1:Z1');
+                $sheet->setAutoFilter('A1:AA1');
 
                 $sheet->cells('A2:A'.$rowNumber, function($cells) {
                     $cells->setBackground('#f5964f');
@@ -359,7 +360,8 @@ class ContractLogsController extends Controller
                     'W'     => 17,
                     'X'     => 10,
                     'Y'     => 10,
-                    'Z'     => 50
+                    'Z'     => 40,
+                    'AA'    => 50
                 ));
 
                 $sheet->setColumnFormat(array(
@@ -377,9 +379,10 @@ class ContractLogsController extends Controller
                     ),
                 );
 
-                $sheet->getStyle('A1:Z'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A1:Z1')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('A1:AA'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A1:AA1')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('Z2:Z'.$rowNumber)->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AA2:AA'.$rowNumber)->getAlignment()->setWrapText(true);
             });
         })->download('xlsx'); 
     }

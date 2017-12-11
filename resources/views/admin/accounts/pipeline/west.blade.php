@@ -2061,7 +2061,9 @@
             data: {
                 account: BackendVars.account,
                 pipeline: BackendVars.pipeline,
-                summary: BackendVars.summary,
+                rostersBenchs: BackendVars.rostersBenchs,
+                recruitings: BackendVars.recruitings,
+                locums: BackendVars.locums,
                 providers: BackendVars.providers,
                 provider: null,
                 autocomplete: null,
@@ -2072,9 +2074,9 @@
                 fullTimeHoursPhys: BackendVars.pipeline.fullTimeHoursPhys,
                 fullTimeHoursApps: BackendVars.pipeline.fullTimeHoursApps,
 
-                oldSMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isSMD == 1 } ),
-                oldAMD: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isAMD == 1 } ),
-                oldChief: BackendVars.pipeline.rostersBenchs.filter( function(roster) { return roster.isChief == 1 } ),
+                oldSMD: BackendVars.rostersBenchs.filter( function(roster) { return roster.isSMD == 1 } ),
+                oldAMD: BackendVars.rostersBenchs.filter( function(roster) { return roster.isAMD == 1 } ),
+                oldChief: BackendVars.rostersBenchs.filter( function(roster) { return roster.isChief == 1 } ),
 
                 rosterPhysician: {
                     id: null,
@@ -2251,7 +2253,7 @@
 
             computed: {
                 SMDOpenings: function () {
-                    var SMD = _.chain(this.pipeline.rostersBenchs)
+                    var SMD = _.chain(this.rostersBenchs)
                         .filter({ isSMD: 1 })
                         .value();
 
@@ -2447,7 +2449,7 @@
                 },
 
                 activeRosterPhysicians: function () {
-                    return _.chain(this.pipeline.rostersBenchs)
+                    return _.chain(this.rostersBenchs)
                         .filter({ place: 'roster', activity: 'physician' })
                         .reject('resigned')
                         .orderBy(['isSMD', 'isAMD', 'name'], ['desc', 'desc', 'asc'])
@@ -2455,7 +2457,7 @@
                 },
 
                 activeRosterApps: function () {
-                    return _.chain(this.pipeline.rostersBenchs)
+                    return _.chain(this.rostersBenchs)
                         .filter({ place: 'roster', activity: 'app' })
                         .reject('resigned')
                         .orderBy(['isChief', 'name'], ['desc', 'asc'])
@@ -2463,21 +2465,21 @@
                 },
 
                 activeBenchPhysicians: function () {
-                    return _.chain(this.pipeline.rostersBenchs)
+                    return _.chain(this.rostersBenchs)
                         .filter({ place: 'bench', activity: 'physician' })
                         .reject('resigned')
                         .value();
                 },
 
                 activeBenchApps: function () {
-                    return _.chain(this.pipeline.rostersBenchs)
+                    return _.chain(this.rostersBenchs)
                         .filter({ place: 'bench', activity: 'app' })
                         .reject('resigned')
                         .value();
                 },
 
                 credentialingPhysicians: function () {
-                    return _.chain(this.pipeline.rostersBenchs)
+                    return _.chain(this.rostersBenchs)
                         .filter(function(credentialing) {
                             return credentialing.activity === 'physician' && (
                                 credentialing.signedNotStarted === 1 || credentialing.fileToCredentialing !== null
@@ -2490,7 +2492,7 @@
                 },
 
                 credentialingApps: function () {
-                    return _.chain(this.pipeline.rostersBenchs)
+                    return _.chain(this.rostersBenchs)
                         .filter(function(credentialing) {
                             return credentialing.activity === 'app' && (
                                 credentialing.signedNotStarted === 1 || credentialing.fileToCredentialing !== null
@@ -2503,27 +2505,27 @@
                 },
 
                 sortedRecruitings: function () {
-                    return _.chain(this.pipeline.recruitings).reject('declined')
+                    return _.chain(this.recruitings).reject('declined')
                         .orderBy(['type', function (recruiting) {
                             return recruiting.name.toLowerCase();
                         }], ['desc', 'asc']).value();
                 },
 
                 sortedLocums: function () {
-                    return _.chain(this.pipeline.locums).reject('declined')
+                    return _.chain(this.locums).reject('declined')
                         .orderBy(['type', function (locum) {
                             return locum.name.toLowerCase();
                         }], ['desc', 'asc']).value();
                 },
 
                 declines: function () {
-                    return _.chain(this.pipeline.recruitings)
-                        .concat(this.pipeline.locums)
+                    return _.chain(this.recruitings)
+                        .concat(this.locums)
                         .filter('declined').value();
                 },
 
                 resigns: function () {
-                    return _.filter(this.pipeline.rostersBenchs, 'resigned');
+                    return _.filter(this.rostersBenchs, 'resigned');
                 },
             },
 
@@ -2567,7 +2569,7 @@
                             activity: activity
                         }, this[entity]))
                             .then(function (response) {
-                                var rosterBench = _.find(this.pipeline.rostersBenchs, {id: response.data.id});
+                                var rosterBench = _.find(this.rostersBenchs, {id: response.data.id});
                                 _.assignIn(rosterBench, response.data);
                                 this.clearRosterBench(entity);
                         }.bind(this));
@@ -2578,7 +2580,7 @@
                         }, this[entity]))
                             .then(function (response) {
                                 var rosterBench = response.data;
-                                this.pipeline.rostersBenchs.push(rosterBench);
+                                this.rostersBenchs.push(rosterBench);
                                 this.clearRosterBench(entity);
 
                                 if(response.data.isSMD) {
@@ -2600,7 +2602,7 @@
 
                         axios.patch(endpoint, this[entity])
                             .then(function (response) {
-                                var credentialing = _.find(this.pipeline.rostersBenchs, {id: response.data.id});
+                                var credentialing = _.find(this.rostersBenchs, {id: response.data.id});
                                 _.assignIn(credentialing, response.data);
                                 this.clearCredentialing(entity);
                         }.bind(this));
@@ -2628,7 +2630,7 @@
                     credentialing.fileToCredentialing = this.moment(credentialing.fileToCredentialing);
                     credentialing.privilegeGoal = this.moment(credentialing.privilegeGoal);
                     credentialing.appToHospital = this.moment(credentialing.appToHospital);
-
+                    credentialing.provisionalPrivilegeStart = this.moment(credentialing.provisionalPrivilegeStart);
 
                     _.assignIn(this[object], credentialing);
                 },
@@ -2669,7 +2671,7 @@
 
                     axios.patch(endpoint, this.credentialing)
                         .then(function (response) {
-                            this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': this.credentialing.id });
+                            this.rostersBenchs = _.reject(this.rostersBenchs, { 'id': this.credentialing.id });
                             $('#credentialingModal').modal('hide');
                         }.bind(this));
                 },
@@ -2693,8 +2695,8 @@
                     if (place == 'recruiting') {
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id + '/switch', rosterBench)
                         .then(function (response) {
-                            this.pipeline.recruitings.push(response.data);
-                            this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': rosterBench.id });
+                            this.recruitings.push(response.data);
+                            this.rostersBenchs = _.reject(this.rostersBenchs, { 'id': rosterBench.id });
                         }.bind(this));
                     } else {
                         axios.patch('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id, rosterBench)
@@ -2709,30 +2711,30 @@
                     if (confirm("@lang('Are you sure you want to delete this record?')")) {
                         axios.delete('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id)
                             .then(function (response) {
-                                this.pipeline.rostersBenchs = _.reject(this.pipeline.rostersBenchs, { 'id': rosterBench.id });
+                                this.rostersBenchs = _.reject(this.rostersBenchs, { 'id': rosterBench.id });
                             }.bind(this));
                     }
                 },
 
                 deleteDeclining: function (declining) {
                     if (confirm("@lang('Are you sure you want to delete this record?')")) {
-                        var isLocum = _.find(this.pipeline.locums, function(locum){
+                        var isLocum = _.find(this.locums, function(locum){
                              return locum.id == declining.id;
                         });
 
-                        var isRecruiting = _.find(this.pipeline.recruitings, function(locum){
+                        var isRecruiting = _.find(this.recruitings, function(locum){
                              return locum.id == declining.id;
                         });
 
                         if (isLocum) {
                             axios.delete('/admin/accounts/' + this.account.id + '/pipeline/locum/' + declining.id)
                                 .then(function (response) {
-                                    this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': declining.id });
+                                    this.locums = _.reject(this.locums, { 'id': declining.id });
                                 }.bind(this));
                         } else {
                             axios.delete('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + declining.id)
                                 .then(function (response) {
-                                    this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': declining.id });
+                                    this.recruitings = _.reject(this.recruitings, { 'id': declining.id });
                                 }.bind(this));
                         }
                     }
@@ -2750,7 +2752,7 @@
 
                         axios.patch(endpoint, this.newRecruiting)
                             .then(function (response) {
-                                var recruiting = _.find(this.pipeline.recruitings, {id: response.data.id});
+                                var recruiting = _.find(this.recruitings, {id: response.data.id});
                                 _.assignIn(recruiting, response.data);
                                 this.clearNewRecruiting();
                         }.bind(this));
@@ -2758,7 +2760,7 @@
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting', this.newRecruiting)
                             .then(function (response) {
                                 var recruiting = response.data;
-                                this.pipeline.recruitings.push(recruiting);
+                                this.recruitings.push(recruiting);
                                 this.clearNewRecruiting();
                             }.bind(this));
                     }
@@ -2779,7 +2781,7 @@
                     if (confirm("@lang('Are you sure you want to delete this record?')")) {
                         axios.delete('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id)
                             .then(function (response) {
-                                this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
+                                this.recruitings = _.reject(this.recruitings, { 'id': recruiting.id });
                             }.bind(this));
                     }
                 },
@@ -2802,7 +2804,7 @@
 
                         axios.patch(endpoint, this.newLocum)
                             .then(function (response) {
-                                var locum = _.find(this.pipeline.locums, {id: response.data.id});
+                                var locum = _.find(this.locums, {id: response.data.id});
                                 _.assignIn(locum, response.data);
                                 this.clearNewLocum();
                         }.bind(this));
@@ -2810,7 +2812,7 @@
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum', this.newLocum)
                             .then(function (response) {
                                 var locum = response.data;
-                                this.pipeline.locums.push(locum);
+                                this.locums.push(locum);
                                 this.clearNewLocum();
                             }.bind(this));
                     }
@@ -2830,7 +2832,7 @@
                     if (confirm("@lang('Are you sure you want to delete this record?')")) {
                         axios.delete('/admin/accounts/' + this.account.id + '/pipeline/locum/' + locum.id)
                             .then(function (response) {
-                                this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': locum.id });
+                                this.locums = _.reject(this.locums, { 'id': locum.id });
                             }.bind(this));
                     }
                 },
@@ -3190,8 +3192,8 @@
                     } else {
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id + '/switch', recruiting
                         ).then(function (response) {
-                            this.pipeline.rostersBenchs.push(response.data);
-                            this.pipeline.recruitings = _.reject(this.pipeline.recruitings, { 'id': recruiting.id });
+                            this.rostersBenchs.push(response.data);
+                            this.recruitings = _.reject(this.recruitings, { 'id': recruiting.id });
                         }.bind(this));
                     }
                 },
@@ -3208,8 +3210,8 @@
 
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/locum/' + locum.id + '/switch', locum
                     ).then(function (response) {
-                        this.pipeline.rostersBenchs.push(response.data);
-                        this.pipeline.locums = _.reject(this.pipeline.locums, { 'id': locum.id });
+                        this.rostersBenchs.push(response.data);
+                        this.locums = _.reject(this.locums, { 'id': locum.id });
                     }.bind(this));
                 },
 

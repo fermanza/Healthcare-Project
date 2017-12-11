@@ -13,6 +13,7 @@ use App\SystemAffiliation;
 use App\StateAbbreviation;
 use App\Group;
 use App\Pipeline;
+use App\IncAction;
 use App\Scopes\AccountSummaryScope;
 use App\Filters\SummaryFilter;
 use Maatwebsite\Excel\Facades\Excel;
@@ -137,6 +138,18 @@ class ReportsController extends Controller
         $RSC = $request->RSCs ? $request->RSCs[0] : '';
         $operatingUnit = $request->regions ? $request->regions[0] : '';
         $serviceLine = $request->practices ? $request->practices[0] : '';
+
+        $newFilter = $request->new;
+
+        if ($newFilter == "1") {
+            $dataToExport = $dataToExport->filter(function($account) {
+                return $account->getMonthsSinceCreated() < 7;
+            });
+        } elseif ($newFilter == "2") {
+            $dataToExport = $dataToExport->filter(function($account) {
+                return $account->getMonthsSinceCreated() > 7;
+            });
+        }
 
         if ($RSC != '') {
             $RSCInfo = RSC::find($RSC);
@@ -2523,6 +2536,45 @@ class ReportsController extends Controller
                 });
             }
         })->download('xlsx'); 
+    }
+
+    public function incActionReport(Request $request) {
+        if ($request->siteCode) {
+            $incAction = IncAction::where('siteCode', $request->siteCode)->first();
+
+            if($incAction) {
+                $fileName = $incAction->siteCode.' - '.$incAction->{'Hospital Name'}.' - SAWR.docx';
+
+                $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(public_path('template.docx'));
+                $templateProcessor->setValue('date', Carbon::now()->format('d/m/Y'));
+                $templateProcessor->setValue('SVP', $incAction->SVP != " " && $incAction->SVP != null ? $incAction->SVP.',' : '');
+                $templateProcessor->setValue('DOO', $incAction->DOO != " " && $incAction->DOO != null ? $incAction->DOO.',' : '');
+                $templateProcessor->setValue('siteCode', $incAction->siteCode);
+                $templateProcessor->setValue('hospitalName', $incAction->{'Hospital Name'});
+                $templateProcessor->setValue('YTD - Inc Comp', $incAction->{'YTD - Inc Comp'});
+                $templateProcessor->setValue('Prev - Inc Comp', $incAction->{'Prev - Inc Comp'});
+                $templateProcessor->setValue('New Start', $incAction->account ? ($incAction->account->isRecentlyCreated() ? 'New Start' : '') : '');
+                $templateProcessor->setValue('MTD - Phys Signed Not Yet Started', $incAction->{'MTD - Phys SNS'});
+                $templateProcessor->setValue('MTD - Phys Signed Not Yet Started30', $incAction->{'MTD - Phys SNS - 30 day'});
+                $templateProcessor->setValue('MTD - Phys Signed Not Yet Started60', $incAction->{'MTD - Phys SNS - 60 day'});
+                $templateProcessor->setValue('MTD - Phys Signed Not Yet Started90', $incAction->{'MTD - Phys SNS - 90 day'});
+                $templateProcessor->setValue('MTD - APP Signed Not Yet Started', $incAction->{'MTD - APP SNS'});
+                $templateProcessor->setValue('MTD - APP Signed Not Yet Started30', $incAction->{'MTD - APP SNS - 30 day'});
+                $templateProcessor->setValue('MTD - APP Signed Not Yet Started60', $incAction->{'MTD - APP SNS - 60 day'});
+                $templateProcessor->setValue('MTD - APP Signed Not Yet Started90', $incAction->{'MTD - APP SNS - 90 day'});
+                $templateProcessor->setValue('Current Openings - Phys', $incAction->{'Current Openings - Phys'});
+                $templateProcessor->setValue('Current Openings - APP', $incAction->{'Current Openings - APP'});
+                $templateProcessor->setValue('Current Openings - Total', $incAction->{'Current Openings - Total'});
+
+                $templateProcessor->saveAs(public_path($fileName));
+
+                return response()->download(public_path($fileName))->deleteFileAfterSend(true);
+            }
+
+            return "siteCode not found";
+        } else {
+            return "Please enter a siteCode";
+        }
     }
 
     private function getSummaryData(SummaryFilter $filter, $pages) {
