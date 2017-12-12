@@ -6,6 +6,8 @@ use App\PipelineRosterBench;
 use App\PipelineRecruiting;
 use App\PipelineLocum;
 use App\Account;
+use App\ProviderAccount;
+use App\Provider;
 use Illuminate\Http\Request;
 use App\Http\Requests\FileRequest;
 use App\Http\Requests\DashboardRequest;
@@ -40,7 +42,7 @@ class ProvidersController extends Controller
                 ->orWhere('signedNotStarted', 1);
             })->where('completed', 0)->filter($filter)->get();
 
-            $contractIn = PipelineRosterBench::with('pipeline.account', 'provider.accounts')->whereNotNull('contractIn')->where('firstShift', '>', Carbon::now()->format('Y-m-d'))->where('completed', 0)->filter($filter)->get();
+            $contractIn = PipelineRosterBench::with('pipeline.account', 'provider.accounts')->whereNotNull('contractIn')->where('firstShift', '>', Carbon::now()->format('Y-m-d'))->where('completed', 0)->where('signedNotStarted', 0)->filter($filter)->get();
 
             $interviews_sites = $interviews->groupBy(function($provider) {
                 return $provider->pipeline->account->name;
@@ -116,6 +118,50 @@ class ProvidersController extends Controller
 
     public function switch(Request $request)
     {
-        return $request->all();
+        $stage = $request->stage;
+        $provider = json_decode(json_encode($request->provider));
+
+        if ($stage == 2) {
+            $actualProvider = PipelineLocum::where('id', $provider->id)->first();
+
+            if(!$actualProvider) {
+                $actualProvider = PipelineRecruiting::where('id', $provider->id)->first();
+            }
+
+            $rosterBench = new PipelineRosterBench;
+            $rosterBench->pipelineId = $provider->pipelineId;
+            $rosterBench->activity = $provider->type == 'phys' ? 'physician' : 'app';
+            $rosterBench->name = $provider->name;
+            $rosterBench->hours = 0;
+            $rosterBench->interview = $provider->interview;
+            $rosterBench->contractIn = $provider->contractIn;
+            $rosterBench->contractOut = $provider->contractOut;
+            $rosterBench->firstShift = $provider->firstShift;
+            $rosterBench->type = $provider->type;
+            $rosterBench->providerId = $provider->providerId;
+
+            if($rosterBench->save()) {
+                $actualProvider->delete();
+            }
+        } else {
+            $rosterBench = PipelineRosterBench::where('id', $provider->id)->first();
+            $rosterBench->signedNotStarted = 1;
+            $rosterBench->save();
+        }
+
+        return $rosterBench;
+    }
+
+    public function addHospitals(Request $request)
+    {
+        $provider = Provider::where('id', $request->providerId)->first();
+
+        if(!$provider) {
+            return;
+        }
+
+        $provider->accounts()->sync($request->hospitals ? $request->hospitals : [], false);
+
+        return $provider->load('accounts');
     }
 }

@@ -29,7 +29,9 @@ class PipelineLocum extends Model
         'application',
         'interview',
         'potentialStart',
+        'contractIn',
         'contractOut',
+        'firstShift',
         'startDate',
         'declined'
     ];

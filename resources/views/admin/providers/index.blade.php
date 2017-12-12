@@ -41,7 +41,7 @@
 			<div class="name">
 				@{{siteIndex}}
 			</div><div v-for="(stage, stageIndex) in site" class="stage" :class="'stage'+stageIndex">
-				<div v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setProvider(provider)">
+				<div v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setSite(provider)">
 					P @{{ cutName(provider.name) }}
 				</div>
 			</div>
@@ -50,50 +50,57 @@
 	<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">
-                        <span class="provider-name">@{{ provider.name }}</span>
-                    </h4>
-                </div>
-                <div class="modal-body">
-                	<label>Provider Accounts</label>
-                	<ul>
-                		<li v-for="account in provider.provider.accounts">@{{account.name}}</li>
-                	</ul>
-                	<label>Add Accounts To This Provider</label>
-                    <select class="form-control select2" name="accounts[]" data-placeholder="@lang('Account')" multiple>
-                        @foreach ($accounts as $account)
-                            <option value="{{ $account->id }}">
-                                {{ $account->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="modal-footer">
-                	<button type="button" class="btn btn-success">Confirm</button>
-			    	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			    </div>
+            	<form @submit.prevent="addHospitals(extraAccounts)">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	                    <h4 class="modal-title">
+	                        <span class="provider-name">@{{ site.name }}</span>
+	                    </h4>
+	                </div>
+	                <div class="modal-body">
+	                	<label>Provider Accounts</label>
+	                	<ul>
+	                		<li v-for="account in site.provider.accounts">@{{account.name}}</li>
+	                	</ul>
+	                	<label>Add Accounts To This Provider</label>
+	                    <select id="additionalAccounts" class="form-control select2" name="accounts[]" data-placeholder="@lang('Account')" multiple v-model="extraAccounts" required>
+	                        @foreach ($accounts as $account)
+	                            <option value="{{ $account->id }}">
+	                                {{ $account->name }}
+	                            </option>
+	                        @endforeach
+	                    </select>
+	                </div>
+	                <div class="modal-footer">
+	                	<button type="submit" class="btn btn-success">Confirm</button>
+				    	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				    </div>
+				</form>
             </div>
         </div>
     </div>
     <div class="modal fade" id="moveModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">
-                        <span class="provider-name"></span>
-                    </h4>
-                </div>
-                <div class="modal-body">
-                	<label>Set a Projected Start Date</label>
-                    <input type="text" class="form-control datepicker" id="projectedStartDate" />
-                </div>
-                <div class="modal-footer">
-                	<button type="button" class="btn btn-success">Confirm</button>
-			    	<button onclick="revertDrop()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-			    </div>
+            	<form id="moveProvider">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	                    <h4 class="modal-title">
+	                        <span class="provider-name"></span>
+	                    </h4>
+	                </div>
+	                <div class="modal-body">
+	                	<label>Projected Start Date</label>
+	                    <input type="text" class="form-control datepicker-future" id="projectedStartDate" required />
+
+	                    <label>Contract In</label>
+	                    <input type="text" class="form-control datepicker" id="contractIn" required />
+	                </div>
+	                <div class="modal-footer">
+	                	<button type="submit" class="btn btn-success">Confirm</button>
+				    	<button onclick="revertDrop()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				    </div>
+				</form>
             </div>
         </div>
     </div>
@@ -108,18 +115,20 @@
             data: {
             	sites: BackendVars.sites,
             	accounts: BackendVars.accounts,
-            	provider: {
+            	site: {
             		name: '',
             		provider: {
+            			id: null,
             			accounts: []
             		},
-            	}
+            	},
+            	extraAccounts: []
             },
 
             methods: {
-            	setProvider: function(provider) {
-            		this.provider = provider;
-            		this.provider.provider = this.provider.provider == null ? {accounts: []} : this.provider.provider;
+            	setSite: function(site) {
+            		this.site = site;
+            		this.site.provider = this.site.provider == null ? {id: null, accounts: []} : this.site.provider;
 
             		$('#editModal').modal('toggle');
             	},
@@ -128,6 +137,21 @@
             	},
             	convertJson: function(object) {
             		return JSON.stringify(object);
+            	},
+            	addHospitals: function(accounts) {
+            		axios.post('/admin/providers/addHospitals', {providerId: this.site.provider.id, hospitals: this.extraAccounts})
+                        .then(function (response) {
+                        	if(typeof response.data == 'string') {
+                        		alert('Not linked to any provider');
+                        	} else {
+                            	this.site.provider = response.data;
+                            }
+
+                            $('#editModal').modal('toggle');
+                        }.bind(this));
+            	},
+            	resetExtraAccounts: function() {
+            		this.extraAccounts = [];
             	}
             }
         });
@@ -167,6 +191,7 @@
 			var droppedFrom = null;
 			var oldClass = null;
 			var newClass = null;
+			var stage = null;
 
 			function sort(element) {
 				var items = element.children().sort(function(a, b) {
@@ -178,22 +203,29 @@
     			element.append(items);
 			}
 
+			$('#moveProvider').on('submit', function(e) {
+				e.preventDefault();
+				var provider = droppedElement.data('info');
+				var firstShift = $('#projectedStartDate').val();
+				var contractIn = $('#contractIn').val();
+
+				if(provider.contractOut) {
+					provider.contractOut = moment(provider.contractOut).format('MM/DD/YYYY');
+				}
+				provider.firstShift = moment(firstShift).format('MM/DD/YYYY');
+				provider.contractIn = moment(contractIn).format('MM/DD/YYYY');
+				if(provider.interview) {
+					provider.interview = moment(provider.interview).format('MM/DD/YYYY');
+				}
+
+				$.post(postUrl, {_token: "{{csrf_token()}}", provider: provider, stage: stage}, function(response) {
+					
+				});
+
+				$('#moveModal').modal('toggle');
+			});
+
 			$(".draggable").draggable({ axis: "x", revert: "invalid" });
-
-			// $(".draggable.single").dblclick(function() {
-			// 	var provider = $(this);
-			// 	var providerName = provider.data('provider');
-			// 	$('.provider-name').text(providerName);
-
-			// 	var providerAccounts = provider.data('accounts');
-			// 	var accountsList = '';
-			// 	$.each(providerAccounts, function(index, account) {
-			// 		accountsList += '<li>'+account.name+'</li>';
-			// 	});
-			// 	$('#providerAccounts').append(accountsList);
-
-			// 	$('#editModal').modal('toggle');
-			// });
 
 			$(".stage1").droppable({ accept: "",
 				create: function(event, ui) {
@@ -208,10 +240,6 @@
 					$(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);
 
 					sort(droppedOn);
-
-					$.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
-						console.log(response);
-					});
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -241,18 +269,15 @@
 
 					sort(droppedOn);
 
-					// $.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
-					// 	console.log(response);
-					// });
-
 					var provider = dropped;
-					var providerName = provider.data('provider');
-					$('.provider-name').text(providerName);
+					var providerInfo = provider.data('info');
+					$('.provider-name').text(providerInfo.name);
 
 					$('#moveModal').modal('toggle');
 
 					droppedElement = dropped;
 					droppedFrom = $('.stage.stage1');
+					stage = 2;
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -279,12 +304,13 @@
 
 					sort(droppedOn);
 
-					$.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
-						console.log(response);
-					});
-
 					droppedElement = dropped;
 					droppedFrom = $('.stage.stage2');
+					stage = 3;
+
+					$.post(postUrl, {_token: "{{csrf_token()}}", provider: info, stage: stage}, function(response) {
+						
+					});
 				},
 				over: function(event, elem) {
 					$(this).addClass("over");
@@ -295,7 +321,13 @@
 			});
 
 			$('#editModal').on('hidden.bs.modal', function () {
-			    $('#providerAccounts').html('');
+			    $("#additionalAccounts.select2").val(null).trigger('change');
+			    window.providersApp.resetExtraAccounts();
+			});
+
+			$('#moveModal').on('hidden.bs.modal', function () {
+			    $('#projectedStartDate').val('');
+			    $('#contractIn').val('');
 			});
 
 			window.revertDrop = function() {

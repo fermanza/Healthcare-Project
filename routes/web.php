@@ -91,6 +91,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
 
     $router->get('providers/', 'ProvidersController@index')->name('providers.index');
     $router->post('providers/switch', 'ProvidersController@switch')->name('providers.switch');
+    $router->post('providers/addHospitals', 'ProvidersController@addHospitals')->name('providers.addHospitals');
 
     $router->resource('users', 'UsersController', ['except' => 'show']);
     $router->resource('roles', 'RolesController', ['except' => 'show']);
