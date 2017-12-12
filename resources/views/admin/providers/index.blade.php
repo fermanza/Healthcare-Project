@@ -3,7 +3,7 @@
 @section('content-header', __('Provider Dashboard'))
 
 @section('content')
-<div class="providers-page">
+<div id="providersPage" class="providers-page">
 	<form class="box-body">
         <div class="flexboxgrid">
             <div class="row">
@@ -34,55 +34,32 @@
 	<div class="box-body">
 		@if($sites->count() > 0)
 			<div class="site title">
-				<div class="name title">Hospital</div>
-				<div class="stage title">Stage 1</div>
-				<div class="stage title">Stage 2</div>
-				<div class="stage title">Stage 3</div>
+				<div class="name title">Hospital</div><div class="stage title">Stage 1</div><div class="stage title">Stage 2</div><div class="stage title">Stage 3</div>
 			</div>
 		@endif
-		@foreach($sites as $key => $site)
-			<div class="site">
-				<div class="name">
-					{{$key}}
+		<div v-for="(site, siteIndex) in sites" class="site">
+			<div class="name">
+				@{{siteIndex}}
+			</div><div v-for="(stage, stageIndex) in site" class="stage" :class="'stage'+stageIndex">
+				<div v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setProvider(provider)">
+					P @{{ cutName(provider.name) }}
 				</div>
-				@foreach($site as $stage_key => $stage)
-					<div class="stage stage{{$stage_key}}">
-						@foreach($stage as $providers)
-							@if($providers->count() > 15)
-								<div class="draggable multiple" data-providers="{{$providers}}">
-									Phy {{$providers->count()}}
-								</div>
-							@else
-								@foreach($providers as $provider_key => $provider)
-									<div class="draggable single stage{{$stage_key}}" data-provider="{{$provider->name}}" data-info="{{$provider}}" data-accounts="{{$provider->provider ? $provider->provider->accounts : ''}}">
-										@if($provider->type == 'phys') 
-											P {{substr($provider->name, 0, 3)}}
-										@else
-											A {{substr($provider->name, 0, 3)}}
-										@endif
-									</div>
-								@endforeach
-							@endif
-						@endforeach
-					</div>
-				@endforeach
 			</div>
-		@endforeach
+		</div>
 	</div>
-	<button onclick="revertDrop()">revert</button>
 	<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">
-                        <span id="providerName"></span>
+                        <span class="provider-name">@{{ provider.name }}</span>
                     </h4>
                 </div>
                 <div class="modal-body">
                 	<label>Provider Accounts</label>
-                	<ul id="providerAccounts">
-                		
+                	<ul>
+                		<li v-for="account in provider.provider.accounts">@{{account.name}}</li>
                 	</ul>
                 	<label>Add Accounts To This Provider</label>
                     <select class="form-control select2" name="accounts[]" data-placeholder="@lang('Account')" multiple>
@@ -100,21 +77,71 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="moveModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">
+                        <span class="provider-name"></span>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                	<label>Set a Projected Start Date</label>
+                    <input type="text" class="form-control datepicker" id="projectedStartDate" />
+                </div>
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-success">Confirm</button>
+			    	<button onclick="revertDrop()" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+			    </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
 @push('scripts')
 	<script>
+		window.providersApp = new Vue({
+            el: '#providersPage',
+
+            data: {
+            	sites: BackendVars.sites,
+            	accounts: BackendVars.accounts,
+            	provider: {
+            		name: '',
+            		provider: {
+            			accounts: []
+            		},
+            	}
+            },
+
+            methods: {
+            	setProvider: function(provider) {
+            		this.provider = provider;
+            		this.provider.provider = this.provider.provider == null ? {accounts: []} : this.provider.provider;
+
+            		$('#editModal').modal('toggle');
+            	},
+            	cutName: function(name) {
+            		return name.substring(0, 3);
+            	},
+            	convertJson: function(object) {
+            		return JSON.stringify(object);
+            	}
+            }
+        });
+
 		$( document ).tooltip({
-			items: "[data-provider], [data-accounts], [data-providers], [data-info]",
+			items: "[data-providers], [data-info]",
 			content: function() {
 				var element = $( this );
 
-				if (element.is("[data-provider]")) {
-					var provider = element.data('provider');
-					var accounts = element.data('accounts');
+				if (element.is("[data-info]")) {
+					var provider = element.data('info');
+					var accounts = provider.provider && provider.provider.accounts ? provider.provider.accounts : [];
 
-					var element = '<div class="bold-text">'+provider+'</div>';
+					var element = '<div class="bold-text">'+provider.name+'</div>';
 					var accountsList = '';
 					$.each(accounts, function(index, account) {
 						accountsList += account.name+'; ';
@@ -135,7 +162,6 @@
 		});
 
 		$(document).ready(function() {
-
 			var postUrl = '/admin/providers/switch';
 			var droppedElement = null;
 			var droppedFrom = null;
@@ -154,20 +180,20 @@
 
 			$(".draggable").draggable({ axis: "x", revert: "invalid" });
 
-			$(".draggable.single").dblclick(function() {
-				var provider = $(this);
-				var providerName = provider.data('provider');
-				$('#providerName').text(providerName);
+			// $(".draggable.single").dblclick(function() {
+			// 	var provider = $(this);
+			// 	var providerName = provider.data('provider');
+			// 	$('.provider-name').text(providerName);
 
-				var providerAccounts = provider.data('accounts');
-				var accountsList = '';
-				$.each(providerAccounts, function(index, account) {
-					accountsList += '<li>'+account.name+'</li>';
-				});
-				$('#providerAccounts').append(accountsList);
+			// 	var providerAccounts = provider.data('accounts');
+			// 	var accountsList = '';
+			// 	$.each(providerAccounts, function(index, account) {
+			// 		accountsList += '<li>'+account.name+'</li>';
+			// 	});
+			// 	$('#providerAccounts').append(accountsList);
 
-				$('#editModal').modal('toggle');
-			});
+			// 	$('#editModal').modal('toggle');
+			// });
 
 			$(".stage1").droppable({ accept: "",
 				create: function(event, ui) {
@@ -215,9 +241,15 @@
 
 					sort(droppedOn);
 
-					$.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
-						console.log(response);
-					});
+					// $.post(postUrl, {_token: "{{csrf_token()}}", data: info}, function(response) {
+					// 	console.log(response);
+					// });
+
+					var provider = dropped;
+					var providerName = provider.data('provider');
+					$('.provider-name').text(providerName);
+
+					$('#moveModal').modal('toggle');
 
 					droppedElement = dropped;
 					droppedFrom = $('.stage.stage1');
@@ -264,7 +296,7 @@
 
 			$('#editModal').on('hidden.bs.modal', function () {
 			    $('#providerAccounts').html('');
-			})
+			});
 
 			window.revertDrop = function() {
 				droppedElement.removeClass(newClass);

@@ -109,6 +109,8 @@ class ProvidersController extends Controller
 
         $params = compact('sites', 'accounts');
 
+        JavaScript::put($params);
+
         return view('admin.providers.index', $params);
     }
 

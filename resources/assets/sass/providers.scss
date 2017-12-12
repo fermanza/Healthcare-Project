@@ -30,7 +30,6 @@
 		min-height: 100px;
 		vertical-align: top;
 		padding: 10px;
-		margin-right: -5px;
 		border-left: 2px solid #ccc;
 		border-top: 2px solid #ccc;
 
@@ -80,7 +79,7 @@
 		}
 	}
 
-	#providerName {
+	.provider-name {
 		font-weight: bold !important;
 	}
 }
