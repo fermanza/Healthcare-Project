@@ -273,6 +273,17 @@
                 @endif
             </div>
         </div>
+        <div class="col-md-3">
+            <div class="form-group{{ $errors->has('INCaction') ? ' has-error' : '' }}">
+                <label for="INCaction">@lang('INC Action')</label>
+                <div>
+                    <input type="checkbox" name="INCaction" value="1" {{ $account->INCaction ? 'checked' : '' }}>
+                </div>
+                @if ($errors->has('INCaction'))
+                    <span class="help-block"><strong>{{ $errors->first('INCaction') }}</strong></span>
+                @endif
+            </div>
+        </div>
     </div>
 
     <hr />

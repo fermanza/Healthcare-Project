@@ -20,6 +20,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Filesystem\Filesystem;
 
 class ReportsController extends Controller
 {
@@ -2538,43 +2539,84 @@ class ReportsController extends Controller
         })->download('xlsx'); 
     }
 
-    public function incActionReport(Request $request) {
-        if ($request->siteCode) {
-            $incAction = IncAction::where('siteCode', $request->siteCode)->first();
+    public function incActionIndex(SummaryFilter $filter, Request $request) {
+        $queryString = $request->query();
 
-            if($incAction) {
-                $fileName = $incAction->siteCode.' - '.$incAction->{'Hospital Name'}.' - SAWR.docx';
-
-                $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(public_path('template.docx'));
-                $templateProcessor->setValue('date', Carbon::now()->format('d/m/Y'));
-                $templateProcessor->setValue('SVP', $incAction->SVP != " " && $incAction->SVP != null ? $incAction->SVP.',' : '');
-                $templateProcessor->setValue('DOO', $incAction->DOO != " " && $incAction->DOO != null ? $incAction->DOO.',' : '');
-                $templateProcessor->setValue('siteCode', $incAction->siteCode);
-                $templateProcessor->setValue('hospitalName', $incAction->{'Hospital Name'});
-                $templateProcessor->setValue('YTD - Inc Comp', $incAction->{'YTD - Inc Comp'});
-                $templateProcessor->setValue('Prev - Inc Comp', $incAction->{'Prev - Inc Comp'});
-                $templateProcessor->setValue('New Start', $incAction->account ? ($incAction->account->isRecentlyCreated() ? 'New Start' : '') : '');
-                $templateProcessor->setValue('MTD - Phys Signed Not Yet Started', $incAction->{'MTD - Phys SNS'});
-                $templateProcessor->setValue('MTD - Phys Signed Not Yet Started30', $incAction->{'MTD - Phys SNS - 30 day'});
-                $templateProcessor->setValue('MTD - Phys Signed Not Yet Started60', $incAction->{'MTD - Phys SNS - 60 day'});
-                $templateProcessor->setValue('MTD - Phys Signed Not Yet Started90', $incAction->{'MTD - Phys SNS - 90 day'});
-                $templateProcessor->setValue('MTD - APP Signed Not Yet Started', $incAction->{'MTD - APP SNS'});
-                $templateProcessor->setValue('MTD - APP Signed Not Yet Started30', $incAction->{'MTD - APP SNS - 30 day'});
-                $templateProcessor->setValue('MTD - APP Signed Not Yet Started60', $incAction->{'MTD - APP SNS - 60 day'});
-                $templateProcessor->setValue('MTD - APP Signed Not Yet Started90', $incAction->{'MTD - APP SNS - 90 day'});
-                $templateProcessor->setValue('Current Openings - Phys', $incAction->{'Current Openings - Phys'});
-                $templateProcessor->setValue('Current Openings - APP', $incAction->{'Current Openings - APP'});
-                $templateProcessor->setValue('Current Openings - Total', $incAction->{'Current Openings - Total'});
-
-                $templateProcessor->saveAs(public_path($fileName));
-
-                return response()->download(public_path($fileName))->deleteFileAfterSend(true);
-            }
-
-            return "siteCode not found";
+        if(count($queryString) == 0) {
+            $accounts = collect();
         } else {
-            return "Please enter a siteCode";
+            $accounts = $this->getSummaryData($filter, 500);
+            $accounts = $accounts->filter(function($account) {
+                return $account->account && $account->account->INCaction;
+            });
         }
+
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
+
+        $params = compact('accounts', 'RSCs');
+
+        return view('admin.reports.incAction.index', $params);
+    }
+
+    public function incActionReport(SummaryFilter $filter, Request $request) {
+        $timestamp = Carbon::now()->timestamp;
+
+        if(!$request->RSCs) {
+            flash(__('Please get data by using filters before trying to export.'));
+
+            return back();
+        }
+
+        $accounts = $this->getSummaryData($filter, 500);
+        $accounts = $accounts->filter(function($account) {
+            return $account->account && $account->account->INCaction;
+        });
+
+        $siteCodes = $accounts->map(function($account) {
+            return $account->siteCode;
+        });
+
+        $incActions = IncAction::whereIn('siteCode', $siteCodes)->get();
+
+        $file = new Filesystem;
+
+        $file->makeDirectory(public_path('/incAction_'.$timestamp));
+
+        foreach($incActions as $incAction) {
+            $fileName = $incAction->siteCode.' - '.$incAction->{'Hospital Name'}.' - SAWR.docx';
+
+            $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(public_path('template.docx'));
+            $templateProcessor->setValue('date', Carbon::now()->format('d/m/Y'));
+            $templateProcessor->setValue('SVP', $incAction->SVP != " " && $incAction->SVP != null ? $incAction->SVP.',' : '');
+            $templateProcessor->setValue('DOO', $incAction->DOO != " " && $incAction->DOO != null ? $incAction->DOO.',' : '');
+            $templateProcessor->setValue('siteCode', $incAction->siteCode);
+            $templateProcessor->setValue('hospitalName', $incAction->{'Hospital Name'});
+            $templateProcessor->setValue('YTD - Inc Comp', $incAction->{'YTD - Inc Comp'});
+            $templateProcessor->setValue('Prev - Inc Comp', $incAction->{'Prev - Inc Comp'});
+            $templateProcessor->setValue('New Start', $incAction->account ? ($incAction->account->isRecentlyCreated() ? 'New Start' : '') : '');
+            $templateProcessor->setValue('MTD - Phys Signed Not Yet Started', $incAction->{'MTD - Phys SNS'});
+            $templateProcessor->setValue('MTD - Phys Signed Not Yet Started30', $incAction->{'MTD - Phys SNS - 30 day'});
+            $templateProcessor->setValue('MTD - Phys Signed Not Yet Started60', $incAction->{'MTD - Phys SNS - 60 day'});
+            $templateProcessor->setValue('MTD - Phys Signed Not Yet Started90', $incAction->{'MTD - Phys SNS - 90 day'});
+            $templateProcessor->setValue('MTD - APP Signed Not Yet Started', $incAction->{'MTD - APP SNS'});
+            $templateProcessor->setValue('MTD - APP Signed Not Yet Started30', $incAction->{'MTD - APP SNS - 30 day'});
+            $templateProcessor->setValue('MTD - APP Signed Not Yet Started60', $incAction->{'MTD - APP SNS - 60 day'});
+            $templateProcessor->setValue('MTD - APP Signed Not Yet Started90', $incAction->{'MTD - APP SNS - 90 day'});
+            $templateProcessor->setValue('Current Openings - Phys', $incAction->{'Current Openings - Phys'});
+            $templateProcessor->setValue('Current Openings - APP', $incAction->{'Current Openings - APP'});
+            $templateProcessor->setValue('Current Openings - Total', $incAction->{'Current Openings - Total'});
+
+            $templateProcessor->saveAs(public_path('/incAction_'.$timestamp.'/'.$fileName));
+        }
+
+        $zipper = new \Chumper\Zipper\Zipper;
+ 
+        $files = glob(public_path('incAction_'.$timestamp.'/*'));
+        $zipper->make('INC_Action_Report - '.Carbon::now()->format('m_d_Y').'.zip')->add($files)->close();
+
+        $file->deleteDirectory(public_path('incAction_'.$timestamp));
+
+        return response()->download(public_path('INC_Action_Report - '.Carbon::now()->format('m_d_Y').'.zip'))->deleteFileAfterSend(true);
     }
 
     private function getSummaryData(SummaryFilter $filter, $pages) {
