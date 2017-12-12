@@ -1806,7 +1806,7 @@ class ReportsController extends Controller
                         'Interview',
                         'Contract Out',
                         'Contract In',
-                        'First Shift',
+                        'Projected Start Date',
                         'Last contact Date & Next Steps',
                         'Signed Not Started'
                     ];
@@ -1821,7 +1821,7 @@ class ReportsController extends Controller
                         'Interview',
                         'Contract Out',
                         'Contract In',
-                        'First Shift',
+                        'Projected Start Date',
                         'Last contact Date & Next Steps',
                         'Signed Not Started'
                     ];
@@ -1835,7 +1835,7 @@ class ReportsController extends Controller
                         'Interview',
                         'Contract Out',
                         'Contract In',
-                        'First Shift',
+                        'Projected Start Date',
                         'Last contact Date & Next Steps',
                         'Signed Not Started'
                     ];
@@ -1849,7 +1849,7 @@ class ReportsController extends Controller
                         'Interview',
                         'Contract Out',
                         'Contract In',
-                        'First Shift',
+                        'Projected Start Date',
                         'Last contact Date & Next Steps',
                         ''
                     ];

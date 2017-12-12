@@ -190,6 +190,28 @@
     background: #0f9d58;
 }
 
+.reports-summary {
+
+    .recently-created {
+        a {
+            color: #fff;
+        }
+    }
+
+    a {
+        color: #000;
+    }
+}
+
+.float-right {
+    float: right;
+
+    &.bold {
+        font-weight: bold;
+        color: #000;
+    }
+}
+
 body {
     min-height: 100vh;
 }

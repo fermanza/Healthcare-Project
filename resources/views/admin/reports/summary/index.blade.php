@@ -20,6 +20,7 @@
     <button class="btn btn-primary mb10" data-toggle="collapse" data-target="#reportFilters">
         Show Filters
     </button>
+    <p class="float-right bold">Green indicates new start</p>
 	<form class="box-body collapse" id="reportFilters">
         <div class="flexboxgrid">
             <div class="row">
@@ -234,7 +235,7 @@
 	                @foreach($accounts as $account)
 	                    <tr data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
 	                    >
-	                        <td class="wd50">
+	                        <td class="wd50 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
                                 @if($account->account)
                                     <a href="{{ route('admin.accounts.pipeline.index', [$account->account]) }}">
                                         {{ $account->siteCode }}
@@ -245,23 +246,51 @@
                                     </a>
                                 @endif
                             </td>
-	                        <td class="wd230"><span>{{ $account->{'Hospital Name'} }}</span></td>
-	                        <td class="wd80">{{ $account->Practice }}</td>
-	                        <td class="wd110">{{ $account->{'System Affiliation'} }}</td>
-	                        <td class="wd50">{{ $account->JV }}</td>
-	                        <td class="wd200">{{ $account->{'Operating Unit'} }}</td>
-	                        <td class="wd50">{{ ($account->account && $account->account->rsc) ? $account->account->rsc->name : '' }}</td>
-	                        <td class="wd70">{{ $account->{'RSC Recruiter'} }}</td>
-	                        <td class="wd110">
+	                        <td class="wd230 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                <span>{{ $account->{'Hospital Name'} }}</span>
+                            </td>
+	                        <td class="wd80 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->Practice }}
+                            </td>
+	                        <td class="wd110 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->{'System Affiliation'} }}
+                            </td>
+	                        <td class="wd50 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->JV }}
+                            </td>
+	                        <td class="wd200 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->{'Operating Unit'} }}
+                            </td>
+	                        <td class="wd50 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ ($account->account && $account->account->rsc) ? $account->account->rsc->name : '' }}
+                            </td>
+	                        <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->{'RSC Recruiter'} }}
+                            </td>
+	                        <td class="wd110 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
 	                        	{{ $account->{'Secondary Recruiter'} }}
 	                        </td>
-	                        <td class="wd70">{{ $account->Managers }}</td>
-	                        <td class="wd70">{{ $account->DOO }}</td>
-                            <td class="wd70">{{ $account->SVP }}</td>
-	                        <td class="wd70">{{ $account->RMD }}</td>
-	                        <td class="wd60">{{ $account->City }}</td>
-	                        <td class="wd100">{{ $account->Location }}</td>
-	                        <td class="wd100">{{ $account->{'Start Date'} ? $account->{'Start Date'}->format('m/d/y') : '' }}</td>
+	                        <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->Managers }}
+                            </td>
+	                        <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->DOO }}
+                            </td>
+                            <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->SVP }}
+                            </td>
+	                        <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->RMD }}
+                            </td>
+	                        <td class="wd60 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->City }}
+                            </td>
+	                        <td class="wd100 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->Location }}
+                            </td>
+	                        <td class="wd100 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+                                {{ $account->{'Start Date'} ? $account->{'Start Date'}->format('m/d/y') : '' }}
+                            </td>
 	                        <td class="wd150 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
 	                        	{{ $account->getMonthsSinceCreated() === INF ? '' : number_format($account->getMonthsSinceCreated(), 1) }}
 	                        </td>
