@@ -103,6 +103,14 @@
                                         </a>
                                     </li>
                                 @endpermission
+                                @permission('admin.reports.incAction')
+                                    <li class="{{ route_starts_with('admin.reports.incAction') }}">
+                                        <a href="{{ route('admin.reports.incAction.index') }}">
+                                            <i class="fa fa-file-excel-o"></i>
+                                            <span>@lang('INC Watch List')</span>
+                                        </a>
+                                    </li>
+                                @endpermission
                                 @foreach(Auth::user()->dashboards as $dashboard)
                                     <li>
                                         <a href="{{ 'http://'.$dashboard->url }}" target="_blank">

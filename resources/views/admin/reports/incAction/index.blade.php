@@ -3,16 +3,9 @@
 @section('content-header', __('Summary Report'))
 
 @section('tools')
-    <a href="{{ route('admin.reports.summary.excel.details', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
-        <i class="fa fa-file-excel-o"></i>
-        @lang('Detailed Export')
-    </a>
-    <a href="{{ route('admin.reports.summary.excel', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
-        <i class="fa fa-file-excel-o"></i>
-        @lang('Export to Excel')
-    </a>
-    <a href="{{ route('admin.summaryReport.toggleScope') }}" class="btn btn-sm btn-success{{ session('ignore-summary-role-scope') ? ' active' : '' }}">
-        @lang('View All')
+    <a href="{{ route('admin.reports.incAction.export', Request::query()) }}" type="submit" class="btn btn-sm btn-info">
+        <i class="fa fa-file-word-o"></i>
+        @lang('Export')
     </a>
 @endsection
 
@@ -20,134 +13,14 @@
     <button class="btn btn-primary mb10" data-toggle="collapse" data-target="#reportFilters">
         Show Filters
     </button>
-    <p class="float-right bold">Green indicates new start</p>
 	<form class="box-body collapse" id="reportFilters">
         <div class="flexboxgrid">
             <div class="row">
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="affiliations[]" data-placeholder="@lang('Affiliation')" multiple>
-                        @foreach ($affiliations as $affiliation)
-                            <option value="{{ $affiliation->name }}" {{ in_array($affiliation->name, Request::input('affiliations') ?: []) ? 'selected' : '' }}>{{ $affiliation->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="recruiters[]" data-placeholder="@lang('Recruiter')" multiple>
-                        @foreach ($employees as $employee)
-                            <option value="{{ $employee->fullName() }}" {{ in_array($employee->fullName(), Request::input('recruiters') ?: []) ? 'selected' : '' }}>{{ $employee->fullName() }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="practices[]" data-placeholder="@lang('Service Line')" multiple>
-                        @foreach ($practices as $practice)
-                            <option value="{{ $practice->name }}" {{ in_array($practice->name, Request::input('practices') ?: []) ? 'selected' : '' }}>{{ $practice->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="managers[]" data-placeholder="@lang('Manager')" multiple>
-                        @foreach ($employees as $employee)
-                            <option value="{{ $employee->fullName() }}" {{ in_array($employee->fullName(), Request::input('managers') ?: []) ? 'selected' : '' }}>{{ $employee->fullName() }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="monthEndDate" data-placeholder="@lang('Month End Date')">
-                        <option value="" disabled selected></option>
-                        @foreach ($dates as $date)
-                            <option value="{{ $date->MonthEndDate->format('m-Y') }}" {{ $date->MonthEndDate->format('m-Y') == Request::input('monthEndDate') ? 'selected' : '' }}>
-                                {{ $date->MonthEndDate->format('m-Y') }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="regions[]" data-placeholder="@lang('Operating Unit')" multiple>
-                        @foreach ($regions as $region)
-                            <option value="{{ $region->name }}" {{ in_array($region->name, Request::input('regions') ?: []) ? 'selected' : '' }}>{{ $region->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
                     <select class="form-control select2" name="RSCs[]" data-placeholder="@lang('RSC')" multiple>
                         @foreach ($RSCs as $RSC)
                             <option value="{{ $RSC->id }}" {{ in_array($RSC->id, Request::input('RSCs') ?: []) ? 'selected' : '' }}>{{ $RSC->name }}</option>
                         @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="DOO[]" data-placeholder="@lang('DOO')" multiple>
-                        @foreach ($doos as $doo)
-                            <option value="{{ $doo->fullName() }}" {{ in_array($doo->fullName(), Request::input('DOO') ?: []) ? 'selected' : '' }}>{{ $doo->fullName() }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="SVP[]" data-placeholder="@lang('SVP')" multiple>
-                        @foreach ($SVPs as $SVP)
-                            <option value="{{ $SVP->SVP }}" {{ in_array($SVP->SVP, Request::input('SVP') ?: []) ? 'selected' : '' }}>{{ $SVP->SVP }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="RMD[]" data-placeholder="@lang('RMD')" multiple>
-                        @foreach ($RMDs as $RMD)
-                            <option value="{{ $RMD->RMD }}" {{ in_array($RMD->RMD, Request::input('RMD') ?: []) ? 'selected' : '' }}>{{ $RMD->RMD }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="cities[]" data-placeholder="@lang('City')" multiple>
-                        @foreach ($cities as $city)
-                            <option value="{{ $city->city }}" {{ in_array($city->city, Request::input('cities') ?: []) ? 'selected' : '' }}>
-                                {{ $city->city }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="states[]" data-placeholder="@lang('State')" multiple>
-                        @foreach ($states as $state)
-                            <option value="{{ $state->abbreviation }}" {{ in_array($state->abbreviation, Request::input('states') ?: []) ? 'selected' : '' }}>{{ $state->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="groups[]" data-placeholder="@lang('Group')" multiple>
-                        @foreach ($groups as $group)
-                            <option value="{{ $group->id }}" {{ in_array($group->id, Request::input('groups') ?: []) ? 'selected' : '' }}>{{ $group->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="sites[]" data-placeholder="@lang('Site Code')" multiple>
-                        @foreach ($sites as $site)
-                            <option value="{{ $site->id }}" {{ in_array($site->id, Request::input('sites') ?: []) ? 'selected' : '' }}>
-                                {{ $site->siteCode }} - {{ $site->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
-                    <select class="form-control select2" name="new" data-placeholder="@lang('Same\New')">
-                        <option value=""></option>
-                        <option value="1" {{ Request::input('new') == 1 ? 'selected' : '' }}>New Store</option>
-                        <option value="2" {{ Request::input('new') == 2 ? 'selected' : '' }}>Same Store</option>
                     </select>
                 </div>
             </div>
@@ -158,7 +31,7 @@
                         <i class="fa fa-filter"></i>
                         @lang('Apply')
                     </button>
-                    <a href="{{ route('admin.reports.summary.index') }}" type="submit" class="btn btn-sm btn-default">
+                    <a href="{{ route('admin.reports.incAction.index') }}" type="submit" class="btn btn-sm btn-default">
                         <i class="fa fa-times"></i>
                         @lang('Clear')
                     </a>
@@ -166,6 +39,7 @@
             </div>
         </div>
     </form>
+    @if($accounts->count() > 0)
 	<div class="reports-summary maxh100vh">
 		<div class="table-responsive overflow-hidden">
 	        <table id="datatableSummary" class="table table-hover table-bordered">
@@ -235,7 +109,7 @@
 	                @foreach($accounts as $account)
 	                    <tr data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
 	                    >
-	                        <td class="wd50 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+	                        <td class="wd50">
                                 @if($account->account)
                                     <a href="{{ route('admin.accounts.pipeline.index', [$account->account]) }}">
                                         {{ $account->siteCode }}
@@ -246,51 +120,23 @@
                                     </a>
                                 @endif
                             </td>
-	                        <td class="wd230 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                <span>{{ $account->{'Hospital Name'} }}</span>
-                            </td>
-	                        <td class="wd80 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->Practice }}
-                            </td>
-	                        <td class="wd110 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->{'System Affiliation'} }}
-                            </td>
-	                        <td class="wd50 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->JV }}
-                            </td>
-	                        <td class="wd200 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->{'Operating Unit'} }}
-                            </td>
-	                        <td class="wd50 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ ($account->account && $account->account->rsc) ? $account->account->rsc->name : '' }}
-                            </td>
-	                        <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->{'RSC Recruiter'} }}
-                            </td>
-	                        <td class="wd110 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
+	                        <td class="wd230"><span>{{ $account->{'Hospital Name'} }}</span></td>
+	                        <td class="wd80">{{ $account->Practice }}</td>
+	                        <td class="wd110">{{ $account->{'System Affiliation'} }}</td>
+	                        <td class="wd50">{{ $account->JV }}</td>
+	                        <td class="wd200">{{ $account->{'Operating Unit'} }}</td>
+	                        <td class="wd50">{{ ($account->account && $account->account->rsc) ? $account->account->rsc->name : '' }}</td>
+	                        <td class="wd70">{{ $account->{'RSC Recruiter'} }}</td>
+	                        <td class="wd110">
 	                        	{{ $account->{'Secondary Recruiter'} }}
 	                        </td>
-	                        <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->Managers }}
-                            </td>
-	                        <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->DOO }}
-                            </td>
-                            <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->SVP }}
-                            </td>
-	                        <td class="wd70 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->RMD }}
-                            </td>
-	                        <td class="wd60 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->City }}
-                            </td>
-	                        <td class="wd100 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->Location }}
-                            </td>
-	                        <td class="wd100 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
-                                {{ $account->{'Start Date'} ? $account->{'Start Date'}->format('m/d/y') : '' }}
-                            </td>
+	                        <td class="wd70">{{ $account->Managers }}</td>
+	                        <td class="wd70">{{ $account->DOO }}</td>
+                            <td class="wd70">{{ $account->SVP }}</td>
+	                        <td class="wd70">{{ $account->RMD }}</td>
+	                        <td class="wd60">{{ $account->City }}</td>
+	                        <td class="wd100">{{ $account->Location }}</td>
+	                        <td class="wd100">{{ $account->{'Start Date'} ? $account->{'Start Date'}->format('m/d/y') : '' }}</td>
 	                        <td class="wd150 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
 	                        	{{ $account->getMonthsSinceCreated() === INF ? '' : number_format($account->getMonthsSinceCreated(), 1) }}
 	                        </td>
@@ -371,6 +217,11 @@
 	        </table>
 	    </div>
 	</div>
+    @else
+    <div>
+        <p class="text-center">Use filters in order to get data</p>
+    </div>
+    @endif
 @endsection
 
 @push('scripts')
