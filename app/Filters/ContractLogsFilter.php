@@ -217,7 +217,7 @@ class ContractLogsFilter extends Filter
      */
     public function placements($value)
     {
-        $this->query->where('tContractLogs.value', '>', 0)->whereNotNull('tContractLogs.contractInDate')->where('tContractLogs.active', 1)->where('tContractLogs.inactive', 0);
+        $this->query->where('tContractLogs.value', '>', 0)->where('tContractLogs.active', 1)->where('tContractLogs.inactive', 0);
     }
 
     /**
