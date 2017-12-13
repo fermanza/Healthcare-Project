@@ -95,7 +95,7 @@
                                         </a>
                                     </li>
                                 @endpermission
-                                @permission('admin.accounts.export')
+                                @permission('admin.reports.usage.index')
                                     <li class="{{ route_starts_with('admin.reports.usage') }}">
                                         <a href="{{ route('admin.reports.usage.index') }}">
                                             <i class="fa fa-file-excel-o"></i>
