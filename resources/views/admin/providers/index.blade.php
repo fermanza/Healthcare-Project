@@ -41,9 +41,9 @@
 			<div class="name">
 				@{{siteIndex}}
 			</div><div v-for="(stage, stageIndex) in site" class="stage" :class="'stage'+stageIndex">
-				<div v-if="stage[0].length <= 5" v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setSite(provider)">
+				<div v-if="stage[0].length <= 15" v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setSite(provider)">
 					P @{{ cutName(provider.name) }}
-				</div><div v-if="stage[0].length > 5" class="draggable" :class="'stage'+stageIndex" :data-providers="convertJson(stage[0])" @dblclick="setProviders(stage[0])">
+				</div><div v-if="stage[0].length > 15" class="draggable" :class="'stage'+stageIndex" :data-providers="convertJson(stage[0])" @dblclick="setProviders(stage[0])">
 					@{{stage[0].length}}
 				</div>
 			</div>
@@ -109,7 +109,7 @@
     <div class="modal fade" id="providersModal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-            	<form id="moveProvider">
+            	<form @submit.prevent="addProvidersHospitals(providersProvider, providersHospitals)">
 	                <div class="modal-header">
 	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	                    <h4 class="modal-title">
@@ -135,13 +135,13 @@
 	                	<div>
 	                		<label>Add hospitals to providers</label>
 	                		<div>
-		                		<select id="providersProvider" class="form-control select2" data-placeholder="@lang('Provider')" v-model="providersProvider">
+		                		<select id="providersProvider" class="form-control select2" data-placeholder="@lang('Provider')" v-model="providersProvider" required>
 		                			<option value=""></option>
 		                			<option v-for="provider in providers" :value="provider.id">@{{provider.name}}</option>
 		                		</select>
 		                	</div>
 		                	<div class="mt10">
-	                			<select id="providersHospitals" class="form-control select2" data-placeholder="@lang('Hospitals')" multiple v-model="providersHospitals">
+	                			<select id="providersHospitals" class="form-control select2" data-placeholder="@lang('Hospitals')" multiple v-model="providersHospitals" required>
 	                				@foreach ($accounts as $account)
 			                            <option value="{{ $account->id }}">
 			                                {{ $account->name }}
@@ -192,7 +192,6 @@
             	},
             	setProviders: function(providers) {
             		this.providers = providers;
-            		console.log(this.providers);
 
             		$('#providersModal').modal('toggle');
             	},
@@ -212,6 +211,21 @@
                             }
 
                             $('#editModal').modal('toggle');
+                        }.bind(this));
+            	},
+            	addProvidersHospitals: function(provider, hospitals) {
+            		var providerInfo = _.find(this.providers, {id: provider});
+            		providerInfo.provider = providerInfo.provider == null ? {id: null, accounts: []} : providerInfo.provider;
+
+            		axios.post('/admin/providers/addHospitals', {providerId: providerInfo.provider.id, hospitals: hospitals})
+                        .then(function (response) {
+                        	if(typeof response.data == 'string') {
+                        		alert('Not linked to any provider');
+                        	} else {
+                                _.assignIn(providerInfo.provider, response.data);
+                            }
+
+                            $('#providersModal').modal('toggle');
                         }.bind(this));
             	},
             	resetExtraAccounts: function() {
