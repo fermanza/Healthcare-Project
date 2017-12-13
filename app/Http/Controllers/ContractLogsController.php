@@ -18,6 +18,7 @@ use App\AccountEmployee;
 use App\EmployementStatus;
 use App\ProviderDesignation;
 use App\Practice;
+use App\Provider;
 use Carbon\Carbon;
 use App\Scopes\ContractLogScope;
 use Maatwebsite\Excel\Facades\Excel;
@@ -198,8 +199,9 @@ class ContractLogsController extends Controller
             $contractLog->recruiter ? [$contractLog->recruiter] : []
         );
         $recruiters = $recruiters->concat($managers)->sortBy(function($employee) { return $employee->fullName(); });
+        $providers = Provider::all();
 
-        JavaScript::put(compact('statuses', 'specialties'));
+        JavaScript::put(compact('statuses', 'specialties', 'providers'));
 
         $params = compact(
             'contractLog', 'accounts', 'statuses', 'specialties', 'recruiters',

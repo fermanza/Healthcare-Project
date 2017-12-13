@@ -17,10 +17,10 @@
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group">
-                    <label for="providerLastName">@lang('Provider Last Name')</label>
-                    <input type="text" class="form-control" id="providerLastName" name="providerLastName" value="{{ old('providerLastName') ?: $contractLog->providerLastName }}" required />
+                    <label for="providerFirstName">@lang('Provider First Name')</label>
+                    <input type="text" class="form-control" id="providerFirstName" name="providerFirstName" value="{{ old('providerFirstName') ?: $contractLog->providerFirstName }}" required />
                 </div>
-            </div>
+            </div>            
 
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group">
@@ -31,8 +31,8 @@
 
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                 <div class="form-group">
-                    <label for="providerFirstName">@lang('Provider First Name')</label>
-                    <input type="text" class="form-control" id="providerFirstName" name="providerFirstName" value="{{ old('providerFirstName') ?: $contractLog->providerFirstName }}" required />
+                    <label for="providerLastName">@lang('Provider Last Name')</label>
+                    <input type="text" class="form-control" id="providerLastName" name="providerLastName" value="{{ old('providerLastName') ?: $contractLog->providerLastName }}" required />
                 </div>
             </div>
 
@@ -412,6 +412,24 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
+
+            var providers = BackendVars.providers.map(function(provider) {
+                return provider.fullName;
+            });
+
+            $('#providerFirstName').autocomplete({
+                source: providers,
+                select: function( event, ui ) {
+                    event.preventDefault();
+
+                    var name = ui.item.value.split(' ');
+                    var firstName = name[0];
+                    var lastName = name[1];
+
+                    $(this).val(firstName);
+                    $('#providerLastName').val(lastName);
+                }
+            });
 
             $('#contractLogsForm').on('submit', function(evt) {
                 evt.preventDefault();
