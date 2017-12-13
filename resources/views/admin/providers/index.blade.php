@@ -41,8 +41,10 @@
 			<div class="name">
 				@{{siteIndex}}
 			</div><div v-for="(stage, stageIndex) in site" class="stage" :class="'stage'+stageIndex">
-				<div v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setSite(provider)">
+				<div v-if="stage[0].length <= 5" v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setSite(provider)">
 					P @{{ cutName(provider.name) }}
+				</div><div v-if="stage[0].length > 5" class="draggable" :class="'stage'+stageIndex" :data-providers="convertJson(stage[0])" @dblclick="setProviders(stage[0])">
+					@{{stage[0].length}}
 				</div>
 			</div>
 		</div>
@@ -104,6 +106,59 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="providersModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            	<form id="moveProvider">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	                    <h4 class="modal-title">
+	                        Providers
+	                    </h4>
+	                </div>
+	                <div class="modal-body">
+	                	<table class="table table-striped">
+	                		<tr>
+	                			<th>Provider</th>
+	                			<th>Hospitals</th>
+	                		</tr>
+	                		<tr v-for="provider in providers">
+	                			<td>@{{provider.name}}</td>
+	                			<td v-if="provider.provider">
+	                				<span v-for="hospital in provider.provider.accounts">
+	                					@{{hospital.name}};
+	                				</span>
+	                			</td>
+	                			<td v-if="!provider.provider"></td>
+	                		</tr>
+	                	</table>
+	                	<div>
+	                		<label>Add hospitals to providers</label>
+	                		<div>
+		                		<select id="providersProvider" class="form-control select2" data-placeholder="@lang('Provider')" v-model="providersProvider">
+		                			<option value=""></option>
+		                			<option v-for="provider in providers" :value="provider.id">@{{provider.name}}</option>
+		                		</select>
+		                	</div>
+		                	<div class="mt10">
+	                			<select id="providersHospitals" class="form-control select2" data-placeholder="@lang('Hospitals')" multiple v-model="providersHospitals">
+	                				@foreach ($accounts as $account)
+			                            <option value="{{ $account->id }}">
+			                                {{ $account->name }}
+			                            </option>
+			                        @endforeach
+	                			</select>
+	                		</div>
+	                	</div>
+	                </div>
+	                <div class="modal-footer">
+	                	<button type="submit" class="btn btn-success">Confirm</button>
+				    	<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				    </div>
+				</form>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -122,7 +177,10 @@
             			accounts: []
             		},
             	},
-            	extraAccounts: []
+            	extraAccounts: [],
+            	providersProvider: null,
+            	providersHospitals: [],
+            	providers: {}
             },
 
             methods: {
@@ -131,6 +189,12 @@
             		this.site.provider = this.site.provider == null ? {id: null, accounts: []} : this.site.provider;
 
             		$('#editModal').modal('toggle');
+            	},
+            	setProviders: function(providers) {
+            		this.providers = providers;
+            		console.log(this.providers);
+
+            		$('#providersModal').modal('toggle');
             	},
             	cutName: function(name) {
             		return name.substring(0, 3);
@@ -152,6 +216,10 @@
             	},
             	resetExtraAccounts: function() {
             		this.extraAccounts = [];
+            	},
+            	resetProviders: function() {
+            		this.providersProvider = null;
+            		this.providersHospitals = [];
             	}
             }
         });
@@ -174,7 +242,7 @@
 				} else if (element.is("[data-providers]")) {
 					var providers = element.data('providers');
 
-					var element = '<div><table class="table table-bordered table-striped"><tr><td>Physician</td><td>Hospitals</td></tr>';
+					var element = '<div><table class="table fs10 table-bordered table-striped"><tr><td>Physician</td><td>Hospitals</td></tr>';
 					$.each(providers, function(index, provider) {
 						element += '<tr><td>'+provider.name+'</td><td>'+provider.pipeline.account.name+'</td></tr>'
 					});
@@ -318,6 +386,12 @@
 				out: function(event, elem) {
 					$(this).removeClass("over");
 				}
+			});
+
+			$('#providersModal').on('hidden.bs.modal', function () {
+			    $("#providersProvider.select2").val(null).trigger('change');
+			    $("#providersHospitals.select2").val(null).trigger('change');
+			    window.providersApp.resetProviders();
 			});
 
 			$('#editModal').on('hidden.bs.modal', function () {
