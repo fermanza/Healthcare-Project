@@ -2545,7 +2545,7 @@ class ReportsController extends Controller
         if(count($queryString) == 0) {
             $accounts = collect();
         } else {
-            $accounts = $this->getSummaryData($filter, 500);
+            $accounts = $this->getIncData($filter, 500);
             $accounts = $accounts->filter(function($account) {
                 return $account->account && $account->account->INCaction;
             });
@@ -2567,7 +2567,7 @@ class ReportsController extends Controller
             return back();
         }
 
-        $accounts = $this->getSummaryData($filter, 500);
+        $accounts = $this->getIncData($filter, 500);
         $accounts = $accounts->filter(function($account) {
             return $account->account && $account->account->INCaction;
         });
@@ -2622,6 +2622,11 @@ class ReportsController extends Controller
     private function getSummaryData(SummaryFilter $filter, $pages) {
         return AccountSummary::withGlobalScope('role', new AccountSummaryScope)
         ->with('account.rsc')->filter($filter)->paginate($pages);
+    }
+
+    private function getIncData(SummaryFilter $filter, $pages) {
+        return AccountSummary::withGlobalScope('role', new AccountSummaryScope)
+        ->with('account.rsc')->filter($filter)->distinct('siteCode')->paginate($pages);
     }
 
     private function getUsageData(SummaryFilter $filter, $pages) {
