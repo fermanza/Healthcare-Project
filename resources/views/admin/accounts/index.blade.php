@@ -30,10 +30,6 @@
                         @endforeach
                     </select>
                 </div>
-
-                {{-- <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
-                    <input type="text" name="startDate" class="form-control yearpicker" value="{{ Request::input('startDate') ? Request::input('startDate') : '' }}" placeholder="@lang('Year')">
-                </div> --}}
             </div>
         
             <div class="row">

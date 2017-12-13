@@ -183,16 +183,66 @@ class AccountsController extends Controller
      */
     public function termed(Request $request, AccountFilter $filter)
     {
-        $accounts = Account::select('id','name','siteCode','city','state','startDate','endDate','parentSiteCode','RSCId','operatingUnitId')
-            ->withGlobalScope('role', new AccountScope)
-            ->with([
-                'rsc',
-                'region',
-                'recruiter.employee.person',
-                'manager.employee.person',
-            ])
-            ->where('active', true)
-            ->filter($filter)->termed(true)->get();
+        $user_filter = $this->validateUser();
+
+        $RSC_values = $request->RSCs;
+        $RSC_values = $RSC_values == null ? '' : implode (", ", $RSC_values);
+        $RSC_filter = $RSC_values == '' ? '' : 'AND acc.RSCId IN ('.$RSC_values.')';
+
+        //  use tae with (Nolock) on production
+        $accounts = Account::hydrate(DB::select(DB::raw("SELECT accounts.id
+            , accounts.name
+            , accounts.siteCode
+            , accounts.city
+            , accounts.state
+            , accounts.startDate
+            , accounts.endDate
+            , accounts.parentSiteCode
+            , accounts.RSC
+            , accounts.operatingUnit
+            , MAX(accounts.recruiter) as recruiter
+            , MAX(accounts.manager) as manager
+            , MAX(accounts.credentialer) as credentialer
+        FROM (
+        SELECT DISTINCT acc.id, acc.name, acc.siteCode, acc.city, acc.state, acc.startDate, acc.endDate, acc.parentSiteCode,
+        rsc.name AS RSC, ou.name AS operatingUnit,
+        CASE
+            WHEN tae.positionTypeId = ".config('instances.position_types.recruiter')." AND isPrimary = 1 
+                THEN fullName
+        END AS recruiter,
+        CASE
+            WHEN tae.positionTypeId = ".config('instances.position_types.manager')."
+                THEN fullName
+        END AS manager,
+        CASE
+            WHEN tae.positionTypeId = ".config('instances.position_types.credentialer')."
+                THEN fullName
+        END AS credentialer
+        FROM tAccount acc
+        LEFT JOIN tRSC rsc on acc.RSCId = rsc.id
+        LEFT JOIN tOperatingUnit ou on acc.operatingUnitId = ou.id
+        LEFT JOIN (
+           SELECT * FROM (
+                SELECT accountId, employeeId, positionTypeId, isPrimary, fullName
+                FROM vAccountToEmployee tae 
+                 
+            ) tae
+        ) tae 
+        ON acc.id = tae.accountId
+        WHERE acc.active = '1' AND (acc.endDate IS NOT NULL OR acc.endDate <= '".Carbon::now()->format('Y-m-d')."')
+        $user_filter
+        $RSC_filter
+        ) accounts 
+        group by accounts.id
+            , accounts.name
+            , accounts.siteCode
+            , accounts.city
+            , accounts.state
+            , accounts.startDate
+            , accounts.endDate
+            , accounts.parentSiteCode
+            , accounts.RSC
+            , accounts.operatingUnit")));
 
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
 
