@@ -419,6 +419,7 @@
 
             $('#providerFirstName').autocomplete({
                 source: providers,
+                minLength: 3,
                 select: function( event, ui ) {
                     event.preventDefault();
 
