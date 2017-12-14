@@ -2625,8 +2625,16 @@ class ReportsController extends Controller
     }
 
     private function getIncData(SummaryFilter $filter, $pages) {
-        return AccountSummary::withGlobalScope('role', new AccountSummaryScope)
-        ->with('account.rsc')->filter($filter)->distinct('siteCode')->paginate($pages);
+        $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)
+        ->with('account.rsc')->filter($filter)->take(500)->get();
+
+        $accounts = $accounts->sortByDesc(function($account) {
+            return $account->MonthEndDate;
+        });
+
+        $accounts = $accounts->unique('siteCode');
+
+        return $accounts;
     }
 
     private function getUsageData(SummaryFilter $filter, $pages) {
