@@ -2029,9 +2029,34 @@
                 return provider.fullName;
             });
 
+            $.each(BackendVars.rostersBenchs, function(index, rosterBench) {
+                var indexRoster = providers.indexOf(rosterBench.name);
+
+                if (indexRoster > -1) {
+                    providers.splice(indexRoster, 1);
+                }
+            });
+
+            $.each(BackendVars.recruitings, function(index, recruiting) {
+                var indexRecruiting = providers.indexOf(recruiting.name);
+                if (indexRecruiting > -1) {
+                    providers.splice(indexRecruiting, 1);
+                }
+            });
+
+            $.each(BackendVars.locums, function(index, locum) {
+                var indexLocum = providers.indexOf(locum.name);
+                
+                if (indexLocum > -1) {
+                    providers.splice(indexLocum, 1);
+                }
+            });
+
+            window.providers= providers;
+
             $(".providers").each(function () {
                 $(this).autocomplete({
-                    source: providers,
+                    source: window.providers,
                     close: function( event, ui ) {
                         const cEvent = new CustomEvent('input');
                         this.dispatchEvent(cEvent);
@@ -2561,6 +2586,12 @@
                     
                     this[entity].providerId = provider ? provider.id : null;
 
+                    var indexRoster = providers.indexOf(this[entity].name);
+
+                    if (indexRoster > -1) {
+                        providers.splice(indexRoster, 1);
+                    }
+
                     if(this[entity].id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
 
@@ -2618,6 +2649,8 @@
                     rosterBench.privilegeGoal = this.moment(rosterBench.privilegeGoal);
                     rosterBench.appToHospital = this.moment(rosterBench.appToHospital);
                     rosterBench.provisionalPrivilegeStart = this.moment(rosterBench.provisionalPrivilegeStart);
+
+                    window.providers.push(rosterBench.name);
 
                     _.assignIn(this[object], rosterBench);
                 },
@@ -2747,6 +2780,12 @@
                     
                     this.newRecruiting.providerId = provider ? provider.id : null;
 
+                    var indexRecruiting = providers.indexOf(this.newRecruiting.name);
+
+                    if (indexRecruiting > -1) {
+                        providers.splice(indexRecruiting, 1);
+                    }
+
                     if(this.newRecruiting.id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.newRecruiting.id;
 
@@ -2774,6 +2813,8 @@
                     recruiting.contractIn = this.moment(recruiting.contractIn);
                     recruiting.firstShift = this.moment(recruiting.firstShift);
 
+                    window.providers.push(recruiting.name);
+
                     _.assignIn(this.newRecruiting, recruiting);
                 },
 
@@ -2798,6 +2839,12 @@
                     var provider = _.find(this.providers, {fullName: name});
                     
                     this.newLocum.providerId = provider ? provider.id : null;
+
+                    var indexLocum = providers.indexOf(this.newLocum.name);
+
+                    if (indexLocum > -1) {
+                        providers.splice(indexLocum, 1);
+                    }
 
                     if(this.newLocum.id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/locum/' + this.newLocum.id;
@@ -2824,6 +2871,8 @@
                     locum.declined = this.moment(locum.declined);
                     locum.application = this.moment(locum.application);
                     locum.interview = this.moment(locum.interview);
+
+                    window.providers.push(locum.name);
 
                     _.assignIn(this.newLocum, locum);
                 },
@@ -2908,8 +2957,6 @@
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
                     roster.provisionalPrivilegeStart = this.moment(roster.provisionalPrivilegeStart);
-
-                    console.log(roster);
 
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
