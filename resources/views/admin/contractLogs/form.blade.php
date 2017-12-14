@@ -424,10 +424,19 @@
                     event.preventDefault();
 
                     var name = ui.item.value.split(' ');
-                    var firstName = name[0];
-                    var lastName = name[1];
 
+                    if(name.length > 2) {
+                        var firstName = name[0];
+                        var middleName = name[1];
+                        var lastName = name[2];
+                    } else {
+                        var firstName = name[0];
+                        var middleName = '';
+                        var lastName = name[1];
+                    }
+                    
                     $(this).val(firstName);
+                    $('#providerMiddleInitial').val(middleName);
                     $('#providerLastName').val(lastName);
                 }
             });
