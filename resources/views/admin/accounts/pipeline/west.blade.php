@@ -476,7 +476,7 @@
                                 <tr>
                                     <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
-                                    <th class="mw50">@lang('Hours')</th>
+                                    <th class="mw70">@lang('Hours')</th>
                                     <th class="mw70">@lang('FT/PT/EMB')</th>
                                     <th class="mw120">@lang('File To Credentialing')</th>
                                     <th class="mw100">@lang('APP To Hospital')</th>
@@ -489,7 +489,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(credentialing, index) in credentialingPhysicians">
+                                <tr v-for="(credentialing, index) in credentialingPhysicians" :class="{'bold': credentialing.providerId}">
                                     <td>
                                         <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
                                         <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
@@ -593,7 +593,7 @@
                                 <tr>
                                     <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
-                                    <th class="mw50">@lang('Hours')</th>
+                                    <th class="mw70">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
                                     <th class="mw120">@lang('File To Credentialing')</th>
                                     <th class="mw100">@lang('APP To Hospital')</th>
@@ -606,7 +606,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(credentialing, index) in credentialingApps">
+                                <tr v-for="(credentialing, index) in credentialingApps" :class="{'bold': credentialing.providerId}">
                                     <td>
                                         <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
                                         <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
@@ -714,7 +714,7 @@
                                 <th class="mw50">@lang('SMD')</th>
                                 <th class="mw50">@lang('AMD')</th>
                                 <th class="mw200">@lang('Name')</th>
-                                <th class="mw50">@lang('Hours')</th>
+                                <th class="mw70">@lang('Hours')</th>
                                 <th class="mw60">@lang('FT/PTG/EMB')</th>
                                 <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
@@ -877,7 +877,7 @@
                             <tr>
                                 <th class="mw100">@lang('Chief')</th>
                                 <th class="mw200">@lang('Name')</th>
-                                <th class="mw50">@lang('Hours')</th>
+                                <th class="mw70">@lang('Hours')</th>
                                 <th class="mw60">@lang('FT/PTG/EMB')</th>
                                 <th class="mw50">@lang('NOC')</th>
                                 <th class="mw100">@lang('Interview')</th>
@@ -1779,7 +1779,7 @@
                                 <tr>
                                     <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
-                                    <th class="mw50">@lang('Hours')</th>
+                                    <th class="mw70">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
                                     <th class="mw120">@lang('File To Credentialing')</th>
                                     <th class="mw100">@lang('APP To Hospital')</th>
@@ -1792,7 +1792,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(credentialing, index) in credentialingPhysicians">
+                                <tr v-for="(credentialing, index) in credentialingPhysicians" :class="{'bold': credentialing.providerId}">
                                     <td>
                                         <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
                                         <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
@@ -1896,7 +1896,7 @@
                                 <tr>
                                     <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
-                                    <th class="mw50">@lang('Hours')</th>
+                                    <th class="mw70">@lang('Hours')</th>
                                     <th class="mw80">@lang('FT/PT/EMB')</th>
                                     <th class="mw120">@lang('File To Credentialing')</th>
                                     <th class="mw100">@lang('APP To Hospital')</th>
@@ -1909,7 +1909,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(credentialing, index) in credentialingApps">
+                                <tr v-for="(credentialing, index) in credentialingApps" :class="{'bold': credentialing.providerId}">
                                     <td>
                                         <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
                                         <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
