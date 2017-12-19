@@ -130,14 +130,6 @@
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
-                    <select class="form-control select2" name="owners[]" data-placeholder="@lang('Contract Owner')" multiple>
-                        @foreach ($coordinators as $owner)
-                            <option value="{{ $owner->id }}" {{ in_array($owner->id, Request::input('owners') ?: []) ? 'selected' : '' }}>{{ $owner->fullName() }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <input type="checkbox" name="pending" value="1" {{ Request::input('pending') ? 'checked' : '' }} />
                     @lang('Pending Contract')
                 </div>
@@ -155,6 +147,19 @@
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
                     <input type="checkbox" name="inactive" value="1" {{ Request::input('inactive') ? 'checked' : '' }} />
                     @lang('Inactive')
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <input type="checkbox" name="declines" value="1" {{ Request::input('declines') ? 'checked' : '' }} />
+                    @lang('Exclude Declines')
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">
+                    <select class="form-control select2" name="owners[]" data-placeholder="@lang('Contract Owner')" multiple>
+                        @foreach ($coordinators as $owner)
+                            <option value="{{ $owner->id }}" {{ in_array($owner->id, Request::input('owners') ?: []) ? 'selected' : '' }}>{{ $owner->fullName() }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 mb5">

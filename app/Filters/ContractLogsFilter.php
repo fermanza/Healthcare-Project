@@ -254,6 +254,17 @@ class ContractLogsFilter extends Filter
     }
 
     /**
+     * Apply declines filter.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function declines($value)
+    {
+        $this->query->where('tContractLogs.declined', 0);
+    }
+
+    /**
      * Apply sort filter.
      *
      * @param  string  $key
