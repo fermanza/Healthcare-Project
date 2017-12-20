@@ -41,9 +41,9 @@
 			<div class="name">
 				@{{siteIndex}}
 			</div><div v-for="(stage, stageIndex) in site" class="stage" :class="'stage'+stageIndex">
-				<div v-if="stage[0].length <= 15" v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setSite(provider)">
+				<div v-if="stage[0] && stage[0].length <= 15" v-for="(provider, providerIndex) in stage[0]" class="draggable single" :class="'stage'+stageIndex" :data-info="convertJson(provider)" @dblclick="setSite(provider)">
 					P @{{ cutName(provider.name) }}
-				</div><div v-if="stage[0].length > 15" class="draggable" :class="'stage'+stageIndex" :data-providers="convertJson(stage[0])" @dblclick="setProviders(stage[0])">
+				</div><div v-if="stage[0] && stage[0].length > 15" class="draggable" :class="'stage'+stageIndex" :data-providers="convertJson(stage[0])" @dblclick="setProviders(stage[0])">
 					@{{stage[0].length}}
 				</div>
 			</div>
