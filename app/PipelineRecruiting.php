@@ -63,4 +63,14 @@ class PipelineRecruiting extends Model
     {
         return $this->belongsTo(Provider::class, 'providerId');
     }
+
+    /**
+     * Get the recruiting's pipeline.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function pipeline()
+    {
+        return $this->belongsTo(Pipeline::class, 'pipelineId');
+    }
 }

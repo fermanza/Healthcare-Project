@@ -15,7 +15,6 @@ $(() => {
         $.get('/admin/sidebar-collapse');
     });
 
-
     // iCheck
     $('.icheck').iCheck({
         checkboxClass: 'icheckbox_square-blue',
@@ -105,6 +104,9 @@ $(() => {
                     selectEl.focus();
                 }
             });
+        }).on('select2:select', function(evt) {
+            const event = new CustomEvent('change');
+            this.dispatchEvent(event);
         });
     })();
         
@@ -132,6 +134,17 @@ $(() => {
         format: 'mm/dd/yyyy',
         autoclose: true,
         todayHighlight: true
+    }).on('changeDate', function () {
+        const event = new CustomEvent('input');
+        this.dispatchEvent(event);
+    });
+
+    // DatePicker
+    $('.datepicker-future').datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true,
+        todayHighlight: true,
+        startDate: new Date()
     }).on('changeDate', function () {
         const event = new CustomEvent('input');
         this.dispatchEvent(event);

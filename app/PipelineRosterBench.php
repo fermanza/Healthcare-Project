@@ -56,6 +56,16 @@ class PipelineRosterBench extends Model
     }
 
     /**
+     * Get the rosterbench's pipeline.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function pipeline()
+    {
+        return $this->belongsTo(Pipeline::class, 'pipelineId');
+    }
+
+    /**
      * Get the credentialingNotes.
      *
      * @param  string  $value

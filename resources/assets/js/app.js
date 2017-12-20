@@ -16,6 +16,10 @@ if (typeof CustomEvent !== 'function') {
 // jQuery
 window.$ = window.jQuery = require('jquery');
 require("jquery-ui/ui/widgets/autocomplete");
+require("jquery-ui/ui/widgets/draggable");
+require("jquery-ui/ui/widgets/droppable");
+require("jquery-ui/ui/widgets/sortable");
+require("jquery-ui/ui/widgets/tooltip");
 
 // Bootstrap
 require('bootstrap-sass');

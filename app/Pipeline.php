@@ -57,4 +57,16 @@ class Pipeline extends Model
     {
         return $this->belongsTo(User::class, 'lastUpdatedBy');
     }
+
+    /**
+     * Get the pipeline's account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'accountId');
+    }
+
+
 }

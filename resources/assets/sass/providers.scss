@@ -1,0 +1,85 @@
+.providers-page{
+	margin-top: 15px;
+
+	.site:last-child > div {
+		border-bottom: 2px solid #ccc;
+	}
+
+	.name {
+		display: inline-block;
+		width: 20%;
+		min-height: 100px;
+		font-weight: bold;
+		border-left: 2px solid #ccc;
+		border-top: 2px solid #ccc;
+		margin-right: -5px;
+		padding: 10px;
+		color: #000;
+
+		&.title {
+			min-height: 0;
+			text-align: center;
+			font-weight: normal;
+		}
+	}
+
+	.stage {
+		display: inline-block;
+		width: 25%;
+		text-align: center;
+		min-height: 100px;
+		vertical-align: top;
+		padding: 10px;
+		border-left: 2px solid #ccc;
+		border-top: 2px solid #ccc;
+
+		&.title {
+			min-height: 0;
+		}
+	}
+
+	.stage:last-child {
+		border-right: 2px solid #ccc;
+	}
+
+	.draggable {
+		border: 1px solid #ddd;
+	    width: 30px;
+	    height: 30px;
+	    line-height: 30px;
+	    border-radius: 25px;
+	    font-size: 10px;
+	    display: inline-block;
+	    color: #fff;
+	}
+
+	.draggable:hover {
+		cursor: pointer;
+	}
+
+	.stage.over {
+	  	background: #f5f5f5;
+	}
+
+	.stage1 {
+		.draggable {
+			background-color: #2E7D32;
+		}
+	}
+
+	.stage2 {
+		.draggable {
+			background-color: #FFD600;
+		}
+	}
+
+	.stage3 {
+		.draggable {
+			background-color: #D50000;
+		}
+	}
+
+	.provider-name {
+		font-weight: bold !important;
+	}
+}

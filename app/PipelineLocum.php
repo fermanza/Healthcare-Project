@@ -29,7 +29,9 @@ class PipelineLocum extends Model
         'application',
         'interview',
         'potentialStart',
+        'contractIn',
         'contractOut',
+        'firstShift',
         'startDate',
         'declined'
     ];
@@ -62,5 +64,15 @@ class PipelineLocum extends Model
     public function provider()
     {
         return $this->belongsTo(Provider::class, 'providerId');
+    }
+
+    /**
+     * Get the locum'spipeline.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function pipeline()
+    {
+        return $this->belongsTo(Pipeline::class, 'pipelineId');
     }
 }

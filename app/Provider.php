@@ -43,4 +43,14 @@ class Provider extends Model
     {
         return utf8_decode($value);
     }
+
+     /**
+     * Get the provider's accounts.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function accounts()
+    {
+        return $this->belongsToMany(Account::class, 'tProviderToAccount', 'providerId', 'accountId');
+    }
 }
