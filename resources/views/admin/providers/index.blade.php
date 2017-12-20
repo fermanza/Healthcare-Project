@@ -164,80 +164,6 @@
 
 @push('scripts')
 	<script>
-		window.providersApp = new Vue({
-            el: '#providersPage',
-
-            data: {
-            	sites: BackendVars.sites,
-            	accounts: BackendVars.accounts,
-            	site: {
-            		name: '',
-            		provider: {
-            			id: null,
-            			accounts: []
-            		},
-            	},
-            	extraAccounts: [],
-            	providersProvider: null,
-            	providersHospitals: [],
-            	providers: {}
-            },
-
-            methods: {
-            	setSite: function(site) {
-            		this.site = site;
-            		this.site.provider = this.site.provider == null ? {id: null, accounts: []} : this.site.provider;
-
-            		$('#editModal').modal('toggle');
-            	},
-            	setProviders: function(providers) {
-            		this.providers = providers;
-
-            		$('#providersModal').modal('toggle');
-            	},
-            	cutName: function(name) {
-            		return name.substring(0, 3);
-            	},
-            	convertJson: function(object) {
-            		return JSON.stringify(object);
-            	},
-            	addHospitals: function(accounts) {
-            		axios.post('/admin/providers/addHospitals', {providerId: this.site.provider.id, hospitals: this.extraAccounts})
-                        .then(function (response) {
-                        	if(typeof response.data == 'string') {
-                        		alert('Not linked to any provider');
-                        	} else {
-                            	this.site.provider = response.data;
-                            }
-
-                            $('#editModal').modal('toggle');
-                        }.bind(this));
-            	},
-            	addProvidersHospitals: function(provider, hospitals) {
-            		var providerInfo = _.find(this.providers, {id: provider});
-            		providerInfo.provider = providerInfo.provider == null ? {id: null, accounts: []} : providerInfo.provider;
-
-            		axios.post('/admin/providers/addHospitals', {providerId: providerInfo.provider.id, hospitals: hospitals})
-                        .then(function (response) {
-                        	if(typeof response.data == 'string') {
-                        		alert('Not linked to any provider');
-                        	} else {
-                                _.assignIn(providerInfo.provider, response.data);
-                            }
-
-                            $('#providersModal').modal('toggle');
-                        }.bind(this));
-            	},
-            	resetExtraAccounts: function() {
-            		this.extraAccounts = [];
-            	},
-            	resetProviders: function() {
-            		this.providersProvider = null;
-            		this.providersHospitals = [];
-            	}
-            }
-        });
-
 		$( document ).tooltip({
 			items: "[data-providers], [data-info]",
 			content: function() {
@@ -426,5 +352,79 @@
 				sort(droppedFrom);
 			}
 		});
+
+		window.providersApp = new Vue({
+            el: '#providersPage',
+
+            data: {
+            	sites: BackendVars.sites,
+            	accounts: BackendVars.accounts,
+            	site: {
+            		name: '',
+            		provider: {
+            			id: null,
+            			accounts: []
+            		},
+            	},
+            	extraAccounts: [],
+            	providersProvider: null,
+            	providersHospitals: [],
+            	providers: {}
+            },
+
+            methods: {
+            	setSite: function(site) {
+            		this.site = site;
+            		this.site.provider = this.site.provider == null ? {id: null, accounts: []} : this.site.provider;
+
+            		$('#editModal').modal('toggle');
+            	},
+            	setProviders: function(providers) {
+            		this.providers = providers;
+
+            		$('#providersModal').modal('toggle');
+            	},
+            	cutName: function(name) {
+            		return name.substring(0, 3);
+            	},
+            	convertJson: function(object) {
+            		return JSON.stringify(object);
+            	},
+            	addHospitals: function(accounts) {
+            		axios.post('/admin/providers/addHospitals', {providerId: this.site.provider.id, hospitals: this.extraAccounts})
+                        .then(function (response) {
+                        	if(typeof response.data == 'string') {
+                        		alert('Not linked to any provider');
+                        	} else {
+                            	this.site.provider = response.data;
+                            }
+
+                            $('#editModal').modal('toggle');
+                        }.bind(this));
+            	},
+            	addProvidersHospitals: function(provider, hospitals) {
+            		var providerInfo = _.find(this.providers, {id: provider});
+            		providerInfo.provider = providerInfo.provider == null ? {id: null, accounts: []} : providerInfo.provider;
+
+            		axios.post('/admin/providers/addHospitals', {providerId: providerInfo.provider.id, hospitals: hospitals})
+                        .then(function (response) {
+                        	if(typeof response.data == 'string') {
+                        		alert('Not linked to any provider');
+                        	} else {
+                                _.assignIn(providerInfo.provider, response.data);
+                            }
+
+                            $('#providersModal').modal('toggle');
+                        }.bind(this));
+            	},
+            	resetExtraAccounts: function() {
+            		this.extraAccounts = [];
+            	},
+            	resetProviders: function() {
+            		this.providersProvider = null;
+            		this.providersHospitals = [];
+            	}
+            }
+        });
 	</script>
 @endpush
