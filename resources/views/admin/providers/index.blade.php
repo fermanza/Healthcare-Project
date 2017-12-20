@@ -33,7 +33,7 @@
     </form>
 	<div class="box-body">
 		@if($sites->count() > 0)
-			<div class="site title">
+			<div class="site title" v-cloak>
 				<div class="name title">Hospital</div><div class="stage title">Stage 1</div><div class="stage title">Stage 2</div><div class="stage title">Stage 3</div>
 			</div>
 		@endif
