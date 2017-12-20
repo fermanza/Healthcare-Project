@@ -88,7 +88,15 @@ class ProvidersController extends Controller
                 }
             }
 
-            foreach ($interviews_sites as $key => $site) {
+            if(!empty($interviews_sites)) {
+                $fillEmpty = $interviews_sites;
+            } elseif(!empty($contractIn_sites)) {
+                $fillEmpty = $contractIn_sites;
+            } else {
+                $fillEmpty = $credentialings_sites;
+            }
+
+            foreach ($fillEmpty as $key => $site) {
                 if(!isset($temp[$key][1])) {
                     $temp[$key][1] = array();
                 }
