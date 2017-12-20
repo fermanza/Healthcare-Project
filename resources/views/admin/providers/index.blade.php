@@ -37,7 +37,7 @@
 				<div class="name title">Hospital</div><div class="stage title">Stage 1</div><div class="stage title">Stage 2</div><div class="stage title">Stage 3</div>
 			</div>
 		@endif
-		<div v-for="(site, siteIndex) in sites" class="site">
+		<div v-for="(site, siteIndex) in sites" class="site" v-cloak>
 			<div class="name">
 				@{{siteIndex}}
 			</div><div v-for="(stage, stageIndex) in site" class="stage" :class="'stage'+stageIndex">
