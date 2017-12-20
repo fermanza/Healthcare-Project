@@ -2380,6 +2380,20 @@
                         .value();
                 },
 
+                SMDs: function () {
+                    return _.chain(this.rostersBenchs)
+                        .filter({ isSMD: 1 })
+                        .reject('resigned')
+                        .value();
+                },
+
+                AMDs: function () {
+                    return _.chain(this.rostersBenchs)
+                        .filter({ isAMD: 1 })
+                        .reject('resigned')
+                        .value();
+                },
+
                 credentialingPhysicians: function () {
                     return _.chain(this.rostersBenchs)
                         .filter(function(credentialing) {
@@ -2786,8 +2800,7 @@
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
-
-                    console.log(roster);
+                    roster.provisionalPrivilegeStart = this.moment(roster.provisionalPrivilegeStart);
 
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
@@ -2795,9 +2808,15 @@
                         roster.isSMD = !roster.isSMD;
 
                         if(roster.isSMD) {
-                            this.pipeline.medicalDirector = roster.name;
+                            this.SMDs.push(roster);
+
+                            var SMDs = _.sortBy(this.SMDs, function(SMD) { return SMD.name.toLowerCase(); });
+
+                            this.pipeline.medicalDirector = SMDs.length ? SMDs[0].name : '';
                         } else {
-                            this.pipeline.medicalDirector = '';
+                            var SMDs = _.sortBy(this.SMDs, function(SMD) { return SMD.name.toLowerCase(); });
+
+                            this.pipeline.medicalDirector = SMDs.length ? SMDs[0].name : '';
                         }
 
                         axios.patch('/admin/accounts/' + this.account.id + '/pipeline', this.pipeline)
@@ -2829,41 +2848,16 @@
 
                     roster.type = type;
 
-                    if ( this.oldSMD.length && type == 'SMD') {
-                        this.oldSMD[0].isSMD = 0;
-                    }
-                    
-                    if ( this.oldAMD.length && type == 'AMD') {
-                        this.oldAMD[0].isAMD = 0;
-                    }
-
                     if ( this.oldChief.length && type == 'Chief') {
                         this.oldChief[0].isChief = 0;
                     }
 
-                    roster.oldAMD = this.oldAMD.length ? this.oldAMD[0].id : '';
-                    roster.oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
                     roster.oldChief = this.oldChief.length ? this.oldChief[0].id : '';
 
                     axios.patch(endpoint, roster)
                         .then(function (response) {
-                            if(type == 'SMD') {
-                                this.oldSMD = [];
-                                roster.isSMD = response.data.isSMD;
-                                
-                                if(roster.isSMD) {
-                                    this.oldSMD.push(roster);
-                                }
-                            } 
-
-                            if (type == 'AMD') {
-                                this.oldAMD = [];
-                                roster.isAMD = response.data.isAMD;
-                                
-                                if(roster.isAMD){
-                                    this.oldAMD.push(roster);
-                                }
-                            }
+                            var rosterBench = _.find(this.rostersBenchs, {id: response.data.id});
+                            _.assignIn(rosterBench, response.data);
 
                             if (type == 'Chief') {
                                 this.oldChief = [];

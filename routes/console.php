@@ -305,6 +305,10 @@ Artisan::command('export-accounts-pdf {email} {ids} {--queue}', function ($email
             return $rosterBench->isSMD;
         });
 
+        $SMD = $SMD->sortBy(function($s) {
+            return strtolower($s->name);
+        });
+
         $sheet->cell('H4', function($cell) use ($account) {
             $cell->setBackground('#b5c7e6');
             $cell->setValue('Team Members');
