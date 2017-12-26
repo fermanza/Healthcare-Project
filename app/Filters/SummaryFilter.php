@@ -152,6 +152,23 @@ class SummaryFilter extends Filter
     }
 
     /**
+     * Apply termed filter.
+     *
+     * @param  int $val
+     * @return void
+     */
+    public function termed($val)
+    {
+        $this->query->whereHas('account', function($query) use ($val) {
+            if($val == 1) {
+                $query->whereNull('endDate');
+            } elseif ($val == 2) {
+                $query->whereNotNull('endDate');
+            }
+        });
+    }
+
+    /**
      * Apply SVP filter.
      *
      * @param  array  $names

@@ -54,6 +54,20 @@
 			vertical-align: middle;
 		}
 
+		tr {
+			&.term90less {
+		    	td {
+		        	background-color: #FF0000;
+		    	}
+		    }
+
+			&.term90more {
+		    	td {
+		        	background-color: #FFEB3B;
+		    	}
+			}
+		}
+
 		td {
 			text-overflow:ellipsis;
 		    white-space: nowrap;

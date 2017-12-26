@@ -150,6 +150,14 @@
                         <option value="2" {{ Request::input('new') == 2 ? 'selected' : '' }}>Same Store</option>
                     </select>
                 </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb5">
+                    <select class="form-control select2" name="termed" data-placeholder="@lang('Active\Termed')">
+                        <option value=""></option>
+                        <option value="1" {{ Request::input('termed') == 1 ? 'selected' : '' }}>Active</option>
+                        <option value="2" {{ Request::input('termed') == 2 ? 'selected' : '' }}>Termed</option>
+                    </select>
+                </div>
             </div>
         
             <div class="row">
@@ -233,7 +241,7 @@
 	            </thead>
 	            <tbody>
 	                @foreach($accounts as $account)
-	                    <tr data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
+	                    <tr data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}" class="{{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}"
 	                    >
 	                        <td class="wd50 {{ $account->getMonthsSinceCreated() < 7 ? 'recently-created' : ''}}">
                                 @if($account->account)

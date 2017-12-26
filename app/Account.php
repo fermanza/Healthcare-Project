@@ -328,6 +328,44 @@ class Account extends Model
         return number_format($months, 1);
     }
 
+        /**
+     * Verify if account is 90 days old or less.
+     *
+     * @return boolean
+     */
+    public function term90less() {
+        if($this->endDate) {
+            if (Carbon::now()->diffInDays($this->endDate) <= 90) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Verify if account is more than 90 days old.
+     *
+     * @return boolean
+     */
+    public function term90more() {
+        if($this->endDate) {
+            if (Carbon::now()->diffInDays($this->endDate) > 90) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        
+        return false;
+    }
+
     /**
      * Determines if end date has been met.
      *

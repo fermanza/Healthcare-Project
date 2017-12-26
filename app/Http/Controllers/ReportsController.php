@@ -127,7 +127,7 @@ class ReportsController extends Controller
         $dataToExport = $this->getSummaryData($filter, 5000);
         $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO", "SVP", "RMD", "City", "Location",
-            "Start Date", "# of Months Account Open", "Phys", "APP", "Total", "Phys", "APP", "Total",
+            "Start Date", "Termed", "# of Months Account Open", "Phys", "APP", "Total", "Phys", "APP", "Total",
             "SMD", "AMD", "Phys", "APP", "Total", "% Recruited", "% Recruited - Phys", "% Recruited - APP",
             "Inc Comp", "FT Utilization - %", "Embassador Utilization - %", "Internal Locum Utilization - %",
             "External Locum Utilization - %", "Applications", "Interviews", "Contracts Out", "Contracts in",
@@ -230,6 +230,7 @@ class ReportsController extends Controller
                         $account->City,
                         $account->Location,
                         $account->{'Start Date'} ? \PHPExcel_Shared_Date::PHPToExcel($account->{'Start Date'}) : '',
+                        $account->account && $account->account->endDate ? \PHPExcel_Shared_Date::PHPToExcel($account->account->endDate) : '',
                         $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated(),
                         $account->present()->excel('Complete Staff - Phys'),
                         $account->present()->excel('Complete Staff - APP'),
@@ -267,16 +268,12 @@ class ReportsController extends Controller
                     $sheet->row($rowNumber, $row);
 
                     if ($account->getMonthsSinceCreated() < 7) {
-                        $sheet->cell('Q'.$rowNumber, function($cell) use ($account) {
+                        $sheet->cell('R'.$rowNumber, function($cell) use ($account) {
                             $cell->setBackground('#1aaf54');
                             $cell->setFontColor('#ffffff');
                         });
                     }
                 };
-
-                $sheet->cell('R'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=SUM(R3:R'.$rowNumber.')');
-                });
 
                 $sheet->cell('S'.($rowNumber+2), function($cell) use($rowNumber) {
                     $cell->setValue('=SUM(S3:S'.$rowNumber.')');
@@ -287,7 +284,7 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('U'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=SUM(U3:U'.$rowNumber.')');
+                    $cell->setValue('=SUM(u3:u'.$rowNumber.')');
                 });
 
                 $sheet->cell('V'.($rowNumber+2), function($cell) use($rowNumber) {
@@ -319,11 +316,11 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AC'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=(T'.($rowNumber+2).'-AB'.($rowNumber+2).')/T'.($rowNumber+2));
+                    $cell->setValue('=SUM(AC3:AC'.$rowNumber.')');
                 });
 
                 $sheet->cell('AD'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=(R'.($rowNumber+2).'-Z'.($rowNumber+2).')/R'.($rowNumber+2));
+                    $cell->setValue('=(U'.($rowNumber+2).'-AC'.($rowNumber+2).')/U'.($rowNumber+2));
                 });
 
                 $sheet->cell('AE'.($rowNumber+2), function($cell) use($rowNumber) {
@@ -331,7 +328,7 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AF'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=SUM(AF3:AF'.$rowNumber.')');
+                    $cell->setValue('=(T'.($rowNumber+2).'-AB'.($rowNumber+2).')/T'.($rowNumber+2));
                 });
 
                 $sheet->cell('AK'.($rowNumber+2), function($cell) use($rowNumber) {
@@ -382,16 +379,20 @@ class ReportsController extends Controller
                     $cell->setValue('=SUM(AV3:AV'.$rowNumber.')');
                 });
 
+                $sheet->cell('AW'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AW3:AW'.$rowNumber.')');
+                });
+
                 $sheet->setFreeze('C3');
                 $sheet->setAutoFilter('A2:AV2');
-                $sheet->mergeCells('A1:Q1');
-                $sheet->mergeCells('R1:T1');
-                $sheet->mergeCells('U1:W1');
-                $sheet->mergeCells('X1:AB1');
-                $sheet->mergeCells('AC1:AE1');
-                $sheet->mergeCells('AF1:AJ1');
-                $sheet->mergeCells('AK1:AO1');
-                $sheet->mergeCells('AP1:AV1');
+                $sheet->mergeCells('A1:R1');
+                $sheet->mergeCells('S1:U1');
+                $sheet->mergeCells('V1:X1');
+                $sheet->mergeCells('Y1:AC1');
+                $sheet->mergeCells('AD1:AF1');
+                $sheet->mergeCells('AG1:AK1');
+                $sheet->mergeCells('AL1:AP1');
+                $sheet->mergeCells('AQ1:AW1');
 
                 $sheet->cell('A1', function($cell) {
                     $cell->setValue('RECRUITING SUMMARY');
@@ -403,7 +404,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('R1', function($cell) {
+                $sheet->cell('S1', function($cell) {
                     $cell->setValue('COMPLETE STAFF');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#dce6f1');
@@ -414,7 +415,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('U1', function($cell) {
+                $sheet->cell('V1', function($cell) {
                     $cell->setValue('CURRENT STAFF');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#ebf1df');
@@ -425,7 +426,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('X1', function($cell) {
+                $sheet->cell('Y1', function($cell) {
                     $cell->setValue('CURRENT OPENINGS');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#fffd38');
@@ -436,7 +437,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AC1', function($cell) {
+                $sheet->cell('AD1', function($cell) {
                     $cell->setValue('PERCENT RECRUITED');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#e4dfec');
@@ -447,7 +448,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AF1', function($cell) {
+                $sheet->cell('AG1', function($cell) {
                     $cell->setValue('PREV MONTH');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#c7eecf');
@@ -458,7 +459,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AK1', function($cell) {
+                $sheet->cell('AL1', function($cell) {
                     $cell->setValue('MTD');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#fec7ce');
@@ -469,7 +470,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AP1', function($cell) {
+                $sheet->cell('AQ1', function($cell) {
                     $cell->setValue('YTD');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#feeaa0');
@@ -480,7 +481,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cells('A2:AV2', function($cells) {
+                $sheet->cells('A2:AW2', function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(8);
@@ -504,7 +505,7 @@ class ReportsController extends Controller
                     $cells->setValignment('center');
                 });
 
-                $sheet->cells('R3:AV'.$rowNumber, function($cells) {
+                $sheet->cells('R3:AW'.$rowNumber, function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(8);
@@ -513,16 +514,16 @@ class ReportsController extends Controller
                 });
 
                 $sheet->setColumnFormat(array(
-                    'P3:P'.$rowNumber      => 'mm/dd/yy',
-                    'Q3:AB'.$rowNumber     => '0.0',
-                    'AC3:AE'.$rowNumber    => '0.0%',
-                    'AF3:AF'.$rowNumber    => '"$"#,##0.00_-',
-                    'AG3:AJ'.$rowNumber    => '0.0%',
-                    'AU3:AU'.$rowNumber    => '"$"#,##0.00_-',
-                    'AV3:AV'.$rowNumber    => '0.0',
-                    'AC'.($rowNumber+2 )   => '0.0%',
+                    'P3:Q'.$rowNumber      => 'mm/dd/yy',
+                    'R3:AC'.$rowNumber     => '0.0',
+                    'AD3:AF'.$rowNumber    => '0.0%',
+                    'AG3:AG'.$rowNumber    => '"$"#,##0.00_-',
+                    'AH3:AK'.$rowNumber    => '0.0%',
+                    'AV3:AV'.$rowNumber    => '"$"#,##0.00_-',
+                    'AW3:AW'.$rowNumber    => '0.0',
                     'AD'.($rowNumber+2 )   => '0.0%',
                     'AE'.($rowNumber+2 )   => '0.0%',
+                    'AF'.($rowNumber+2 )   => '0.0%',
                 ));
 
                 $sheet->setWidth(array(
@@ -542,8 +543,8 @@ class ReportsController extends Controller
                     'N'     => 12,
                     'O'     => 11,
                     'P'     => 11,
-                    'Q'     => 13,
-                    'R'     => 7,
+                    'Q'     => 11,
+                    'R'     => 13,
                     'S'     => 7,
                     'T'     => 7,
                     'U'     => 7,
@@ -552,15 +553,15 @@ class ReportsController extends Controller
                     'X'     => 7,
                     'Y'     => 7,
                     'Z'     => 7,
-                    'AA'    => 7,
-                    'AB'    => 12,
-                    'AC'    => 15,
+                    'AA'     => 7,
+                    'AB'    => 7,
+                    'AC'    => 12,
                     'AD'    => 15,
-                    'AE'    => 12,
+                    'AE'    => 15,
                     'AF'    => 12,
-                    'AG'    => 13,
+                    'AG'    => 12,
                     'AH'    => 13,
-                    'AI'    => 12,
+                    'AI'    => 13,
                     'AJ'    => 12,
                     'AK'    => 12,
                     'AL'    => 12,
@@ -573,7 +574,8 @@ class ReportsController extends Controller
                     'AS'    => 12,
                     'AT'    => 12,
                     'AU'    => 12,
-                    'AV'    => 12
+                    'AV'    => 12,
+                    'AW'    => 12
                 ));
 
                 $tableStyle = array(
@@ -602,22 +604,22 @@ class ReportsController extends Controller
                     ),
                 );
 
-                $sheet->getStyle('A1:AV'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A1:Q'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('R1:T'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('U1:W'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('X1:AB'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('AC1:AE'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('AF1:AJ'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('AK1:AO'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A2:AV2')->applyFromArray($headersStyle);
+                $sheet->getStyle('A1:AW'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A1:R'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('S1:U'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('V1:X'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('Y1:AC'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('AD1:AF'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('AG1:AK'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('AL1:AP'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A2:AW2')->applyFromArray($headersStyle);
 
-                $sheet->getStyle('Q2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AH2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('R2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AI2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AJ2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AO2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AT2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AK2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AP2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AU2')->getAlignment()->setWrapText(true);
             });
         })->download('xlsx'); 
     }
@@ -764,7 +766,7 @@ class ReportsController extends Controller
         $dataToExport = $this->getSummaryData($filter, 5000);
         $headers = ["#", "Contract Name", "Service Line", "System Affiliation", "JV", "Operating Unit",
             "RSC", "Recruiter", "Secondary Recruiter", "Managers", "DOO", "SVP", "RMD", "City", "Location",
-            "Start Date", "# of Months Account Open", "Phys", "APP", "Total", "Phys", "APP", "Total",
+            "Start Date", "Termed", "# of Months Account Open", "Phys", "APP", "Total", "Phys", "APP", "Total",
             "SMD", "AMD", "Phys", "APP", "Total", "% Recruited", "% Recruited - Phys", "% Recruited - APP",
             "Inc Comp", "FT Utilization - %", "Embassador Utilization - %", "Internal Locum Utilization - %",
             "External Locum Utilization - %", "Applications", "Interviews", "Contracts Out", "Contracts in",
@@ -924,6 +926,7 @@ class ReportsController extends Controller
                         $account->City,
                         $account->Location,
                         $account->{'Start Date'} ? \PHPExcel_Shared_Date::PHPToExcel($account->{'Start Date'}) : '',
+                        $account->account && $account->account->endDate ? \PHPExcel_Shared_Date::PHPToExcel($account->account->endDate) : '',
                         $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated(),
                         $account->present()->excel('Complete Staff - Phys'),
                         $account->present()->excel('Complete Staff - APP'),
@@ -961,16 +964,12 @@ class ReportsController extends Controller
                     $sheet->row($rowNumber, $row);
 
                     if ($account->getMonthsSinceCreated() < 7) {
-                        $sheet->cell('Q'.$rowNumber, function($cell) use ($account) {
+                        $sheet->cell('R'.$rowNumber, function($cell) use ($account) {
                             $cell->setBackground('#1aaf54');
                             $cell->setFontColor('#ffffff');
                         });
                     }
                 };
-
-                $sheet->cell('R'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=SUM(R3:R'.$rowNumber.')');
-                });
 
                 $sheet->cell('S'.($rowNumber+2), function($cell) use($rowNumber) {
                     $cell->setValue('=SUM(S3:S'.$rowNumber.')');
@@ -981,7 +980,7 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('U'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=SUM(U3:U'.$rowNumber.')');
+                    $cell->setValue('=SUM(u3:u'.$rowNumber.')');
                 });
 
                 $sheet->cell('V'.($rowNumber+2), function($cell) use($rowNumber) {
@@ -1013,11 +1012,11 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AC'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=(T'.($rowNumber+2).'-AB'.($rowNumber+2).')/T'.($rowNumber+2));
+                    $cell->setValue('=SUM(AC3:AC'.$rowNumber.')');
                 });
 
                 $sheet->cell('AD'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=(R'.($rowNumber+2).'-Z'.($rowNumber+2).')/R'.($rowNumber+2));
+                    $cell->setValue('=(U'.($rowNumber+2).'-AC'.($rowNumber+2).')/U'.($rowNumber+2));
                 });
 
                 $sheet->cell('AE'.($rowNumber+2), function($cell) use($rowNumber) {
@@ -1025,7 +1024,7 @@ class ReportsController extends Controller
                 });
 
                 $sheet->cell('AF'.($rowNumber+2), function($cell) use($rowNumber) {
-                    $cell->setValue('=SUM(AF3:AF'.$rowNumber.')');
+                    $cell->setValue('=(T'.($rowNumber+2).'-AB'.($rowNumber+2).')/T'.($rowNumber+2));
                 });
 
                 $sheet->cell('AK'.($rowNumber+2), function($cell) use($rowNumber) {
@@ -1076,16 +1075,20 @@ class ReportsController extends Controller
                     $cell->setValue('=SUM(AV3:AV'.$rowNumber.')');
                 });
 
+                $sheet->cell('AW'.($rowNumber+2), function($cell) use($rowNumber) {
+                    $cell->setValue('=SUM(AW3:AW'.$rowNumber.')');
+                });
+
                 $sheet->setFreeze('C3');
                 $sheet->setAutoFilter('A2:AV2');
-                $sheet->mergeCells('A1:Q1');
-                $sheet->mergeCells('R1:T1');
-                $sheet->mergeCells('U1:W1');
-                $sheet->mergeCells('X1:AB1');
-                $sheet->mergeCells('AC1:AE1');
-                $sheet->mergeCells('AF1:AJ1');
-                $sheet->mergeCells('AK1:AO1');
-                $sheet->mergeCells('AP1:AV1');
+                $sheet->mergeCells('A1:R1');
+                $sheet->mergeCells('S1:U1');
+                $sheet->mergeCells('V1:X1');
+                $sheet->mergeCells('Y1:AC1');
+                $sheet->mergeCells('AD1:AF1');
+                $sheet->mergeCells('AG1:AK1');
+                $sheet->mergeCells('AL1:AP1');
+                $sheet->mergeCells('AQ1:AW1');
 
                 $sheet->cell('A1', function($cell) {
                     $cell->setValue('RECRUITING SUMMARY');
@@ -1097,7 +1100,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('R1', function($cell) {
+                $sheet->cell('S1', function($cell) {
                     $cell->setValue('COMPLETE STAFF');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#dce6f1');
@@ -1108,7 +1111,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('U1', function($cell) {
+                $sheet->cell('V1', function($cell) {
                     $cell->setValue('CURRENT STAFF');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#ebf1df');
@@ -1119,7 +1122,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('X1', function($cell) {
+                $sheet->cell('Y1', function($cell) {
                     $cell->setValue('CURRENT OPENINGS');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#fffd38');
@@ -1130,7 +1133,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AC1', function($cell) {
+                $sheet->cell('AD1', function($cell) {
                     $cell->setValue('PERCENT RECRUITED');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#e4dfec');
@@ -1141,7 +1144,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AF1', function($cell) {
+                $sheet->cell('AG1', function($cell) {
                     $cell->setValue('PREV MONTH');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#c7eecf');
@@ -1152,7 +1155,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AK1', function($cell) {
+                $sheet->cell('AL1', function($cell) {
                     $cell->setValue('MTD');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#fec7ce');
@@ -1163,7 +1166,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cell('AP1', function($cell) {
+                $sheet->cell('AQ1', function($cell) {
                     $cell->setValue('YTD');
                     $cell->setFontColor('#000000');
                     $cell->setBackground('#feeaa0');
@@ -1174,7 +1177,7 @@ class ReportsController extends Controller
                     $cell->setValignment('center');
                 });
 
-                $sheet->cells('A2:AV2', function($cells) {
+                $sheet->cells('A2:AW2', function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(8);
@@ -1198,7 +1201,7 @@ class ReportsController extends Controller
                     $cells->setValignment('center');
                 });
 
-                $sheet->cells('R3:AV'.$rowNumber, function($cells) {
+                $sheet->cells('R3:AW'.$rowNumber, function($cells) {
                     $cells->setFontColor('#000000');
                     $cells->setFontFamily('Calibri (Body)');
                     $cells->setFontSize(8);
@@ -1207,16 +1210,16 @@ class ReportsController extends Controller
                 });
 
                 $sheet->setColumnFormat(array(
-                    'P3:P'.$rowNumber      => 'mm/dd/yy',
-                    'Q3:AB'.$rowNumber     => '0.0',
-                    'AC3:AE'.$rowNumber    => '0.0%',
-                    'AF3:AF'.$rowNumber    => '"$"#,##0.00_-',
-                    'AG3:AJ'.$rowNumber    => '0.0%',
-                    'AU3:AU'.$rowNumber    => '"$"#,##0.00_-',
-                    'AV3:AV'.$rowNumber    => '0.0',
-                    'AC'.($rowNumber+2 )   => '0.0%',
+                    'P3:Q'.$rowNumber      => 'mm/dd/yy',
+                    'R3:AC'.$rowNumber     => '0.0',
+                    'AD3:AF'.$rowNumber    => '0.0%',
+                    'AG3:AG'.$rowNumber    => '"$"#,##0.00_-',
+                    'AH3:AK'.$rowNumber    => '0.0%',
+                    'AV3:AV'.$rowNumber    => '"$"#,##0.00_-',
+                    'AW3:AW'.$rowNumber    => '0.0',
                     'AD'.($rowNumber+2 )   => '0.0%',
                     'AE'.($rowNumber+2 )   => '0.0%',
+                    'AF'.($rowNumber+2 )   => '0.0%',
                 ));
 
                 $sheet->setWidth(array(
@@ -1236,8 +1239,8 @@ class ReportsController extends Controller
                     'N'     => 12,
                     'O'     => 11,
                     'P'     => 11,
-                    'Q'     => 13,
-                    'R'     => 7,
+                    'Q'     => 11,
+                    'R'     => 13,
                     'S'     => 7,
                     'T'     => 7,
                     'U'     => 7,
@@ -1246,15 +1249,15 @@ class ReportsController extends Controller
                     'X'     => 7,
                     'Y'     => 7,
                     'Z'     => 7,
-                    'AA'    => 7,
-                    'AB'    => 12,
-                    'AC'    => 15,
+                    'AA'     => 7,
+                    'AB'    => 7,
+                    'AC'    => 12,
                     'AD'    => 15,
-                    'AE'    => 12,
+                    'AE'    => 15,
                     'AF'    => 12,
-                    'AG'    => 13,
+                    'AG'    => 12,
                     'AH'    => 13,
-                    'AI'    => 12,
+                    'AI'    => 13,
                     'AJ'    => 12,
                     'AK'    => 12,
                     'AL'    => 12,
@@ -1267,27 +1270,53 @@ class ReportsController extends Controller
                     'AS'    => 12,
                     'AT'    => 12,
                     'AU'    => 12,
-                    'AV'    => 12
+                    'AV'    => 12,
+                    'AW'    => 12
                 ));
 
-                $sheet->getStyle('A1:AV'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A1:Q'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('R1:T'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('U1:W'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('X1:AB'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('AC1:AE'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('AF1:AJ'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('AK1:AO'.$rowNumber)->applyFromArray($tableStyle);
-                $sheet->getStyle('A2:AV2')->applyFromArray($headerStyle);
+                $tableStyle = array(
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                        'inside' => array(
+                            'style' => 'thin',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                    ),
+                );
 
-                $sheet->getStyle('Q2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AH2')->getAlignment()->setWrapText(true);
+                $headersStyle = array(
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                        'inside' => array(
+                            'style' => 'medium',
+                            'color' => array('rgb' => '000000'),
+                        ),
+                    ),
+                );
+
+                $sheet->getStyle('A1:AW'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A1:R'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('S1:U'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('V1:X'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('Y1:AC'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('AD1:AF'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('AG1:AK'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('AL1:AP'.$rowNumber)->applyFromArray($tableStyle);
+                $sheet->getStyle('A2:AW2')->applyFromArray($headersStyle);
+
+                $sheet->getStyle('R2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AI2')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('AJ2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AO2')->getAlignment()->setWrapText(true);
-                $sheet->getStyle('AT2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AK2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AP2')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('AU2')->getAlignment()->setWrapText(true);
 
-                $sheet->getColumnDimension('AF')->setVisible(false);
                 $sheet->getColumnDimension('AG')->setVisible(false);
                 $sheet->getColumnDimension('AH')->setVisible(false);
                 $sheet->getColumnDimension('AI')->setVisible(false);
@@ -1304,6 +1333,7 @@ class ReportsController extends Controller
                 $sheet->getColumnDimension('AT')->setVisible(false);
                 $sheet->getColumnDimension('AU')->setVisible(false);
                 $sheet->getColumnDimension('AV')->setVisible(false);
+                $sheet->getColumnDimension('AW')->setVisible(false);
             });
 
             foreach ($accounts as $account) {
