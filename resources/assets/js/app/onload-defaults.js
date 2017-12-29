@@ -139,6 +139,22 @@ $(() => {
         this.dispatchEvent(event);
     });
 
+    $('.datepicker').on('focusout', function(evt) {
+        var date = $(this).val();
+
+        if(date != '') {
+            var dateArray = date.split('/');
+
+            if(dateArray[2] && dateArray[2].length == 4) {
+                //
+            } else {
+                alert('Please use the proper format (mm/dd/yyyy) or use the calendar, otherwise data will not be saved/updated.');
+                $(this).datepicker().datepicker("setDate", '');
+                $(this).val('');
+            }
+        }
+    });
+
     // DatePicker
     $('.datepicker-future').datepicker({
         format: 'mm/dd/yyyy',
