@@ -89,7 +89,6 @@ class ProvidersController extends Controller
             }
 
             if(count($interviews_sites) > 0) {
-                dd($interviews_sites);
                 $fillEmpty = $interviews_sites;
             } elseif(count($contractIn_sites) > 0) {
                 $fillEmpty = $contractIn_sites;
