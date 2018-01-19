@@ -28,7 +28,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
 mix.sass('resources/assets/sass/vendor.scss', 'public/css');
 mix.sass('resources/assets/sass/app.scss', 'public/css');
 
-mix.browserSync('emcare.dev');
+mix.browserSync('emcare.test');
 
 if (mix.config.inProduction) {
     mix.version();

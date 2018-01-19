@@ -30,6 +30,9 @@ require('admin-lte');
 // iCheck
 require('icheck');
 
+// d3
+window.d3 = require('d3');
+
 // DataTables
 require('datatables');
 require('datatables-select');
@@ -93,6 +96,10 @@ window.$.fn.daterangepicker = function(options, callback) {
     });
     return this;
 };
+
+
+// Dashboard
+require('./app/dashboard');
 
 // Onload Defaults
 require('./app/onload-defaults');

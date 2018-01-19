@@ -8,6 +8,16 @@ use Illuminate\Http\Request;
 use App\Http\Requests\FileRequest;
 use App\Http\Requests\DashboardRequest;
 use Illuminate\Support\Facades\Storage;
+use App\Account;
+use App\RSC;
+use App\Region;
+use App\Division;
+use App\Employee;
+use App\Practice;
+use App\SystemAffiliation;
+use App\StateAbbreviation;
+use App\Group;
+use App\Pipeline;
 
 class DashboardsController extends Controller
 {
@@ -18,9 +28,25 @@ class DashboardsController extends Controller
      */
     public function index()
     {
-        $dashboards = Dashboard::all();
+        $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
 
-        return view('admin.dashboards.index', compact('dashboards'));
+        $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
+        $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
+        $doos = $employees->filter->hasPosition(config('instances.position_types.doo'));
+        $SVPs = Pipeline::distinct('SVP')->select('SVP')->orderBy('SVP')->get();
+        $RMDs = Pipeline::distinct('RMD')->select('RMD')->orderBy('RMD')->get();
+        $RSCs = RSC::where('active', true)->orderBy('name')->get();
+        $states = StateAbbreviation::all();
+        $cities = Account::distinct('city')->select('city')->where('active', true)->orderBy('city')->get();
+        $practices = Practice::where('active', true)->orderBy('name')->get();
+        $regions = Region::where('active', true)->orderBy('name')->get();
+        $affiliations = SystemAffiliation::all();
+        $sites = Account::where('active', true)->orderBy('name')->get();
+        $groups = Group::where('active', true)->get()->sortBy('name');
+
+        $params = compact('recruiters', 'managers', 'doos', 'SVPs', 'RMDs', 'states', 'cities', 'practices', 'regions', 'affiliations', 'sites', 'RSCs', 'groups');
+
+        return view('admin.dashboards.charts', $params);
     }
 
     /**

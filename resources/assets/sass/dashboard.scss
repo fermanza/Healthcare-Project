@@ -1,0 +1,231 @@
+.charts {
+    background-color: #e8ecef;
+    box-sizing: content-box;
+    background-size: cover;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+    .sr-only-focusable:active,
+    .sr-only-focusable:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        margin: 0;
+        overflow: visible;
+        clip: auto;
+    }
+    .fb-parent {
+        width: auto;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: stretch;
+        align-content: stretch;
+    }
+    .fb-v-center {
+        align-self: center;
+    }
+    .fb-h-center {
+        justify-content: center;
+    }
+    .fb-grow {
+        flex: 1;
+    }
+    .fb-rows {
+        flex-direction: column;
+    }
+    .mln {
+        margin-left: 0;
+    }
+    .mrn {
+        margin-right: 0;
+    }
+    .mtn {
+        margin-top: 0;
+    }
+    .mbn {
+        margin-bottom: 0;
+    }
+    .mls {
+        margin-left: 5px !important;
+    }
+    .mlm {
+        margin-left: 10px !important;
+    }
+    .mll {
+        margin-left: 15px !important;
+    }
+    .mrs {
+        margin-right: 5px !important;
+    }
+    .mrm {
+        margin-right: 10px !important;
+    }
+    .mrl {
+        margin-right: 15px !important;
+    }
+    .mts {
+        margin-top: 5px !important;
+    }
+    .mtm {
+        margin-top: 10px !important;
+    }
+    .mtl {
+        margin-top: 15px !important;
+    }
+    .mbs {
+        margin-bottom: 5px !important;
+    }
+    .mbm {
+        margin-bottom: 10px !important;
+    }
+    .mbl {
+        margin-bottom: 15px !important;
+    }
+    .padSM {
+        padding: 5px;
+    }
+    .padMD {
+        padding: 10px;
+    }
+    .padLG {
+        padding: 15px;
+    }
+    .filters {
+        width: 200px;
+    }
+    .filters .filter-list {
+        overflow-y: auto;
+    }
+    .row-1 {
+        flex: 3;
+    }
+    .row-1 .col-1 {
+        flex: 2;
+    }
+    .row-1 .col-2 {
+        flex: 1;
+    }
+    .row-1 .col-3 {
+        flex: 3;
+    }
+    .row-2 {
+        flex: 2;
+    }
+    .row-3 {
+        height: 120px;
+    }
+    .box {
+        margin: 5px;
+        padding: 5px;
+        position: relative;
+        background-color: #fff;
+    }
+    .box h1,
+    .box h2 {
+        font-weight: bold;
+    }
+    .box h3.title,
+    .box h4.title {
+        margin: 0;
+    }
+    .box h4 {
+        margin-bottom: 5px;
+    }
+    .inv-header {
+        background-color: #116682;
+        color: #fff;
+        font-size: 1.4em;
+        text-align: center;
+    }
+    .switch-control ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        align-items: stretch;
+        height: 60px;
+    }
+    .switch-control ul li {
+        align-content: center;
+        text-align: center;
+        background-color: #b1b4ba;
+        color: #fff;
+        margin-top: 5px;
+        line-height: 4;
+    }
+    .switch-control ul li.selected {
+        margin-top: 0;
+        background-color: #116682;
+    }
+    .switch-control ul li:not(.selected):hover {
+        background-color: #85868c;
+        cursor: pointer;
+    }
+    .switch-control .title {
+        background-color: #5e5f63;
+        color: #fff;
+        text-align: center;
+        margin: 0;
+        padding: 5px 0;
+    }
+    .pipelineDataSvg,
+    .gaugeBG {
+        position: absolute;
+    }
+    .pipelineDataSvg {
+        left: 5px;
+    }
+    .tpr_graph {
+        position: relative;
+    }
+    .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 4px;
+    }
+    .barAxis text {
+        fill: "#116682";
+    }
+    .lineAxis text {
+        fill: black;
+    }
+    .toolTip {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+        position: absolute;
+        display: none;
+        width: auto;
+        height: auto;
+        background: none repeat scroll 0 0 white;
+        border: 1px solid #e8ecef;
+        color: black;
+        font: 12px sans-serif;
+        padding: 5px;
+    }
+    .toolTip p {
+        text-align: center;
+    }
+    .legendSwatch {
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        margin-right: 5px;
+        background-color: #000;
+    }
+    .legendSwatch.contractsIn {
+        background-color: #116682;
+    }
+    .legendSwatch.openings {
+        background-color: #6897a7;
+    }
+    /*# sourceMappingURL=treehouse-dashboard.css.map */
+}
