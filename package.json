@@ -15,6 +15,13 @@
     "bootstrap-datetime-picker": "^2.4.4",
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^3.2.3",
+    "datatables": "^1.10.13",
+    "datatables-bootstrap3-plugin": "^0.5.0",
+    "datatables-select": "^1.1.0",
+    "datatables.net": "^1.10.15",
+    "datatables.net-bs": "^1.10.15",
+    "es6-promise": "^4.1.1",
+    "fastclick": "^1.0.6",
     "flexboxgrid": "^6.3.1",
     "font-awesome": "^4.7.0",
     "icheck": "^1.0.2",
@@ -27,6 +34,7 @@
     "vue": "^2.4.2"
   },
   "dependencies": {
+    "d3": "^4.12.2",
     "jquery-ui": "^1.12.1"
   }
 }
