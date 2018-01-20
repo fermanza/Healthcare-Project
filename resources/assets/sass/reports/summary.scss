@@ -54,17 +54,14 @@
 			vertical-align: middle;
 		}
 
-		tr {
+		td {
 			&.term90less {
-		    	td {
-		        	background-color: #FF0000;
-		    	}
+	        	background-color: #FF0000;
+	        	color: #FFF;
 		    }
 
 			&.term90more {
-		    	td {
-		        	background-color: #FFEB3B;
-		    	}
+	        	background-color: #FFEB3B;
 			}
 		}
 
