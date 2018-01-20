@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Dashboard;
 use App\User;
+use App\AccountSummary;
 use Illuminate\Http\Request;
 use App\Http\Requests\FileRequest;
 use App\Http\Requests\DashboardRequest;
@@ -18,6 +19,7 @@ use App\SystemAffiliation;
 use App\StateAbbreviation;
 use App\Group;
 use App\Pipeline;
+use App\Filters\SummaryFilter;
 
 class DashboardsController extends Controller
 {
@@ -26,15 +28,15 @@ class DashboardsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(SummaryFilter $filter)
     {
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
 
         $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
         $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         $doos = $employees->filter->hasPosition(config('instances.position_types.doo'));
-        $SVPs = Pipeline::distinct('SVP')->select('SVP')->orderBy('SVP')->get();
-        $RMDs = Pipeline::distinct('RMD')->select('RMD')->orderBy('RMD')->get();
+        $SVPs = Pipeline::distinct('SVP')->select('SVP')->whereNotNull('SVP')->orderBy('SVP')->get();
+        $RMDs = Pipeline::distinct('RMD')->select('RMD')->whereNotNull('RMD')->orderBy('RMD')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $states = StateAbbreviation::all();
         $cities = Account::distinct('city')->select('city')->where('active', true)->orderBy('city')->get();
@@ -43,6 +45,8 @@ class DashboardsController extends Controller
         $affiliations = SystemAffiliation::all();
         $sites = Account::where('active', true)->orderBy('name')->get();
         $groups = Group::where('active', true)->get()->sortBy('name');
+
+        $chartsData = $this->getChartsData($filter);
 
         $params = compact('recruiters', 'managers', 'doos', 'SVPs', 'RMDs', 'states', 'cities', 'practices', 'regions', 'affiliations', 'sites', 'RSCs', 'groups');
 
@@ -136,5 +140,39 @@ class DashboardsController extends Controller
         flash(__('Dashboard deleted.'));
 
         return back();
+    }
+
+    private function getChartsData(SummaryFilter $filter) {
+        $accounts = AccountSummary::with('account.rsc')->filter($filter)->get();
+
+        $pipeline = [
+            "data" => [], 
+            "titles" => [
+                "Applications",
+                "Interviews",
+                "Contracts Out",
+                "Contracts In",
+                "Credentialing"
+            ]
+        ];
+
+        $squares = [
+            "PhysiciansRecruited" => 0,
+            "AppRecruited" => 0,
+            "totalPctRecruited" => 0,
+            "QTDApplications" => 0,
+            "QTDInterviews" => 0,
+            "QTDContractsOut" => 0,
+            "QTDContractsIn" => 0,
+            "QTDCredentialing" => 0
+        ];
+
+        $gauge = ["value" => 0];
+
+        $bars = [];
+
+        
+
+        //dd($accounts);
     }
 }

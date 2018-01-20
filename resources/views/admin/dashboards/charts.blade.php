@@ -6,18 +6,19 @@
 <div class="charts">
 	<div class="fb-parent">
 		<div class="filters fb-parent fb-rows">
-            <form>
+            <form id="chartsForm">
     			<div class="box fb-parent fb-rows">
     				<div class="inv-header mbm">
     					<i class="fa fa-filter"></i> Filters
     				</div>
     				<div class="switch-control mbm">
     					<ul class="switch-options fb-parent">
-    						<li class="fb-grow">MTD</li>
-    						<li class="fb-grow selected">QTD</li>
-    						<li class="fb-grow">YTD</li>
+    						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'MTD' ? 'selected' : '') : ''}}">MTD</li>
+    						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'QTD' ? 'selected' : '') : 'selected'}}">QTD</li>
+    						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'YTD' ? 'selected' : '') : ''}}">YTD</li>
     					</ul>
     					<p class="title">Custom Period</p>
+                        <input type="text" id="periodValue" class="hidden" name="period" value="QTD">
     				</div>
     				<div class="filter-list fb-grow mbm">
                         <select class="form-control select2" name="affiliations[]" data-placeholder="@lang('Affiliation')" multiple>
@@ -206,3 +207,13 @@
 	</div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('.switch-options>.fb-grow').on('click', function() {
+            $('#periodValue').val($(this).text());
+        })
+    });
+</script>
+@endpush

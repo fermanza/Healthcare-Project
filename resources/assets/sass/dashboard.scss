@@ -3,6 +3,7 @@
     box-sizing: content-box;
     background-size: cover;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    height: 100%;
 
     .sr-only {
         position: absolute;
@@ -25,7 +26,7 @@
     }
     .fb-parent {
         width: auto;
-        height: 100%;
+        //height: 100%;
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -108,7 +109,8 @@
         overflow-y: auto;
     }
     .row-1 {
-        flex: 3;
+        flex: 1;
+        max-height: 350px;
     }
     .row-1 .col-1 {
         flex: 2;
@@ -121,6 +123,7 @@
     }
     .row-2 {
         flex: 2;
+        max-height: 250px;
     }
     .row-3 {
         height: 120px;
@@ -226,6 +229,10 @@
     }
     .legendSwatch.openings {
         background-color: #6897a7;
+    }
+
+    .pipeline-wrapper {
+        height: 100%;
     }
     /*# sourceMappingURL=treehouse-dashboard.css.map */
 }

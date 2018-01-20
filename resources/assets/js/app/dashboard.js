@@ -1,7 +1,7 @@
 // JavaScript Document
 'use strict';
 var dashboard = {
-	initFilterSwitch: function(){
+	initFilterSwitch: function(params){
 		$(".switch-options li")
 		.on("click", function(){
 			$(this)
@@ -13,7 +13,7 @@ var dashboard = {
 			.addClass("selected");
 		});
 	},
-	populateDynamicValues: function(){
+	populateDynamicValues: function(params){
 		$.ajax({
 			url: "/dynamic.json",
 			success: function(data){
@@ -42,16 +42,15 @@ var dashboard = {
 		init: function(args){
 			var w = $(args.containerSelector).parent().innerWidth();
 			var h = $(args.containerSelector).parent().innerHeight();
-			var barPadding = 20;
+			var barPadding = 30;
 			var dataset;
-			var barHeight = 30;
-			var divider = 7;
+			var barHeight = 25;
 			
 			d3.json("/"+args.dataFile, function(error, data) {
 				if (error) throw error;
 			
 				dataset = data.data;
-				var svgHeight = (dataset.length+1) * (barHeight + barPadding)+barPadding;
+				var svgHeight = h;
 				var maxVal = Math.max.apply(null, dataset);
 				var minVal = Math.min.apply(null, dataset);
 
@@ -75,7 +74,7 @@ var dashboard = {
 				.attr("x", 0)
 				.attr("width", w)
 				.attr("y", function(d, i) {
-					return i * (h / dataset.length - barPadding) + barPadding;
+					return (i * (h / dataset.length)) + barPadding;
 				})
 				.attr("height", barHeight)
 				.attr("fill", function(d) {
@@ -97,7 +96,7 @@ var dashboard = {
 				.attr("x", 0)
 				//.transition()
 				.attr("y", function(d, i) {
-					return i * (h / titles.length - barPadding)+barPadding - 5;
+					return (i * (h / titles.length)+barPadding) - 5;
 				})
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "16px")
@@ -129,7 +128,7 @@ var dashboard = {
 				})
 				//.transition()
 				.attr("y", function(d, i) {
-					return i * (h / dataset.length - barPadding) + barPadding;
+					return (i * (h / dataset.length)) + barPadding;
 				})
 				.attr("height", barHeight)
 				//.transition()
@@ -151,7 +150,7 @@ var dashboard = {
 				})
 				.transition()
 				.attr("y", function(d, i) {
-					return i * (h / dataset.length - barPadding) + barPadding + 20;
+					return (i * (h / dataset.length)) + barPadding + 18;
 				})
 				.attr("font-family", "sans-serif")
 				.attr("font-size", "16px")
