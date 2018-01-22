@@ -3,7 +3,7 @@
 @section('content-header', __('Dashboards'))
 
 @section('content')
-<div class="charts">
+<div id="charts" class="charts" v-cloak>
 	<div class="fb-parent">
 		<div class="filters fb-parent fb-rows">
             <form id="chartsForm">
@@ -131,14 +131,14 @@
 						<div class="fb-v-center">
 							<h1 class="mtn dynamic noPlus" data-id="PhysiciansRecruited"></h1>
 							<p>Physicians Recruited</p>
-							<h3>QTD</h3>
+							<h3>@{{period}}</h3>
 						</div>
 					</div>
 					<div class="fb-grow subrow-2 box mtm text-center fb-h-center fb-parent">
 						<div class="fb-v-center">
 							<h1 class="mtn dynamic noPlus" data-id="AppRecruited"></h1>
 							<p>App Recruited</p>
-							<h3>QTD</h3>
+							<h3>@{{period}}</h3>
 						</div>
 					</div>
 				</div>
@@ -148,7 +148,7 @@
 						<div class="fb-parent fb-grow fb-rows text-center fb-h-center">
 							<div class="fb-v-center">
 								<h1 class="totalPctRecruited"></h1>
-								<h1>QTD</h1>
+								<h1>@{{period}}</h1>
 							</div>
 						</div>
 						<div class="fb-grow fb-h-center fb-parent">
@@ -159,13 +159,13 @@
 			</div>
 			<div class="fb-grow row-2 fb-parent mbm">
 				<div class="fb-grow fb-rows fb-parent col-1 box mrm">
-					<h4 class="title">Recent Recruited V's Contracts In</h4>
+					<h4 class="title">Percent Recruited vs Contracts In</h4>
 					<div class="fb-grow rrvci">
 						
 					</div>
 				</div>
 				<div class="fb-grow fb-rows fb-parent col-2 box mlm">
-					<h4 class="title">Recent Recruited V's Openings</h4>
+					<h4 class="title">Percent Recruited vs Openings</h4>
 					<div class="fb-grow rrvo">
 						
 					</div>
@@ -174,32 +174,32 @@
 			<div class="row-3 fb-parent mbm">
 				<div class="fb-grow col-1 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
-						<h2 class="mtn dynamic" data-id="QTDApplications"></h2>
-						<p class="mbn">QTD Applications</p>
+						<h2 class="mtn dynamic" data-id="Applications"></h2>
+						<p class="mbn">@{{period}} Applications</p>
 					</div>
 				</div>
 				<div class="fb-grow col-2 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
-						<h2 class="mtn dynamic" data-id="QTDInterviews"></h2>
-						<p class="mbn">QTD Interviews</p>
+						<h2 class="mtn dynamic" data-id="Interviews"></h2>
+						<p class="mbn">@{{period}} Interviews</p>
 					</div>
 				</div>
 				<div class="fb-grow col-3 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
-						<h2 class="mtn dynamic" data-id="QTDContractsOut"></h2>
-						<p class="mbn">Contacts Out</p>
+						<h2 class="mtn dynamic" data-id="ContractsOut"></h2>
+						<p class="mbn">@{{period}} Contacts Out</p>
 					</div>
 				</div>
 				<div class="fb-grow col-4 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
-						<h2 class="mtn dynamic" data-id="QTDContractsIn"></h2>
-						<p class="mbn">Contacts In</p>
+						<h2 class="mtn dynamic" data-id="ContractsIn"></h2>
+						<p class="mbn">@{{period}} Contacts In</p>
 					</div>
 				</div>
 				<div class="fb-grow col-5 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
-						<h2 class="mtn dynamic" data-id="QTDCredentialing"></h2>
-						<p class="mbn">QTD Credentialing</p>
+						<h2 class="mtn dynamic" data-id="Credentialings"></h2>
+						<p class="mbn">@{{period}} Credentialing</p>
 					</div>
 				</div>
 			</div>
@@ -213,7 +213,55 @@
     $(document).ready(function() {
         $('.switch-options>.fb-grow').on('click', function() {
             $('#periodValue').val($(this).text());
-        })
+        });
+
+        window.dashboard.pipeline.init({
+            containerSelector: ".pipeline-wrapper",
+            data: BackendVars.pipeline
+        });
+
+        window.dashboard.populateDynamicValues(BackendVars.squares);
+
+        window.dashboard.gauge.build({
+            containerSelector: ".tpr_graph",
+            data: BackendVars.gauge
+        });
+
+        window.dashboard.initFilterSwitch();
+
+        window.dashboard.barLineGraph.init({
+            containerSelector: ".rrvci", 
+            color: "#116682",
+            color_hash: [  
+              ["Contracts In", "#116682"],
+              ["Percentage Recruited", "#000000"]
+            ],
+            type: 'Contracts',
+            data: BackendVars.bars
+        });
+
+        window.dashboard.barLineGraph.init({
+            containerSelector: ".rrvo", 
+            color: "#6897a7",
+            color_hash: [  
+              ["Openings", "#6897a7"],
+              ["Percentage Recruited", "#000000"]
+            ],
+            type: 'Openings',
+            data: BackendVars.bars
+        });
+    });
+
+    window.mappingApp = new Vue({
+        el: '#charts',
+
+        data: {
+            period: 'MTD'
+        },
+
+        methods: {
+
+        }
     });
 </script>
 @endpush

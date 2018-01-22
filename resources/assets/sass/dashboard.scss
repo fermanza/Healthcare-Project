@@ -231,8 +231,18 @@
         background-color: #6897a7;
     }
 
+    #pipeline {
+        > .fb-parent {
+            padding: 5px 15px;
+        }
+    }
+
     .pipeline-wrapper {
         height: 100%;
+    }
+
+    .title {
+        color: #000;
     }
     /*# sourceMappingURL=treehouse-dashboard.css.map */
 }

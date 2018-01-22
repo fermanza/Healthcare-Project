@@ -20,6 +20,8 @@ use App\StateAbbreviation;
 use App\Group;
 use App\Pipeline;
 use App\Filters\SummaryFilter;
+use Carbon\Carbon;
+use JavaScript;
 
 class DashboardsController extends Controller
 {
@@ -49,6 +51,8 @@ class DashboardsController extends Controller
         $chartsData = $this->getChartsData($filter);
 
         $params = compact('recruiters', 'managers', 'doos', 'SVPs', 'RMDs', 'states', 'cities', 'practices', 'regions', 'affiliations', 'sites', 'RSCs', 'groups');
+
+        JavaScript::put($chartsData);
 
         return view('admin.dashboards.charts', $params);
     }
@@ -143,7 +147,56 @@ class DashboardsController extends Controller
     }
 
     private function getChartsData(SummaryFilter $filter) {
-        $accounts = AccountSummary::with('account.rsc')->filter($filter)->get();
+        //$accounts = AccountSummary::with('account.rsc')->filter($filter)->get();
+
+        $accounts = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->month)->whereYear('MonthEndDate', Carbon::now()->year)->get();
+        $previousMonth = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth()->month)->whereYear('MonthEndDate', Carbon::now()->subMonth()->year)->get();
+        $thirdMonth = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth(2)->month)->whereYear('MonthEndDate', Carbon::now()->subMonth(2)->year)->get();
+        $fourthMonth = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth(3)->month)->whereYear('MonthEndDate', Carbon::now()->subMonth(3)->year)->get();
+
+        $monthsData = array($accounts, $previousMonth, $thirdMonth, $fourthMonth);
+
+        $completeStaffPhys = $accounts->sum('Complete Staff - Phys');
+        $completeStaffAPP = $accounts->sum('Complete Staff - APP');
+        $completeStaffTotal = $accounts->sum('Complete Staff - Total');
+
+        $currentStaffPhys = $accounts->sum('Current Staff - Total');
+        $currentStaffAPP = $accounts->sum('Current Staff - Total');
+        $currentStaffTotal = $accounts->sum('Current Staff - Total');
+
+        $openingsPhys = $accounts->sum('Current Openings - Phys');
+        $openingsAPP = $accounts->sum('Current Openings - APP');
+        $openingsTotal = $accounts->sum('Current Openings - Total');
+
+        $currentApplications = $accounts->sum('MTD - Applications');
+        $currentInterViews = $accounts->sum('MTD - Interviews');
+        $currentContractsOut = $accounts->sum('MTD - Contracts Out');
+        $currentContractsIn = $accounts->sum('MTD - Contracts In');
+        $currentCredentialings = $accounts->sum('MTD - Signed Not Yet Started');
+
+        $prevCompleteStaffPhys = $previousMonth->sum('Complete Staff - Phys');
+        $prevCompleteStaffAPP = $previousMonth->sum('Complete Staff - APP');
+        $prevCompleteStaffTotal = $previousMonth->sum('Complete Staff - Total');
+
+        $prevCurrentStaffPhys = $previousMonth->sum('Current Staff - Total');
+        $prevCurrentStaffAPP = $previousMonth->sum('Current Staff - Total');
+        $prevCurrentStaffTotal = $previousMonth->sum('Current Staff - Total');
+
+        $prevOpeningsPhys = $previousMonth->sum('Current Openings - Phys');
+        $prevOpeningsAPP = $previousMonth->sum('Current Openings - APP');
+        $prevOpeningsTotal = $previousMonth->sum('Current Openings - Total');
+
+        $prevApplications = $previousMonth->sum('MTD - Applications');
+        $prevInterViews = $previousMonth->sum('MTD - Interviews');
+        $prevContractsOut = $previousMonth->sum('MTD - Contracts Out');
+        $prevContractsIn = $previousMonth->sum('MTD - Contracts In');
+        $prevCredentialings = $previousMonth->sum('MTD - Signed Not Yet Started');
+
+        $percentApplications = $prevApplications == 0 ? 0 : round(($currentApplications - $prevApplications) / $prevApplications, 2);
+        $percentInterViews = $prevInterViews == 0 ? 0 : round(($currentInterViews - $prevInterViews) / $prevInterViews, 2);
+        $percentContractsOut = $prevContractsOut == 0 ? 0 : round(($currentContractsOut - $prevContractsOut) / $prevContractsOut, 2);
+        $percentContractsIn = $prevContractsIn == 0 ? 0 : round(($currentContractsIn - $prevContractsIn) / $prevContractsIn, 2);
+        $percentCredentialings = $prevCredentialings == 0 ? 0 : round(($currentCredentialings - $prevCredentialings) / $prevCredentialings, 2);
 
         $pipeline = [
             "data" => [], 
@@ -157,22 +210,63 @@ class DashboardsController extends Controller
         ];
 
         $squares = [
-            "PhysiciansRecruited" => 0,
-            "AppRecruited" => 0,
-            "totalPctRecruited" => 0,
-            "QTDApplications" => 0,
-            "QTDInterviews" => 0,
-            "QTDContractsOut" => 0,
-            "QTDContractsIn" => 0,
-            "QTDCredentialing" => 0
+            "PhysiciansRecruited" => round(($completeStaffPhys - $openingsPhys) / $completeStaffPhys, 2),
+            "AppRecruited" => round(($completeStaffAPP - $openingsAPP) / $completeStaffAPP, 2),
+            "totalPctRecruited" => round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2),
+            "Applications" => $percentApplications,
+            "Interviews" => $percentInterViews,
+            "ContractsOut" => $percentContractsOut,
+            "ContractsIn" => $percentContractsIn,
+            "Credentialings" => $percentCredentialings
         ];
 
-        $gauge = ["value" => 0];
+        $gauge = ["value" => round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2)];
 
-        $bars = [];
+        $bars = [
+            "contracts" => array(),
+            "openings" => array()
+        ];
 
+        for($x = 0; $x < 4; $x++) {
+            $tempContracts = array();
+            $tempContracts["name"] = Carbon::today()->subMonth($x)->format('F Y');
+
+            $tempOpenings = array();
+            $tempOpenings["name"] = Carbon::today()->subMonth($x)->format('F Y');
+
+            $contracts = $monthsData[$x]->sum('MTD - Contracts In');
+            $openings = $monthsData[$x]->sum('Current Openings - Total');
+
+            $completeStaffTotal = $monthsData[$x]->sum('Complete Staff - Total');
+            $openingsTotal = $monthsData[$x]->sum('Current Openings - Total');
+
+            $line = round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2);
+
+            $tempContracts["bar"] = $contracts;
+            $tempOpenings["bar"] = $openings;
+
+            $tempContracts["line1"] = $line;
+            $tempOpenings["line1"] = $line;
+
+            $bars["contracts"][] = $tempContracts;
+            $bars["openings"][] = $tempOpenings;
+        }
         
+        $pipeline["data"] = [
+            $currentApplications,
+            $currentInterViews,
+            $currentContractsOut,
+            $currentContractsIn,
+            $currentCredentialings
+        ];
 
-        //dd($accounts);
+        $formatedResponse = array(
+            'pipeline' => $pipeline, 
+            'squares' => $squares, 
+            'gauge' => $gauge,
+            'bars' => $bars
+        );
+
+        return $formatedResponse;
     }
 }
