@@ -192,6 +192,9 @@ class DashboardsController extends Controller
         $prevContractsIn = $previousMonth->sum('MTD - Contracts In');
         $prevCredentialings = $previousMonth->sum('MTD - Signed Not Yet Started');
 
+        $percentRecruitedPhys = $completeStaffPhys == 0 ? 0 : round(($completeStaffPhys - $openingsPhys) / $completeStaffPhys, 2);
+        $percentRecruitedAPP = $completeStaffAPP == 0 ? 0 : round(($completeStaffAPP - $openingsAPP) / $completeStaffAPP, 2);
+        $percentRecruitedTotal = $completeStaffTotal == 0 ? 0 : round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2);
         $percentApplications = $prevApplications == 0 ? 0 : round(($currentApplications - $prevApplications) / $prevApplications, 2);
         $percentInterViews = $prevInterViews == 0 ? 0 : round(($currentInterViews - $prevInterViews) / $prevInterViews, 2);
         $percentContractsOut = $prevContractsOut == 0 ? 0 : round(($currentContractsOut - $prevContractsOut) / $prevContractsOut, 2);
@@ -210,9 +213,9 @@ class DashboardsController extends Controller
         ];
 
         $squares = [
-            "PhysiciansRecruited" => round(($completeStaffPhys - $openingsPhys) / $completeStaffPhys, 2),
-            "AppRecruited" => round(($completeStaffAPP - $openingsAPP) / $completeStaffAPP, 2),
-            "totalPctRecruited" => round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2),
+            "PhysiciansRecruited" => $percentRecruitedPhys,
+            "AppRecruited" => $percentRecruitedAPP,
+            "totalPctRecruited" => $percentRecruitedTotal,
             "Applications" => $percentApplications,
             "Interviews" => $percentInterViews,
             "ContractsOut" => $percentContractsOut,
@@ -240,7 +243,7 @@ class DashboardsController extends Controller
             $completeStaffTotal = $monthsData[$x]->sum('Complete Staff - Total');
             $openingsTotal = $monthsData[$x]->sum('Current Openings - Total');
 
-            $line = round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2);
+            $line = $completeStaffTotal == 0 ? 0 : round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2);
 
             $tempContracts["bar"] = $contracts;
             $tempOpenings["bar"] = $openings;
