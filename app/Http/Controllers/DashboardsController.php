@@ -223,7 +223,7 @@ class DashboardsController extends Controller
             "Credentialings" => $percentCredentialings
         ];
 
-        $gauge = ["value" => round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2)];
+        $gauge = ["value" => $percentRecruitedTotal];
 
         $bars = [
             "contracts" => array(),
