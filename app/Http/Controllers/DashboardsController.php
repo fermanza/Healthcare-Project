@@ -192,14 +192,14 @@ class DashboardsController extends Controller
         $prevContractsIn = $previousMonth->sum('MTD - Contracts In');
         $prevCredentialings = $previousMonth->sum('MTD - Signed Not Yet Started');
 
-        $percentRecruitedPhys = $completeStaffPhys == 0 ? 0 : round(($completeStaffPhys - $openingsPhys) / $completeStaffPhys, 2);
-        $percentRecruitedAPP = $completeStaffAPP == 0 ? 0 : round(($completeStaffAPP - $openingsAPP) / $completeStaffAPP, 2);
-        $percentRecruitedTotal = $completeStaffTotal == 0 ? 0 : round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2);
-        $percentApplications = $prevApplications == 0 ? 0 : round(($currentApplications - $prevApplications) / $prevApplications, 2);
-        $percentInterViews = $prevInterViews == 0 ? 0 : round(($currentInterViews - $prevInterViews) / $prevInterViews, 2);
-        $percentContractsOut = $prevContractsOut == 0 ? 0 : round(($currentContractsOut - $prevContractsOut) / $prevContractsOut, 2);
-        $percentContractsIn = $prevContractsIn == 0 ? 0 : round(($currentContractsIn - $prevContractsIn) / $prevContractsIn, 2);
-        $percentCredentialings = $prevCredentialings == 0 ? 0 : round(($currentCredentialings - $prevCredentialings) / $prevCredentialings, 2);
+        $percentRecruitedPhys = $completeStaffPhys == 0 ? 0 : round((($completeStaffPhys - $openingsPhys) / $completeStaffPhys) * 100, 2);
+        $percentRecruitedAPP = $completeStaffAPP == 0 ? 0 : round((($completeStaffAPP - $openingsAPP) / $completeStaffAPP) * 100, 2);
+        $percentRecruitedTotal = $completeStaffTotal == 0 ? 0 : round((($completeStaffTotal - $openingsTotal) / $completeStaffTotal) * 100, 2);
+        $percentApplications = $prevApplications == 0 ? 0 : round((($currentApplications - $prevApplications) / $prevApplications) * 100, 2);
+        $percentInterViews = $prevInterViews == 0 ? 0 : round((($currentInterViews - $prevInterViews) / $prevInterViews) * 100, 2);
+        $percentContractsOut = $prevContractsOut == 0 ? 0 : round((($currentContractsOut - $prevContractsOut) / $prevContractsOut) * 100, 2);
+        $percentContractsIn = $prevContractsIn == 0 ? 0 : round((($currentContractsIn - $prevContractsIn) / $prevContractsIn) * 100, 2);
+        $percentCredentialings = $prevCredentialings == 0 ? 0 : round((($currentCredentialings - $prevCredentialings) / $prevCredentialings) * 100, 2);
 
         $pipeline = [
             "data" => [], 
@@ -243,7 +243,7 @@ class DashboardsController extends Controller
             $completeStaffTotal = $monthsData[$x]->sum('Complete Staff - Total');
             $openingsTotal = $monthsData[$x]->sum('Current Openings - Total');
 
-            $line = $completeStaffTotal == 0 ? 0 : round(($completeStaffTotal - $openingsTotal) / $completeStaffTotal, 2);
+            $line = $completeStaffTotal == 0 ? 0 : round((($completeStaffTotal - $openingsTotal) / $completeStaffTotal * 100), 2);
 
             $tempContracts["bar"] = $contracts;
             $tempOpenings["bar"] = $openings;

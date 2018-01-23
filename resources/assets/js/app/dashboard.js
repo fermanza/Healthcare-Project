@@ -405,7 +405,7 @@ var dashboard = {
 			.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			var data = args.type == 'Contracts' ? args.data.contracts : args.data.openings;
+			var data = args.type == 'Contracts In' ? args.data.contracts : args.data.openings;
 
 			// format the data
 			data.forEach(function(d) {
@@ -445,7 +445,7 @@ var dashboard = {
 				var l = elements.length -1;
 				//l = l-1
 				var elementData = elements[l].__data__
-				divTooltip.html("<p clas='mbn'><b>"+(d.name)+"</b></p><span class='legendSwatch contractsIn'></span>Contracts In: "+elementData.bar+"<br><span class='legendSwatch pctRecruited'></span>Percentage Recruited: "+elementData.line1+"%");
+				divTooltip.html("<p clas='mbn'><b>"+(d.name)+"</b></p><span class='legendSwatch contractsIn'></span>"+args.type+": "+elementData.bar+"<br><span class='legendSwatch pctRecruited'></span>Percentage Recruited: "+elementData.line1+"%");
 			})
 			.on("mouseout", function(d){
 				//hide the tooltip on mouseout

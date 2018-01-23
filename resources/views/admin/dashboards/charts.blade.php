@@ -236,7 +236,7 @@
               ["Contracts In", "#116682"],
               ["Percentage Recruited", "#000000"]
             ],
-            type: 'Contracts',
+            type: 'Contracts In',
             data: BackendVars.bars
         });
 
