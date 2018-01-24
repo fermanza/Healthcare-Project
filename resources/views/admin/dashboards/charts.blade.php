@@ -13,8 +13,8 @@
     				</div>
     				<div class="switch-control mbm">
     					<ul class="switch-options fb-parent">
-    						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'MTD' ? 'selected' : '') : ''}}">MTD</li>
-    						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'QTD' ? 'selected' : '') : 'selected'}}">QTD</li>
+    						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'QTD' ? 'selected' : '') : ''}}">QTD</li>
+    						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'MTD' ? 'selected' : '') : 'selected'}}">MTD</li>
     						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'YTD' ? 'selected' : '') : ''}}">YTD</li>
     					</ul>
     					<p class="title">Custom Period</p>
@@ -256,7 +256,7 @@
         el: '#charts',
 
         data: {
-            period: 'MTD'
+            period: BackendVars.period
         },
 
         methods: {

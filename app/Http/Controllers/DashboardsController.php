@@ -30,7 +30,7 @@ class DashboardsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(SummaryFilter $filter)
+    public function index(SummaryFilter $filter, Request $request)
     {
         $employees = Employee::with('person')->where('active', true)->get()->sortBy->fullName();
 
@@ -48,7 +48,7 @@ class DashboardsController extends Controller
         $sites = Account::where('active', true)->orderBy('name')->get();
         $groups = Group::where('active', true)->get()->sortBy('name');
 
-        $chartsData = $this->getChartsData($filter);
+        $chartsData = $this->getChartsData($filter, $request->period);
 
         $params = compact('recruiters', 'managers', 'doos', 'SVPs', 'RMDs', 'states', 'cities', 'practices', 'regions', 'affiliations', 'sites', 'RSCs', 'groups');
 
@@ -146,15 +146,67 @@ class DashboardsController extends Controller
         return back();
     }
 
-    private function getChartsData(SummaryFilter $filter) {
-        //$accounts = AccountSummary::with('account.rsc')->filter($filter)->get();
+    private function getChartsData(SummaryFilter $filter, $period) {
 
-        $accounts = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->month)->whereYear('MonthEndDate', Carbon::now()->year)->get();
-        $previousMonth = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth()->month)->whereYear('MonthEndDate', Carbon::now()->subMonth()->year)->get();
-        $thirdMonth = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth(2)->month)->whereYear('MonthEndDate', Carbon::now()->subMonth(2)->year)->get();
-        $fourthMonth = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth(3)->month)->whereYear('MonthEndDate', Carbon::now()->subMonth(3)->year)->get();
+        $period = !$period ? 'MTD' : $period;
+        $currentQuarterStart = Carbon::today()->firstOfQuarter();
+        $currentQuarterEnd = Carbon::today()->lastOfQuarter();
 
-        $monthsData = array($accounts, $previousMonth, $thirdMonth, $fourthMonth);
+        $secondQuarterS = new \Carbon\Carbon('-3 months');
+        $secondQuarterE = new \Carbon\Carbon('-3 months');
+        $secondQuarterStart = $secondQuarterS->firstOfQuarter();
+        $secondQuarterEnd = $secondQuarterE->lastOfQuarter();
+
+        $thirdQuarterS = new \Carbon\Carbon('-6 months');
+        $thirdQuarterE = new \Carbon\Carbon('-6 months');
+        $thirdQuarterStart = $thirdQuarterS->firstOfQuarter();
+        $thirdQuarterEnd = $thirdQuarterE->lastOfQuarter();
+
+        $fourthQuarterS = new \Carbon\Carbon('-9 months');
+        $fourthQuarterE = new \Carbon\Carbon('-9 months');
+        $fourthQuarterStart = $fourthQuarterS->firstOfQuarter();
+        $fourthQuarterEnd = $fourthQuarterE->lastOfQuarter();
+
+        switch ($period) {
+            case 'MTD':
+                $accounts = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->month)->whereYear('MonthEndDate', Carbon::now()->year)->get();
+                $prevAccounts = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth()->month)->whereYear('MonthEndDate', Carbon::now()->subMonth()->year)->get();
+                $firstPeriod = $accounts;
+                $secondPeriod = $prevAccounts;
+                $thirdPeriod = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth(2)->month)->whereYear('MonthEndDate', Carbon::now()->subMonth(2)->year)->get();
+                $fourthPeriod = AccountSummary::whereMonth('MonthEndDate', Carbon::now()->subMonth(3)->month)->whereYear('MonthEndDate', Carbon::now()->subMonth(3)->year)->get();
+                break;
+
+            case 'QTD':
+                $accounts = AccountSummary::whereDate('MonthEndDate', '>=', $currentQuarterStart)->whereDate('MonthEndDate', '<=', $currentQuarterEnd)->get();
+                $prevAccounts = AccountSummary::whereDate('MonthEndDate', '>=', $secondQuarterStart)->whereDate('MonthEndDate', '<=', $secondQuarterEnd)->get();
+                $firstPeriod = $accounts;
+                $secondPeriod = $prevAccounts;
+                $thirdPeriod = AccountSummary::whereDate('MonthEndDate', '>=', $thirdQuarterStart)->whereDate('MonthEndDate', '<=', $thirdQuarterEnd)->get();
+                $fourthPeriod = AccountSummary::whereDate('MonthEndDate', '>=', $fourthQuarterStart)->whereDate('MonthEndDate', '<=', $fourthQuarterEnd)->get();
+                break;
+
+            case 'YTD':
+                $accounts = AccountSummary::whereYear('MonthEndDate', Carbon::now()->year)->get();
+                $prevAccounts = AccountSummary::whereYear('MonthEndDate', Carbon::now()->subYear()->year)->get();
+                $firstPeriod = $accounts;
+                $secondPeriod = $prevAccounts;
+                $thirdPeriod = AccountSummary::whereYear('MonthEndDate', Carbon::now()->subYear(2)->year)->get();
+                $fourthPeriod = AccountSummary::whereYear('MonthEndDate', Carbon::now()->subYear(3)->year)->get();
+                break;
+            
+            default:
+                break;
+        }
+
+        $monthsData = array($firstPeriod, $secondPeriod, $thirdPeriod, $fourthPeriod);
+        
+        $quarters = array(
+            $currentQuarterStart,
+            $secondQuarterStart,
+            $thirdQuarterStart,
+            $fourthQuarterStart
+        );
 
         $completeStaffPhys = $accounts->sum('Complete Staff - Phys');
         $completeStaffAPP = $accounts->sum('Complete Staff - APP');
@@ -174,23 +226,23 @@ class DashboardsController extends Controller
         $currentContractsIn = $accounts->sum('MTD - Contracts In');
         $currentCredentialings = $accounts->sum('MTD - Signed Not Yet Started');
 
-        $prevCompleteStaffPhys = $previousMonth->sum('Complete Staff - Phys');
-        $prevCompleteStaffAPP = $previousMonth->sum('Complete Staff - APP');
-        $prevCompleteStaffTotal = $previousMonth->sum('Complete Staff - Total');
+        $prevCompleteStaffPhys = $prevAccounts->sum('Complete Staff - Phys');
+        $prevCompleteStaffAPP = $prevAccounts->sum('Complete Staff - APP');
+        $prevCompleteStaffTotal = $prevAccounts->sum('Complete Staff - Total');
 
-        $prevCurrentStaffPhys = $previousMonth->sum('Current Staff - Total');
-        $prevCurrentStaffAPP = $previousMonth->sum('Current Staff - Total');
-        $prevCurrentStaffTotal = $previousMonth->sum('Current Staff - Total');
+        $prevCurrentStaffPhys = $prevAccounts->sum('Current Staff - Total');
+        $prevCurrentStaffAPP = $prevAccounts->sum('Current Staff - Total');
+        $prevCurrentStaffTotal = $prevAccounts->sum('Current Staff - Total');
 
-        $prevOpeningsPhys = $previousMonth->sum('Current Openings - Phys');
-        $prevOpeningsAPP = $previousMonth->sum('Current Openings - APP');
-        $prevOpeningsTotal = $previousMonth->sum('Current Openings - Total');
+        $prevOpeningsPhys = $prevAccounts->sum('Current Openings - Phys');
+        $prevOpeningsAPP = $prevAccounts->sum('Current Openings - APP');
+        $prevOpeningsTotal = $prevAccounts->sum('Current Openings - Total');
 
-        $prevApplications = $previousMonth->sum('MTD - Applications');
-        $prevInterViews = $previousMonth->sum('MTD - Interviews');
-        $prevContractsOut = $previousMonth->sum('MTD - Contracts Out');
-        $prevContractsIn = $previousMonth->sum('MTD - Contracts In');
-        $prevCredentialings = $previousMonth->sum('MTD - Signed Not Yet Started');
+        $prevApplications = $prevAccounts->sum('MTD - Applications');
+        $prevInterViews = $prevAccounts->sum('MTD - Interviews');
+        $prevContractsOut = $prevAccounts->sum('MTD - Contracts Out');
+        $prevContractsIn = $prevAccounts->sum('MTD - Contracts In');
+        $prevCredentialings = $prevAccounts->sum('MTD - Signed Not Yet Started');
 
         $percentRecruitedPhys = $completeStaffPhys == 0 ? 0 : round((($completeStaffPhys - $openingsPhys) / $completeStaffPhys) * 100, 2);
         $percentRecruitedAPP = $completeStaffAPP == 0 ? 0 : round((($completeStaffAPP - $openingsAPP) / $completeStaffAPP) * 100, 2);
@@ -232,10 +284,28 @@ class DashboardsController extends Controller
 
         for($x = 0; $x < 4; $x++) {
             $tempContracts = array();
-            $tempContracts["name"] = Carbon::today()->subMonth($x)->format('F Y');
-
             $tempOpenings = array();
-            $tempOpenings["name"] = Carbon::today()->subMonth($x)->format('F Y');
+
+
+            switch ($period) {
+                case 'MTD':
+                    $tempContracts["name"] = Carbon::today()->subMonth($x)->format('F Y');
+                    $tempOpenings["name"] = Carbon::today()->subMonth($x)->format('F Y');
+                    break;
+
+                case 'QTD':
+                    $tempContracts["name"] = $quarters[$x]->format('Y').' Q'.$quarters[$x]->quarter;
+                    $tempOpenings["name"] = $quarters[$x]->format('Y').' Q'.$quarters[$x]->quarter;
+                    break;
+
+                case 'YTD':
+                    $tempContracts["name"] = Carbon::today()->subYear($x)->format('Y');
+                    $tempOpenings["name"] = Carbon::today()->subYear($x)->format('Y');
+                    break;
+                
+                default:
+                    break;
+            }
 
             $contracts = $monthsData[$x]->sum('MTD - Contracts In');
             $openings = $monthsData[$x]->sum('Current Openings - Total');
@@ -267,7 +337,8 @@ class DashboardsController extends Controller
             'pipeline' => $pipeline, 
             'squares' => $squares, 
             'gauge' => $gauge,
-            'bars' => $bars
+            'bars' => $bars,
+            'period' => $period
         );
 
         return $formatedResponse;
