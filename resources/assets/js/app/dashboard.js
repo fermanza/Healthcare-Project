@@ -421,7 +421,7 @@ var dashboard = {
 			  return d.bar; 
 			})]);
 
-			yLine.domain([0, 100]);
+			yLine.domain([60, 100]);
 
 			var rect = svg.selectAll("rect")
 			.data(data);

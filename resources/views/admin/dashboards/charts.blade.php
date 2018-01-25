@@ -18,7 +18,7 @@
     						<li class="fb-grow {{Request::input('period') ? (Request::input('period') == 'YTD' ? 'selected' : '') : ''}}">YTD</li>
     					</ul>
     					<p class="title">Custom Period</p>
-                        <input type="text" id="periodValue" class="hidden" name="period" value="QTD">
+                        <input type="text" id="periodValue" class="hidden" name="period" value="MTD">
     				</div>
     				<div class="filter-list fb-grow mbm">
                         <select class="form-control select2" name="affiliations[]" data-placeholder="@lang('Affiliation')" multiple>
@@ -108,6 +108,12 @@
                             <option value="1" {{ Request::input('new') == 1 ? 'selected' : '' }}>New Store</option>
                             <option value="2" {{ Request::input('new') == 2 ? 'selected' : '' }}>Same Store</option>
                         </select>
+
+                        <select class="form-control select2" name="active" data-placeholder="@lang('Active\Termed')">
+                            <option value=""></option>
+                            <option value="1" {{ Request::input('new') == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="2" {{ Request::input('new') == 2 ? 'selected' : '' }}>Termed</option>
+                        </select>
     				</div>
     				<div class="controls">
                         <a href="{{ route('admin.dashboards.index') }}" type="submit" class="btn btn-default btn-block clear mbs">
@@ -131,14 +137,14 @@
 						<div class="fb-v-center">
 							<h1 class="mtn dynamic noPlus" data-id="PhysiciansRecruited"></h1>
 							<p>Physicians Recruited</p>
-							<h3>@{{period}}</h3>
+							<h3>MTD</h3>
 						</div>
 					</div>
 					<div class="fb-grow subrow-2 box mtm text-center fb-h-center fb-parent">
 						<div class="fb-v-center">
 							<h1 class="mtn dynamic noPlus" data-id="AppRecruited"></h1>
 							<p>App Recruited</p>
-							<h3>@{{period}}</h3>
+							<h3>MTD</h3>
 						</div>
 					</div>
 				</div>
@@ -148,7 +154,7 @@
 						<div class="fb-parent fb-grow fb-rows text-center fb-h-center">
 							<div class="fb-v-center">
 								<h1 class="totalPctRecruited"></h1>
-								<h1>@{{period}}</h1>
+								<h1>MTD</h1>
 							</div>
 						</div>
 						<div class="fb-grow fb-h-center fb-parent">
@@ -198,8 +204,8 @@
 				</div>
 				<div class="fb-grow col-5 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
-						<h2 class="mtn dynamic" data-id="Credentialings"></h2>
-						<p class="mbn">@{{period}} Credentialing</p>
+						<h2 class="mtn dynamic" data-id="Openings"></h2>
+						<p class="mbn">@{{period}} Openings</p>
 					</div>
 				</div>
 			</div>
