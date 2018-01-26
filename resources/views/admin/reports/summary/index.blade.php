@@ -185,8 +185,8 @@
                         <th colspan="5" class="current-openings-bg">CURRENT OPENINGS</th>
                         <th colspan="3" class="percent-bg">PERCENT RECRUITED</th>
                         <th colspan="5" class="prev-month-bg">PREV MONTH</th>
-                        <th colspan="5" class="mtd-bg">MTD</th>
-                        <th colspan="7" class="ytd-bg">YTD</th>
+                        <th colspan="7" class="mtd-bg">MTD</th>
+                        <th colspan="9" class="ytd-bg">YTD</th>
                     </tr>
 	                <tr>
 	                    <th class="thwd40">#</th>
@@ -230,13 +230,17 @@
                         <th class="thwd80">@lang('Contracts Out')</th>
                         <th class="thwd80">@lang('Contracts in')</th>
                         <th class="thwd100">@lang('Signed Not Yet Started')</th>
+                        <th class="thwd60">@lang('Phys +/-')</th>
+                        <th class="thwd60">@lang('APP +/-')</th>
                         <th class="thwd80">@lang('Applications')</th>
                         <th class="thwd80">@lang('Interviews')</th>
                         <th class="thwd80">@lang('Pending Contracts')</th>
                         <th class="thwd80">@lang('Contracts In ')</th>
                         <th class="thwd100">@lang('Signed Not Yet Started')</th>
                         <th class="thwd100">@lang('Inc Comp')</th>
-                        <th class="thwd50">@lang('Attrition')</th>
+                        <th class="thwd60">@lang('Attrition')</th>
+                        <th class="thwd60">@lang('Phys +/-')</th>
+                        <th class="thwd60">@lang('APP +/-')</th>
 	                </tr>
 	            </thead>
 	            <tbody>
@@ -352,6 +356,12 @@
                             <td class="wd50">
                                 {{ $account->present()->{'MTD - Signed Not Yet Started'} }}
                             </td>
+                            <td class="wd100">
+                                {{ $account->present()->{'MTD - Phys +/-'} }}
+                            </td>
+                            <td class="wd100">
+                                {{ $account->present()->{'MTD - APP +/-'} }}
+                            </td>
                             <td class="wd50">
                                 {{ $account->present()->{'YTD - Applications'} }}
                             </td>
@@ -373,12 +383,19 @@
                             <td class="wd100">
                                 {{ $account->present()->{'YTD - Attrition'} }}
                             </td>
+                            <td class="wd100">
+                                {{ $account->present()->{'YTD - Phys +/-'} }}
+                            </td>
+                            <td class="wd100">
+                                {{ $account->present()->{'YTD - APP +/-'} }}
+                            </td>
 	                    </tr>
 	                @endforeach
 	            </tbody>
 	        </table>
 	    </div>
 	</div>
+    <p class="notes">* Percent recruited number does not reflect sites that are overstaffed</p>
 @endsection
 
 @push('scripts')
@@ -432,9 +449,13 @@
                     var sum45 = api.column( 45, {page:'current'} ).data().sum(); 
                     var sum46 = api.column( 46, {page:'current'} ).data().sum(); 
                     var sum47 = api.column( 47, {page:'current'} ).data().sum();
+                    var sum48 = api.column( 48, {page:'current'} ).data().sum();
+                    var sum49 = api.column( 49, {page:'current'} ).data().sum();
+                    var sum50 = api.column( 50, {page:'current'} ).data().sum();
+                    var sum51 = api.column( 51, {page:'current'} ).data().sum();
                   
                   $( api.table().body() ).append(
-                    '<tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>'+(sum17 > 0 ? sum17.toFixed(1) : '')+'</td><td>'+(sum18 > 0 ? sum18.toFixed(1) : '')+'</td><td>'+(sum19 > 0 ? sum19.toFixed(1) : '')+'</td><td>'+(sum20 > 0 ? sum20.toFixed(1) : '')+'</td><td>'+(sum21 > 0 ? sum21.toFixed(1) : '')+'</td><td>'+(sum22 > 0 ? sum22.toFixed(1) : '')+'</td><td>'+(sum23 > 0 ? roundStep(sum23, 0.5) : '')+'</td><td>'+(sum24 > 0 ? roundStep(sum24, 0.5) : '')+'</td><td>'+(sum25 > 0 ? roundStep(sum25, 0.5) : '')+'</td><td>'+(sum26 > 0 ? roundStep(sum26, 0.5) : '')+'</td><td>'+(sum27 > 0 ? roundStep(sum27, 0.5) : '')+'</td><td>'+(sum28 > 0 ? (sum28 > 100 ? '100%' : sum28.toFixed(1)+'%') : '')+'</td></td><td>'+(sum29 > 0 ? (sum29 > 100 ? '100%' : sum29.toFixed(1)+'%') : '')+'</td><td>'+(sum30 > 0 ? (sum30 > 100 ? '100%' : sum30.toFixed(1)+'%') : '')+'</td><td>'+(sum31 > 0 ? '$'+sum31.toFixed(2) : '')+'</td><td></td><td></td><td></td><td></td><td>'+(sum36 > 0 ? sum36.toFixed(1) : '')+'</td><td>'+(sum37 > 0 ? sum37.toFixed(1) : '')+'</td><td>'+(sum38 > 0 ? sum38.toFixed(1) : '')+'</td><td>'+(sum39 > 0 ? sum39.toFixed(1) : '')+'</td><td>'+(sum40 > 0 ? sum40.toFixed(1) : '')+'</td><td>'+(sum41 > 0 ? sum41.toFixed(1) : '')+'</td><td>'+(sum42 > 0 ? sum42.toFixed(1) : '')+'</td><td>'+(sum43 > 0 ? sum43.toFixed(1) : '')+'</td><td>'+(sum44 > 0 ? sum44.toFixed(1) : '')+'</td><td>'+(sum45 > 0 ? sum45.toFixed(1) : '')+'</td><td>'+(sum46 > 0 ? '$'+sum46.toFixed(2) : '')+'</td><td>'+(sum47 > 0 ? sum47.toFixed(1) : '')+'</td></tr>'
+                    '<tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>'+(sum17 > 0 ? sum17.toFixed(1) : '')+'</td><td>'+(sum18 > 0 ? sum18.toFixed(1) : '')+'</td><td>'+(sum19 > 0 ? sum19.toFixed(1) : '')+'</td><td>'+(sum20 > 0 ? sum20.toFixed(1) : '')+'</td><td>'+(sum21 > 0 ? sum21.toFixed(1) : '')+'</td><td>'+(sum22 > 0 ? sum22.toFixed(1) : '')+'</td><td>'+(sum23 > 0 ? roundStep(sum23, 0.5) : '')+'</td><td>'+(sum24 > 0 ? roundStep(sum24, 0.5) : '')+'</td><td>'+(sum25 > 0 ? roundStep(sum25, 0.5) : '')+'</td><td>'+(sum26 > 0 ? roundStep(sum26, 0.5) : '')+'</td><td>'+(sum27 > 0 ? roundStep(sum27, 0.5) : '')+'</td><td>'+(sum28 > 0 ? (sum28 > 100 ? '100%' : sum28.toFixed(1)+'%') : '')+'</td></td><td>'+(sum29 > 0 ? (sum29 > 100 ? '100%' : sum29.toFixed(1)+'%') : '')+'</td><td>'+(sum30 > 0 ? (sum30 > 100 ? '100%' : sum30.toFixed(1)+'%') : '')+'</td><td>'+(sum31 > 0 ? '$'+sum31.toFixed(2) : '')+'</td><td></td><td></td><td></td><td></td><td>'+(sum36 > 0 ? sum36.toFixed(1) : '')+'</td><td>'+(sum37 > 0 ? sum37.toFixed(1) : '')+'</td><td>'+(sum38 > 0 ? sum38.toFixed(1) : '')+'</td><td>'+(sum39 > 0 ? sum39.toFixed(1) : '')+'</td><td>'+(sum40 > 0 ? sum40.toFixed(1) : '')+'</td><td>'+(sum41 > 0 ? sum41.toFixed(1) : '')+'</td><td>'+(sum42 > 0 ? sum42.toFixed(1) : '')+'</td><td>'+(sum43 > 0 ? sum43.toFixed(1) : '')+'</td><td>'+(sum44 > 0 ? sum44.toFixed(1) : '')+'</td><td>'+(sum45 > 0 ? sum45.toFixed(1) : '')+'</td><td>'+(sum46 > 0 ? sum46.toFixed(1) : '')+'</td><td>'+(sum47 > 0 ? sum47.toFixed(1) : '')+'</td><td>'+(sum48 > 0 ? '$'+sum48.toFixed(2) : '')+'</td><td>'+(sum49 > 0 ? sum49.toFixed(1) : '')+'</td><td>'+(sum50 > 0 ? sum50.toFixed(1) : '')+'</td><td>'+(sum51 > 0 ? sum51.toFixed(1) : '')+'</td></tr>'
                   );
                 }
             }));

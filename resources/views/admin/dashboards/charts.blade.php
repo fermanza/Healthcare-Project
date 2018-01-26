@@ -109,10 +109,10 @@
                             <option value="2" {{ Request::input('new') == 2 ? 'selected' : '' }}>Same Store</option>
                         </select>
 
-                        <select class="form-control select2" name="active" data-placeholder="@lang('Active\Termed')">
+                        <select class="form-control select2" name="termed" data-placeholder="@lang('Active\Termed')">
                             <option value=""></option>
-                            <option value="1" {{ Request::input('active') == 1 ? 'selected' : '' }}>Active</option>
-                            <option value="2" {{ Request::input('active') == 2 ? 'selected' : '' }}>Termed</option>
+                            <option value="1" {{ Request::input('termed') == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="2" {{ Request::input('termed') == 2 ? 'selected' : '' }}>Termed</option>
                         </select>
     				</div>
     				<div class="controls">
@@ -179,31 +179,31 @@
 				<div class="fb-grow col-1 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
 						<h2 class="mtn dynamic" data-id="Applications"></h2>
-						<p class="mbn">@{{period}} Applications</p>
+						<p class="mbn bottom-kpi">@{{period}} over @{{period}} Applications</p>
 					</div>
 				</div>
 				<div class="fb-grow col-2 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
 						<h2 class="mtn dynamic" data-id="Interviews"></h2>
-						<p class="mbn">@{{period}} Interviews</p>
+						<p class="mbn bottom-kpi">@{{period}} over @{{period}} Interviews</p>
 					</div>
 				</div>
 				<div class="fb-grow col-3 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
 						<h2 class="mtn dynamic" data-id="ContractsOut"></h2>
-						<p class="mbn">@{{period}} Contacts Out</p>
+						<p class="mbn bottom-kpi">@{{period}} over @{{period}} Contacts Out</p>
 					</div>
 				</div>
 				<div class="fb-grow col-4 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
 						<h2 class="mtn dynamic" data-id="ContractsIn"></h2>
-						<p class="mbn">@{{period}} Contacts In</p>
+						<p class="mbn bottom-kpi">@{{period}} over @{{period}} Contacts In</p>
 					</div>
 				</div>
 				<div class="fb-grow col-5 box text-center fb-h-center fb-parent">
 					<div class="fb-v-center">
 						<h2 class="mtn dynamic" data-id="Openings"></h2>
-						<p class="mbn">@{{period}} Openings</p>
+						<p class="mbn bottom-kpi">@{{period}} over @{{period}} Openings</p>
 					</div>
 				</div>
 			</div>
