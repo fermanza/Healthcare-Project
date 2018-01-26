@@ -525,7 +525,7 @@ var dashboard = {
 		      .attr("font-weight", "bold")
 		      .attr("fill", args.color)
 		      .attr("font-size", "14px")
-		      .attr("x", function(d) { return xBar(d.name) + xBar.bandwidth()/2; })
+		      .attr("x", function(d) { return xBar(d.name) + xBar.bandwidth()/2 - 10; })
 		      .attr("y", function(d) { return yBar(d.bar) - 5; })
 		      .text(function(d) { return d.bar; });
 
@@ -535,7 +535,7 @@ var dashboard = {
 		      .attr("font-weight", "bold")
 		      .attr("fill", "#000")
 		      .attr("font-size", "12px")
-		      .attr("x", function(d) { return xLine(d.name) + xLine.bandwidth()/2; })
+		      .attr("x", function(d) { return xLine(d.name) + xLine.bandwidth()/2 - 10; })
 		      .attr("y", function(d) { return yLine(d.line1) - 5; })
 		      .text(function(d) { return d.line1+'%'; });
 		}
