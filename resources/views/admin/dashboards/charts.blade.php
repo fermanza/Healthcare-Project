@@ -111,8 +111,8 @@
 
                         <select class="form-control select2" name="active" data-placeholder="@lang('Active\Termed')">
                             <option value=""></option>
-                            <option value="1" {{ Request::input('new') == 1 ? 'selected' : '' }}>Active</option>
-                            <option value="2" {{ Request::input('new') == 2 ? 'selected' : '' }}>Termed</option>
+                            <option value="1" {{ Request::input('active') == 1 ? 'selected' : '' }}>Active</option>
+                            <option value="2" {{ Request::input('active') == 2 ? 'selected' : '' }}>Termed</option>
                         </select>
     				</div>
     				<div class="controls">
@@ -136,15 +136,13 @@
 					<div class="fb-grow subrow-1 box mbm text-center fb-h-center fb-parent">
 						<div class="fb-v-center">
 							<h1 class="mtn dynamic noPlus" data-id="PhysiciansRecruited"></h1>
-							<p>Physicians Recruited</p>
-							<h3>MTD</h3>
+							<p class="kpi-text">Physicians Recruited <br> <span class="bold period">MTD</span></p>
 						</div>
 					</div>
 					<div class="fb-grow subrow-2 box mtm text-center fb-h-center fb-parent">
 						<div class="fb-v-center">
 							<h1 class="mtn dynamic noPlus" data-id="AppRecruited"></h1>
-							<p>App Recruited</p>
-							<h3>MTD</h3>
+							<p class="kpi-text">App Recruited <br> <span class="bold period">MTD</span></p>
 						</div>
 					</div>
 				</div>
@@ -152,9 +150,9 @@
 					<h3 class="title">Total Percent Recruited</h3>
 					<div class="fb-grow fb-parent">
 						<div class="fb-parent fb-grow fb-rows text-center fb-h-center">
-							<div class="fb-v-center">
-								<h1 class="totalPctRecruited"></h1>
-								<h1>MTD</h1>
+							<div id="totalPctRecruited" class="fb-v-center">
+								<p class="totalPctRecruited"></p>
+								<p>MTD</p>
 							</div>
 						</div>
 						<div class="fb-grow fb-h-center fb-parent">

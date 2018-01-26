@@ -4,6 +4,7 @@
     background-size: cover;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     height: 100%;
+    color: #000;
 
     .sr-only {
         position: absolute;
@@ -109,7 +110,7 @@
         overflow-y: auto;
     }
     .row-1 {
-        flex: 1;
+        flex: 5;
         max-height: 350px;
     }
     .row-1 .col-1 {
@@ -141,6 +142,7 @@
     .box h3.title,
     .box h4.title {
         margin: 0;
+        padding: 5px 0 0 5px;
     }
     .box h4 {
         margin-bottom: 5px;
@@ -194,7 +196,7 @@
     .line {
         fill: none;
         stroke: steelblue;
-        stroke-width: 4px;
+        stroke-width: 2px;
     }
     .barAxis text {
         fill: "#116682";
@@ -243,6 +245,35 @@
 
     .title {
         color: #000;
+    }
+
+    #totalPctRecruited {
+        font-size: 48px;
+        font-weight: bolder;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    .kpi-text {
+        line-height: 15px;
+
+        .bold {
+            line-height: 30px;
+        }
+    }
+
+    .period {
+        font-size: 32px;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .select2-container .select2-selection--multiple .select2-selection__rendered {
+        white-space: normal;
     }
     /*# sourceMappingURL=treehouse-dashboard.css.map */
 }

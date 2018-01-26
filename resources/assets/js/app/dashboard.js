@@ -35,8 +35,8 @@ var dashboard = {
 	},
 	pipeline: {
 		init: function(args){
-			var w = $(args.containerSelector).parent().innerWidth();
-			var h = $(args.containerSelector).parent().innerHeight();
+			var w = $(args.containerSelector).parent().innerWidth() - 50;
+			var h = $(args.containerSelector).parent().innerHeight() - 15;
 			var barPadding = 20;
 			var dataset;
 			var barHeight = 30;
@@ -382,10 +382,10 @@ var dashboard = {
 			var divTooltip = d3.select(args.containerSelector).append("div").attr("class", "toolTip");
 
 			// set the ranges
-			var xBar = d3.scaleBand().range([0, width]).paddingInner(0.5).paddingOuter(0.25);
+			var xBar = d3.scaleBand().range([0, width]).paddingInner(0.25).paddingOuter(0);
 			var xLine = d3.scalePoint().range([0, width]).padding(0.5);
 			var yBar = d3.scaleLinear().range([height, 0]);
-			var yLine = d3.scaleLinear().range([height, 0]);
+			var yLine = d3.scaleLinear().range([height, 0]).domain([0, 100]);
 
 			// define the 1st line
 			var valueline = d3.line()
@@ -420,8 +420,6 @@ var dashboard = {
 			yBar.domain([0, d3.max(data, function(d) {
 			  return d.bar; 
 			})]);
-
-			yLine.domain([60, 100]);
 
 			var rect = svg.selectAll("rect")
 			.data(data);
@@ -519,7 +517,27 @@ var dashboard = {
 			svg.append("g")
 			.attr("class", "lineAxis")
 			.attr("transform", "translate( " + width + ", 0 )")
-			.call(d3.axisRight(yLine));
+			.call(d3.axisRight(yLine).ticks(5).tickFormat(function(d) { return d + "%"; }));
+
+			svg.selectAll("text.bar")
+			.data(data)
+		    .enter().append("text")
+		      .attr("font-weight", "bold")
+		      .attr("fill", args.color)
+		      .attr("font-size", "14px")
+		      .attr("x", function(d) { return xBar(d.name) + xBar.bandwidth()/2; })
+		      .attr("y", function(d) { return yBar(d.bar) - 5; })
+		      .text(function(d) { return d.bar; });
+
+		    svg.selectAll("text.line")
+			.data(data)
+		    .enter().append("text")
+		      .attr("font-weight", "bold")
+		      .attr("fill", "#000")
+		      .attr("font-size", "12px")
+		      .attr("x", function(d) { return xLine(d.name) + xLine.bandwidth()/2; })
+		      .attr("y", function(d) { return yLine(d.line1) - 5; })
+		      .text(function(d) { return d.line1+'%'; });
 		}
 	}
 };

@@ -37,14 +37,14 @@ class DashboardsController extends Controller
         $recruiters = $employees->filter->hasPosition(config('instances.position_types.recruiter'));
         $managers = $employees->filter->hasPosition(config('instances.position_types.manager'));
         $doos = $employees->filter->hasPosition(config('instances.position_types.doo'));
-        $SVPs = Pipeline::distinct('SVP')->select('SVP')->whereNotNull('SVP')->orderBy('SVP')->get();
-        $RMDs = Pipeline::distinct('RMD')->select('RMD')->whereNotNull('RMD')->orderBy('RMD')->get();
+        $SVPs = Pipeline::distinct()->select('SVP')->whereNotNull('SVP')->orderBy('SVP')->get();
+        $RMDs = Pipeline::distinct()->select('RMD')->whereNotNull('RMD')->orderBy('RMD')->get();
         $RSCs = RSC::where('active', true)->orderBy('name')->get();
         $states = StateAbbreviation::all();
-        $cities = Account::distinct('city')->select('city')->where('active', true)->orderBy('city')->get();
+        $cities = Account::distinct()->select('city')->where('active', true)->whereNotNull('city')->orderBy('city')->get();
         $practices = Practice::where('active', true)->orderBy('name')->get();
         $regions = Region::where('active', true)->orderBy('name')->get();
-        $affiliations = SystemAffiliation::all();
+        $affiliations = SystemAffiliation::distinct()->select('name')->get();
         $sites = Account::where('active', true)->orderBy('name')->get();
         $groups = Group::where('active', true)->get()->sortBy('name');
 
