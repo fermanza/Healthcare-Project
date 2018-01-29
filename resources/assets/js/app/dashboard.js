@@ -381,6 +381,8 @@ var dashboard = {
 			//createthe tooltip holder
 			var divTooltip = d3.select(args.containerSelector).append("div").attr("class", "toolTip");
 
+			var yLineRange = args.type == "Contracts In" ? [0, 100] : [100, 500];
+
 			// set the ranges
 			var xBar = d3.scaleBand().range([0, width]).paddingInner(0.25).paddingOuter(0);
 			var xLine = d3.scalePoint().range([0, width]).padding(0.5);
@@ -406,6 +408,7 @@ var dashboard = {
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			var data = args.type == 'Contracts In' ? args.data.contracts : args.data.openings;
+			var blackText = args.type == 'Contracts In' ? 'Percentage Recruited' : 'Contract Out To In %';
 
 			// format the data
 			data.forEach(function(d) {
@@ -443,7 +446,7 @@ var dashboard = {
 				var l = elements.length -1;
 				//l = l-1
 				var elementData = elements[l].__data__
-				divTooltip.html("<p clas='mbn'><b>"+(d.name)+"</b></p><span class='legendSwatch contractsIn'></span>"+args.type+": "+elementData.bar+"<br><span class='legendSwatch pctRecruited'></span>Percentage Recruited: "+elementData.line1+"%");
+				divTooltip.html("<p clas='mbn'><b>"+(d.name)+"</b></p><span class='legendSwatch contractsIn'></span>"+args.type+": "+elementData.bar+"<br><span class='legendSwatch pctRecruited'></span>"+blackText+": "+elementData.line1+"%");
 			})
 			.on("mouseout", function(d){
 				//hide the tooltip on mouseout
@@ -492,8 +495,12 @@ var dashboard = {
 			.attr("x", function(d, i){ return i *  textWidth + 15;})
 			.attr("y", 0)
 			.text(function(d) {
-				var text = d[0];
-				return text;
+				if(args.type != 'Contracts In' && d[0] == 'Percentage Recruited') {
+					return 'Contract Out To In %';
+				} else {
+					var text = d[0];
+					return text;
+				}
 			});
 				
 			legend

@@ -231,7 +231,7 @@ class ReportsController extends Controller
                         $account->Location,
                         $account->{'Start Date'} ? \PHPExcel_Shared_Date::PHPToExcel($account->{'Start Date'}) : '',
                         $account->account && $account->account->endDate ? \PHPExcel_Shared_Date::PHPToExcel($account->account->endDate) : '',
-                        $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated(),
+                        $account->getMonthsSinceCreated($request->monthEndDate) === INF ? '' : $account->getMonthsSinceCreated($request->monthEndDate),
                         $account->present()->excel('Complete Staff - Phys'),
                         $account->present()->excel('Complete Staff - APP'),
                         $account->present()->excel('Complete Staff - Total'),
@@ -271,7 +271,7 @@ class ReportsController extends Controller
 
                     $sheet->row($rowNumber, $row);
 
-                    if ($account->getMonthsSinceCreated() < 7) {
+                    if ($account->getMonthsSinceCreated($request->monthEndDate) < 7) {
                         $sheet->cell('R'.$rowNumber, function($cell) use ($account) {
                             $cell->setBackground('#1aaf54');
                             $cell->setFontColor('#ffffff');
@@ -952,7 +952,7 @@ class ReportsController extends Controller
                         $account->Location,
                         $account->{'Start Date'} ? \PHPExcel_Shared_Date::PHPToExcel($account->{'Start Date'}) : '',
                         $account->account && $account->account->endDate ? \PHPExcel_Shared_Date::PHPToExcel($account->account->endDate) : '',
-                        $account->getMonthsSinceCreated() === INF ? '' : $account->getMonthsSinceCreated(),
+                        $account->getMonthsSinceCreated($request->monthEndDate) === INF ? '' : $account->getMonthsSinceCreated($request->monthEndDate),
                         $account->present()->excel('Complete Staff - Phys'),
                         $account->present()->excel('Complete Staff - APP'),
                         $account->present()->excel('Complete Staff - Total'),
@@ -992,7 +992,7 @@ class ReportsController extends Controller
 
                     $sheet->row($rowNumber, $row);
 
-                    if ($account->getMonthsSinceCreated() < 7) {
+                    if ($account->getMonthsSinceCreated($request->monthEndDate) < 7) {
                         $sheet->cell('R'.$rowNumber, function($cell) use ($account) {
                             $cell->setBackground('#1aaf54');
                             $cell->setFontColor('#ffffff');

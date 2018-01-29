@@ -356,19 +356,22 @@ class DashboardsController extends Controller
                     break;
             }
 
-            $contracts = $monthsData[$x]->sum('MTD - Contracts In');
+            $contractsIn = $monthsData[$x]->sum('MTD - Contracts In');
+            $contractsOut = $monthsData[$x]->sum('MTD - Contracts Out');
             $openings = $monthsData[$x]->sum('Current Openings - Total');
 
             $completeStaffTotal = $monthsData[$x]->sum('Complete Staff - Total');
             $openingsTotal = $monthsData[$x]->sum('Current Openings - Total');
 
-            $line = $completeStaffTotal == 0 ? 0 : round((($completeStaffTotal - $openingsTotal) / $completeStaffTotal * 100), 2);
 
-            $tempContracts["bar"] = $contracts;
+            $lineContractsIn = $completeStaffTotal == 0 ? 0 : round((($completeStaffTotal - $openingsTotal) / $completeStaffTotal * 100), 2);
+            $lineContractsInVsOut = $completeStaffTotal == 0 ? 0 : round((($contractsIn / $contractsOut) * 100), 2);
+
+            $tempContracts["bar"] = $contractsIn;
             $tempOpenings["bar"] = $openings;
 
-            $tempContracts["line1"] = $line;
-            $tempOpenings["line1"] = $line;
+            $tempContracts["line1"] = $lineContractsIn;
+            $tempOpenings["line1"] = $lineContractsInVsOut > 100 ? 100 : $lineContractsInVsOut;
 
             $bars["contracts"][] = $tempContracts;
             $bars["openings"][] = $tempOpenings;

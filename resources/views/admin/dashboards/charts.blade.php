@@ -169,7 +169,7 @@
 					</div>
 				</div>
 				<div class="fb-grow fb-rows fb-parent col-2 box mlm">
-					<h4 class="title">Percent Recruited vs Openings</h4>
+					<h4 class="title">Contract Out To In vs Openings</h4>
 					<div class="fb-grow rrvo">
 						
 					</div>

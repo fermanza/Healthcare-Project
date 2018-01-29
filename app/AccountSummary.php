@@ -49,10 +49,20 @@ class AccountSummary extends Model
      *
      * @return float
      */
-    public function getMonthsSinceCreated()
+    public function getMonthsSinceCreated($date = null)
     {
         if (! $this->{'Start Date'}) {
             return INF;
+        }
+
+        $targetDate = Carbon::now();
+
+        if ($date) {
+            $monthYear = explode('-', $date);
+            $month = $monthYear[0];
+            $year = $monthYear[1];
+
+            $targetDate = Carbon::parse(date($year.'-'.$month.'-'.'01'));
         }
 
         $monthDays = 30;
@@ -60,7 +70,7 @@ class AccountSummary extends Model
         if($this->{'Start Date'}->gte(Carbon::now())) {
             return 0;
         } else {
-            $days = Carbon::now()->diffInDays($this->{'Start Date'});
+            $days = $targetDate->diffInDays($this->{'Start Date'});
         }
         
         $months = $days / $monthDays;
