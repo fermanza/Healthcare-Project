@@ -189,7 +189,7 @@ class ReportsController extends Controller
 
         $fileName .= ' - '.Carbon::now()->format('m/d/Y');
 
-        Excel::create($fileName, function($excel) use ($dataToExport, $headers){
+        Excel::create($fileName, function($excel) use ($dataToExport, $headers, $request){
 
             $accountIds = $dataToExport->map(function($account) { return $account->accountId; });
             $accountIds = array_values($accountIds->toArray());
@@ -906,7 +906,7 @@ class ReportsController extends Controller
             return back();
         }
 
-        Excel::create($fileName, function($excel) use ($dataToExport, $accountIds, $headers, $tableStyle, $headerStyle, $topBorder, $bottomBorder){
+        Excel::create($fileName, function($excel) use ($dataToExport, $accountIds, $headers, $tableStyle, $headerStyle, $topBorder, $bottomBorder, $request){
 
             $accounts = Account::whereIn('id', $accountIds)->with([
                 'pipeline' => function ($query) {
