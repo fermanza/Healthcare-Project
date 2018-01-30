@@ -381,13 +381,30 @@ var dashboard = {
 			//createthe tooltip holder
 			var divTooltip = d3.select(args.containerSelector).append("div").attr("class", "toolTip");
 
-			var yLineRange = args.type == "Contracts In" ? [0, 100] : [100, 500];
+			var data = args.type == 'Contracts In' ? args.data.contracts : args.data.openings;
+
+			var lines = data.map(function(d) {
+				return d.line1;
+			});
+
+			var maxVal = Math.max.apply(null, lines);
+			var minVal = Math.min.apply(null, lines);
+
+			minVal = minVal == maxVal ? (maxVal - 30) : (minVal - 10);
+
+			maxVal = maxVal + 10;
+			maxVal = maxVal >= 100 ? 100 : maxVal;
+
+			minVal = Math.round(minVal / 10) * 10;
+			maxVal = Math.round(maxVal / 10) * 10;
+			
+			var yLineRange = [minVal, maxVal];
 
 			// set the ranges
 			var xBar = d3.scaleBand().range([0, width]).paddingInner(0.25).paddingOuter(0);
 			var xLine = d3.scalePoint().range([0, width]).padding(0.5);
 			var yBar = d3.scaleLinear().range([height, 0]);
-			var yLine = d3.scaleLinear().range([height, 0]).domain([0, 100]);
+			var yLine = d3.scaleLinear().range([height, 0]).domain(yLineRange);
 
 			// define the 1st line
 			var valueline = d3.line()
@@ -407,7 +424,6 @@ var dashboard = {
 			.append("g")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			var data = args.type == 'Contracts In' ? args.data.contracts : args.data.openings;
 			var blackText = args.type == 'Contracts In' ? 'Percentage Recruited' : 'Contract Out To In %';
 
 			// format the data
@@ -530,10 +546,11 @@ var dashboard = {
 			.data(data)
 		    .enter().append("text")
 		      .attr("font-weight", "bold")
-		      .attr("fill", args.color)
+		      .attr("fill", "#FFF")
 		      .attr("font-size", "14px")
-		      .attr("x", function(d) { return xBar(d.name) + xBar.bandwidth()/2 - 10; })
-		      .attr("y", function(d) { return yBar(d.bar) - 5; })
+		      .attr("x", function(d) { return xBar(d.name) + xBar.bandwidth()/2; })
+		      .attr("y", function(d) { return yBar(d.bar - d.bar); })
+		      .style("text-anchor", "middle")
 		      .text(function(d) { return d.bar; });
 
 		    svg.selectAll("text.line")
