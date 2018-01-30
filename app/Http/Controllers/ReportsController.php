@@ -200,7 +200,7 @@ class ReportsController extends Controller
 
             $accounts = Account::whereIn('id', $accountIds)->get();
 
-            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers){
+            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers, $request){
                 
                 $rowNumber = 2;
 
@@ -921,7 +921,7 @@ class ReportsController extends Controller
                 'practices',
             ])->orderBy('name')->get();
 
-            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers){
+            $excel->sheet('Summary', function($sheet) use ($dataToExport, $headers, $request){
                 
                 $rowNumber = 2;
 
