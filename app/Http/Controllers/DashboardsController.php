@@ -365,7 +365,7 @@ class DashboardsController extends Controller
 
 
             $lineContractsIn = $completeStaffTotal == 0 ? 0 : round((($completeStaffTotal - $openingsTotal) / $completeStaffTotal * 100), 2);
-            $lineContractsInVsOut = $completeStaffTotal == 0 ? 0 : round((($contractsIn / $contractsOut) * 100), 2);
+            $lineContractsInVsOut = $contractsOut == 0 ? 0 : round((($contractsIn / $contractsOut) * 100), 2);
 
             $tempContracts["bar"] = $contractsIn;
             $tempOpenings["bar"] = $openings;
