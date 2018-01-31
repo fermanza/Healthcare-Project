@@ -53,15 +53,6 @@
                         </a>
                     </li>
 
-                    @permission('admin.dashboards.index')
-                        <li class="{{ route_starts_with('admin.dashboards') }}">
-                            <a href="{{ route('admin.dashboards.index') }}">
-                                <i class="fa fa-link"></i>
-                                <span>@lang('Dashboards')</span>
-                            </a>
-                        </li>
-                    @endpermission
-
                     @permission('admin.providers.index')
                         <li class="{{ route_starts_with('admin.providers') }}">
                             <a href="{{ route('admin.providers.index') }}">

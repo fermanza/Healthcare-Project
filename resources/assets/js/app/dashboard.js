@@ -397,6 +397,9 @@ var dashboard = {
 
 			minVal = Math.round(minVal / 10) * 10;
 			maxVal = Math.round(maxVal / 10) * 10;
+
+			minVal = minVal < 0 ? 0 : minVal;
+			maxVal = maxVal < 0 ? 30 : maxVal;
 			
 			var yLineRange = [minVal, maxVal];
 

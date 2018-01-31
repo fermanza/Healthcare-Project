@@ -19,7 +19,7 @@ $router->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetFo
 $router->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'auth'], function ($router) {
-    $router->get('dashboard', 'AdminController@index')->name('dashboard');
+    $router->get('dashboard', 'DashboardsController@index')->name('dashboard');
 
     $router->get('accounts/toggleScope', 'AccountsController@toggleScope')->name('accounts.toggleScope');
     $router->get('accounts/toggleChildren', 'AccountsController@toggleChildren')->name('accounts.toggleChildren');

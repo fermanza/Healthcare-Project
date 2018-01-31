@@ -161,9 +161,9 @@ class SummaryFilter extends Filter
     {
         $this->query->whereHas('account', function($query) use ($val) {
             if($val == 1) {
-                $query->whereNull('endDate')->orWhere('endDate', '>', Carbon::today()->format('Y-m-d')); 
+                $query->whereNull('endDate'); 
             } elseif ($val == 2) {
-                $query->whereNotNull('endDate')->whereDate('endDate', '<=', Carbon::today()->format('Y-m-d'));
+                $query->whereNotNull('endDate');
             }
         });
     }

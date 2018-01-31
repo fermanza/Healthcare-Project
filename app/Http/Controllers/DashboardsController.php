@@ -20,6 +20,7 @@ use App\StateAbbreviation;
 use App\Group;
 use App\Pipeline;
 use App\Filters\SummaryFilter;
+use App\Scopes\AccountSummaryScope;
 use Carbon\Carbon;
 use JavaScript;
 
@@ -147,6 +148,7 @@ class DashboardsController extends Controller
     }
 
     private function getChartsData(SummaryFilter $filter, $period, $newFilter) {
+        Carbon::useMonthsOverflow(false);
 
         $period = !$period ? 'MTD' : $period;
         $currentQuarterStart = Carbon::today()->firstOfQuarter();
@@ -169,33 +171,33 @@ class DashboardsController extends Controller
 
         switch ($period) {
             case 'MTD':
-                $accounts = AccountSummary::filter($filter)->whereMonth('MonthEndDate', Carbon::now()->month)->whereYear('MonthEndDate', Carbon::now()->year)->get();
-                $prevAccounts = AccountSummary::filter($filter)->whereMonth('MonthEndDate', Carbon::now()->subMonth()->month)->whereYear('MonthEndDate', Carbon::now()->subMonth()->year)->get();
+                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
+                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth()->month)->whereYear('MonthEndDate', Carbon::today()->subMonth()->year)->get();
                 $currentMonth = $accounts;
                 $firstPeriod = $accounts;
                 $secondPeriod = $prevAccounts;
-                $thirdPeriod = AccountSummary::filter($filter)->whereMonth('MonthEndDate', Carbon::now()->subMonth(2)->month)->whereYear('MonthEndDate', Carbon::now()->subMonth(2)->year)->get();
-                $fourthPeriod = AccountSummary::filter($filter)->whereMonth('MonthEndDate', Carbon::now()->subMonth(3)->month)->whereYear('MonthEndDate', Carbon::now()->subMonth(3)->year)->get();
+                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth(2)->month)->whereYear('MonthEndDate', Carbon::today()->subMonth(2)->year)->get();
+                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth(3)->month)->whereYear('MonthEndDate', Carbon::today()->subMonth(3)->year)->get();
                 break;
 
             case 'QTD':
-                $accounts = AccountSummary::filter($filter)->whereDate('MonthEndDate', '>=', $currentQuarterStart)->whereDate('MonthEndDate', '<=', $currentQuarterEnd)->get();
-                $prevAccounts = AccountSummary::filter($filter)->whereDate('MonthEndDate', '>=', $secondQuarterStart)->whereDate('MonthEndDate', '<=', $secondQuarterEnd)->get();
-                $currentMonth = AccountSummary::filter($filter)->whereMonth('MonthEndDate', Carbon::now()->month)->whereYear('MonthEndDate', Carbon::now()->year)->get();
+                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereDate('MonthEndDate', '>=', $currentQuarterStart)->whereDate('MonthEndDate', '<=', $currentQuarterEnd)->get();
+                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereDate('MonthEndDate', '>=', $secondQuarterStart)->whereDate('MonthEndDate', '<=', $secondQuarterEnd)->get();
+                $currentMonth = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
                 $firstPeriod = $accounts;
                 $secondPeriod = $prevAccounts;
-                $thirdPeriod = AccountSummary::filter($filter)->whereDate('MonthEndDate', '>=', $thirdQuarterStart)->whereDate('MonthEndDate', '<=', $thirdQuarterEnd)->get();
-                $fourthPeriod = AccountSummary::filter($filter)->whereDate('MonthEndDate', '>=', $fourthQuarterStart)->whereDate('MonthEndDate', '<=', $fourthQuarterEnd)->get();
+                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereDate('MonthEndDate', '>=', $thirdQuarterStart)->whereDate('MonthEndDate', '<=', $thirdQuarterEnd)->get();
+                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereDate('MonthEndDate', '>=', $fourthQuarterStart)->whereDate('MonthEndDate', '<=', $fourthQuarterEnd)->get();
                 break;
 
             case 'YTD':
-                $accounts = AccountSummary::filter($filter)->whereYear('MonthEndDate', Carbon::now()->year)->get();
-                $prevAccounts = AccountSummary::filter($filter)->whereYear('MonthEndDate', Carbon::now()->subYear()->year)->get();
-                $currentMonth = AccountSummary::filter($filter)->whereMonth('MonthEndDate', Carbon::now()->month)->whereYear('MonthEndDate', Carbon::now()->year)->get();
+                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereYear('MonthEndDate', Carbon::today()->year)->get();
+                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear()->year)->get();
+                $currentMonth = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
                 $firstPeriod = $accounts;
                 $secondPeriod = $prevAccounts;
-                $thirdPeriod = AccountSummary::filter($filter)->whereYear('MonthEndDate', Carbon::now()->subYear(2)->year)->get();
-                $fourthPeriod = AccountSummary::filter($filter)->whereYear('MonthEndDate', Carbon::now()->subYear(3)->year)->get();
+                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear(2)->year)->get();
+                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear(3)->year)->get();
                 break;
             
             default:
