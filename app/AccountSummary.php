@@ -57,7 +57,7 @@ class AccountSummary extends Model
 
         $targetDate = Carbon::now();
 
-        if ($date) {
+        if ($date != null) {
             $monthYear = explode('-', $date);
             $month = $monthYear[0];
             $year = $monthYear[1];

@@ -213,6 +213,10 @@ class DashboardsController extends Controller
                 return $account->getMonthsSinceCreated() < 7;
             });
 
+            $currentMonth = $currentMonth->filter(function($account) {
+                return $account->getMonthsSinceCreated() < 7;
+            });
+
             $firstPeriod = $firstPeriod->filter(function($account) {
                 return $account->getMonthsSinceCreated() < 7;
             });
@@ -234,6 +238,10 @@ class DashboardsController extends Controller
             });
 
             $prevAccounts = $prevAccounts->filter(function($account) {
+                return $account->getMonthsSinceCreated() > 7;
+            });
+
+            $currentMonth = $currentMonth->filter(function($account) {
                 return $account->getMonthsSinceCreated() > 7;
             });
 
@@ -262,6 +270,8 @@ class DashboardsController extends Controller
             $thirdQuarterStart,
             $fourthQuarterStart
         );
+
+        $totalAccounts = $currentMonth->count();
 
         $completeStaffPhys = $currentMonth->sum('Complete Staff - Phys');
         $completeStaffAPP = $currentMonth->sum('Complete Staff - APP');
@@ -307,11 +317,12 @@ class DashboardsController extends Controller
         $pipeline = [
             "data" => [], 
             "titles" => [
+                "Accounts",
                 "Applications",
                 "Interviews",
                 "Contracts Out",
                 "Contracts In",
-                "Credentialings"
+                "Credentialing"
             ]
         ];
 
@@ -380,6 +391,7 @@ class DashboardsController extends Controller
         }
         
         $pipeline["data"] = [
+            $totalAccounts,
             $currentApplications,
             $currentInterViews,
             $currentContractsOut,

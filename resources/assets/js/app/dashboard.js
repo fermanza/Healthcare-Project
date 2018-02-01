@@ -39,7 +39,7 @@ var dashboard = {
 			var h = $(args.containerSelector).parent().innerHeight() - 15;
 			var barPadding = 20;
 			var dataset;
-			var barHeight = 30;
+			var barHeight = 20;
 			
 			dataset = args.data.data;
 			var svgHeight = h;
@@ -91,7 +91,7 @@ var dashboard = {
 				return (i * (h / titles.length)+barPadding) - 5;
 			})
 			.attr("font-family", "sans-serif")
-			.attr("font-size", "16px")
+			.attr("font-size", "15px")
 			.attr("fill", function(d) {
 				return "rgb(186, 188, 194)";
 			});
@@ -144,10 +144,10 @@ var dashboard = {
 			})
 			.transition()
 			.attr("y", function(d, i) {
-				return (i * (h / dataset.length)) + barPadding + 18;
+				return (i * (h / dataset.length)) + barPadding + 15;
 			})
 			.attr("font-family", "sans-serif")
-			.attr("font-size", "16px")
+			.attr("font-size", "14px")
 			.attr("fill", "white")
 			.attr("text-anchor", "middle");
 		}
