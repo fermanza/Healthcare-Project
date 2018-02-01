@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('content-header', __('Dashboards'))
+@section('content-header', __('Dashboard'))
 
 @section('content')
 <div id="charts" class="charts" v-cloak>
