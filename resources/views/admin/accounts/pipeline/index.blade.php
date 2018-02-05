@@ -758,6 +758,7 @@
                                     <input type="checkbox" v-model="roster.isProactive" @change="updateHighLight(roster)">
                                     <span class="hidden">@{{roster.isProactive}}</span>
                                 </td>
+                                <td>@{{ moment(roster.provisionalPrivilegeStart) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
@@ -845,7 +846,7 @@
                                     <input type="text" class="form-control" v-model="rosterPhysician.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="rosterPhysician.signedNotStarted">
+                                    <input type="checkbox" @click="checkStartDate(rosterPhysician, $event)" v-model="rosterPhysician.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="checkbox" v-model="rosterPhysician.isProactive">
@@ -999,7 +1000,7 @@
                                     <input type="text" class="form-control" v-model="rosterApps.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="rosterApps.signedNotStarted">
+                                    <input type="checkbox" @click="checkStartDate(rosterApps, $event)" v-model="rosterApps.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="checkbox" v-model="rosterApps.isProactive">
@@ -1132,7 +1133,7 @@
                                     <input type="text" class="form-control datepicker" v-model="benchPhysician.contractIn" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" />
+                                    <input type="checkbox" @click="checkStartDate(benchPhysician, $event)" v-model="benchPhysician.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="benchPhysician.notes" />
@@ -1263,7 +1264,7 @@
                                     <input type="text" class="form-control datepicker" v-model="benchApps.contractIn" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" />
+                                    <input type="checkbox" @click="checkStartDate(benchApps, $event)" v-model="benchApps.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="benchApps.notes" />
@@ -2918,6 +2919,23 @@
                     }
                 },
 
+                checkStartDate: function(roster, e) {
+                    var name = roster.name;
+                    var provider = _.find(this.providers, {fullName: name});
+                    
+                    if(!provider) {
+                        var currentDate = moment();
+                        var futureDate = moment(currentDate).add(5, 'M').format('MM/DD/YYYY');
+                        
+                        roster.firstShift = futureDate;
+                    } else {
+                        if (roster.firstShift == null || roster.firstShift == "") {
+                            e.preventDefault();
+                            roster.signedNotStarted = 0;
+                            alert('Please provide best start date, a more accurate date will be provided by credentialing');
+                        }
+                    }
+                },
 
                 compareFirstShift: function (firstShift) {
                     if(firstShift) {

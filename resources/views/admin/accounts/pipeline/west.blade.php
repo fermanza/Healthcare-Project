@@ -846,7 +846,7 @@
                                     <input type="text" class="form-control" v-model="rosterPhysician.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" :disabled="!rosterPhysician.firstShift" v-model="rosterPhysician.signedNotStarted">
+                                    <input type="checkbox" @click="checkStartDate(rosterPhysician, $event)" v-model="rosterPhysician.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="checkbox" v-model="rosterPhysician.isProactive">
@@ -1002,7 +1002,7 @@
                                     <input type="text" class="form-control" v-model="rosterApps.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" :disabled="!rosterApps.firstShift" v-model="rosterApps.signedNotStarted">
+                                    <input type="checkbox" @click="checkStartDate(rosterApps, $event)" v-model="rosterApps.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="checkbox" v-model="rosterApps.isProactive">
@@ -1146,7 +1146,7 @@
                                     <input type="text" class="form-control" v-model="benchPhysician.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" :disabled="!benchPhysician.firstShift" v-model="benchPhysician.signedNotStarted">
+                                    <input type="checkbox" @click="checkStartDate(benchPhysician, $event)" v-model="benchPhysician.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="benchPhysician.provisionalPrivilegeStart" />
@@ -1282,7 +1282,7 @@
                                     <input type="text" class="form-control" v-model="benchApps.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" :disabled="!benchApps.firstShift" v-model="benchApps.signedNotStarted">
+                                    <input type="checkbox" @click="checkStartDate(benchApps, $event)" v-model="benchApps.signedNotStarted">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control datepicker" v-model="benchApps.provisionalPrivilegeStart" />
@@ -3090,6 +3090,23 @@
                     }
                 },
 
+                checkStartDate: function(roster, e) {
+                    var name = roster.name;
+                    var provider = _.find(this.providers, {fullName: name});
+                    
+                    if(!provider) {
+                        var currentDate = moment();
+                        var futureDate = moment(currentDate).add(5, 'M').format('MM/DD/YYYY');
+                        
+                        roster.firstShift = futureDate;
+                    } else {
+                        if (roster.firstShift == null || roster.firstShift == "") {
+                            e.preventDefault();
+                            roster.signedNotStarted = 0;
+                            alert('Please provide best start date, a more accurate date will be provided by credentialing');
+                        }
+                    }
+                },
 
                 compareFirstShift: function (firstShift) {
                     if(firstShift) {
