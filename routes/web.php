@@ -81,6 +81,7 @@ $router->group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 
      $router->patch('accounts/{account}/pipeline/recruiting/{recruiting}', 'PipelineRecruitingController@update')->name('accounts.pipeline.recruiting.update');
     $router->delete('accounts/{account}/pipeline/recruiting/{recruiting}', 'PipelineRecruitingController@destroy')->name('accounts.pipeline.recruiting.destroy');
     $router->post('accounts/{account}/pipeline/recruiting/{recruiting}/switch', 'PipelineRecruitingController@switch')->name('accounts.pipeline.recruiting.switch');
+    $router->post('accounts/{account}/pipeline/recruiting/{recruiting}/makeCred', 'PipelineRecruitingController@makeCred')->name('accounts.pipeline.recruiting.cred');
 
     $router->post('accounts/{account}/pipeline/locum', 'PipelineLocumController@store')->name('accounts.pipeline.locum.store');
     $router->patch('accounts/{account}/pipeline/locum/{locum}/decline', 'PipelineLocumController@decline')->name('accounts.pipeline.locum.decline');

@@ -1357,6 +1357,12 @@
                                         </button>
                                     @endpermission
 
+                                    @permission('admin.accounts.pipeline.recruiting.cred')
+                                        <button @click="makeCred(recruiting)" type="button" class="btn btn-xs btn-primary mb5">
+                                            @lang('CRED')
+                                        </button>
+                                    @endpermission
+
                                     @permission('admin.accounts.pipeline.recruiting.decline')
                                         <button type="button" class="btn btn-xs btn-warning mb5"
                                             data-toggle="modal" data-target="#declineModal"
@@ -2518,7 +2524,7 @@
                 },
 
                 credentialingPhysicians: function () {
-                    return _.chain(this.rostersBenchs)
+                    var rostersBenchs = _.chain(this.rostersBenchs)
                         .filter(function(credentialing) {
                             return credentialing.activity === 'physician' && (
                                 credentialing.signedNotStarted === 1 || credentialing.fileToCredentialing !== null
@@ -2528,10 +2534,21 @@
                         .reject('completed')
                         .reject('removed')
                         .value();
+
+                    var recruitings = _.chain(this.recruitings)
+                        .filter(function(credentialing) {
+                            return credentialing.type === 'phys' && credentialing.isCredentialing === 1;
+                        })
+                        .reject('resigned')
+                        .reject('completed')
+                        .reject('removed')
+                        .value();
+
+                    return _.concat(rostersBenchs, recruitings);
                 },
 
                 credentialingApps: function () {
-                    return _.chain(this.rostersBenchs)
+                    var rostersBenchs = _.chain(this.rostersBenchs)
                         .filter(function(credentialing) {
                             return credentialing.activity === 'app' && (
                                 credentialing.signedNotStarted === 1 || credentialing.fileToCredentialing !== null
@@ -2541,6 +2558,17 @@
                         .reject('completed')
                         .reject('removed')
                         .value();
+
+                    var recruitings = _.chain(this.recruitings)
+                        .filter(function(credentialing) {
+                            return credentialing.type === 'app' && credentialing.isCredentialing === 1;
+                        })
+                        .reject('resigned')
+                        .reject('completed')
+                        .reject('removed')
+                        .value();
+
+                    return _.concat(rostersBenchs, recruitings);
                 },
 
                 sortedRecruitings: function () {
@@ -3255,6 +3283,21 @@
                             this.recruitings = _.reject(this.recruitings, { 'id': recruiting.id });
                         }.bind(this));
                     }
+                },
+
+
+                makeCred: function(recruiting) {
+                    recruiting.interview = this.moment(recruiting.interview);
+                    recruiting.contractIn = this.moment(recruiting.contractIn);
+                    recruiting.contractOut = this.moment(recruiting.contractOut);
+                    recruiting.firstShift = this.moment(recruiting.firstShift);
+
+                    recruiting.isCredentialing = 1;
+
+                    axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id + '/makeCred', recruiting
+                        ).then(function (response) {
+                            this.credentialingPhysicians.push(response.data);
+                        }.bind(this));
                 },
 
                 switchLocumTo: function(locum, place) {

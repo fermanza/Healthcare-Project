@@ -221,4 +221,21 @@ class PipelineRecruitingController extends Controller
             return $rosterBench;
         }
     }
+
+
+    /**
+     * Make the specified recruiting a credentialing.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param  \App\Account  $account
+     * @param  \App\PipelineRecruiting  $recruiting
+     * @return \Illuminate\Http\Response
+     */
+    public function makeCred(Request $request, Account $account, PipelineRecruiting $recruiting)
+    {
+        $recruiting->isCredentialing = 1;
+        $recruiting->save();
+
+        return $recruiting;
+    }
 }
