@@ -2671,11 +2671,18 @@
 
                 addCredentialing: function (entity) {
                     if(this[entity].id) {
-                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
+                        if (this[entity].activity) {
+                            var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
+                        } else {
+                            var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this[entity].id;
+                        }
 
                         axios.patch(endpoint, this[entity])
                             .then(function (response) {
                                 var credentialing = _.find(this.rostersBenchs, {id: response.data.id});
+                                if (!credentialing) {
+                                    credentialing = _.find(this.recruitings, {id: response.data.id});
+                                }
                                 _.assignIn(credentialing, response.data);
                                 this.clearCredentialing(entity);
                         }.bind(this));
@@ -3101,8 +3108,12 @@
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
                     roster.provisionalPrivilegeStart = this.moment(roster.provisionalPrivilegeStart);
-                    
-                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+
+                    if(roster.activity) {
+                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+                    } else {
+                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + roster.id;
+                    }
 
                     axios.patch(endpoint, roster)
                         .then(function (response) {
@@ -3292,11 +3303,9 @@
                     recruiting.contractOut = this.moment(recruiting.contractOut);
                     recruiting.firstShift = this.moment(recruiting.firstShift);
 
-                    recruiting.isCredentialing = 1;
-
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id + '/makeCred', recruiting
                         ).then(function (response) {
-                            this.credentialingPhysicians.push(response.data);
+                            alert("Set to credentialing");
                         }.bind(this));
                 },
 

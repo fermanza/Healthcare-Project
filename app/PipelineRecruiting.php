@@ -31,7 +31,10 @@ class PipelineRecruiting extends Model
         'contractIn',
         'contractOut',
         'firstShift',
-        'declined'
+        'declined',
+        'fileToCredentialing',
+        'privilegeGoal',
+        'appToHospital',
     ];
 
     /**

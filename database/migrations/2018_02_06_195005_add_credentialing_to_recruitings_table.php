@@ -15,6 +15,14 @@ class AddCredentialingToRecruitingsTable extends Migration
     {
         Schema::table('tAccountPipelineRecruiting', function (Blueprint $table) {
             $table->boolean('isCredentialing')->default(0)->nullable();
+            $table->string('stopLight')->default('green')->nullable();
+            $table->date('fileToCredentialing')->nullable();
+            $table->string('enrollmentNotes')->nullable();
+            $table->string('credentialingNotes')->nullable();
+            $table->date('privilegeGoal')->nullable();
+            $table->date('appToHospital')->nullable();
+            $table->integer('stage')->nullable();
+            $table->string('enrollmentStatus')->nullable();
         });
     }
 

@@ -136,6 +136,14 @@ class PipelineRecruitingController extends Controller
         $recruiting->notes = $request->notes;
         $recruiting->noc = $request->noc;
         $recruiting->providerId = $request->providerId;
+        $recruiting->stopLight = $request->stopLight;
+        $recruiting->fileToCredentialing = $request->fileToCredentialing;
+        $recruiting->privilegeGoal = $request->privilegeGoal;
+        $recruiting->appToHospital = $request->appToHospital;
+        $recruiting->stage = $request->stage;
+        $recruiting->enrollmentStatus = $request->enrollmentStatus;
+        $recruiting->enrollmentNotes = $request->enrollmentNotes;
+        $recruiting->credentialingNotes = $request->credentialingNotes;
         $recruiting->lastUpdated = Carbon::now();
         $recruiting->lastUpdatedBy = \Auth::id();
         $recruiting->save();
