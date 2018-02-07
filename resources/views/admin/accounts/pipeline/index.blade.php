@@ -2534,11 +2534,18 @@
 
                 addCredentialing: function (entity) {
                     if(this[entity].id) {
-                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
+                        if (this[entity].activity) {
+                            var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + this[entity].id;
+                        } else {
+                            var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this[entity].id;
+                        }
 
                         axios.patch(endpoint, this[entity])
                             .then(function (response) {
                                 var credentialing = _.find(this.rostersBenchs, {id: response.data.id});
+                                if (!credentialing) {
+                                    credentialing = _.find(this.recruitings, {id: response.data.id});
+                                }
                                 _.assignIn(credentialing, response.data);
                                 this.clearCredentialing(entity);
                         }.bind(this));
@@ -2930,8 +2937,13 @@
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
-                    
-                    var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+                    roster.provisionalPrivilegeStart = this.moment(roster.provisionalPrivilegeStart);
+
+                    if(roster.activity) {
+                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
+                    } else {
+                        var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + roster.id;
+                    }
 
                     axios.patch(endpoint, roster)
                         .then(function (response) {
