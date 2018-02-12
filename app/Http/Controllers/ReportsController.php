@@ -62,11 +62,11 @@ class ReportsController extends Controller
 
         if ($newFilter == "1") {
             $accounts = $accounts->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 6;
             });
         } elseif ($newFilter == "2") {
             $accounts = $accounts->filter(function($account) {
-                return $account->getMonthsSinceCreated() > 7;
+                return $account->getMonthsSinceCreated() > 6;
             });
         }
 
@@ -144,11 +144,11 @@ class ReportsController extends Controller
 
         if ($newFilter == "1") {
             $dataToExport = $dataToExport->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 6;
             });
         } elseif ($newFilter == "2") {
             $dataToExport = $dataToExport->filter(function($account) {
-                return $account->getMonthsSinceCreated() > 7;
+                return $account->getMonthsSinceCreated() > 6;
             });
         }
 
@@ -271,7 +271,7 @@ class ReportsController extends Controller
 
                     $sheet->row($rowNumber, $row);
 
-                    if ($account->getMonthsSinceCreated($request->monthEndDate) < 7) {
+                    if ($account->getMonthsSinceCreated($request->monthEndDate) <= 6) {
                         $sheet->cell('R'.$rowNumber, function($cell) use ($account) {
                             $cell->setBackground('#1aaf54');
                             $cell->setFontColor('#ffffff');
@@ -803,11 +803,11 @@ class ReportsController extends Controller
 
         if ($newFilter == "1") {
             $dataToExport = $dataToExport->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 6;
             });
         } elseif ($newFilter == "2") {
             $dataToExport = $dataToExport->filter(function($account) {
-                return $account->getMonthsSinceCreated() > 7;
+                return $account->getMonthsSinceCreated() > 6;
             });
         }
 
@@ -992,7 +992,7 @@ class ReportsController extends Controller
 
                     $sheet->row($rowNumber, $row);
 
-                    if ($account->getMonthsSinceCreated($request->monthEndDate) < 7) {
+                    if ($account->getMonthsSinceCreated($request->monthEndDate) <= 6) {
                         $sheet->cell('R'.$rowNumber, function($cell) use ($account) {
                             $cell->setBackground('#1aaf54');
                             $cell->setFontColor('#ffffff');

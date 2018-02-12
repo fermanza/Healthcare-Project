@@ -247,7 +247,7 @@
 	                @foreach($accounts as $account)
 	                    <tr data-name="{{ $account->name }}" data-site-code="{{ $account->siteCode }}"
 	                    >
-	                        <td class="wd50 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd50 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 @if($account->account)
                                     <a href="{{ route('admin.accounts.pipeline.index', [$account->account]) }}">
                                         {{ $account->siteCode }}
@@ -258,52 +258,52 @@
                                     </a>
                                 @endif
                             </td>
-	                        <td class="wd230 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd230 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 <span>{{ $account->{'Hospital Name'} }}</span>
                             </td>
-	                        <td class="wd80 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd80 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->Practice }}
                             </td>
-	                        <td class="wd110 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd110 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->{'System Affiliation'} }}
                             </td>
-	                        <td class="wd50 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd50 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->JV }}
                             </td>
-	                        <td class="wd200 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd200 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->{'Operating Unit'} }}
                             </td>
-	                        <td class="wd50 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd50 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ ($account->account && $account->account->rsc) ? $account->account->rsc->name : '' }}
                             </td>
-	                        <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->{'RSC Recruiter'} }}
                             </td>
-	                        <td class="wd110 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd110 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
 	                        	{{ $account->{'Secondary Recruiter'} }}
 	                        </td>
-	                        <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->Managers }}
                             </td>
-	                        <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->DOO }}
                             </td>
-                            <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+                            <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->SVP }}
                             </td>
-	                        <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd70 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->RMD }}
                             </td>
-	                        <td class="wd60 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd60 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->City }}
                             </td>
-	                        <td class="wd100 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd100 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->Location }}
                             </td>
-	                        <td class="wd100 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd100 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
                                 {{ $account->{'Start Date'} ? $account->{'Start Date'}->format('m/d/y') : '' }}
                             </td>
-	                        <td class="wd150 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) < 7 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
+	                        <td class="wd150 {{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) <= 6 ? 'recently-created' : ''}} {{$account->account ? ($account->account->term90less() ? 'term90less' : ($account->account->term90more() ? 'term90more' : '')) : ''}}">
 	                        	{{ $account->getMonthsSinceCreated(Request::input('monthEndDate')) === INF ? '' : number_format($account->getMonthsSinceCreated(Request::input('monthEndDate')), 1) }}
 	                        </td>
                             <td class="wd50">{{ $account->present()->{'Complete Staff - Phys'} }}</td>
