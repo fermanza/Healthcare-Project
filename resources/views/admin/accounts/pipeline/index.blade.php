@@ -477,7 +477,7 @@
                                     <th class="mw60"></th>
                                     <th class="mw180">@lang('Name')</th>
                                     <th class="mw70">@lang('Hours')</th>
-                                    <th class="mw80">@lang('FT/PT/EMB')</th>
+                                    <th class="mw70">@lang('FT/PT/EMB')</th>
                                     <th class="mw120">@lang('File To Credentialing')</th>
                                     <th class="mw100">@lang('APP To Hospital')</th>
                                     <th class="mw50">@lang('Stage')</th>
@@ -489,7 +489,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(credentialing, index) in credentialingPhysicians" v-bind:id="credentialing.id" :class="{'bold': credentialing.providerId}">
+                                <tr v-for="(credentialing, index) in credentialingPhysicians" :class="{'bold': credentialing.providerId}">
                                     <td>
                                         <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
                                         <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
@@ -729,7 +729,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': (roster.signedNotStarted && compareFirstShift(roster.firstShift))}">
+                            <tr v-for="roster in activeRosterPhysicians" :class="{'highlight': (roster.signedNotStarted && compareFirstShift(roster.firstShift)), 'bold': roster.providerId}">
                                 <td>
                                     <input class="roster-radio" type="checkbox" name="SMD" :value="1" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
                                     <span class="hidden">@{{roster.isSMD}}</span>
@@ -778,7 +778,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.update')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(roster, 'bench')"
                                         >
                                             @lang('Bench')
@@ -786,7 +786,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(roster, 'recruiting', 'phys')"
                                         >
                                             @lang('Recruiting')
@@ -810,7 +810,7 @@
                                     <input type="checkbox" v-model="rosterPhysician.isAMD">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="rosterPhysician.name" required />
+                                    <input type="text" data-id="rosterPhysician" class="form-control providers" v-model="rosterPhysician.name">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="rosterPhysician.hours" min="0" required />
@@ -872,7 +872,7 @@
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="rosterAppsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw100">@lang('Chief')</th>
@@ -887,11 +887,12 @@
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw60">@lang('Signed Not Started')</th>
                                 <th class="mw60">@lang('Proactive')</th>
+                                <th class="mw150">@lang('Provisional Privilege Start')</th>
                                 <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted && compareFirstShift(roster.firstShift)}">
+                            <tr v-for="roster in activeRosterApps" :class="{'highlight': roster.signedNotStarted && compareFirstShift(roster.firstShift), 'bold': roster.providerId}">
                                 <td>
                                     <input type="checkbox" v-model="roster.isChief" @click="updateRosterBench(roster, 'Chief')">
                                     <span class="hidden">@{{roster.isChief}}</span>
@@ -916,6 +917,7 @@
                                     <input type="checkbox" v-model="roster.isProactive" @change="updateHighLight(roster)">
                                     <span class="hidden">@{{roster.isProactive}}</span>
                                 </td>
+                                <td>@{{ moment(roster.provisionalPrivilegeStart) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
@@ -935,7 +937,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.update')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(roster, 'bench')"
                                         >
                                             @lang('Bench')
@@ -943,7 +945,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(roster, 'recruiting', 'app')"
                                         >
                                             @lang('Recruiting')
@@ -964,7 +966,7 @@
                                     <input type="checkbox" v-model="rosterApps.isChief" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="rosterApps.name" required />
+                                    <input type="text" data-id="rosterApps" class="form-control providers" v-model="rosterApps.name">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="rosterApps.hours" min="0" required />
@@ -1005,6 +1007,9 @@
                                 <td>
                                     <input type="checkbox" v-model="rosterApps.isProactive">
                                 </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.provisionalPrivilegeStart" />
+                                </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="submit" class="btn btn-xs btn-success">
@@ -1028,7 +1033,7 @@
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="benchPhysicianTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -1041,11 +1046,12 @@
                                 <th class="mw120">@lang('Projected Start Date')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw150">@lang('Provisional Privilege Start')</th>
                                 <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="bench in activeBenchPhysicians" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift)}">
+                            <tr v-for="bench in activeBenchPhysicians" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift), 'bold': bench.providerId}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
@@ -1062,6 +1068,7 @@
                                     <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)" @click="checkFirstShift(bench, $event)" :readonly="bench.firstShift == null">
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
+                                <td>@{{ moment(bench.provisionalPrivilegeStart) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
@@ -1081,7 +1088,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.update')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(bench, 'roster')"
                                         >
                                             @lang('Roster')
@@ -1089,7 +1096,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(bench, 'recruiting', 'phys')"
                                         >
                                             @lang('Recruiting')
@@ -1107,7 +1114,7 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control" v-model="benchPhysician.name" required />
+                                    <input type="text" data-id="benchPhysician" class="form-control providers" v-model="benchPhysician.name">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="benchPhysician.hours" min="0" required />
@@ -1133,13 +1140,16 @@
                                     <input type="text" class="form-control datepicker" v-model="benchPhysician.contractIn" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" @click="checkStartDate(benchPhysician, $event)" v-model="benchPhysician.signedNotStarted">
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" />
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="benchPhysician.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="benchPhysician.signedNotStarted">
+                                    <input type="checkbox" @click="checkStartDate(benchPhysician, $event)" v-model="benchPhysician.signedNotStarted">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.provisionalPrivilegeStart" />
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -1159,7 +1169,7 @@
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
             <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="benchAppsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw200">@lang('Name')</th>
@@ -1172,11 +1182,12 @@
                                 <th class="mw120">@lang('Projected Start Date')</th>
                                 <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
                                 <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw150">@lang('Provisional Privilege Start')</th>
                                 <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="bench in activeBenchApps" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift)}">
+                            <tr v-for="bench in activeBenchApps" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift), 'bold': bench.providerId}">
                                 <td>@{{ bench.name }}</td>
                                 <td>@{{ bench.hours }}</td>
                                 <td class="text-uppercase">@{{ bench.contract }}</td>
@@ -1193,6 +1204,7 @@
                                     <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)" @click="checkFirstShift(bench, $event)" :readonly="bench.firstShift == null">
                                     <span class="hidden">@{{bench.signedNotStarted}}</span>
                                 </td>
+                                <td>@{{ moment(bench.provisionalPrivilegeStart) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
@@ -1212,7 +1224,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.update')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(bench, 'roster')"
                                         >
                                             @lang('Roster')
@@ -1220,7 +1232,7 @@
                                     @endpermission
 
                                     @permission('admin.accounts.pipeline.rosterBench.switch')
-                                        <button type="button" class="btn btn-xs btn-info"
+                                        <button type="button" class="btn btn-xs btn-primary"
                                             @click="switchRosterBenchTo(bench, 'recruiting', 'app')"
                                         >
                                             @lang('Recruiting')
@@ -1238,7 +1250,7 @@
                         <tfoot class="hidden-print">
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control" v-model="benchApps.name" required />
+                                    <input type="text" data-id="benchApps" class="form-control providers" v-model="benchApps.name">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="benchApps.hours" min="0" required />
@@ -1264,13 +1276,16 @@
                                     <input type="text" class="form-control datepicker" v-model="benchApps.contractIn" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" @click="checkStartDate(benchApps, $event)" v-model="benchApps.signedNotStarted">
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" />
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="benchApps.notes" />
                                 </td>
                                 <td>
-                                    <input type="checkbox" v-model="benchApps.signedNotStarted">
+                                    <input type="checkbox" @click="checkStartDate(benchApps, $event)" v-model="benchApps.signedNotStarted">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.provisionalPrivilegeStart" />
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -1294,7 +1309,7 @@
             <h4 class="pipeline-green-title">@lang('Recruiting Pipeline')</h4>
             <form @submit.prevent="addRecruiting">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="recruitingsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('PHYS/APP')</th>
@@ -1310,7 +1325,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="recruiting in sortedRecruitings" :class="{'bg-success': currentRecruiting(recruiting)}">
+                            <tr v-for="recruiting in sortedRecruitings" :class="{'bg-success': currentRecruiting(recruiting), 'bold': recruiting.providerId}">
                                 <td class="text-uppercase">@{{ recruiting.type }}</td>
                                 <td>@{{ recruiting.name }}</td>
                                 <td class="text-uppercase">@{{ recruiting.contract }}</td>
@@ -1376,7 +1391,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" id="internalUsers" class="form-control" v-model="newRecruiting.name" required />
+                                    <input type="text" class="form-control providers" v-model="newRecruiting.name">
                                 </td>
                                 <td>
                                     <select class="form-control" v-model="newRecruiting.contract" required>
@@ -1423,7 +1438,7 @@
             <h4 class="pipeline-green-title">@lang('Locums Pipeline')</h4>
             <form @submit.prevent="addLocum">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="locumsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
                                 <th class="mw60">@lang('PHYS/APP')</th>
@@ -1438,7 +1453,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="locum in sortedLocums">
+                            <tr v-for="locum in sortedLocums" :class="{'bold': locum.providerId}">
                                 <td class="text-uppercase">@{{ locum.type }}</td>
                                 <td>@{{ locum.name }}</td>
                                 <td>@{{ locum.agency }}</td>
@@ -1494,7 +1509,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="newLocum.name" required />
+                                    <input type="text" class="form-control providers" v-model="newLocum.name">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" v-model="newLocum.agency" required />
@@ -1783,7 +1798,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(credentialing, index) in credentialingPhysicians" v-bind:id="credentialing.id" :class="{'bold': credentialing.providerId}">
+                                <tr v-for="(credentialing, index) in credentialingPhysicians" :class="{'bold': credentialing.providerId}">
                                     <td>
                                         <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
                                         <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
@@ -1936,7 +1951,7 @@
                                             <button type="button" class="btn btn-xs btn-success"
                                                 @click="completeCredentialing(credentialing)"
                                             >
-                                                <i class="fa fa-trash"></i>
+                                                <i class="fa fa-check"></i>
                                             </button>
                                         @endpermission
                                     </td>
@@ -1996,109 +2011,156 @@
             </div>
         @endif
 
-        <div class="no-break-inside">
-            <h4 class="pipeline-blue-title">@lang('Unlinked')</h4>
+        {{-- <div class="no-break-inside">
+            <h4 class="pipeline-blue-title">@lang('Unlinked Roster')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
-            <form @submit.prevent="addCredentialing('credentialingPhysician')">
+            <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysician')">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="rosterPhysicianTable" class="table table-bordered">
                         <thead class="bg-gray">
                             <tr>
-                                <th class="mw60"></th>
-                                <th class="mw180">@lang('Name')</th>
+                                <th class="mw50">@lang('SMD')</th>
+                                <th class="mw50">@lang('AMD')</th>
+                                <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
-                                <th class="mw80">@lang('FT/PT/EMB')</th>
-                                <th class="mw120">@lang('File To Credentialing')</th>
-                                <th class="mw100">@lang('APP To Hospital')</th>
-                                <th class="mw50">@lang('Stage')</th>
-                                <th class="mw100">@lang('Privilege Goal')</th>
-                                <th class="mw120">@lang('Enrollment Status')</th>
-                                <th class="mw150">@lang('Enrollment Notes')</th>
-                                <th class="mw150">@lang('Credentialing Notes')</th>
-                                <th class="mw100 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw60">@lang('FT/PTG/EMB')</th>
+                                <th class="mw50">@lang('NOC')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw60">@lang('Signed Not Started')</th>
+                                <th class="mw60">@lang('Proactive')</th>
+                                <th class="mw150">@lang('Provisional Privilege Start')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(credentialing, index) in credentialingPhysicians" :class="{'bold': credentialing.providerId}">
+                            <tr v-for="roster in activeUnlinkedRosterPhysicians" :class="{'highlight': (roster.signedNotStarted && compareFirstShift(roster.firstShift)), 'bold': roster.providerId}">
                                 <td>
-                                    <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
-                                    <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
-                                    <input type='radio' class="icheck-green" :name="'stopLight' + index" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                    <input class="roster-radio" type="checkbox" name="SMD" :value="1" :checked='roster.isSMD' @change="updateRosterBench(roster, 'SMD')">
+                                    <span class="hidden">@{{roster.isSMD}}</span>
                                 </td>
-                                <td>@{{ credentialing.name }}</td>
-                                <td>@{{ credentialing.hours }}</td>
-                                <td class="text-uppercase">@{{ credentialing.contract }}</td>
-                                <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
-                                <td>@{{ moment(credentialing.appToHospital) }}</td>
-                                <td>@{{ credentialing.stage }}</td>
-                                <td>@{{ moment(credentialing.privilegeGoal) }}</td>
-                                <td>@{{ credentialing.enrollmentStatus }}</td>
-                                <td>@{{ credentialing.enrollmentNotes }}</td>
-                                <td>@{{ credentialing.credentialingNotes }}</td>
+                                <td>
+                                    <input class="roster-radio" type="checkbox" name="AMD" :value="1" :checked='roster.isAMD' @change="updateRosterBench(roster, 'AMD')">
+                                    <span class="hidden">@{{roster.isAMD}}</span>
+                                </td>
+                                <td>@{{ roster.name }}</td>
+                                <td>@{{ roster.hours }}</td>
+                                <td class="text-uppercase">@{{ roster.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.noc" @change="updateHighLight(roster)">
+                                    <span class="hidden">@{{roster.noc}}</span>
+                                </td>
+                                <td>@{{ moment(roster.interview) }}</td>
+                                <td>@{{ moment(roster.contractOut) }}</td>
+                                <td>@{{ moment(roster.contractIn) }}</td>
+                                <td>@{{ moment(roster.firstShift) }}</td>
+                                <td>@{{ roster.notes }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)" @click="checkFirstShift(roster, $event)" :readonly="roster.firstShift == null">
+                                    <span class="hidden">@{{roster.signedNotStarted}}</span>
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.isProactive" @change="updateHighLight(roster)">
+                                    <span class="hidden">@{{roster.isProactive}}</span>
+                                </td>
+                                <td>@{{ moment(roster.provisionalPrivilegeStart) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="editCredentialing(credentialing, 'credentialingPhysician')"
+                                            @click="editRosterBench(roster, 'rosterPhysician')"
                                         >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
-                                    @permission('admin.accounts.pipeline.rosterBench.removeCredentialing')
-                                        <button type="button" class="btn btn-xs btn-danger"
-                                            data-toggle="modal" data-target="#credentialingModal"
-                                            @click="setCredentialing(credentialing)"
+
+                                    @permission('admin.accounts.pipeline.rosterBench.resign')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#resignModal"
+                                            @click="setResigning(roster)"
                                         >
-                                            <i class="fa fa-trash"></i>
+                                            @lang('Resign')
                                         </button>
                                     @endpermission
-                                    @permission('admin.accounts.pipeline.rosterBench.complete')
-                                        <button type="button" class="btn btn-xs btn-success"
-                                            @click="completeCredentialing(credentialing)"
+
+                                    @permission('admin.accounts.pipeline.rosterBench.update')
+                                        <button type="button" class="btn btn-xs btn-primary"
+                                            @click="switchRosterBenchTo(roster, 'bench')"
                                         >
-                                            <i class="fa fa-check"></i>
+                                            @lang('Bench')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.switch')
+                                        <button type="button" class="btn btn-xs btn-primary"
+                                            @click="switchRosterBenchTo(roster, 'recruiting', 'phys')"
+                                        >
+                                            @lang('Recruiting')
+                                        </button>
+                                    @endpermission
+                                    
+                                    @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                        <button @click="deleteRosterBench(roster)" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     @endpermission
                                 </td>
                             </tr>
                         </tbody>
-                        <tfoot class="hidden-print" v-show="credentialingPhysician.id">
+                        <tfoot class="hidden-print">
                             <tr>
                                 <td>
+                                    <input type="checkbox" v-model="rosterPhysician.isSMD">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="credentialingPhysician.name" required readonly />
+                                    <input type="checkbox" v-model="rosterPhysician.isAMD">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="credentialingPhysician.hours" min="0" required readonly />
+                                    <input type="text" data-id="rosterPhysician" class="form-control providers" v-model="rosterPhysician.name">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control text-uppercase" v-model="credentialingPhysician.contract" required readonly />
+                                    <input type="number" class="form-control" v-model="rosterPhysician.hours" min="0" required />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control datepicker" v-model="credentialingPhysician.fileToCredentialing" />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control datepicker" v-model="credentialingPhysician.appToHospital" />
-                                </td>
-                                <td>
-                                    <select class="form-control" v-model="credentialingPhysician.stage">
+                                    <select class="form-control" v-model="rosterPhysician.contract" required>
                                         <option :value="null" disabled selected></option>
-                                        @for($x = 1; $x <= 12; $x++);
-                                            <option value="{{$x}}">{{$x}}</option>
-                                        @endfor
+                                        @foreach ($contractTypes as $name => $contractType)
+                                            @if($name == 'PT')
+                                                <option value="ptg">PTG</option>
+                                            @else
+                                                <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @endif
+                                        @endforeach
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control datepicker" v-model="credentialingPhysician.privilegeGoal" />
+                                    <input type="checkbox" v-model="rosterPhysician.noc">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentStatus" />
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.interview" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentNotes" />
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.contractOut" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="credentialingPhysician.credentialingNotes" />
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.firstShift" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="rosterPhysician.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" @click="checkStartDate(rosterPhysician, $event)" v-model="rosterPhysician.signedNotStarted">
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterPhysician.isProactive">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterPhysician.provisionalPrivilegeStart" />
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -2116,106 +2178,145 @@
 
         <div class="no-break-inside">
             <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
-            <form @submit.prevent="addCredentialing('credentialingApp')">
+            <form @submit.prevent="addRosterBench('roster', 'app', 'rosterApps')">
                 <div class="table-responsive">
-                    <table class="table table-bordered summary-datatable">
+                    <table id="rosterAppsTable" class="table table-bordered summary-datatable">
                         <thead class="bg-gray">
                             <tr>
-                                <th class="mw60"></th>
-                                <th class="mw180">@lang('Name')</th>
+                                <th class="mw100">@lang('Chief')</th>
+                                <th class="mw200">@lang('Name')</th>
                                 <th class="mw70">@lang('Hours')</th>
-                                <th class="mw80">@lang('FT/PT/EMB')</th>
-                                <th class="mw120">@lang('File To Credentialing')</th>
-                                <th class="mw100">@lang('APP To Hospital')</th>
-                                <th class="mw50">@lang('Stage')</th>
-                                <th class="mw100">@lang('Privilege Goal')</th>
-                                <th class="mw120">@lang('Enrollment Status')</th>
-                                <th class="mw150">@lang('Enrollment Notes')</th>
-                                <th class="mw150">@lang('Credentialing Notes')</th>
-                                <th class="mw100 text-center hidden-print">@lang('Actions')</th>
+                                <th class="mw60">@lang('FT/PTG/EMB')</th>
+                                <th class="mw50">@lang('NOC')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw60">@lang('Signed Not Started')</th>
+                                <th class="mw60">@lang('Proactive')</th>
+                                <th class="mw150">@lang('Provisional Privilege Start')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(credentialing, index) in credentialingApps" :class="{'bold': credentialing.providerId}">
+                            <tr v-for="roster in activeUnlinkedRosterApps" :class="{'highlight': roster.signedNotStarted && compareFirstShift(roster.firstShift), 'bold': roster.providerId}">
                                 <td>
-                                    <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
-                                    <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
-                                    <input type='radio' class="icheck-green" :name="'stopLight' + index" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                    <input type="checkbox" v-model="roster.isChief" @click="updateRosterBench(roster, 'Chief')">
+                                    <span class="hidden">@{{roster.isChief}}</span>
                                 </td>
-                                <td>@{{ credentialing.name }}</td>
-                                <td>@{{ credentialing.hours }}</td>
-                                <td class="text-uppercase">@{{ credentialing.contract }}</td>
-                                <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
-                                <td>@{{ moment(credentialing.appToHospital) }}</td>
-                                <td>@{{ credentialing.stage }}</td>
-                                <td>@{{ moment(credentialing.privilegeGoal) }}</td>
-                                <td>@{{ credentialing.enrollmentStatus }}</td>
-                                <td>@{{ credentialing.enrollmentNotes }}</td>
-                                <td>@{{ credentialing.credentialingNotes }}</td>
+                                <td>@{{ roster.name }}</td>
+                                <td>@{{ roster.hours }}</td>
+                                <td class="text-uppercase">@{{ roster.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.noc" @change="updateHighLight(roster)">
+                                    <span class="hidden">@{{roster.noc}}</span>
+                                </td>
+                                <td>@{{ moment(roster.interview) }}</td>
+                                <td>@{{ moment(roster.contractOut) }}</td>
+                                <td>@{{ moment(roster.contractIn) }}</td>
+                                <td>@{{ moment(roster.firstShift) }}</td>
+                                <td>@{{ roster.notes }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.signedNotStarted" @change="updateHighLight(roster)" @click="checkFirstShift(roster, $event)" :readonly="roster.firstShift == null">
+                                    <span class="hidden">@{{roster.signedNotStarted}}</span>
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="roster.isProactive" @change="updateHighLight(roster)">
+                                    <span class="hidden">@{{roster.isProactive}}</span>
+                                </td>
+                                <td>@{{ moment(roster.provisionalPrivilegeStart) }}</td>
                                 <td class="text-center hidden-print">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
                                         <button type="button" class="btn btn-xs btn-info"
-                                            @click="editCredentialing(credentialing, 'credentialingApp')"
+                                            @click="editRosterBench(roster, 'rosterApps')"
                                         >
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                     @endpermission
-                                    @permission('admin.accounts.pipeline.rosterBench.removeCredentialing')
-                                        <button type="button" class="btn btn-xs btn-danger"
-                                            data-toggle="modal" data-target="#credentialingModal"
-                                            @click="setCredentialing(credentialing)"
+
+                                    @permission('admin.accounts.pipeline.rosterBench.resign')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#resignModal"
+                                            @click="setResigning(roster)"
                                         >
-                                            <i class="fa fa-trash"></i>
+                                            @lang('Resign')
                                         </button>
                                     @endpermission
-                                    @permission('admin.accounts.pipeline.rosterBench.complete')
-                                        <button type="button" class="btn btn-xs btn-success"
-                                            @click="completeCredentialing(credentialing)"
+
+                                    @permission('admin.accounts.pipeline.rosterBench.update')
+                                        <button type="button" class="btn btn-xs btn-primary"
+                                            @click="switchRosterBenchTo(roster, 'bench')"
                                         >
-                                            <i class="fa fa-check"></i>
+                                            @lang('Bench')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.switch')
+                                        <button type="button" class="btn btn-xs btn-primary"
+                                            @click="switchRosterBenchTo(roster, 'recruiting', 'app')"
+                                        >
+                                            @lang('Recruiting')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                        <button @click="deleteRosterBench(roster)" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
                                         </button>
                                     @endpermission
                                 </td>
                             </tr>
                         </tbody>
-                        <tfoot class="hidden-print" v-show="credentialingApp.id">
+                        <tfoot class="hidden-print">
                             <tr>
                                 <td>
+                                    <input type="checkbox" v-model="rosterApps.isChief" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="credentialingApp.name" required readonly />
+                                    <input type="text" data-id="rosterApps" class="form-control providers" v-model="rosterApps.name">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="credentialingApp.hours" min="0" required readonly />
+                                    <input type="number" class="form-control" v-model="rosterApps.hours" min="0" required />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control text-uppercase" v-model="credentialingApp.contract" required readonly />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control datepicker" v-model="credentialingApp.fileToCredentialing" />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control datepicker" v-model="credentialingApp.appToHospital" />
-                                </td>
-                                <td>
-                                    <select class="form-control" v-model="credentialingApp.stage">
+                                    <select class="form-control" v-model="rosterApps.contract" required>
                                         <option :value="null" disabled selected></option>
-                                        @for($x = 1; $x <= 12; $x++);
-                                            <option value="{{$x}}">{{$x}}</option>
-                                        @endfor
+                                        @foreach ($contractTypes as $name => $contractType)
+                                            @if($name == 'PT')
+                                                <option value="ptg">PTG</option>
+                                            @else
+                                                <option value="{{ $contractType }}">{{ $name }}</option>
+                                            @endif
+                                        @endforeach
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control datepicker" v-model="credentialingApp.privilegeGoal" />
+                                    <input type="checkbox" v-model="rosterApps.noc">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="credentialingApp.enrollmentStatus" />
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.interview" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="credentialingApp.enrollmentNotes" />
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.contractOut" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="credentialingApp.credentialingNotes" />
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.firstShift" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="rosterApps.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" @click="checkStartDate(rosterApps, $event)" v-model="rosterApps.signedNotStarted">
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="rosterApps.isProactive">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="rosterApps.provisionalPrivilegeStart" />
                                 </td>
                                 <td class="text-center">
                                     @permission('admin.accounts.pipeline.rosterBench.store')
@@ -2231,6 +2332,283 @@
             </form>
         </div>
 
+
+        <hr />
+
+
+        <div class="no-break-inside">
+            <h4 class="pipeline-blue-title">@lang('Unlinked Bench')</h4>
+            <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
+            <form @submit.prevent="addRosterBench('bench', 'physician', 'benchPhysician')">
+                <div class="table-responsive">
+                    <table id="benchPhysicianTable" class="table table-bordered summary-datatable">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th class="mw200">@lang('Name')</th>
+                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw100">@lang('PRN/Locum')</th>
+                                <th class="mw50">@lang('NOC')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw150">@lang('Provisional Privilege Start')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="bench in activeUnlinkedBenchPhysicians" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift), 'bold': bench.providerId}">
+                                <td>@{{ bench.name }}</td>
+                                <td>@{{ bench.hours }}</td>
+                                <td class="text-uppercase">@{{ bench.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="bench.noc" @change="updateHighLight(bench)">
+                                    <span class="hidden">@{{bench.noc}}</span>
+                                </td>
+                                <td>@{{ moment(bench.interview) }}</td>
+                                <td>@{{ moment(bench.contractOut) }}</td>
+                                <td>@{{ moment(bench.contractIn) }}</td>
+                                <td>@{{ moment(bench.firstShift) }}</td>
+                                <td>@{{ bench.notes }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)" @click="checkFirstShift(bench, $event)" :readonly="bench.firstShift == null">
+                                    <span class="hidden">@{{bench.signedNotStarted}}</span>
+                                </td>
+                                <td>@{{ moment(bench.provisionalPrivilegeStart) }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(bench, 'benchPhysician')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.resign')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#resignModal"
+                                            @click="setResigning(bench)"
+                                        >
+                                            @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.update')
+                                        <button type="button" class="btn btn-xs btn-primary"
+                                            @click="switchRosterBenchTo(bench, 'roster')"
+                                        >
+                                            @lang('Roster')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.switch')
+                                        <button type="button" class="btn btn-xs btn-primary"
+                                            @click="switchRosterBenchTo(bench, 'recruiting', 'phys')"
+                                        >
+                                            @lang('Recruiting')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                        <button @click="deleteRosterBench(bench)" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print">
+                            <tr>
+                                <td>
+                                    <input type="text" data-id="benchPhysician" class="form-control providers" v-model="benchPhysician.name">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="benchPhysician.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <select class="form-control" v-model="benchPhysician.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($benchContractTypes as $name => $benchContractType)
+                                            <option value="{{ $benchContractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="benchPhysician.noc">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.interview" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.contractOut" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.firstShift" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="benchPhysician.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" @click="checkStartDate(benchPhysician, $event)" v-model="benchPhysician.signedNotStarted">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchPhysician.provisionalPrivilegeStart" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+        <div class="no-break-inside">
+            <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
+            <form @submit.prevent="addRosterBench('bench', 'app', 'benchApps')">
+                <div class="table-responsive">
+                    <table id="benchAppsTable" class="table table-bordered summary-datatable">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th class="mw200">@lang('Name')</th>
+                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw100">@lang('PRN/Locum')</th>
+                                <th class="mw50">@lang('NOC')</th>
+                                <th class="mw100">@lang('Interview')</th>
+                                <th class="mw100">@lang('Contract Out')</th>
+                                <th class="mw100">@lang('Contract In')</th>
+                                <th class="mw120">@lang('Projected Start Date')</th>
+                                <th class="mw200 w100">@lang('Last Contact Date & Next Steps')</th>
+                                <th class="mw100">@lang('Signed Not Started')</th>
+                                <th class="mw150">@lang('Provisional Privilege Start')</th>
+                                <th class="mw250 text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="bench in activeUnlinkedBenchApps" :class="{'highlight': bench.signedNotStarted && compareFirstShift(bench.firstShift), 'bold': bench.providerId}">
+                                <td>@{{ bench.name }}</td>
+                                <td>@{{ bench.hours }}</td>
+                                <td class="text-uppercase">@{{ bench.contract }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="bench.noc" @change="updateHighLight(bench)">
+                                    <span class="hidden">@{{bench.noc}}</span>
+                                </td>
+                                <td>@{{ moment(bench.interview) }}</td>
+                                <td>@{{ moment(bench.contractOut) }}</td>
+                                <td>@{{ moment(bench.contractIn) }}</td>
+                                <td>@{{ moment(bench.firstShift) }}</td>
+                                <td>@{{ bench.notes }}</td>
+                                <td>
+                                    <input type="checkbox" v-model="bench.signedNotStarted" @change="updateHighLight(bench)" @click="checkFirstShift(bench, $event)" :readonly="bench.firstShift == null">
+                                    <span class="hidden">@{{bench.signedNotStarted}}</span>
+                                </td>
+                                <td>@{{ moment(bench.provisionalPrivilegeStart) }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editRosterBench(bench, 'benchApps')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.resign')
+                                        <button type="button" class="btn btn-xs btn-warning"
+                                            data-toggle="modal" data-target="#resignModal"
+                                            @click="setResigning(bench)"
+                                        >
+                                            @lang('Resign')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.update')
+                                        <button type="button" class="btn btn-xs btn-primary"
+                                            @click="switchRosterBenchTo(bench, 'roster')"
+                                        >
+                                            @lang('Roster')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.switch')
+                                        <button type="button" class="btn btn-xs btn-primary"
+                                            @click="switchRosterBenchTo(bench, 'recruiting', 'app')"
+                                        >
+                                            @lang('Recruiting')
+                                        </button>
+                                    @endpermission
+
+                                    @permission('admin.accounts.pipeline.rosterBench.destroy')
+                                        <button @click="deleteRosterBench(bench)" type="button" class="btn btn-xs btn-danger">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print">
+                            <tr>
+                                <td>
+                                    <input type="text" data-id="benchApps" class="form-control providers" v-model="benchApps.name">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="benchApps.hours" min="0" required />
+                                </td>
+                                <td>
+                                    <select class="form-control" v-model="benchApps.contract" required>
+                                        <option :value="null" disabled selected></option>
+                                        @foreach ($benchContractTypes as $name => $benchContractType)
+                                            <option value="{{ $benchContractType }}">{{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="checkbox" v-model="benchApps.noc">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.interview" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.contractOut" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.contractIn" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.firstShift" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="benchApps.notes" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" @click="checkStartDate(benchApps, $event)" v-model="benchApps.signedNotStarted">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="benchApps.provisionalPrivilegeStart" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div> --}}
+
     </div>
 @endsection
 
@@ -2243,13 +2621,67 @@
         });
 
         $(document).ready(function() {
-            var accountsDT = $('#rosterPhysicianTable').DataTable($.extend({}, defaultDTOptions, {
+            var accountsDT = $('#rosterPhysicianTable').DataTable($.extend({}, window.defaultDTOptions, {
                 order: [[ 0, 'desc' ], [ 1, 'desc' ]]
             }));
 
-            var declinedDT = $('#declinedTable').DataTable($.extend({}, defaultDTOptions, {
+            var declinedDT = $('#declinedTable').DataTable($.extend({}, window.defaultDTOptions, {
                 order: [[ 5, 'desc' ]]
             }));
+
+            var providers = BackendVars.providers.map(function(provider) {
+                return provider.fullName;
+            });
+
+            $.each(BackendVars.rostersBenchs, function(index, rosterBench) {
+                var indexRoster = providers.indexOf(rosterBench.name);
+
+                if (indexRoster > -1) {
+                    providers.splice(indexRoster, 1);
+                }
+            });
+
+            $.each(BackendVars.recruitings, function(index, recruiting) {
+                var indexRecruiting = providers.indexOf(recruiting.name);
+                if (indexRecruiting > -1) {
+                    providers.splice(indexRecruiting, 1);
+                }
+            });
+
+            $.each(BackendVars.locums, function(index, locum) {
+                var indexLocum = providers.indexOf(locum.name);
+                
+                if (indexLocum > -1) {
+                    providers.splice(indexLocum, 1);
+                }
+            });
+
+            window.providers= providers;
+
+            $(".providers").each(function () {
+                $(this).autocomplete({
+                    source: window.providers,
+                    close: function( event, ui ) {
+                        const cEvent = new CustomEvent('input');
+                        this.dispatchEvent(cEvent);
+                        $(this).blur();
+                        $(this).focus();
+                    },
+                    select: function( event, ui ) {
+                        var selected = ui.item.value;
+                        var autocompletePlace = $(event.target).data("id");
+                        var provider = _.find(BackendVars.providers, {fullName: selected});
+
+                        $.post('/admin/emworks/find', {
+                            providerId: provider.id,
+                            _token: "{{ csrf_token() }}"
+                        }, function(response) {
+                            window.app.provider = response;
+                            window.app.autocomplete = autocompletePlace;
+                        });
+                    }
+                });
+            });
         });
 
         window.app = new Vue({
@@ -2261,6 +2693,9 @@
                 rostersBenchs: BackendVars.rostersBenchs,
                 recruitings: BackendVars.recruitings,
                 locums: BackendVars.locums,
+                providers: BackendVars.providers,
+                provider: null,
+                autocomplete: null,
 
                 staffPhysicianNeeds: BackendVars.pipeline.staffPhysicianNeeds,
                 staffAppsNeeds: BackendVars.pipeline.staffAppsNeeds,
@@ -2281,6 +2716,7 @@
                     contractIn: '',
                     firstShift: '',
                     notes: '',
+                    provisionalPrivilegeStart: '',
                 },
 
                 rosterApps: {
@@ -2292,6 +2728,7 @@
                     contractIn: '',
                     firstShift: '',
                     notes: '',
+                    provisionalPrivilegeStart: '',
                 },
 
                 credentialingPhysician: {
@@ -2324,6 +2761,7 @@
                     contractIn: '',
                     firstShift: '',
                     notes: '',
+                    provisionalPrivilegeStart: '',
                 },
 
                 benchApps: {
@@ -2334,6 +2772,7 @@
                     contractIn: '',
                     firstShift: '',
                     notes: '',
+                    provisionalPrivilegeStart: '',
                 },
 
 
@@ -2393,6 +2832,52 @@
                     resignedReason: '',
                 },
                 toResign: {},
+            },
+
+            watch: {
+                provider: function (newProvider) {
+                    if (this.autocomplete == 'rosterPhysician') {
+                        this.rosterPhysician.interview = this.moment(newProvider.interview);
+                        this.rosterPhysician.contractIn = this.moment(newProvider.contractIn);
+                        this.rosterPhysician.contractOut = this.moment(newProvider.contractOut);
+                        this.rosterPhysician.privilegeGoal = this.moment(newProvider.privilegeGoal);
+                        this.rosterPhysician.provisionalPrivilegeStart = this.moment(newProvider.ProvisionalPrivilegeStart);
+                        this.rosterPhysician.enrollmentStatus = newProvider.EnrollmentStatus;
+                        this.rosterPhysician.credentialingNotes = newProvider.credentialingNotes;
+                        this.rosterPhysician.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
+                        this.rosterPhysician.appToHospital = this.moment(newProvider.appToHospital);
+                    } else if (this.autocomplete == 'benchPhysician') {
+                        this.benchPhysician.interview = this.moment(newProvider.interview);
+                        this.benchPhysician.contractIn = this.moment(newProvider.contractIn);
+                        this.benchPhysician.contractOut = this.moment(newProvider.contractOut);
+                        this.benchPhysician.privilegeGoal = this.moment(newProvider.privilegeGoal);
+                        this.benchPhysician.provisionalPrivilegeStart = this.moment(newProvider.ProvisionalPrivilegeStart);
+                        this.benchPhysician.enrollmentStatus = newProvider.EnrollmentStatus;
+                        this.benchPhysician.credentialingNotes = newProvider.credentialingNotes;
+                        this.benchPhysician.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
+                        this.benchPhysician.appToHospital = this.moment(newProvider.appToHospital);
+                    } else if (this.autocomplete == 'rosterApps') {
+                        this.rosterApps.interview = this.moment(newProvider.interview);
+                        this.rosterApps.contractIn = this.moment(newProvider.contractIn);
+                        this.rosterApps.contractOut = this.moment(newProvider.contractOut);
+                        this.rosterApps.privilegeGoal = this.moment(newProvider.privilegeGoal);
+                        this.rosterApps.provisionalPrivilegeStart = this.moment(newProvider.ProvisionalPrivilegeStart);
+                        this.rosterApps.enrollmentStatus = newProvider.EnrollmentStatus;
+                        this.rosterApps.credentialingNotes = newProvider.credentialingNotes;
+                        this.rosterApps.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
+                        this.rosterApps.appToHospital = this.moment(newProvider.appToHospital);
+                    } else if (this.autocomplete == 'benchApps') {
+                        this.benchApps.interview = this.moment(newProvider.interview);
+                        this.benchApps.contractIn = this.moment(newProvider.contractIn);
+                        this.benchApps.contractOut = this.moment(newProvider.contractOut);
+                        this.benchApps.privilegeGoal = this.moment(newProvider.privilegeGoal);
+                        this.benchApps.provisionalPrivilegeStart = this.moment(newProvider.ProvisionalPrivilegeStart);
+                        this.benchApps.enrollmentStatus = newProvider.EnrollmentStatus;
+                        this.benchApps.credentialingNotes = newProvider.credentialingNotes;
+                        this.benchApps.fileToCredentialing = this.moment(newProvider.fileToCredentialing);
+                        this.benchApps.appToHospital = this.moment(newProvider.appToHospital);
+                    }
+                }
             },
 
             computed: {
@@ -2622,6 +3107,36 @@
                         .value();
                 },
 
+                activeUnlinkedRosterPhysicians: function () {
+                    return _.chain(this.rostersBenchs)
+                        .filter({ place: 'roster', activity: 'physician', unlinked: 1 })
+                        .reject('resigned')
+                        .orderBy(['isSMD', 'isAMD', 'name'], ['desc', 'desc', 'asc'])
+                        .value();
+                },
+
+                activeUnlinkedRosterApps: function () {
+                    return _.chain(this.rostersBenchs)
+                        .filter({ place: 'roster', activity: 'app', unlinked: 1 })
+                        .reject('resigned')
+                        .orderBy(['isChief', 'name'], ['desc', 'asc'])
+                        .value();
+                },
+
+                activeUnlinkedBenchPhysicians: function () {
+                    return _.chain(this.rostersBenchs)
+                        .filter({ place: 'bench', activity: 'physician', unlinked: 1 })
+                        .reject('resigned')
+                        .value();
+                },
+
+                activeUnlinkedBenchApps: function () {
+                    return _.chain(this.rostersBenchs)
+                        .filter({ place: 'bench', activity: 'app', unlinked: 1 })
+                        .reject('resigned')
+                        .value();
+                },
+
                 SMDs: function () {
                     return _.chain(this.rostersBenchs)
                         .filter({ isSMD: 1 })
@@ -2710,6 +3225,10 @@
             },
 
             methods: {
+                setProvider: function(obj) {
+                    this.provider = obj;
+                },
+
                 addRosterBench: function (place, activity, entity) {
                     if(entity == 'rosterPhysician') {
                         this[entity].oldSMD = this.oldSMD.length ? this.oldSMD[0].id : '';
@@ -2730,6 +3249,17 @@
                         if( this.oldChief.length && this[entity].isChief) {
                             this.oldChief[0].isChief = 0;
                         }
+                    }
+
+                    var name = this[entity].name;
+                    var provider = _.find(this.providers, {fullName: name});
+                    
+                    this[entity].providerId = provider ? provider.id : null;
+
+                    var indexRoster = providers.indexOf(this[entity].name);
+
+                    if (indexRoster > -1) {
+                        providers.splice(indexRoster, 1);
                     }
 
                     if(this[entity].id) {
@@ -2764,7 +3294,7 @@
                                     this.oldAMD.push(response.data);
                                 }
                             }.bind(this));
-                        }
+                    }
                 },
 
                 addCredentialing: function (entity) {
@@ -2797,6 +3327,8 @@
                     rosterBench.appToHospital = this.moment(rosterBench.appToHospital);
                     rosterBench.provisionalPrivilegeStart = this.moment(rosterBench.provisionalPrivilegeStart);
 
+                    window.providers.push(rosterBench.name);
+
                     _.assignIn(this[object], rosterBench);
                 },
 
@@ -2808,7 +3340,7 @@
                     credentialing.fileToCredentialing = this.moment(credentialing.fileToCredentialing);
                     credentialing.privilegeGoal = this.moment(credentialing.privilegeGoal);
                     credentialing.appToHospital = this.moment(credentialing.appToHospital);
-
+                    credentialing.provisionalPrivilegeStart = this.moment(credentialing.provisionalPrivilegeStart);
 
                     _.assignIn(this[object], credentialing);
                 },
@@ -2865,6 +3397,10 @@
                     rosterBench.contractIn = this.moment(rosterBench.contractIn);
                     rosterBench.contractOut = this.moment(rosterBench.contractOut);
                     rosterBench.firstShift = this.moment(rosterBench.firstShift);
+                    rosterBench.fileToCredentialing = this.moment(rosterBench.fileToCredentialing);
+                    rosterBench.privilegeGoal = this.moment(rosterBench.privilegeGoal);
+                    rosterBench.appToHospital = this.moment(rosterBench.appToHospital);
+                    rosterBench.provisionalPrivilegeStart = this.moment(rosterBench.provisionalPrivilegeStart);
 
                     if (place == 'recruiting') {
                         axios.post('/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + rosterBench.id + '/switch', rosterBench)
@@ -2916,6 +3452,17 @@
 
 
                 addRecruiting: function () {
+                    var name = this.newRecruiting.name;
+                    var provider = _.find(this.providers, {fullName: name});
+                    
+                    this.newRecruiting.providerId = provider ? provider.id : null;
+
+                    var indexRecruiting = providers.indexOf(this.newRecruiting.name);
+
+                    if (indexRecruiting > -1) {
+                        providers.splice(indexRecruiting, 1);
+                    }
+
                     if(this.newRecruiting.id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + this.newRecruiting.id;
 
@@ -2943,6 +3490,8 @@
                     recruiting.contractIn = this.moment(recruiting.contractIn);
                     recruiting.firstShift = this.moment(recruiting.firstShift);
 
+                    window.providers.push(recruiting.name);
+
                     _.assignIn(this.newRecruiting, recruiting);
                 },
 
@@ -2963,6 +3512,17 @@
 
 
                 addLocum: function () {
+                    var name = this.newLocum.name;
+                    var provider = _.find(this.providers, {fullName: name});
+                    
+                    this.newLocum.providerId = provider ? provider.id : null;
+
+                    var indexLocum = providers.indexOf(this.newLocum.name);
+
+                    if (indexLocum > -1) {
+                        providers.splice(indexLocum, 1);
+                    }
+
                     if(this.newLocum.id) {
                         var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/locum/' + this.newLocum.id;
 
@@ -2988,6 +3548,8 @@
                     locum.declined = this.moment(locum.declined);
                     locum.application = this.moment(locum.application);
                     locum.interview = this.moment(locum.interview);
+
+                    window.providers.push(locum.name);
 
                     _.assignIn(this.newLocum, locum);
                 },
@@ -3149,6 +3711,7 @@
                     roster.fileToCredentialing = this.moment(roster.fileToCredentialing);
                     roster.privilegeGoal = this.moment(roster.privilegeGoal);
                     roster.appToHospital = this.moment(roster.appToHospital);
+                    roster.provisionalPrivilegeStart = this.moment(roster.provisionalPrivilegeStart);
                     
                     var endpoint = '/admin/accounts/' + this.account.id + '/pipeline/rosterBench/' + roster.id;
 
@@ -3199,10 +3762,12 @@
                     var provider = _.find(this.providers, {fullName: name});
                     
                     if(!provider) {
-                        var currentDate = moment();
-                        var futureDate = moment(currentDate).add(5, 'M').format('MM/DD/YYYY');
-                        
-                        roster.firstShift = futureDate;
+                        if(!roster.firstShift) {
+                            var currentDate = moment();
+                            var futureDate = moment(currentDate).add(5, 'M').format('MM/DD/YYYY');
+                            
+                            roster.firstShift = futureDate;
+                        }
                     } else {
                         if (roster.firstShift == null || roster.firstShift == "") {
                             e.preventDefault();
@@ -3361,17 +3926,16 @@
                     }
                 },
 
+
                 makeCred: function(recruiting) {
                     recruiting.interview = this.moment(recruiting.interview);
                     recruiting.contractIn = this.moment(recruiting.contractIn);
                     recruiting.contractOut = this.moment(recruiting.contractOut);
                     recruiting.firstShift = this.moment(recruiting.firstShift);
 
-                    recruiting.isCredentialing = 1;
-
                     axios.post('/admin/accounts/' + this.account.id + '/pipeline/recruiting/' + recruiting.id + '/makeCred', recruiting
                         ).then(function (response) {
-                            this.credentialingPhysicians.push(response.data);
+                            alert("Set to credentialing");
                         }.bind(this));
                 },
 
