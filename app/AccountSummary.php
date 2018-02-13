@@ -62,7 +62,7 @@ class AccountSummary extends Model
             $month = $monthYear[0];
             $year = $monthYear[1];
 
-            $targetDate = Carbon::parse(date($year.'-'.$month.'-'.'01'));
+            $targetDate = Carbon::parse(date($year.'-'.$month.'-'.'d'));
         }
 
         $monthDays = 30;
