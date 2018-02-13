@@ -2011,6 +2011,241 @@
             </div>
         @endif
 
+        <div class="no-break-inside">
+            <h4 class="pipeline-blue-title">@lang('Unlinked')</h4>
+            <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
+            <form @submit.prevent="addCredentialing('credentialingPhysician')">
+                <div class="table-responsive">
+                    <table class="table table-bordered summary-datatable">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th class="mw60"></th>
+                                <th class="mw180">@lang('Name')</th>
+                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw80">@lang('FT/PT/EMB')</th>
+                                <th class="mw120">@lang('File To Credentialing')</th>
+                                <th class="mw100">@lang('APP To Hospital')</th>
+                                <th class="mw50">@lang('Stage')</th>
+                                <th class="mw100">@lang('Privilege Goal')</th>
+                                <th class="mw120">@lang('Enrollment Status')</th>
+                                <th class="mw150">@lang('Enrollment Notes')</th>
+                                <th class="mw150">@lang('Credentialing Notes')</th>
+                                <th class="mw100 text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(credentialing, index) in credentialingPhysicians" :class="{'bold': credentialing.providerId}">
+                                <td>
+                                    <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                    <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                    <input type='radio' class="icheck-green" :name="'stopLight' + index" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                </td>
+                                <td>@{{ credentialing.name }}</td>
+                                <td>@{{ credentialing.hours }}</td>
+                                <td class="text-uppercase">@{{ credentialing.contract }}</td>
+                                <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
+                                <td>@{{ moment(credentialing.appToHospital) }}</td>
+                                <td>@{{ credentialing.stage }}</td>
+                                <td>@{{ moment(credentialing.privilegeGoal) }}</td>
+                                <td>@{{ credentialing.enrollmentStatus }}</td>
+                                <td>@{{ credentialing.enrollmentNotes }}</td>
+                                <td>@{{ credentialing.credentialingNotes }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editCredentialing(credentialing, 'credentialingPhysician')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+                                    @permission('admin.accounts.pipeline.rosterBench.removeCredentialing')
+                                        <button type="button" class="btn btn-xs btn-danger"
+                                            data-toggle="modal" data-target="#credentialingModal"
+                                            @click="setCredentialing(credentialing)"
+                                        >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                    @permission('admin.accounts.pipeline.rosterBench.complete')
+                                        <button type="button" class="btn btn-xs btn-success"
+                                            @click="completeCredentialing(credentialing)"
+                                        >
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print" v-show="credentialingPhysician.id">
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="credentialingPhysician.name" required readonly />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="credentialingPhysician.hours" min="0" required readonly />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control text-uppercase" v-model="credentialingPhysician.contract" required readonly />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="credentialingPhysician.fileToCredentialing" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="credentialingPhysician.appToHospital" />
+                                </td>
+                                <td>
+                                    <select class="form-control" v-model="credentialingPhysician.stage">
+                                        <option :value="null" disabled selected></option>
+                                        @for($x = 1; $x <= 12; $x++);
+                                            <option value="{{$x}}">{{$x}}</option>
+                                        @endfor
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="credentialingPhysician.privilegeGoal" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentStatus" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="credentialingPhysician.enrollmentNotes" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="credentialingPhysician.credentialingNotes" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+        <div class="no-break-inside">
+            <h6 class="pseudo-header bg-gray">@lang('APPs')</h6>
+            <form @submit.prevent="addCredentialing('credentialingApp')">
+                <div class="table-responsive">
+                    <table class="table table-bordered summary-datatable">
+                        <thead class="bg-gray">
+                            <tr>
+                                <th class="mw60"></th>
+                                <th class="mw180">@lang('Name')</th>
+                                <th class="mw70">@lang('Hours')</th>
+                                <th class="mw80">@lang('FT/PT/EMB')</th>
+                                <th class="mw120">@lang('File To Credentialing')</th>
+                                <th class="mw100">@lang('APP To Hospital')</th>
+                                <th class="mw50">@lang('Stage')</th>
+                                <th class="mw100">@lang('Privilege Goal')</th>
+                                <th class="mw120">@lang('Enrollment Status')</th>
+                                <th class="mw150">@lang('Enrollment Notes')</th>
+                                <th class="mw150">@lang('Credentialing Notes')</th>
+                                <th class="mw100 text-center hidden-print">@lang('Actions')</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(credentialing, index) in credentialingApps" :class="{'bold': credentialing.providerId}">
+                                <td>
+                                    <input type='radio' class="icheck-red" :name="'stopLight' + index" value="red"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'red')">
+                                    <input type='radio' class="icheck-yellow" :name="'stopLight' + index" value="yellow"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'yellow')">
+                                    <input type='radio' class="icheck-green" :name="'stopLight' + index" value="green"/ v-model="credentialing.stopLight" @change="updateStopLight(credentialing, 'green')">
+                                </td>
+                                <td>@{{ credentialing.name }}</td>
+                                <td>@{{ credentialing.hours }}</td>
+                                <td class="text-uppercase">@{{ credentialing.contract }}</td>
+                                <td>@{{ moment(credentialing.fileToCredentialing) }}</td>
+                                <td>@{{ moment(credentialing.appToHospital) }}</td>
+                                <td>@{{ credentialing.stage }}</td>
+                                <td>@{{ moment(credentialing.privilegeGoal) }}</td>
+                                <td>@{{ credentialing.enrollmentStatus }}</td>
+                                <td>@{{ credentialing.enrollmentNotes }}</td>
+                                <td>@{{ credentialing.credentialingNotes }}</td>
+                                <td class="text-center hidden-print">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="button" class="btn btn-xs btn-info"
+                                            @click="editCredentialing(credentialing, 'credentialingApp')"
+                                        >
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    @endpermission
+                                    @permission('admin.accounts.pipeline.rosterBench.removeCredentialing')
+                                        <button type="button" class="btn btn-xs btn-danger"
+                                            data-toggle="modal" data-target="#credentialingModal"
+                                            @click="setCredentialing(credentialing)"
+                                        >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endpermission
+                                    @permission('admin.accounts.pipeline.rosterBench.complete')
+                                        <button type="button" class="btn btn-xs btn-success"
+                                            @click="completeCredentialing(credentialing)"
+                                        >
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="hidden-print" v-show="credentialingApp.id">
+                            <tr>
+                                <td>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="credentialingApp.name" required readonly />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="credentialingApp.hours" min="0" required readonly />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control text-uppercase" v-model="credentialingApp.contract" required readonly />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="credentialingApp.fileToCredentialing" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="credentialingApp.appToHospital" />
+                                </td>
+                                <td>
+                                    <select class="form-control" v-model="credentialingApp.stage">
+                                        <option :value="null" disabled selected></option>
+                                        @for($x = 1; $x <= 12; $x++);
+                                            <option value="{{$x}}">{{$x}}</option>
+                                        @endfor
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control datepicker" v-model="credentialingApp.privilegeGoal" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="credentialingApp.enrollmentStatus" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="credentialingApp.enrollmentNotes" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="credentialingApp.credentialingNotes" />
+                                </td>
+                                <td class="text-center">
+                                    @permission('admin.accounts.pipeline.rosterBench.store')
+                                        <button type="submit" class="btn btn-xs btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endpermission
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
     </div>
 @endsection
 
