@@ -103,10 +103,6 @@ class AccountsPipelineController extends Controller
 
         JavaScript::put($paramsJS);
 
-        if($account->rsc && $account->rsc->name == 'West') {
-            return view('admin.accounts.pipeline.west', $params);
-        }
-
         return view('admin.accounts.pipeline.index', $params);
     }
 
