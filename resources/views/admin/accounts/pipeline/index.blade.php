@@ -2011,7 +2011,7 @@
             </div>
         @endif
 
-        {{-- <div class="no-break-inside">
+        <div class="no-break-inside">
             <h4 class="pipeline-blue-title">@lang('Unlinked Roster')</h4>
             <h6 class="pseudo-header bg-gray">@lang('Physician')</h6>
             <form @submit.prevent="addRosterBench('roster', 'physician', 'rosterPhysician')">
@@ -2607,7 +2607,7 @@
                     </table>
                 </div>
             </form>
-        </div> --}}
+        </div>
 
     </div>
 @endsection

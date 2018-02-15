@@ -19,9 +19,12 @@ use App\SystemAffiliation;
 use App\StateAbbreviation;
 use App\Group;
 use App\Pipeline;
+use App\vFactInterview;
+use App\vContractLog;
 use App\Filters\SummaryFilter;
 use App\Scopes\AccountSummaryScope;
 use Carbon\Carbon;
+use DB;
 use JavaScript;
 
 class DashboardsController extends Controller
@@ -295,24 +298,61 @@ class DashboardsController extends Controller
         $prevCurrentStaffAPP = $prevAccounts->sum('Current Staff - Total');
         $prevCurrentStaffTotal = $prevAccounts->sum('Current Staff - Total');
 
-        $prevOpeningsPhys = $prevAccounts->sum('Current Openings - Phys');
-        $prevOpeningsAPP = $prevAccounts->sum('Current Openings - APP');
         $prevOpeningsTotal = $prevAccounts->sum('Current Openings - Total');
 
-        $prevApplications = $prevAccounts->sum('MTD - Applications');
-        $prevInterViews = $prevAccounts->sum('MTD - Interviews');
-        $prevContractsOut = $prevAccounts->sum('MTD - Contracts Out');
-        $prevContractsIn = $prevAccounts->sum('MTD - Contracts In');
-        $prevCredentialings = $prevAccounts->sum('MTD - Signed Not Yet Started');
 
+        //// TOP SQUARES INFO /////
         $percentRecruitedPhys = $completeStaffPhys == 0 ? 0 : round((($completeStaffPhys - $currentOpeningsPhys) / $completeStaffPhys) * 100, 2);
         $percentRecruitedAPP = $completeStaffAPP == 0 ? 0 : round((($completeStaffAPP - $currentOpeningsAPP) / $completeStaffAPP) * 100, 2);
         $percentRecruitedTotal = $completeStaffTotal == 0 ? 0 : round((($completeStaffTotal - $currentOpeningsTotal) / $completeStaffTotal) * 100, 2);
-        $percentApplications = $prevApplications == 0 ? 0 : round((($currentApplications - $prevApplications) / $prevApplications) * 100, 2);
-        $percentInterViews = $prevInterViews == 0 ? 0 : round((($currentInterViews - $prevInterViews) / $prevInterViews) * 100, 2);
-        $percentContractsOut = $prevContractsOut == 0 ? 0 : round((($currentContractsOut - $prevContractsOut) / $prevContractsOut) * 100, 2);
-        $percentContractsIn = $prevContractsIn == 0 ? 0 : round((($currentContractsIn - $prevContractsIn) / $prevContractsIn) * 100, 2);
+
+
         $percentOpenings = $prevOpeningsTotal == 0 ? 0 : round((($currentOpeningsTotal - $prevOpeningsTotal) / $prevOpeningsTotal) * 100, 2);
+
+        $prevMonthStart = Carbon::today()->subMonth()->startOfMonth()->format('Y-m-d');
+        $nextMonthStart = Carbon::today()->addMonth()->startOfMonth()->format('Y-m-d');
+
+        $interviews = vFactInterview::selectRaw('interviewDate, sum(InterviewCount) as InterviewCount')
+        ->whereRaw("datediff(dd, interviewDate, dateofinterview) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
+        ->where('interviewDate', '>=', $prevMonthStart)
+        ->where('interviewDate', '<=', $nextMonthStart)
+        ->groupBy('interviewDate')->get();
+
+        $applications = vFactInterview::selectRaw('applicationDate, sum(applicationCount) as applicationCount')
+        ->whereRaw("datediff(dd, applicationDate, createdOn) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
+        ->where('applicationDate', '>=', $prevMonthStart)
+        ->where('applicationDate', '<=', $nextMonthStart)
+        ->groupBy('applicationDate')->get();
+
+        $contractsIn = vContractLog::selectRaw('dateadd(month, datediff(month, 0, contractInDate), 0) as contractIn, count(contractInDate) as contractsInCount')
+        ->whereRaw("datediff(dd, contractInDate, dateadd(month, datediff(month, 0, contractInDate), 0)) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
+        ->where('contractInDate', '>=', $prevMonthStart)
+        ->where('contractInDate', '<=', $nextMonthStart)
+        ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractInDate), 0)'))->get();
+
+        $contractsOut = vContractLog::selectRaw('dateadd(month, datediff(month, 0, contractOutDate), 0) as contractOut, count(contractOutDate) as contractsOutCount')
+        ->whereRaw("datediff(dd, contractOutDate, DATEADD(month, DATEDIFF(month, 0, contractOutDate), 0)) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
+        ->where('contractOutDate', '>=', $prevMonthStart)
+        ->where('contractOutDate', '<=', $nextMonthStart)
+        ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractOutDate), 0)'))->get();
+
+        $realCurrentApplications = isset($applications[1]) ? $interviews[1] : 0;
+        $prevApplications = isset($applications[0]) ? $interviews[0] : 0;
+
+        $realCurrentInterviews = isset($interviews[1]) ? $interviews[1] : 0;
+        $prevInterViews = isset($interviews[0]) ? $interviews[0] : 0;
+
+        $realCurrentContractsIn = isset($contractsIn[1]) ? $contractIn[1] : 0;
+        $prevContractsIn = isset($contractsIn[0]) ? $contractIn[0] : 0;
+
+        $realCurrentContractsOut = isset($contractsOut[1]) ? $contractOut[1] : 0;
+        $prevContractsOut = isset($contractsOut[0]) ? $contractOut[0] : 0;
+
+        //// BOTTOM SQUARES INFO /////
+        $percentApplications = $prevApplications == 0 ? 0 : round((($realCurrentApplications - $prevApplications) / $prevApplications) * 100, 2);
+        $percentInterViews = $prevInterViews == 0 ? 0 : round((($realCurrentInterViews - $prevInterViews) / $prevInterViews) * 100, 2);
+        $percentContractsOut = $prevContractsOut == 0 ? 0 : round((($realCurrentContractsOut - $prevContractsOut) / $prevContractsOut) * 100, 2);
+        $percentContractsIn = $prevContractsIn == 0 ? 0 : round((($realCurrentContractsIn - $prevContractsIn) / $prevContractsIn) * 100, 2);
 
         $pipeline = [
             "data" => [], 
