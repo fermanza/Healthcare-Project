@@ -350,7 +350,7 @@ class DashboardsController extends Controller
 
         //// BOTTOM SQUARES INFO /////
         $percentApplications = $prevApplications == 0 ? 0 : round((($realCurrentApplications - $prevApplications) / $prevApplications) * 100, 2);
-        $percentInterViews = $prevInterviews == 0 ? 0 : round((($realCurrentInterviews - $prevInterviews) / $prevInterViews) * 100, 2);
+        $percentInterViews = $prevInterviews == 0 ? 0 : round((($realCurrentInterviews - $prevInterviews) / $prevInterviews) * 100, 2);
         $percentContractsOut = $prevContractsOut == 0 ? 0 : round((($realCurrentContractsOut - $prevContractsOut) / $prevContractsOut) * 100, 2);
         $percentContractsIn = $prevContractsIn == 0 ? 0 : round((($realCurrentContractsIn - $prevContractsIn) / $prevContractsIn) * 100, 2);
 
