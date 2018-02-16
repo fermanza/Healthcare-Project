@@ -336,17 +336,17 @@ class DashboardsController extends Controller
         ->where('contractOutDate', '<=', $nextMonthStart)
         ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractOutDate), 0)'))->get();
 
-        $realCurrentApplications = isset($applications[1]) ? $interviews[1] : 0;
-        $prevApplications = isset($applications[0]) ? $interviews[0] : 0;
+        $realCurrentApplications = isset($applications[1]) ? $applications[1]->applicationCount : 0;
+        $prevApplications = isset($applications[0]) ? $applications[0]->applicationCount : 0;
 
-        $realCurrentInterviews = isset($interviews[1]) ? $interviews[1] : 0;
-        $prevInterViews = isset($interviews[0]) ? $interviews[0] : 0;
+        $realCurrentInterviews = isset($interviews[1]) ? $interviews[1]->InterviewCount : 0;
+        $prevInterViews = isset($interviews[0]) ? $interviews[0]->InterviewCount : 0;
 
-        $realCurrentContractsIn = isset($contractsIn[1]) ? $contractsIn[1] : 0;
-        $prevContractsIn = isset($contractsIn[0]) ? $contractsIn[0] : 0;
+        $realCurrentContractsIn = isset($contractsIn[1]) ? $contractsIn[1]->contractsInCount : 0;
+        $prevContractsIn = isset($contractsIn[0]) ? $contractsIn[0]->contractsInCount : 0;
 
-        $realCurrentContractsOut = isset($contractsOut[1]) ? $contractsOut[1] : 0;
-        $prevContractsOut = isset($contractsOut[0]) ? $contractsOut[0] : 0;
+        $realCurrentContractsOut = isset($contractsOut[1]) ? $contractsOut[1]->contractsOutCount : 0;
+        $prevContractsOut = isset($contractsOut[0]) ? $contractsOut[0]->contractsOutCount : 0;
 
         //// BOTTOM SQUARES INFO /////
         $percentApplications = $prevApplications == 0 ? 0 : round((($realCurrentApplications - $prevApplications) / $prevApplications) * 100, 2);
