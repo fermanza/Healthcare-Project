@@ -342,11 +342,11 @@ class DashboardsController extends Controller
         $realCurrentInterviews = isset($interviews[1]) ? $interviews[1] : 0;
         $prevInterViews = isset($interviews[0]) ? $interviews[0] : 0;
 
-        $realCurrentContractsIn = isset($contractsIn[1]) ? $contractIn[1] : 0;
-        $prevContractsIn = isset($contractsIn[0]) ? $contractIn[0] : 0;
+        $realCurrentContractsIn = isset($contractsIn[1]) ? $contractsIn[1] : 0;
+        $prevContractsIn = isset($contractsIn[0]) ? $contractsIn[0] : 0;
 
-        $realCurrentContractsOut = isset($contractsOut[1]) ? $contractOut[1] : 0;
-        $prevContractsOut = isset($contractsOut[0]) ? $contractOut[0] : 0;
+        $realCurrentContractsOut = isset($contractsOut[1]) ? $contractsOut[1] : 0;
+        $prevContractsOut = isset($contractsOut[0]) ? $contractsOut[0] : 0;
 
         //// BOTTOM SQUARES INFO /////
         $percentApplications = $prevApplications == 0 ? 0 : round((($realCurrentApplications - $prevApplications) / $prevApplications) * 100, 2);
