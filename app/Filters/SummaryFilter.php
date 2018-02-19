@@ -58,7 +58,7 @@ class SummaryFilter extends Filter
      */
     public function regions($names)
     {
-        $this->query->whereIn('vAccountSummary.Operating Unit', $names);
+        $this->query->whereIn('Operating Unit', $names);
     }
     
     /**
