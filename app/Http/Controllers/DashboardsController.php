@@ -174,33 +174,33 @@ class DashboardsController extends Controller
 
         switch ($period) {
             case 'MTD':
-                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
-                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth()->month)->whereYear('MonthEndDate', Carbon::today()->subMonth()->year)->get();
+                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
+                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth()->month)->whereYear('MonthEndDate', Carbon::today()->subMonth()->year)->get();
                 $currentMonth = $accounts;
                 $firstPeriod = $accounts;
                 $secondPeriod = $prevAccounts;
-                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth(2)->month)->whereYear('MonthEndDate', Carbon::today()->subMonth(2)->year)->get();
-                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth(3)->month)->whereYear('MonthEndDate', Carbon::today()->subMonth(3)->year)->get();
+                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth(2)->month)->whereYear('MonthEndDate', Carbon::today()->subMonth(2)->year)->get();
+                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->subMonth(3)->month)->whereYear('MonthEndDate', Carbon::today()->subMonth(3)->year)->get();
                 break;
 
             case 'QTD':
-                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereDate('MonthEndDate', '>=', $currentQuarterStart)->whereDate('MonthEndDate', '<=', $currentQuarterEnd)->get();
-                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereDate('MonthEndDate', '>=', $secondQuarterStart)->whereDate('MonthEndDate', '<=', $secondQuarterEnd)->get();
-                $currentMonth = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
+                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereDate('MonthEndDate', '>=', $currentQuarterStart)->whereDate('MonthEndDate', '<=', $currentQuarterEnd)->get();
+                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereDate('MonthEndDate', '>=', $secondQuarterStart)->whereDate('MonthEndDate', '<=', $secondQuarterEnd)->get();
+                $currentMonth = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
                 $firstPeriod = $accounts;
                 $secondPeriod = $prevAccounts;
-                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereDate('MonthEndDate', '>=', $thirdQuarterStart)->whereDate('MonthEndDate', '<=', $thirdQuarterEnd)->get();
-                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereDate('MonthEndDate', '>=', $fourthQuarterStart)->whereDate('MonthEndDate', '<=', $fourthQuarterEnd)->get();
+                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereDate('MonthEndDate', '>=', $thirdQuarterStart)->whereDate('MonthEndDate', '<=', $thirdQuarterEnd)->get();
+                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereDate('MonthEndDate', '>=', $fourthQuarterStart)->whereDate('MonthEndDate', '<=', $fourthQuarterEnd)->get();
                 break;
 
             case 'YTD':
-                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereYear('MonthEndDate', Carbon::today()->year)->get();
-                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear()->year)->get();
-                $currentMonth = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
+                $accounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereYear('MonthEndDate', Carbon::today()->year)->get();
+                $prevAccounts = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear()->year)->get();
+                $currentMonth = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereMonth('MonthEndDate', Carbon::today()->month)->whereYear('MonthEndDate', Carbon::today()->year)->get();
                 $firstPeriod = $accounts;
                 $secondPeriod = $prevAccounts;
-                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear(2)->year)->get();
-                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear(3)->year)->get();
+                $thirdPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear(2)->year)->get();
+                $fourthPeriod = AccountSummary::withGlobalScope('role', new AccountSummaryScope)->select('Complete Staff - Phys', 'Complete Staff - APP', 'Complete Staff - Total', 'Current Openings - Phys', 'Current Openings - APP', 'Current Openings - Total', 'MTD - Applications', 'MTD - Interviews', 'MTD - Contracts Out', 'MTD - Contracts In', 'MTD - Signed Not Yet Started')->filter($filter)->whereYear('MonthEndDate', Carbon::today()->subYear(3)->year)->get();
                 break;
             
             default:
@@ -268,29 +268,29 @@ class DashboardsController extends Controller
         $prevMonthStart = Carbon::today()->subMonth()->startOfMonth()->format('Y-m-d');
         $nextMonthStart = Carbon::today()->addMonth()->startOfMonth()->format('Y-m-d');
 
-        // $interviews = vFactInterview::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('interviewDate, sum(InterviewCount) as InterviewCount')
-        // ->whereRaw("datediff(dd, interviewDate, dateofinterview) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
-        // ->where('interviewDate', '>=', $prevMonthStart)
-        // ->where('interviewDate', '<=', $nextMonthStart)
-        // ->groupBy('interviewDate')->get();
+        $interviews = vFactInterview::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('interviewDate, sum(InterviewCount) as InterviewCount')
+        ->whereRaw("datediff(dd, interviewDate, dateofinterview) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
+        ->where('interviewDate', '>=', $prevMonthStart)
+        ->where('interviewDate', '<=', $nextMonthStart)
+        ->groupBy('interviewDate')->get();
 
-        // $applications = vFactInterview::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('applicationDate, sum(applicationCount) as applicationCount')
-        // ->whereRaw("datediff(dd, applicationDate, createdOn) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
-        // ->where('applicationDate', '>=', $prevMonthStart)
-        // ->where('applicationDate', '<=', $nextMonthStart)
-        // ->groupBy('applicationDate')->get();
+        $applications = vFactInterview::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('applicationDate, sum(applicationCount) as applicationCount')
+        ->whereRaw("datediff(dd, applicationDate, createdOn) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
+        ->where('applicationDate', '>=', $prevMonthStart)
+        ->where('applicationDate', '<=', $nextMonthStart)
+        ->groupBy('applicationDate')->get();
 
-        // $contractsIn = vContractLog::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('dateadd(month, datediff(month, 0, contractInDate), 0) as contractIn, count(contractInDate) as contractsInCount')
-        // ->whereRaw("datediff(dd, contractInDate, dateadd(month, datediff(month, 0, contractInDate), 0)) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
-        // ->where('contractInDate', '>=', $prevMonthStart)
-        // ->where('contractInDate', '<=', $nextMonthStart)
-        // ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractInDate), 0)'))->get();
+        $contractsIn = vContractLog::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('dateadd(month, datediff(month, 0, contractInDate), 0) as contractIn, count(contractInDate) as contractsInCount')
+        ->whereRaw("datediff(dd, contractInDate, dateadd(month, datediff(month, 0, contractInDate), 0)) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
+        ->where('contractInDate', '>=', $prevMonthStart)
+        ->where('contractInDate', '<=', $nextMonthStart)
+        ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractInDate), 0)'))->get();
 
-        // $contractsOut = vContractLog::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('dateadd(month, datediff(month, 0, contractOutDate), 0) as contractOut, count(contractOutDate) as contractsOutCount')
-        // ->whereRaw("datediff(dd, contractOutDate, DATEADD(month, DATEDIFF(month, 0, contractOutDate), 0)) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
-        // ->where('contractOutDate', '>=', $prevMonthStart)
-        // ->where('contractOutDate', '<=', $nextMonthStart)
-        // ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractOutDate), 0)'))->get();
+        $contractsOut = vContractLog::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('dateadd(month, datediff(month, 0, contractOutDate), 0) as contractOut, count(contractOutDate) as contractsOutCount')
+        ->whereRaw("datediff(dd, contractOutDate, DATEADD(month, DATEDIFF(month, 0, contractOutDate), 0)) <= datediff(dd, '".date('Y-m-01')."', '".date('Y-m-d')."')")
+        ->where('contractOutDate', '>=', $prevMonthStart)
+        ->where('contractOutDate', '<=', $nextMonthStart)
+        ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractOutDate), 0)'))->get();
 
         $monthsData = array($firstPeriod, $secondPeriod, $thirdPeriod, $fourthPeriod);
         
@@ -321,8 +321,8 @@ class DashboardsController extends Controller
         $prevCompleteStaffAPP = $prevAccounts->sum('Complete Staff - APP');
         $prevCompleteStaffTotal = $prevAccounts->sum('Complete Staff - Total');
 
-        $prevCurrentStaffPhys = $prevAccounts->sum('Current Staff - Total');
-        $prevCurrentStaffAPP = $prevAccounts->sum('Current Staff - Total');
+        $prevCurrentStaffPhys = $prevAccounts->sum('Current Staff - Phys');
+        $prevCurrentStaffAPP = $prevAccounts->sum('Current Staff - APP');
         $prevCurrentStaffTotal = $prevAccounts->sum('Current Staff - Total');
 
         $prevOpeningsTotal = $prevAccounts->sum('Current Openings - Total');

@@ -35,4 +35,9 @@ class vFactInterview extends Model
                     end as months) > 7');
 	    }
     }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'accountId');
+    }
 }
