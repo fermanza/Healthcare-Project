@@ -209,31 +209,31 @@ class DashboardsController extends Controller
 
         if ($newFilter == "1") {
             $accounts = $accounts->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 7;
             });
 
             $prevAccounts = $prevAccounts->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 7;
             });
 
             $currentMonth = $currentMonth->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 7;
             });
 
             $firstPeriod = $firstPeriod->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 7;
             });
 
             $secondPeriod = $secondPeriod->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 7;
             });
 
             $thirdPeriod = $thirdPeriod->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 7;
             });
 
             $fourthPeriod = $fourthPeriod->filter(function($account) {
-                return $account->getMonthsSinceCreated() < 7;
+                return $account->getMonthsSinceCreated() <= 7;
             });
         } elseif ($newFilter == "2") {
             $accounts = $accounts->filter(function($account) {
