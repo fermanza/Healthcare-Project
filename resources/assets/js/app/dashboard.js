@@ -39,8 +39,10 @@ var dashboard = {
 	},
 	pipeline: {
 		init: function(args){
-			var w = $(args.containerSelector).parent().innerWidth() - 50;
-			var h = $(args.containerSelector).parent().innerHeight() - 15;
+			var margin = {top: 10, right: 25, bottom: 10, left: 25},
+				w = $(args.containerSelector).parent().innerWidth() - margin.left - margin.right,
+				h = $(args.containerSelector).parent().innerHeight() - margin.top - margin.bottom;
+
 			var barPadding = 20;
 			var dataset;
 			var barHeight = 20;

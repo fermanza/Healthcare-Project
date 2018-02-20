@@ -129,7 +129,7 @@
 				<div class="fb-grow fb-parent fb-rows col-1 box mrm fb-h-center" id="pipeline">
 					<h4 class="title">Current Month Recruiting Funnel</h4>
 					<div class="fb-grow fb-h-center fb-parent">
-						<div class="pipeline-wrapper fb-v-center"></div>
+						<div class="pipeline-wrapper"></div>
 					</div>
 				</div>
 				<div class="fb-grow col-2 fb-rows fb-parent wrap">

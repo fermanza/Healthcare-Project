@@ -26,11 +26,11 @@ class vFactInterview extends Model
     	if ($new) {
 	        return $new == 1 
 	            ? $query->whereRaw('(select case 
-                        when round(datediff('.$date.', StartDate) / 30, 1) > 0 then round(datediff('.$date.', StartDate) / 30, 1)
+                        when round(datediff(dd, '.$date.', StartDate) / 30, 1) > 0 then round(datediff(dd, '.$date.', StartDate) / 30, 1)
                         else 0
                     end as months) <= 7')
 	            : $query->whereRaw('(select case 
-                        when round(datediff('.$date.', StartDate) / 30, 1) > 0 then round(datediff('.$date.', StartDate) / 30, 1)
+                        when round(datediff(dd, '.$date.', StartDate) / 30, 1) > 0 then round(datediff(dd, '.$date.', StartDate) / 30, 1)
                         else 0
                     end as months) > 7');
 	    }
