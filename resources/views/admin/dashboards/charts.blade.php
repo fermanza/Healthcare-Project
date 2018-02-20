@@ -20,7 +20,7 @@
     					<p class="title">Custom Period</p>
                         <input type="text" id="periodValue" class="hidden" name="period" value="MTD">
     				</div>
-    				<div class="filter-list fb-grow mbm">
+    				<div class="filter-list mbm">
                         <select class="form-control select2" name="affiliations[]" data-placeholder="@lang('Affiliation')" multiple>
                             @foreach ($affiliations as $affiliation)
                                 <option value="{{ $affiliation->name }}" {{ in_array($affiliation->name, Request::input('affiliations') ?: []) ? 'selected' : '' }}>{{ $affiliation->name }}</option>
@@ -155,7 +155,7 @@
 								<p>MTD</p>
 							</div>
 						</div>
-						<div class="fb-grow fb-h-center fb-parent">
+						<div class="fb-h-center fb-parent">
 							<div class="tpr_graph fb-v-center"></div>
 						</div>
 					</div>

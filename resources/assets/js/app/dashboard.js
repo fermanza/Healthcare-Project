@@ -1,5 +1,9 @@
 // JavaScript Document
 'use strict';
+
+var ua = window.navigator.userAgent;
+var msie = ua.indexOf("MSIE ");
+
 var dashboard = {
 	initFilterSwitch: function(params){
 		$(".switch-options li")
