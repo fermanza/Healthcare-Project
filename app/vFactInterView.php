@@ -24,16 +24,16 @@ class vFactInterview extends Model
         $date = date('Y-m-d');
 
     	if ($new) {
-	        return $new == 1 
-	            ? $query->whereRaw('(select case 
-                        when round(datediff(dd, '.$date.', StartDate) / 30, 1) > 0 then round(datediff(dd, '.$date.', StartDate) / 30, 1)
+            return $new == 1 
+                ? $query->whereRaw("(select case 
+                        when round(datediff(dd, StartDate, '".$date."') / 30, 1) > 0 then round(datediff(dd, StartDate, '".$date."') / 30, 1)
                         else 0
-                    end as months) <= 7')
-	            : $query->whereRaw('(select case 
-                        when round(datediff(dd, '.$date.', StartDate) / 30, 1) > 0 then round(datediff(dd, '.$date.', StartDate) / 30, 1)
+                    end as months) <= 7")
+                : $query->whereRaw("(select case 
+                        when round(datediff(dd, StartDate, '".$date."') / 30, 1) > 0 then round(datediff(dd, StartDate, '".$date."') / 30, 1)
                         else 0
-                    end as months) > 7');
-	    }
+                    end as months) > 7");
+        }
     }
 
     public function account()
