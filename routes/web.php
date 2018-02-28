@@ -8,6 +8,10 @@ $router->get('login', 'Auth\LoginController@showLoginForm')->name('login');
 $router->post('login', 'Auth\LoginController@login');
 $router->get('logout', 'Auth\LoginController@logout')->name('logout');
 
+$router->get('php', function() {
+    phpinfo();
+});
+
 // Registration Routes...
 // $router->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 // $router->post('register', 'Auth\RegisterController@register');
