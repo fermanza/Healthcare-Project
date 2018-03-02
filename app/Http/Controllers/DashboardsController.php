@@ -271,46 +271,54 @@ class DashboardsController extends Controller
         $currentMonthDate = Carbon::today()->format('Y-m-d');
 
         $interviews = vFactInterview::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('interviewDate, sum(InterviewCount) as InterviewCount')
-        ->where(function($query) use ($prevMonthDate, $prevMonthStart) {
-            $query->where('DateOfInterview', '>=', $prevMonthStart)
-                ->where('DateOfInterview', '<=', $prevMonthDate);
-        })
-        ->orWhere(function($query) use ($currentMonthDate, $currentMonthStart) {
-            $query->where('DateOfInterview', '>=', $currentMonthStart)
-                ->where('DateOfInterview', '<=', $currentMonthDate);
+        ->where(function($query) use ($prevMonthDate, $prevMonthStart, $currentMonthDate, $currentMonthStart) {
+            $query->where(function($q) use ($prevMonthDate, $prevMonthStart) {
+                $q->where('DateOfInterview', '>=', $prevMonthStart)
+                    ->where('DateOfInterview', '<=', $prevMonthDate);
+            })
+            ->orWhere(function($q) use ($currentMonthDate, $currentMonthStart) {
+                $q->where('DateOfInterview', '>=', $currentMonthStart)
+                    ->where('DateOfInterview', '<=', $currentMonthDate);
+            });
         })
         ->groupBy('interviewDate')->get();
 
         $applications = vFactInterview::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('applicationDate, sum(applicationCount) as applicationCount')
-        ->where(function($query) use ($prevMonthDate, $prevMonthStart) {
-            $query->where('CreatedOn', '>=', $prevMonthStart)
-                ->where('CreatedOn', '<=', $prevMonthDate);
-        })
-        ->orWhere(function($query) use ($currentMonthDate, $currentMonthStart) {
-            $query->where('CreatedOn', '>=', $currentMonthStart)
-                ->where('CreatedOn', '<=', $currentMonthDate);
+        ->where(function($query) use ($prevMonthDate, $prevMonthStart, $currentMonthDate, $currentMonthStart) {
+            $query->where(function($q) use ($prevMonthDate, $prevMonthStart) {
+                $q->where('CreatedOn', '>=', $prevMonthStart)
+                    ->where('CreatedOn', '<=', $prevMonthDate);
+            })
+            ->orWhere(function($q) use ($currentMonthDate, $currentMonthStart) {
+                $q->where('CreatedOn', '>=', $currentMonthStart)
+                    ->where('CreatedOn', '<=', $currentMonthDate);
+            });
         })
         ->groupBy('applicationDate')->get();
 
-        $contractsIn = vContractLog::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('dateadd(month, datediff(month, 0, contractInDate), 0) as contractIn, count(contractInDate) as contractsInCount')
-        ->where(function($query) use ($prevMonthDate, $prevMonthStart) {
-            $query->where('contractInDate', '>=', $prevMonthStart)
-                ->where('contractInDate', '<=', $prevMonthDate);
-        })
-        ->orWhere(function($query) use ($currentMonthDate, $currentMonthStart) {
-            $query->where('contractInDate', '>=', $currentMonthStart)
-                ->where('contractInDate', '<=', $currentMonthDate);
+        $contractsIn = vContractLog::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('dateadd(month, datediff(month, 0, contractInDate), 0) as contractIn, sum(value) as contractsInCount')
+        ->where(function($query) use ($prevMonthDate, $prevMonthStart, $currentMonthDate, $currentMonthStart) {
+            $query->where(function($a) use ($prevMonthDate, $prevMonthStart) {
+                $a->where('contractInDate', '>=', $prevMonthStart)
+                    ->where('contractInDate', '<=', $prevMonthDate);
+            })
+            ->orWhere(function($q) use ($currentMonthDate, $currentMonthStart) {
+                $q->where('contractInDate', '>=', $currentMonthStart)
+                    ->where('contractInDate', '<=', $currentMonthDate);
+            });
         })
         ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractInDate), 0)'))->get();
 
-        $contractsOut = vContractLog::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('dateadd(month, datediff(month, 0, contractOutDate), 0) as contractOut, count(contractOutDate) as contractsOutCount')
-         ->where(function($query) use ($prevMonthDate, $prevMonthStart) {
-            $query->where('contractOutDate', '>=', $prevMonthStart)
-                ->where('contractOutDate', '<=', $prevMonthDate);
-        })
-        ->orWhere(function($query) use ($currentMonthDate, $currentMonthStart) {
-            $query->where('contractOutDate', '>=', $currentMonthStart)
-                ->where('contractOutDate', '<=', $currentMonthDate);
+        $contractsOut = vContractLog::withGlobalScope('role', new AccountSummaryScope)->filter($filter)->new($newFilter)->selectRaw('dateadd(month, datediff(month, 0, contractOutDate), 0) as contractOut, sum(value) as contractsOutCount')
+         ->where(function($query) use ($prevMonthDate, $prevMonthStart, $currentMonthDate, $currentMonthStart) {
+            $query->where(function($a) use ($prevMonthDate, $prevMonthStart) {
+                $a->where('contractOutDate', '>=', $prevMonthStart)
+                    ->where('contractOutDate', '<=', $prevMonthDate);
+            })
+            ->orWhere(function($q) use ($currentMonthDate, $currentMonthStart) {
+                $q->where('contractOutDate', '>=', $currentMonthStart)
+                    ->where('contractOutDate', '<=', $currentMonthDate);
+            });
         })
         ->groupBy(DB::raw('dateadd(month, datediff(month, 0, contractOutDate), 0)'))->get();
 
