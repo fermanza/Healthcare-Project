@@ -256,10 +256,8 @@ class AccountsPipelineController extends Controller
         $locumsAPPList = $lists['locumsAPPList'];
         $futureRostersList = $lists['futureRostersList'];
         $futureLocumsList = $lists['futureLocumsList'];
-        $recruitingsPhysList = $lists['recruitingsPhysList'];
-        $recruitingsAppList = $lists['recruitingsAppList'];
-        $credentialingsPhysList = $lists['credentialingsPhysList'];
-        $credentialingsAppList = $lists['credentialingsAppList'];
+        $recruitingsList = $lists['recruitingsList'];
+        $credentialingsList = $lists['credentialingsList'];
 
         $address = $account->googleAddress.' | '.$account->city.', '.$account->state.' '.$account->zipCode;
 
@@ -379,20 +377,14 @@ class AccountsPipelineController extends Controller
             $section->addText($futureLocumsList, $normalFontStyle);
         }
 
-        if($recruitingsPhysList || $recruitingsAppList) {
+        if($recruitingsList != '') {
             $section->addText('Pipeline/Candidate Update', $boldUnderlinedFontStyle);
-            $section->addText('PHYS', $boldUnderlinedFontStyle);
-            $section->addText($recruitingsPhysList, $normalFontStyle);
-            $section->addText('APP', $boldUnderlinedFontStyle);
-            $section->addText($recruitingsAppList, $normalFontStyle);
+            $section->addText($recruitingsList, $normalFontStyle);
         }
 
-        if($credentialingsPhysList || $credentialingsAppList) {
+        if($credentialingsList != '') {
             $section->addText('Credentialing', $boldUnderlinedFontStyle);
-            $section->addText('PHYS', $boldUnderlinedFontStyle);
-            $section->addText($credentialingsPhysList, $normalFontStyle);
-            $section->addText('APP', $boldUnderlinedFontStyle);
-            $section->addText($credentialingsAppList, $normalFontStyle);
+            $section->addText($credentialingsList, $normalFontStyle);
         }
 
         // Saving the document...
@@ -452,12 +444,12 @@ class AccountsPipelineController extends Controller
 
         $benchAPPs = $benchAPPs->values();
 
-        $credentialers = $account->pipeline->rostersBenchs
-        ->reject(function($rosterBench) { 
-            return !is_null($rosterBench->resigned); 
-        })
-        ->reject(function($rosterBench){
-            return !$rosterBench->signedNotStarted;
+        $credentialers = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->signedNotStarted || !is_null($rosterBench->fileToCredentialing);
+        })->reject(function($rosterBench){
+            return $rosterBench->resigned;
+        })->reject(function($recruiting){
+            return $recruiting->completed;
         })->sortBy('name');
 
         $recruitings = $account->pipeline->recruitings
@@ -688,6 +680,8 @@ class AccountsPipelineController extends Controller
 
                 return $firstShift->gte($today);
             }
+        })->reject(function($rosterBench){
+            return $rosterBench->resigned;
         });
 
         $futureRosters = $futureRosters->values();
@@ -702,35 +696,17 @@ class AccountsPipelineController extends Controller
 
         $futureLocums = $futureLocums->values();
 
-        $credentialingsPhys = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-            return $rosterBench->signedNotStarted && $rosterBench->activity == 'physician';
+        $credentialings = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+            return $rosterBench->signedNotStarted || !is_null($rosterBench->fileToCredentialing);
         })->reject(function($rosterBench){
             return $rosterBench->resigned;
         })->reject(function($recruiting){
             return $recruiting->completed;
         })->sortBy('name');
 
-        $credentialingsPhys = $credentialingsPhys->values();
+        $credentialings = $credentialings->values();
 
-        $credentialingsApp = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
-            return $rosterBench->signedNotStarted && $rosterBench->activity == 'app';
-        })->reject(function($rosterBench){
-            return $rosterBench->resigned;
-        })->reject(function($recruiting){
-            return $recruiting->completed;
-        })->sortBy('name');
-
-        $credentialingsApp = $credentialingsApp->values();
-
-        $recruitingsPhys = $account->pipeline->recruitings->filter(function($recruiting) {
-            return $recruiting->type == 'phys';
-        })->reject(function($recruiting) {
-            return $recruiting->declined;
-        })->sortBy('name');
-
-        $recruitingsApp = $account->pipeline->recruitings->filter(function($recruiting) {
-            return $recruiting->type == 'app';
-        })->reject(function($recruiting) {
+        $recruitings = $account->pipeline->recruitings->reject(function($recruiting) {
             return $recruiting->declined;
         })->sortBy('name');
         /////// End of Elements for lists /////////
@@ -797,7 +773,12 @@ class AccountsPipelineController extends Controller
 
         $futureRostersList = '';
         foreach ($futureRosters as $key => $futureRoster) {
-            $futureRostersList .= $futureRoster->name.' - '.htmlspecialchars($futureRoster->notes);
+            $activity = $futureRoster->activity == 'app' ? 'App' : 'Phys';
+            if($account->pipeline->practiceTime == 'hours') {
+                $futureRostersList .= $futureRoster->name.' - '.strtoupper($activity).' - '.strtoupper($futureRoster->contract).' - '.$futureRoster->hours.' - '.htmlspecialchars($futureRoster->notes);
+            } else {
+                $futureRostersList .= $futureRoster->name.' - '.strtoupper($activity).' - '.strtoupper($futureRoster->contract).' - '.htmlspecialchars($futureRoster->notes);
+            }
 
             $futureRostersList.= '<w:br/>';
         }
@@ -806,35 +787,23 @@ class AccountsPipelineController extends Controller
         foreach ($futureLocums as $key => $futureLocum) {
             $futureLocumsList .= $futureLocum->name.' - '.htmlspecialchars($futureLocum->credentialingNotes);
 
+            $futureLocumsList .= $futureLocum->name.' - '.strtoupper($futureLocum->type).' - '.strtoupper($futureLocum->contract).' - '.htmlspecialchars($futureLocum->credentialingNotes);
+
             $futureLocumsList.= '<w:br/>';
         }
 
-        $recruitingsPhysList = '';
-        foreach ($recruitingsPhys as $key => $recruitingPhys) {
-            $recruitingsPhysList .= $recruitingPhys->name.' - '.htmlspecialchars($recruitingPhys->notes);
+        $recruitingsList = '';
+        foreach ($recruitings as $key => $recruiting) {
+            $recruitingsList .= $recruiting->name.' - '.strtoupper($recruiting->type).' - '.strtoupper($recruiting->contract).' - '.htmlspecialchars($recruiting->credentialingNotes);
 
-            $recruitingsPhysList.= '<w:br/>';
+            $recruitingsList.= '<w:br/>';
         }
 
-        $recruitingsAppList = '';
-        foreach ($recruitingsApp as $key => $recruitingApp) {
-            $recruitingsAppList .= $recruitingApp->name.' - '.htmlspecialchars($recruitingApp->notes);
+        $credentialingsList = '';
+        foreach ($credentialings as $key => $credentialing) {
+            $credentialingsList .= $credentialing->name.' - '.strtoupper($credentialing->type).' - '.strtoupper($credentialing->contract).' - '.htmlspecialchars($credentialing->credentialingNotes);
 
-            $recruitingsAppList.= '<w:br/>';
-        }
-
-        $credentialingsPhysList = '';
-        foreach ($credentialingsPhys as $key => $credentialingPhys) {
-            $credentialingsPhysList .= $credentialingPhys->name.' - '.htmlspecialchars($credentialingPhys->credentialingNotes);
-
-            $credentialingsPhysList.= '<w:br/>';
-        }
-
-        $credentialingsAppList = '';
-        foreach ($credentialingsApp as $key => $credentialingApp) {
-            $credentialingsAppList .= $credentialingApp->name.' - '.htmlspecialchars($credentialingApp->credentialingNotes);
-
-            $credentialingsAppList.= '<w:br/>';
+            $credentialingsList.= '<w:br/>';
         }
         /////// End of Lists ///////////
 
@@ -847,11 +816,8 @@ class AccountsPipelineController extends Controller
             'locumsAPPList' => $locumsAPPList,
             'futureRostersList' => $futureRostersList,
             'futureLocumsList' => $futureLocumsList,
-            'recruitingsPhysList' => $recruitingsPhysList,
-            'recruitingsAppList' => $recruitingsAppList,
-            'credentialingsPhysList' => $credentialingsPhysList,
-            'credentialingsAppList' => $credentialingsAppList,
-        );
+            'recruitingsList' => $recruitingsList,
+            'credentialingsList' => $credentialingsList,        );
     }
 
     private function createRecruitingTable($sheet, $account, $benchTableStartData, $recruitings) {
@@ -1621,12 +1587,12 @@ class AccountsPipelineController extends Controller
                 })->reject(function($rosterBench) { return !is_null($rosterBench->resigned); })
                 ->sortBy('name');
                 $benchAPPs = $benchAPPs->values();
-                $credentialers = $account->pipeline->rostersBenchs
-                ->reject(function($rosterBench) { 
-                    return !is_null($rosterBench->resigned); 
-                })
-                ->reject(function($rosterBench){
-                    return !$rosterBench->signedNotStarted;
+                $credentialers = $account->pipeline->rostersBenchs->filter(function($rosterBench) {
+                    return $rosterBench->signedNotStarted || !is_null($rosterBench->fileToCredentialing);
+                })->reject(function($rosterBench){
+                    return $rosterBench->resigned;
+                })->reject(function($recruiting){
+                    return $recruiting->completed;
                 })->sortBy('name');
                 $recruitings = $account->pipeline->recruitings
                 ->reject(function($rosterBench) { 
