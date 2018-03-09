@@ -3327,7 +3327,11 @@
                     rosterBench.appToHospital = this.moment(rosterBench.appToHospital);
                     rosterBench.provisionalPrivilegeStart = this.moment(rosterBench.provisionalPrivilegeStart);
 
-                    window.providers.push(rosterBench.name);
+                    var provider = _.find(BackendVars.providers, {fullName: rosterBench.name});
+
+                    if(provider) {
+                        window.providers.push(rosterBench.name);
+                    }
 
                     _.assignIn(this[object], rosterBench);
                 },
@@ -3490,7 +3494,11 @@
                     recruiting.contractIn = this.moment(recruiting.contractIn);
                     recruiting.firstShift = this.moment(recruiting.firstShift);
 
-                    window.providers.push(recruiting.name);
+                    var provider = _.find(BackendVars.providers, {fullName: recruiting.name});
+
+                    if(provider) {
+                        window.providers.push(recruiting.name);
+                    }
 
                     _.assignIn(this.newRecruiting, recruiting);
                 },
@@ -3549,7 +3557,11 @@
                     locum.application = this.moment(locum.application);
                     locum.interview = this.moment(locum.interview);
 
-                    window.providers.push(locum.name);
+                    var provider = _.find(BackendVars.providers, {fullName: locum.name});
+
+                    if(provider) {
+                        window.providers.push(locum.name);
+                    }
 
                     _.assignIn(this.newLocum, locum);
                 },
